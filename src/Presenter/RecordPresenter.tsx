@@ -1,7 +1,13 @@
-// The purpose of this file is to create the presenter component for where the user records or uploads audio
-
+// RecordPresenter.tsx
+import React from "react";
 import RecordView from "../View/RecordView";
 
-export default function RecordPresenter() {
-  return <RecordView></RecordView>;
+interface RecordPresenterProps {
+  onFileChange: (file: File | null) => void;
+}
+
+export default function RecordPresenter({
+  onFileChange,
+}: RecordPresenterProps) {
+  return <RecordView onFileChange={onFileChange} />;
 }

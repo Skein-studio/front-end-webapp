@@ -16,6 +16,7 @@ const Text = styled.p<TextProps>`
   font-family: "Roboto", "Helvetica", "Arial", sans-serif;
   font-weight: ${({ weight }) => (weight ? weight : "400")};
   text-align: ${({ align }) => (align ? align : "justify")};
+  margin: 2px;
   margin: ${({ noMargin }) => (noMargin ? "0" : "0 0 20px 0")};
   transition: color 0.3s ease;
 
@@ -29,6 +30,7 @@ interface ButtonProps {
   color?: string;
   hoverBgColor?: string;
   hoverColor?: string;
+  onChange?: React.ChangeEventHandler<HTMLInputElement>;
 }
 
 const Button = styled.button<ButtonProps>`
@@ -36,21 +38,24 @@ const Button = styled.button<ButtonProps>`
   justify-content: center;
   align-items: center;
   padding: 10px 20px;
-  background-color: ${({ bgColor }) => (bgColor ? bgColor : "#007BFF")};
-  color: ${({ color }) => (color ? color : "#FFF")};
+  margin: 4px;
+  background-color: ${({ bgColor }) => (bgColor ? bgColor : "#FFFFFF")};
+  color: ${({ color }) => (color ? color : "#007BFF")};
   border: none;
   border-radius: 4px;
+  box-shadow: 0px 2px 8px rgba(0, 123, 255, 0.25);
   font-family: "Roboto", "Helvetica", "Arial", sans-serif;
   font-size: 16px;
   font-weight: 500;
   text-align: center;
   cursor: pointer;
-  transition: background-color 0.3s ease, color 0.3s ease;
+  transition: background-color 0.3s ease, color 0.3s ease, box-shadow 0.3s ease;
 
   &:hover {
     background-color: ${({ hoverBgColor }) =>
-      hoverBgColor ? hoverBgColor : "#0056b3"};
-    color: ${({ hoverColor }) => (hoverColor ? hoverColor : "#FFF")};
+      hoverBgColor ? hoverBgColor : "#f8f9fa"};
+    color: ${({ hoverColor }) => (hoverColor ? hoverColor : "#0056b3")};
+    box-shadow: 0px 2px 8px rgba(0, 123, 255, 0.5);
   }
 
   &:focus {
@@ -58,17 +63,46 @@ const Button = styled.button<ButtonProps>`
   }
 `;
 
-const OuterBox = styled.div`
+const OuterBox = styled.div<BoxProps>`
   display: flex;
-  flex-direction: column;
+  flex-direction: ${(props) => (props.flexdir ? props.flexdir : "column")};
   justify-content: center;
   align-items: center;
-  width: 80%;
-  height: 200px;
+  width: 100%;
+  height: 100%;
   margin: 10px auto;
-  background-color: #f5f5f5;
-  border-radius: 10px;
-  box-shadow: 0px 10px 20px rgba(0, 0, 0, 0.19), 0px 6px 6px rgba(0, 0, 0, 0.23);
+  padding: 4px;
+  background-color: #ffffff;
+  border-radius: 4px;
+  box-shadow: 0px 2px 8px rgba(0, 123, 255, 0.25);
+  transition: box-shadow 0.3s ease;
+
+  &:hover {
+    box-shadow: 0px 2px 8px rgba(0, 123, 255, 0.5);
+  }
 `;
 
-export { OuterBox, Text, Button };
+interface BoxProps {
+  flexdir?: string;
+}
+
+const InnerBox = styled.div<BoxProps>`
+  display: flex;
+  flex-direction: ${(props) => (props.flexdir ? props.flexdir : "column")};
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  width: 80%; // slightly smaller than OuterBox to create a nested appearance
+  height: 80%; // slightly smaller than OuterBox to create a nested appearance
+  padding: 4px;
+  background-color: #f8f9fa; // slightly darker than OuterBox to create a contrast
+  border-radius: 4px;
+  box-shadow: 0px 2px 4px rgba(0, 123, 255, 0.1); // slightly softer shadow than OuterBox
+  transition: box-shadow 0.3s ease;
+  margin: 2px;
+  &:hover {
+    box-shadow: 0px 2px 8px rgba(0, 123, 255, 0.3); // slightly softer hover effect than OuterBox
+  }
+`;
+
+export { OuterBox, Text, Button, InnerBox };
