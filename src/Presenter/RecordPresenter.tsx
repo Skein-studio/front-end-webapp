@@ -2,6 +2,6 @@
 
 import RecordView from "../View/RecordView";
 
-export default function RecordPresenter(){
-    return <RecordView></RecordView>
+export default function RecordPresenter() {
+  return <RecordView></RecordView>;
 }
