@@ -21,7 +21,7 @@ export default function CreateSongView(props: Props) {
     onFileChange,
     audioFile,
     genre,
-  } = props;
+  } = props; // later add a callback for sending the prompt up to the CreateSongPresenter which will handle it and send to back-end along with audio filex
   const [showPrompt, setShowPrompt] = useState(false);
 
   const prompt = `A ${genre}-themed song with the following instruments:\n ${instruments.join(
