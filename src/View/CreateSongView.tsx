@@ -29,7 +29,7 @@ export default function CreateSongView(props: Props) {
   )}`;
 
   function handleCreateButtonClick() {
-    if (audioFile) {
+    if (audioFile) { // later update this to have more reqs like having at least one instrument as well as a genre chosen
       setShowPrompt(true);
     }
   }
