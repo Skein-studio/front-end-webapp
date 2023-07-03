@@ -51,8 +51,8 @@ const NodeSmall = styled.div<NodeProps>`
   justify-content: center;
   align-items: center;
   align-self: center;
-  width: 300px;
-  height: 300px;
+  width: 450px;
+  height: 450px;
   margin: 2px auto;
   padding: 2px;
   background-color: #ffffff;
@@ -66,8 +66,8 @@ const NodeSmall = styled.div<NodeProps>`
 `;
 
 const NodeLarge = styled(NodeSmall)`
-  width: 600px;
-  height: 600px;
+  width: 900px;
+  height: 900px;
   padding: 20px;
 `;
 

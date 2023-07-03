@@ -9,7 +9,7 @@ import {
   NodeSmall,
   NodeText,
 } from "../Util/NodeStyles";
-import { Button, Container } from "../Util/BaseStyles";
+import { Button, Container, BlankSpace } from "../Util/BaseStyles";
 
 const Source: React.FC = () => {
   const [showLargeView, setShowLargeView] = useState<boolean>(false);
@@ -41,9 +41,10 @@ const Source: React.FC = () => {
           {showLargeView ? "-" : "+"}
         </ToggleButton>
       )}
-      {/*<Handle type="source" position={Position.Left} /> Source has no input */}
+      {/*<Handle type="source"  position={Position.Left} /> Source has no input */}
+      <BlankSpace width={1} height={100}></BlankSpace>
       {base ? (
-        <>
+        <Container>
           {showLargeView ? (
             <Container>
               <p>Spectrogram here</p>
@@ -70,14 +71,13 @@ const Source: React.FC = () => {
               </Button>
             </>
           )}
-        </>
+        </Container>
       ) : (
-        <>
+        <Container>
             <Button onClick={() => handleBaseChange("Record")}>Record</Button>
             <Button onClick={() => handleBaseChange("Import")}>Import</Button>
             <Button onClick={() => handleBaseChange("Generate")}>Generate</Button>
-
-        </>
+        </Container>
       )}
       <Handle type="target" position={Position.Right} />
     </CurrentNode>
