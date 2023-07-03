@@ -15,7 +15,7 @@ const Source: React.FC = () => {
   const [showLargeView, setShowLargeView] = useState<boolean>(false);
   const [base, setBase] = useState<string>("");
 
-  const handleBaseChange = (text: String) => {
+  const handleBaseChange = (text: string) => {
     setBase(text);
   };
 
