@@ -5,6 +5,7 @@ import { TopBar, ToggleButton, NodeText } from "@/app/Util/NodeStyles";
 import RecordPresenter from "@/app/Util/AudioRecorder/RecordPresenter";
 import ImportAudio from "@/app/Util/AudioImporter/ImportAudio";
 import GenerateAudio from "@/app/Util/AudioGenerator/GenerateAudio";
+import { useAudio } from "@/app/Util/AudioContext";
 
 const spectrogramPlaceHolder =
   "https://s3.amazonaws.com/izotopedownloads/docs/rx6/img/07g-regular-stft.png";
@@ -71,19 +72,21 @@ const LargeView = ({
   </Container>
 );
 
-const SmallView = () => (
-  <Container>
-    <img
-      src={spectrogramPlaceHolder}
-      alt="Spectrogram placeholder"
-      style={{ width: "100%", height: "auto" }} // change here
-    />{" "}
-    {/* Use Image component here */}
-    <Button>
-      <NodeText>▶️</NodeText>
-    </Button>
-  </Container>
-);
+const SmallView = () => {
+  const { audioData, setAudioData } = useAudio();
+  
+  return (
+    <Container>
+      <img
+        src={spectrogramPlaceHolder}
+        alt="Spectrogram placeholder"
+        style={{ width: "100%", height: "auto" }} 
+      />
+      {audioData && <audio src={URL.createObjectURL(audioData)} controls />}
+    </Container>
+  );
+}
+
 
 type SourceProps = {
   showLargeView: boolean;
