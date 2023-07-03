@@ -37,8 +37,9 @@ const Button = styled.button<ButtonProps>`
   display: flex;
   justify-content: center;
   align-items: center;
-  padding: 10px 20px;
+  padding: 16px;
   margin: 4px;
+  height: 36px; // Set a specific height
   background-color: ${({ bgColor }) => (bgColor ? bgColor : "#FFFFFF")};
   color: ${({ color }) => (color ? color : "rgba(0, 123, 255, 0.5)")};
   border: none;
@@ -70,11 +71,10 @@ interface BoxProps {
 const Container = styled.div<BoxProps>`
   display: flex;
   flex-direction: ${(props) => (props.flexdir ? props.flexdir : "column")};
-  flex-wrap: wrap;
   justify-content: space-around;
   align-items: center;
   width: 90%;
-  height: 90%;
+  height: 100%; // Set height to 100%
   padding: 4px;
   margin: 4px;
 `;
