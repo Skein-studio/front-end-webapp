@@ -15,8 +15,8 @@ const Source: React.FC = () => {
   const [showLargeView, setShowLargeView] = useState<boolean>(false);
   const [base, setBase] = useState<string>("");
 
-  const handleBaseChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
-    setBase(event.target.value);
+  const handleBaseChange = (text:String) => {
+    setBase(text);
   };
 
   const handleDone = (e: React.MouseEvent) => {
@@ -72,12 +72,12 @@ const Source: React.FC = () => {
           )}
         </>
       ) : (
-        <StyledSelect value={base} onChange={handleBaseChange}>
-          <option value="">Select...</option>
-          <option value="record">Record</option>
-          <option value="import">Import</option>
-          <option value="generate">Generate</option>
-        </StyledSelect>
+        <>
+            <Button onClick={() => handleBaseChange("Record")}>Record</Button>
+            <Button onClick={() => handleBaseChange("Import")}>Import</Button>
+            <Button onClick={() => handleBaseChange("Generate")}>Generate</Button>
+
+        </>
       )}
       <Handle type="target" position={Position.Right} />
     </CurrentNode>
