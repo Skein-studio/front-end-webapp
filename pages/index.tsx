@@ -16,7 +16,7 @@ export default function Home() {
       <Flow></Flow>
       
       <InnerBox>
-        Some other content here
+        This content is outside the Flow window
       </InnerBox>
     </OuterBox>
   );

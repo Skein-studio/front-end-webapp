@@ -1,32 +1,7 @@
 import React, { useState } from 'react';
 import { Handle, Position } from 'reactflow';
-import styled from 'styled-components';
-import { Button , Container, NodeLarge, NodeSmall } from '../Util/BaseStyles';
-
-const TopBar = styled.div`
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  box-sizing: border-box; /* Add this line */
-  border-bottom: 1px solid black;
-  padding: 10px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-`;
-const StyledSelect = styled.select`
-  padding: 5px;
-  margin: 20px;
-  border: 1px solid #ccc;
-  border-radius: 5px;
-`;
-
-const ToggleButton = styled.button`
-  position: absolute;
-  top: 10px;
-  left: 10px;
-`;
+import {NodeBox, TopBar, StyledSelect, ToggleButton, NodeLarge, NodeSmall} from '../Util/NodeStyles';
+import { Button , Container, Text} from '../Util/BaseStyles';
 
 const Source: React.FC = () => {
   const [showLargeView, setShowLargeView] = useState<boolean>(false);
@@ -65,12 +40,15 @@ const Source: React.FC = () => {
         <>
           {showLargeView ? (
             <Container>
-                <StyledSelect value={style} onChange={handleStyleChange}>
-                <option value="">Select...</option>
-                <option value="guitar">Guitar Solo</option>
-                <option value="flute">Fantasy Flute</option>
-                </StyledSelect>
-                <Button onClick={handleDone}>Done</Button>
+                <Container>
+                    Style:
+                    <StyledSelect value={style} onChange={handleStyleChange}>
+                    <option value="">Select...</option>
+                    <option value="guitar">Guitar Solo</option>
+                    <option value="flute">Fantasy Flute</option>
+                    </StyledSelect>
+                    <Button onClick={handleDone}>Done</Button>
+                </Container>
             </Container>
           ) : (
             <>
