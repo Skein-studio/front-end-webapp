@@ -1,7 +1,7 @@
 import React, { useState } from "react";
-import { Container } from "../BaseStyles";
+import { Button, Container } from "../BaseStyles";
 
-const dummyAudioFile = "./dummy.mp3"
+const dummyAudioFile = "./dummy.mp3";
 
 const GenerateAudio: React.FC = () => {
   const [audioSrc, setAudioSrc] = useState<string>("");
@@ -14,7 +14,7 @@ const GenerateAudio: React.FC = () => {
 
   return (
     <Container>
-      <button onClick={handleClick}>Generate</button>
+      <Button onClick={handleClick}>Generate</Button>
       {audioSrc && <audio src={audioSrc} controls />}
     </Container>
   );

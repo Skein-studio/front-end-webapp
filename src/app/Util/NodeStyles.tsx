@@ -16,9 +16,9 @@ const NodeText = styled.p`
 `;
 
 const TopBar = styled.div`
-display: flex;
-justify-content: center;
-align-items: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
   width: 100%;
   height: 40px; // Set a specific height
   box-sizing: border-box; /* Add this line */
@@ -37,9 +37,9 @@ const StyledSelect = styled.select`
 `;
 
 const ToggleButton = styled.button`
-position: absolute; // Change from absolute to relative
-top: 10px;
-left: 10px;
+  position: absolute; // Change from absolute to relative
+  top: 10px;
+  left: 10px;
 `;
 
 interface NodeProps {

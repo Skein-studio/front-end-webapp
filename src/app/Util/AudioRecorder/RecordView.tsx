@@ -1,20 +1,27 @@
 import React from "react";
 
+import { Button, Container } from "../BaseStyles";
+
 type Props = {
-  isRecording: boolean,
-  onStart: () => void,
-  onStop: () => void,
-  audioData: Blob | null,
+  isRecording: boolean;
+  onStart: () => void;
+  onStop: () => void;
+  audioData: Blob | null;
 };
 
-const RecordView: React.FC<Props> = ({isRecording, onStart, onStop, audioData}) => {
+const RecordView: React.FC<Props> = ({
+  isRecording,
+  onStart,
+  onStop,
+  audioData,
+}) => {
   return (
-    <div>
-      <button onClick={isRecording ? onStop : onStart}>
+    <Container>
+      <Button onClick={isRecording ? onStop : onStart}>
         {isRecording ? "Stop Recording" : "Start Recording"}
-      </button>
+      </Button>
       {audioData && <audio src={URL.createObjectURL(audioData)} controls />}
-    </div>
+    </Container>
   );
 };
 

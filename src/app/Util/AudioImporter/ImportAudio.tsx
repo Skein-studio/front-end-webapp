@@ -1,18 +1,19 @@
 import React, { useState } from "react";
+import { useAudio } from "../AudioContext";
 
 const ImportAudio: React.FC = () => {
-  const [audioFile, setAudioFile] = useState<File | null>(null);
+  const { audioData, setAudioData } = useAudio();
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files) {
-      setAudioFile(e.target.files[0]);
+      setAudioData(e.target.files[0]);
     }
   };
 
   return (
     <div>
       <input type="file" accept="audio/*" onChange={handleChange} />
-      {audioFile && <audio src={URL.createObjectURL(audioFile)} controls />}
+      {audioData && <audio src={URL.createObjectURL(audioData)} controls />}
     </div>
   );
 };

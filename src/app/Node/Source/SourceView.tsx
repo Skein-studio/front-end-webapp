@@ -85,7 +85,6 @@ const SmallView = () => (
   </Container>
 );
 
-
 type SourceProps = {
   showLargeView: boolean;
   handleToggleView: (e: React.MouseEvent) => void;
@@ -113,7 +112,7 @@ const SourceView: React.FC<SourceProps> = ({
             handleClick={handleToggleView}
           />
         )}
-        <Container style={{flex: 1}}> 
+        <Container style={{ flex: 1 }}>
           {base ? (
             showLargeView ? (
               <LargeView base={base} handleDone={handleDone} />
