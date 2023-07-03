@@ -1,8 +1,8 @@
 import React, { useState } from "react";
-import RecordPresenter from "../Presenter/RecordPresenter";
+import RecordPresenter from "./RecordPresenter";
 import { OuterBox, Text, Button, InnerBox } from "../Util/BaseStyles";
 import InstrumentToggle from "./InstrumentToggle";
-import GenreDropdown from "./GenreDropdown";
+import GenreDropdown from "../View/GenreDropdown";
 
 interface Props {
   instruments: string[];
@@ -29,7 +29,8 @@ export default function CreateSongView(props: Props) {
   )}`;
 
   function handleCreateButtonClick() {
-    if (audioFile) { // later update this to have more reqs like having at least one instrument as well as a genre chosen
+    if (audioFile) {
+      // later update this to have more reqs like having at least one instrument as well as a genre chosen
       setShowPrompt(true);
     }
   }

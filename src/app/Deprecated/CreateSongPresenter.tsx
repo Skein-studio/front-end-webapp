@@ -1,5 +1,5 @@
 import { useState } from "react";
-import CreateSongView from "../View/CreateSongView";
+import CreateSongView from "./CreateSongView";
 
 export default function CreateSongPresenter() {
   const [instruments, setInstruments] = useState<string[]>([]);
