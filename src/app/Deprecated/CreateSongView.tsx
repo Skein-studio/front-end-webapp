@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import RecordPresenter from "../Presenter/RecordPresenter";
+import RecordPresenter from "./RecordPresenter";
 import { OuterBox, Text, Button, InnerBox } from "../Util/BaseStyles";
 import InstrumentToggle from "./InstrumentToggle";
 import GenreDropdown from "../View/GenreDropdown";
