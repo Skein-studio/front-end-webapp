@@ -6,13 +6,9 @@ import { Button , Container, Text} from '../Util/BaseStyles';
 const Source: React.FC = () => {
   const [showLargeView, setShowLargeView] = useState<boolean>(false);
   const [base, setBase] = useState<string>('');
-  const [style, setStyle] = useState<string>('');
 
   const handleBaseChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
     setBase(event.target.value);
-  };
-  const handleStyleChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
-    setStyle(event.target.value);
   };
 
   const handleDone = (e: React.MouseEvent) => {
@@ -35,20 +31,27 @@ const Source: React.FC = () => {
           {showLargeView ? "-" : "+"}
         </ToggleButton>
       )}
-      <Handle type="target" position={Position.Right} />
+      {/*<Handle type="source" position={Position.Left} /> Source has no input */}
       {base ? (
         <>
           {showLargeView ? (
             <Container>
-                <Container>
-                    Style:
-                    <StyledSelect value={style} onChange={handleStyleChange}>
-                    <option value="">Select...</option>
-                    <option value="guitar">Guitar Solo</option>
-                    <option value="flute">Fantasy Flute</option>
-                    </StyledSelect>
-                    <Button onClick={handleDone}>Done</Button>
-                </Container>
+                <p>Spectrogram here</p>
+                {/*
+                Style:
+                <StyledSelect value={style} onChange={handleStyleChange}>
+                <option value="">Select...</option>
+                <option value="guitar">Guitar Solo</option>
+                <option value="flute">Fantasy Flute</option>
+                </StyledSelect>
+                
+           This will be present in the signal node instead */}
+
+                {
+                    base
+                }
+                <Button onClick={handleDone}>Done</Button>
+                
             </Container>
           ) : (
             <>
@@ -65,7 +68,7 @@ const Source: React.FC = () => {
           <option value="generate">Generate</option>
         </StyledSelect>
       )}
-      <Handle type="source" position={Position.Left} />
+      <Handle type="target" position={Position.Right} />
     </CurrentNode>
   );
 };
