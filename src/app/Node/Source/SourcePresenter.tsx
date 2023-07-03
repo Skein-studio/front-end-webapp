@@ -2,9 +2,6 @@ import React, { useState } from "react";
 import {NodeLarge, NodeSmall } from "@/app/Util/NodeStyles";;
 import {NodeContainer, SmallView, LargeView, BaseOptionsView, ToggleButtonView, TopBarView} from "./SourceView";
 
-import Image from "next/image";
-
-
 const SourcePresenter: React.FC = () => {
   const [showLargeView, setShowLargeView] = useState<boolean>(false);
   const [base, setBase] = useState<string>("");

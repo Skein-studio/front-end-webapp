@@ -66,7 +66,7 @@ const NodeSmall = styled.div<NodeProps>`
 `;
 
 const NodeLarge = styled(NodeSmall)`
-  width: 900px;
+  width: 450px;
   height: 900px;
   padding: 20px;
 `;

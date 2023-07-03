@@ -1,6 +1,6 @@
 import {  Button, Container, BlankSpace } from "@/app/Util/BaseStyles";
 import { Handle, Position } from "reactflow";
-import { TopBar, ToggleButton, NodeLarge, NodeSmall, NodeText } from "@/app/Util/NodeStyles";
+import { TopBar, ToggleButton, NodeText } from "@/app/Util/NodeStyles";
 const spectrogramPlaceHolder = 'https://s3.amazonaws.com/izotopedownloads/docs/rx6/img/07g-regular-stft.png';
 
 
@@ -24,7 +24,7 @@ const TopBarView = ({ base }: { base: string }) => (
   
   const LargeView = ({ base, handleDone }: { base: string; handleDone: (e: React.MouseEvent) => void }) => (
     <Container>
-      <img src={spectrogramPlaceHolder} alt="Spectrogram placeholder" width={600} height={300}/> {/* Use Image component here */}
+      <img src={spectrogramPlaceHolder} alt="Spectrogram placeholder" width={400} height={150}/> {/* Use Image component here */}
       {base}
       <Button onClick={handleDone}>
         <NodeText>✔️</NodeText>
@@ -34,7 +34,7 @@ const TopBarView = ({ base }: { base: string }) => (
   
   const SmallView = () => (
     <Container>
-      <img src={spectrogramPlaceHolder} alt="Spectrogram placeholder" width={300} height={150} /> {/* Use Image component here */}
+      <img src={spectrogramPlaceHolder} alt="Spectrogram placeholder" width={400} height={150} /> {/* Use Image component here */}
       <Button>
         <NodeText>▶️</NodeText>
       </Button>
