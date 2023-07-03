@@ -1,7 +1,7 @@
 import React from "react";
 import ReactFlow from "reactflow";
 import "reactflow/dist/style.css";
-import { InnerBox, OuterBox } from "@/app/Util/BaseStyles";
+import { Container} from "@/app/Util/BaseStyles";
 import Flow from "@/app/Util/Flow";
 
 const initialNodes = [
@@ -12,10 +12,10 @@ const initialEdges = [{ id: "e1-2", source: "1", target: "2" }];
 
 export default function Home() {
   return (
-    <OuterBox>
+    <Container>
       <Flow></Flow>
 
-      <InnerBox>This content is outside the Flow window</InnerBox>
-    </OuterBox>
+      <Container>This content is outside the Flow window</Container>
+    </Container>
   );
 }

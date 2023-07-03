@@ -63,26 +63,6 @@ const Button = styled.button<ButtonProps>`
   }
 `;
 
-const OuterBox = styled.div<BoxProps>`
-  display: flex;
-  flex-direction: ${(props) => (props.flexdir ? props.flexdir : "column")};
-  justify-content: center;
-  align-items: center;
-  align-self: center;
-  width: 100%;
-  height: 100%;
-  margin: 10px auto;
-  padding: 4px;
-  background-color: #ffffff;
-  border-radius: 4px;
-  box-shadow: 0px 2px 8px rgba(0, 123, 255, 0.25);
-  transition: box-shadow 0.3s ease;
-
-  &:hover {
-    box-shadow: 0px 2px 8px rgba(0, 123, 255, 0.5);
-  }
-`;
-
 interface BoxProps {
   flexdir?: string;
 }
@@ -115,23 +95,4 @@ const BlankSpace = styled.div<BlankProps>`
   margin: 4px;
 `;
 
-const InnerBox = styled.div<BoxProps>`
-  display: flex;
-  flex-direction: ${(props) => (props.flexdir ? props.flexdir : "column")};
-  flex-wrap: wrap;
-  justify-content: center;
-  align-items: center;
-  width: 80%; // slightly smaller than OuterBox to create a nested appearance
-  height: 80%; // slightly smaller than OuterBox to create a nested appearance
-  padding: 4px;
-  background-color: #f8f9fa; // slightly darker than OuterBox to create a contrast
-  border-radius: 4px;
-  box-shadow: 0px 2px 4px rgba(0, 123, 255, 0.1); // slightly softer shadow than OuterBox
-  transition: box-shadow 0.3s ease;
-  margin: 2px;
-  &:hover {
-    box-shadow: 0px 2px 8px rgba(0, 123, 255, 0.3); // slightly softer hover effect than OuterBox
-  }
-`;
-
-export { OuterBox, Text, Button, InnerBox, Container, BlankSpace };
+export {Text, Button, Container, BlankSpace };
