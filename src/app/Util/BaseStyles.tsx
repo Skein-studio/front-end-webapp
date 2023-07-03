@@ -68,6 +68,7 @@ const OuterBox = styled.div<BoxProps>`
   flex-direction: ${(props) => (props.flexdir ? props.flexdir : "column")};
   justify-content: center;
   align-items: center;
+  align-self: center;
   width: 100%;
   height: 100%;
   margin: 10px auto;
@@ -82,9 +83,53 @@ const OuterBox = styled.div<BoxProps>`
   }
 `;
 
+const NodeSmall = styled.div<NodeProps>`
+  position: relative;
+  display: flex;
+  flex-direction: ${(props) => (props.flexdir ? props.flexdir : "column")};
+  justify-content: center;
+  align-items: center;
+  align-self: center;
+  width: 150px;
+  height: 150px;
+  margin: 2px auto;
+  padding: 2px;
+  background-color: #ffffff;
+  border-radius: 10px;
+  box-shadow: 0px 2px 8px rgba(0, 123, 255, 0.25);
+  transition: box-shadow 0.3s ease;
+
+  &:hover {
+    box-shadow: 0px 2px 8px rgba(0, 123, 255, 0.5);
+  }
+`;
+
+const NodeLarge = styled(NodeSmall)`
+  width: 500px;
+  height: 500px;
+  padding: 20px;
+`;
+interface NodeProps {
+  flexdir?: string;
+}
+
+
 interface BoxProps {
   flexdir?: string;
 }
+
+const Container = styled.div<BoxProps>`
+  display: flex;
+  flex-direction: ${(props) => (props.flexdir ? props.flexdir : "column")};
+  flex-wrap: wrap;
+  justify-content: space-around; 
+  align-items: center;
+  width: 100%; 
+  height: 100%; 
+  padding: 4px;
+  margin: 4px;
+`;
+
 
 const InnerBox = styled.div<BoxProps>`
   display: flex;
@@ -105,4 +150,4 @@ const InnerBox = styled.div<BoxProps>`
   }
 `;
 
-export { OuterBox, Text, Button, InnerBox };
+export { OuterBox, Text, Button, InnerBox , NodeSmall, NodeLarge, Container};
