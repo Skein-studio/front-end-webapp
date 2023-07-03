@@ -42,7 +42,7 @@ const Source: React.FC = () => {
         </ToggleButton>
       )}
       {/*<Handle type="source"  position={Position.Left} /> Source has no input */}
-      <BlankSpace width={1} height={100}></BlankSpace>
+      <BlankSpace width={1} height={75}></BlankSpace>
       {base ? (
         <Container>
           {showLargeView ? (
