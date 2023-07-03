@@ -1,6 +1,5 @@
 import React from 'react';
 import ReactFlow from 'reactflow';
-import CreateSongPresenter from "@/app/Presenter/CreateSongPresenter"
 import 'reactflow/dist/style.css';
 import { InnerBox, OuterBox } from '@/app/Util/BaseStyles';
 import Flow from '@/app/Util/Flow';
@@ -11,15 +10,14 @@ const initialNodes = [
 ];
 const initialEdges = [{ id: 'e1-2', source: '1', target: '2' }];
 
-export default function App() {
+export default function Home() {
   return (
     <OuterBox>
+      <Flow></Flow>
+      
       <InnerBox>
-        <Flow></Flow>
+        Some other content here
       </InnerBox>
-      <InnerBox>
-        <CreateSongPresenter></CreateSongPresenter>
-        </InnerBox>
     </OuterBox>
   );
 }
