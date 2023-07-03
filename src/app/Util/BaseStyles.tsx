@@ -95,4 +95,4 @@ const BlankSpace = styled.div<BlankProps>`
   margin: 4px;
 `;
 
-export {Text, Button, Container, BlankSpace };
+export { Text, Button, Container, BlankSpace };

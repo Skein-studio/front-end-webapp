@@ -10,8 +10,8 @@ import {
   NodeText,
 } from "../Util/NodeStyles";
 import { Button, Container, BlankSpace } from "../Util/BaseStyles";
-const spectrogramPlaceHolder = require('../Image/audio-spectrogram.jpg');
-import Image from 'next/image'; 
+const spectrogramPlaceHolder = require("../Image/audio-spectrogram.jpg");
+import Image from "next/image";
 
 const Source: React.FC = () => {
   const [showLargeView, setShowLargeView] = useState<boolean>(false);
@@ -49,8 +49,11 @@ const Source: React.FC = () => {
         <Container>
           {showLargeView ? (
             <Container>
-                
-            <Image src={spectrogramPlaceHolder} alt="Spectrogram placeholder" />  {/* Use Image component here */}
+              <Image
+                src={spectrogramPlaceHolder}
+                alt="Spectrogram placeholder"
+              />{" "}
+              {/* Use Image component here */}
               {base}
               <Button onClick={handleDone}>
                 <NodeText>✔️</NodeText>

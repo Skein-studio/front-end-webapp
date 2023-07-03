@@ -1,7 +1,7 @@
 import React from "react";
 import ReactFlow from "reactflow";
 import "reactflow/dist/style.css";
-import { Container} from "@/app/Util/BaseStyles";
+import { Container } from "@/app/Util/BaseStyles";
 import Flow from "@/app/Util/Flow";
 
 const initialNodes = [
