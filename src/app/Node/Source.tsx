@@ -22,8 +22,6 @@ const StyledSelect = styled.select`
   border-radius: 5px;
 `;
 
-
-
 const ToggleButton = styled.button`
   position: absolute;
   top: 10px;
