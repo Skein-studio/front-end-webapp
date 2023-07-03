@@ -2,6 +2,8 @@ import React from 'react';
 import ReactFlow, { Node } from 'reactflow';
 import Source from '../Node/Source';
 
+const proOptions = { hideAttribution: true };
+
 const nodeTypes = {
   source: Source,
 };
@@ -15,11 +17,11 @@ const initialNodes: Node[] = [
     },
     // more nodes and edges here...
   ];
-  
+
 const Flow: React.FC = () => {
   return (
     <div style={{ height: "80vh", width: "80vw", border:"1px solid lightgray"}}>
-      <ReactFlow nodes={initialNodes} nodeTypes={nodeTypes} /> 
+      <ReactFlow nodes={initialNodes} nodeTypes={nodeTypes} proOptions={proOptions}/> 
     </div>
   );
 };
