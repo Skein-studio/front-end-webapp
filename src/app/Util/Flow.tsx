@@ -1,11 +1,11 @@
 import React from "react";
 import ReactFlow, { Node } from "reactflow";
-import Source from "../Node/Source";
+import SourcePresenter from "../Node/Source/SourcePresenter";
 
 const proOptions = { hideAttribution: true };
 
 const nodeTypes = {
-  source: Source,
+  source: SourcePresenter,
 };
 
 const nodes: Node[] = [
@@ -23,11 +23,7 @@ const Flow: React.FC = () => {
     <div
       style={{ height: "80vh", width: "80vw", border: "1px solid lightgray" }}
     >
-      <ReactFlow
-        nodes={nodes}
-        nodeTypes={nodeTypes}
-        proOptions={proOptions}
-      />
+      <ReactFlow nodes={nodes} nodeTypes={nodeTypes} proOptions={proOptions} />
     </div>
   );
 };
