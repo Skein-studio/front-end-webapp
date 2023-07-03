@@ -59,7 +59,10 @@ const Source: React.FC = () => {
             </Container>
           ) : (
             <>
-              <NodeText>Spectrogram here</NodeText>
+              <Image
+                src={spectrogramPlaceHolder}
+                alt="Spectrogram placeholder"
+              />{" "}
               <Button>
                 <NodeText>Play</NodeText>
               </Button>
