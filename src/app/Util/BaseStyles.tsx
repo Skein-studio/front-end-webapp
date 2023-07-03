@@ -42,7 +42,7 @@ const Button = styled.button<ButtonProps>`
   background-color: ${({ bgColor }) => (bgColor ? bgColor : "#FFFFFF")};
   color: ${({ color }) => (color ? color : "#007BFF")};
   border: none;
-  border-radius: 4px;
+  border-radius: 10px;
   box-shadow: 0px 2px 8px rgba(0, 123, 255, 0.25);
   font-family: "Roboto", "Helvetica", "Arial", sans-serif;
   font-size: 16px;
@@ -91,14 +91,13 @@ const Container = styled.div<BoxProps>`
   display: flex;
   flex-direction: ${(props) => (props.flexdir ? props.flexdir : "column")};
   flex-wrap: wrap;
-  justify-content: space-around; 
+  justify-content: space-around;
   align-items: center;
-  width: 100%; 
-  height: 100%; 
+  width: 100%;
+  height: 100%;
   padding: 4px;
   margin: 4px;
 `;
-
 
 const InnerBox = styled.div<BoxProps>`
   display: flex;
@@ -119,4 +118,4 @@ const InnerBox = styled.div<BoxProps>`
   }
 `;
 
-export { OuterBox, Text, Button, InnerBox, Container};
+export { OuterBox, Text, Button, InnerBox, Container };

@@ -1,18 +1,26 @@
-import React, { useState } from 'react';
-import { Handle, Position } from 'reactflow';
-import {NodeBox, TopBar, StyledSelect, ToggleButton, NodeLarge, NodeSmall} from '../Util/NodeStyles';
-import { Button , Container, Text} from '../Util/BaseStyles';
+import React, { useState } from "react";
+import { Handle, Position } from "reactflow";
+import {
+  NodeBox,
+  TopBar,
+  StyledSelect,
+  ToggleButton,
+  NodeLarge,
+  NodeSmall,
+  NodeText,
+} from "../Util/NodeStyles";
+import { Button, Container } from "../Util/BaseStyles";
 
 const Source: React.FC = () => {
   const [showLargeView, setShowLargeView] = useState<boolean>(false);
-  const [base, setBase] = useState<string>('');
+  const [base, setBase] = useState<string>("");
 
   const handleBaseChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
     setBase(event.target.value);
   };
 
   const handleDone = (e: React.MouseEvent) => {
-    e.stopPropagation(); 
+    e.stopPropagation();
     setShowLargeView(false);
   };
 
@@ -25,7 +33,9 @@ const Source: React.FC = () => {
 
   return (
     <CurrentNode>
-      <TopBar>Source { base != "" ? `: ${base}` : ""}</TopBar>
+      <TopBar>
+        <NodeText>Source{base != "" ? `: ${base}` : ""}</NodeText>
+      </TopBar>
       {base && (
         <ToggleButton onClick={handleToggleView}>
           {showLargeView ? "-" : "+"}
@@ -36,8 +46,8 @@ const Source: React.FC = () => {
         <>
           {showLargeView ? (
             <Container>
-                <p>Spectrogram here</p>
-                {/*
+              <p>Spectrogram here</p>
+              {/*
                 Style:
                 <StyledSelect value={style} onChange={handleStyleChange}>
                 <option value="">Select...</option>
@@ -47,16 +57,17 @@ const Source: React.FC = () => {
                 
            This will be present in the signal node instead */}
 
-                {
-                    base
-                }
-                <Button onClick={handleDone}>Done</Button>
-                
+              {base}
+              <Button onClick={handleDone}>
+                <NodeText>✅</NodeText>
+              </Button>
             </Container>
           ) : (
             <>
-              <p>Spectrogram here</p>
-              <Button>Play</Button>
+              <NodeText>Spectrogram here</NodeText>
+              <Button>
+                <NodeText>Play</NodeText>
+              </Button>
             </>
           )}
         </>

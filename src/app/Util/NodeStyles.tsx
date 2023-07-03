@@ -1,8 +1,8 @@
 import styled from "styled-components";
 
 const NodeBox = styled.div`
-  display:flex;
-  flex-direction:column;
+  display: flex;
+  flex-direction: column;
   background-color: #ffffff;
   border-radius: 8px;
   box-shadow: 0px 2px 6px rgba(0, 0, 0, 0.1);
@@ -10,6 +10,10 @@ const NodeBox = styled.div`
   width: 200px;
 `;
 
+const NodeText = styled.p`
+  font-size: 18px;
+  color: rgba(0, 123, 255, 0.5);
+`;
 
 const TopBar = styled.div`
   position: absolute;
@@ -17,7 +21,7 @@ const TopBar = styled.div`
   left: 0;
   width: 100%;
   box-sizing: border-box; /* Add this line */
-  border-bottom: 1px solid black;
+  border-bottom: 1px solid rgba(0, 123, 255, 0.125);
   padding: 10px;
   display: flex;
   justify-content: center;
@@ -39,7 +43,6 @@ const ToggleButton = styled.button`
 interface NodeProps {
   flexdir?: string;
 }
-
 
 const NodeSmall = styled.div<NodeProps>`
   position: relative;
@@ -68,5 +71,12 @@ const NodeLarge = styled(NodeSmall)`
   padding: 20px;
 `;
 
-
-export {NodeBox, TopBar, StyledSelect, ToggleButton, NodeLarge, NodeSmall};
+export {
+  NodeBox,
+  TopBar,
+  StyledSelect,
+  ToggleButton,
+  NodeLarge,
+  NodeSmall,
+  NodeText,
+};

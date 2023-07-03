@@ -1,9 +1,3 @@
-interface Props{
-    
-}
+interface Props {}
 
-export default function SmallSourceView(){
-
-
-
-}
+export default function SmallSourceView() {}
