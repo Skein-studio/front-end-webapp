@@ -100,8 +100,8 @@ const Container = styled.div<BoxProps>`
 `;
 interface BlankProps {
   flexdir?: string;
-  width:number;
-  height:number;
+  width: number;
+  height: number;
 }
 const BlankSpace = styled.div<BlankProps>`
   display: flex;
@@ -109,8 +109,8 @@ const BlankSpace = styled.div<BlankProps>`
   flex-wrap: wrap;
   justify-content: space-around;
   align-items: center;
-  width: ${(props) => (props.width)}px;
-  height: ${(props) => (props.height)}px;
+  width: ${(props) => props.width}px;
+  height: ${(props) => props.height}px;
   padding: 4px;
   margin: 4px;
 `;
@@ -134,4 +134,4 @@ const InnerBox = styled.div<BoxProps>`
   }
 `;
 
-export { OuterBox, Text, Button, InnerBox, Container, BlankSpace};
+export { OuterBox, Text, Button, InnerBox, Container, BlankSpace };

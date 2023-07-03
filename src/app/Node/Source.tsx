@@ -15,7 +15,7 @@ const Source: React.FC = () => {
   const [showLargeView, setShowLargeView] = useState<boolean>(false);
   const [base, setBase] = useState<string>("");
 
-  const handleBaseChange = (text:String) => {
+  const handleBaseChange = (text: String) => {
     setBase(text);
   };
 
@@ -48,16 +48,6 @@ const Source: React.FC = () => {
           {showLargeView ? (
             <Container>
               <p>Spectrogram here</p>
-              {/*
-                Style:
-                <StyledSelect value={style} onChange={handleStyleChange}>
-                <option value="">Select...</option>
-                <option value="guitar">Guitar Solo</option>
-                <option value="flute">Fantasy Flute</option>
-                </StyledSelect>
-                
-           This will be present in the signal node instead */}
-
               {base}
               <Button onClick={handleDone}>
                 <NodeText>✅</NodeText>
@@ -74,12 +64,12 @@ const Source: React.FC = () => {
         </Container>
       ) : (
         <Container>
-            <Button onClick={() => handleBaseChange("Record")}>Record</Button>
-            <Button onClick={() => handleBaseChange("Import")}>Import</Button>
-            <Button onClick={() => handleBaseChange("Generate")}>Generate</Button>
+          <Button onClick={() => handleBaseChange("Record")}>Record</Button>
+          <Button onClick={() => handleBaseChange("Import")}>Import</Button>
+          <Button onClick={() => handleBaseChange("Generate")}>Generate</Button>
         </Container>
       )}
-      <Handle type="target" position={Position.Right} />
+      <Handle type="target" position={Position.Bottom} />
     </CurrentNode>
   );
 };
