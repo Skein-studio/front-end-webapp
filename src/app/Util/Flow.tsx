@@ -8,7 +8,7 @@ const nodeTypes = {
   source: Source,
 };
 
-const initialNodes: Node[] = [
+const nodes: Node[] = [
   {
     id: "1", // Unique id for the node
     type: "source", // This should match with the key in nodeTypes
@@ -24,7 +24,7 @@ const Flow: React.FC = () => {
       style={{ height: "80vh", width: "80vw", border: "1px solid lightgray" }}
     >
       <ReactFlow
-        nodes={initialNodes}
+        nodes={nodes}
         nodeTypes={nodeTypes}
         proOptions={proOptions}
       />
