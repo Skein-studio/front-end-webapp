@@ -1,5 +1,6 @@
 import {  Button, Container, BlankSpace } from "@/app/Util/BaseStyles";
 import { Handle, Position } from "reactflow";
+import { NodeLarge, NodeSmall } from "@/app/Util/NodeStyles";
 import { TopBar, ToggleButton, NodeText } from "@/app/Util/NodeStyles";
 const spectrogramPlaceHolder = 'https://s3.amazonaws.com/izotopedownloads/docs/rx6/img/07g-regular-stft.png';
 
@@ -51,4 +52,34 @@ const TopBarView = ({ base }: { base: string }) => (
     );
   };
 
-  export {NodeContainer, SmallView, LargeView, BaseOptionsView, ToggleButtonView, TopBarView}
+  type SourceProps = {
+    showLargeView: boolean,
+    handleToggleView: (e: React.MouseEvent) => void,
+    base: string,
+    handleBaseChange: (text: string) => void,
+    handleDone: (e: React.MouseEvent) => void,
+  };
+  
+  const SourceView: React.FC<SourceProps> = ({showLargeView, handleToggleView, base, handleBaseChange, handleDone}) => {
+    const CurrentNode = showLargeView ? NodeLarge : NodeSmall;
+  
+    return (
+      <CurrentNode>
+        <TopBarView base={base} />
+        {base && <ToggleButtonView showLargeView={showLargeView} handleClick={handleToggleView} />}
+        <NodeContainer>
+          {base ? (
+            showLargeView ? (
+              <LargeView base={base} handleDone={handleDone} />
+            ) : (
+              <SmallView />
+            )
+          ) : (
+            <BaseOptionsView handleBaseChange={handleBaseChange} />
+          )}
+        </NodeContainer>
+      </CurrentNode>
+    );
+  };
+  
+  export default SourceView;

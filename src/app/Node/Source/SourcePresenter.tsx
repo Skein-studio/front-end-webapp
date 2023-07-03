@@ -1,6 +1,5 @@
 import React, { useState } from "react";
-import {NodeLarge, NodeSmall } from "@/app/Util/NodeStyles";;
-import {NodeContainer, SmallView, LargeView, BaseOptionsView, ToggleButtonView, TopBarView} from "./SourceView";
+import SourceView from "./SourceView";
 
 const SourcePresenter: React.FC = () => {
   const [showLargeView, setShowLargeView] = useState<boolean>(false);
@@ -20,24 +19,14 @@ const SourcePresenter: React.FC = () => {
     setShowLargeView(!showLargeView);
   };
 
-  const CurrentNode = showLargeView ? NodeLarge : NodeSmall;
-
   return (
-    <CurrentNode>
-      <TopBarView base={base} />
-      {base && <ToggleButtonView showLargeView={showLargeView} handleClick={handleToggleView} />}
-      <NodeContainer>
-        {base ? (
-          showLargeView ? (
-            <LargeView base={base} handleDone={handleDone} />
-          ) : (
-            <SmallView />
-          )
-        ) : (
-          <BaseOptionsView handleBaseChange={handleBaseChange} />
-        )}
-      </NodeContainer>
-    </CurrentNode>
+    <SourceView
+      showLargeView={showLargeView}
+      handleToggleView={handleToggleView}
+      base={base}
+      handleBaseChange={handleBaseChange}
+      handleDone={handleDone}
+    />
   );
 };
 
