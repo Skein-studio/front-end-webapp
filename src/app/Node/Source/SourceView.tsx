@@ -74,19 +74,18 @@ const LargeView = ({
 
 const SmallView = () => {
   const { audioData, setAudioData } = useAudio();
-  
+
   return (
     <Container>
       <img
         src={spectrogramPlaceHolder}
         alt="Spectrogram placeholder"
-        style={{ width: "100%", height: "auto" }} 
+        style={{ width: "100%", height: "auto" }}
       />
       {audioData && <audio src={URL.createObjectURL(audioData)} controls />}
     </Container>
   );
-}
-
+};
 
 type SourceProps = {
   showLargeView: boolean;
