@@ -28,14 +28,14 @@ const SourcePresenter: React.FC = () => {
 
   return (
     <AudioContext.Provider value={{ audioData, setAudioData }}>
-    <SourceView
-      showLargeView={showLargeView}
-      handleToggleView={handleToggleView}
-      base={base}
-      handleBaseChange={handleBaseChange}
-      handleDone={handleDone}
-    />
-     </AudioContext.Provider>
+      <SourceView
+        showLargeView={showLargeView}
+        handleToggleView={handleToggleView}
+        base={base}
+        handleBaseChange={handleBaseChange}
+        handleDone={handleDone}
+      />
+    </AudioContext.Provider>
   );
 };
 

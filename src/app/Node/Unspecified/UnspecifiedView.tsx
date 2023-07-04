@@ -4,13 +4,12 @@ import { NodeLarge, NodeSmall } from "@/app/Util/NodeStyles";
 import { TopBar, ToggleButton, NodeText } from "@/app/Util/NodeStyles";
 import { NodeType } from "../NodeModel";
 
-interface Props{
-  setNode:(type:NodeType)=>void;
+interface Props {
+  setNode: (type: NodeType) => void;
 }
 
-function UnspecifiedView(props:Props){
-
-  function setNode(type:NodeType){
+function UnspecifiedView(props: Props) {
+  function setNode(type: NodeType) {
     props.setNode(type);
   }
 
@@ -19,10 +18,34 @@ function UnspecifiedView(props:Props){
       <NodeSmall>
         New Node
         <Container>
-          <Button onClick={()=>{setNode(NodeType.Source)}}>Source</Button>
-          <Button onClick={()=>{setNode(NodeType.Signal)}}>Signal</Button>
-          <Button onClick={()=>{setNode(NodeType.Merge)}}>Merge</Button>
-          <Button onClick={()=>{setNode(NodeType.Split)}}>Split</Button>
+          <Button
+            onClick={() => {
+              setNode(NodeType.Source);
+            }}
+          >
+            Source
+          </Button>
+          <Button
+            onClick={() => {
+              setNode(NodeType.Signal);
+            }}
+          >
+            Signal
+          </Button>
+          <Button
+            onClick={() => {
+              setNode(NodeType.Merge);
+            }}
+          >
+            Merge
+          </Button>
+          <Button
+            onClick={() => {
+              setNode(NodeType.Split);
+            }}
+          >
+            Split
+          </Button>
         </Container>
       </NodeSmall>
     </Container>

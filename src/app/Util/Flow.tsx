@@ -3,7 +3,10 @@ import ReactFlow, { Node } from "reactflow";
 import SourcePresenter from "../Node/Source/SourcePresenter";
 import UnspecifiedPresenter from "../Node/Unspecified/UnspecifiedPresenter";
 import { NodeModel, NodeType, NodeContext } from "../Node/NodeModel";
-import { Module } from "module";
+import { useSelector, useDispatch } from "react-redux";
+import { addNode, setNodes } from "../redux/nodesSlice";
+import { RootState } from "../redux/store";
+import { NodeTypeToString } from "../Node/NodeModel";
 
 const proOptions = { hideAttribution: true };
 
@@ -13,72 +16,74 @@ const nodeTypes = {
       <SourcePresenter />
     </NodeContext.Provider>
   ),
-  unspecified: (nodeData:any) =>(
+  unspecified: (nodeData: any) => (
     <NodeContext.Provider value={nodeData.data.nodeModel}>
       <UnspecifiedPresenter />
     </NodeContext.Provider>
   ),
 };
 
-function NodeTypeToString(nodeType:NodeType) : string{
-  switch(nodeType){
-    case(NodeType.Source):
-      return "source";
-    case(NodeType.Signal):
-      return "signal";
-    case(NodeType.Merge):
-      return "merge";
-    case(NodeType.Split):
-      return "split";
-    default:
-      return "unspecified";
-  }
-}  
+
 
 const Flow: React.FC = () => {
-  const [nodes, setNodes] = useState<Node[]>([]);  // useState Hook to manage nodes
-  const [position, setPosition] = useState<{x: number, y: number}>({x: 0, y: 0});
+  const nodes = useSelector((state: RootState) => state.nodes.nodes);
+  const dispatch = useDispatch();
+  const [position, setPosition] = useState<{ x: number; y: number }>({
+    x: 0,
+    y: 0,
+  });
 
   useEffect(() => {
     const updateMousePosition = (ev: MouseEvent) => {
       setPosition({ x: ev.clientX, y: ev.clientY });
     };
 
-    window.addEventListener('mousemove', updateMousePosition);
+    window.addEventListener("mousemove", updateMousePosition);
 
-    return () => window.removeEventListener('mousemove', updateMousePosition);
+    return () => window.removeEventListener("mousemove", updateMousePosition);
   }, []);
 
-
-  const addNode = (x:number, y:number, nodeType:NodeType) => {
+  const addNewNode = (x: number, y: number, nodeType: NodeType) => {
     const newModel = new NodeModel(x, y, [], [], nodeType);
-
+  
     const newNode = {
-      id: newModel.getID().toString(),  // Call the function getID with parenthesis
+      id: newModel.getID().toString(),
       type: NodeTypeToString(nodeType),
-      data: { label: NodeTypeToString(nodeType), nodeModel: newModel},
+      data: { 
+        label: NodeTypeToString(nodeType), 
+        nodeModel: { 
+          position: newModel.position,
+          id: newModel.id,
+          inputs: newModel.inputs,
+          outputs: newModel.outputs,
+          type: newModel.type,
+        } 
+      },
       position: { x: x, y: y },
-    }
-    setNodes((prevNodes) => [...prevNodes, newNode]);  // Use setNodes to update the nodes array
+    };
+    dispatch(addNode(newNode));
+  };
 
-    console.log(nodes);
-  }
+  useEffect(() => {
+    addNewNode(0, 0, NodeType.Source);
+  }, []); // Empty array as dependency, so the effect runs only on mount
 
-  useEffect(()=>{
-    addNode(0, 0, NodeType.Source);
-  },[]);  // Empty array as dependency, so the effect runs only on mount
+  function onConnectEndHandler() {
+    const { x, y } = position;
 
-  function onConnectEndHandler(){
-    const {x, y} = position;
-
-    addNode(x, y, NodeType.Unspecified);
+    addNewNode(x, y, NodeType.Unspecified);
   }
 
   return (
     <div
       style={{ height: "80vh", width: "80vw", border: "1px solid lightgray" }}
     >
-      <ReactFlow nodes={nodes} nodeTypes={nodeTypes} proOptions={proOptions} onConnectEnd={onConnectEndHandler} />
+      <ReactFlow
+        nodes={nodes}
+        nodeTypes={nodeTypes}
+        proOptions={proOptions}
+        onConnectEnd={onConnectEndHandler}
+      />
     </div>
   );
 };
