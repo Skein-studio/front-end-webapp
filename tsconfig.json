@@ -28,7 +28,9 @@
     "**/*.ts",
     "**/*.tsx",
     ".next/types/**/*.ts",
-    "src/app/Util/AudioContext.jsx"
-, "pages/_document.js", "pages/_document.jsx"  ],
+    "src/app/Util/AudioContext.jsx",
+    "pages/_document.js",
+    "pages/_document.jsx"
+  ],
   "exclude": ["node_modules"]
 }

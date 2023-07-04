@@ -1,11 +1,14 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import SourceView from "./SourceView";
+import { NodeContext } from "../NodeModel";
 import { AudioContext } from "@/app/Util/AudioContext";
 
 const SourcePresenter: React.FC = () => {
   const [showLargeView, setShowLargeView] = useState<boolean>(false);
   const [base, setBase] = useState<string>("");
   const [audioData, setAudioData] = useState<Blob | null>(null);
+
+  const node = useContext(NodeContext); // Use NodeContext to get NodeModel instance
 
   //useEffect to load audioData etc from backend upon component load?
 
@@ -25,14 +28,14 @@ const SourcePresenter: React.FC = () => {
 
   return (
     <AudioContext.Provider value={{ audioData, setAudioData }}>
-      <SourceView
-        showLargeView={showLargeView}
-        handleToggleView={handleToggleView}
-        base={base}
-        handleBaseChange={handleBaseChange}
-        handleDone={handleDone}
-      />
-    </AudioContext.Provider>
+    <SourceView
+      showLargeView={showLargeView}
+      handleToggleView={handleToggleView}
+      base={base}
+      handleBaseChange={handleBaseChange}
+      handleDone={handleDone}
+    />
+     </AudioContext.Provider>
   );
 };
 
