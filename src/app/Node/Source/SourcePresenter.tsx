@@ -1,9 +1,13 @@
 import React, { useState } from "react";
 import SourceView from "./SourceView";
+import { AudioContext } from "@/app/Util/AudioContext";
 
 const SourcePresenter: React.FC = () => {
   const [showLargeView, setShowLargeView] = useState<boolean>(false);
   const [base, setBase] = useState<string>("");
+  const [audioData, setAudioData] = useState<Blob | null>(null);
+
+  //useEffect to load audioData etc from backend upon component load?
 
   const handleBaseChange = (text: string) => {
     setBase(text);
@@ -20,13 +24,15 @@ const SourcePresenter: React.FC = () => {
   };
 
   return (
-    <SourceView
-      showLargeView={showLargeView}
-      handleToggleView={handleToggleView}
-      base={base}
-      handleBaseChange={handleBaseChange}
-      handleDone={handleDone}
-    />
+    <AudioContext.Provider value={{ audioData, setAudioData }}>
+      <SourceView
+        showLargeView={showLargeView}
+        handleToggleView={handleToggleView}
+        base={base}
+        handleBaseChange={handleBaseChange}
+        handleDone={handleDone}
+      />
+    </AudioContext.Provider>
   );
 };
 

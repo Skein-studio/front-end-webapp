@@ -16,13 +16,15 @@ const NodeText = styled.p`
 `;
 
 const TopBar = styled.div`
-  position: absolute;
-  top: 0;
-  left: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
   width: 100%;
+  height: 40px; // Set a specific height
   box-sizing: border-box; /* Add this line */
   border-bottom: 1px solid rgba(0, 123, 255, 0.125);
   padding: 10px;
+  margin: 10px;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -35,7 +37,7 @@ const StyledSelect = styled.select`
 `;
 
 const ToggleButton = styled.button`
-  position: absolute;
+  position: absolute; // Change from absolute to relative
   top: 10px;
   left: 10px;
 `;
@@ -51,9 +53,9 @@ const NodeSmall = styled.div<NodeProps>`
   justify-content: center;
   align-items: center;
   align-self: center;
-  width: 450px;
-  height: 450px;
-  margin: 2px auto;
+  width: 300px;
+  height: 300px;
+  margin: 2px 0; // Apply margin only on top and bottom
   padding: 2px;
   background-color: #ffffff;
   border-radius: 10px;
@@ -66,8 +68,8 @@ const NodeSmall = styled.div<NodeProps>`
 `;
 
 const NodeLarge = styled(NodeSmall)`
-  width: 450px;
-  height: 900px;
+  width: 300px;
+  height: 600px;
   padding: 20px;
 `;
 
