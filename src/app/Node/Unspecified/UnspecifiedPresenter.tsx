@@ -7,12 +7,12 @@ import { NodeType } from "../NodeModel";
 const UnspecifiedPresenter: React.FC = () => {
   const node = useContext(NodeContext); // Use NodeContext to get NodeModel instance
   
-  function setNode(type:NodeType){
-    node?.setType(type);
+  function setNode(type:NodeType){// should update the application state (Nodes array)
+    node?.setType(type); 
   }
 
   return (
-    <UnspecifiedView/>
+    <UnspecifiedView setNode={setNode}/>
   );
 };
 
