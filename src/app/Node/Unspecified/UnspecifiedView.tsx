@@ -6,7 +6,12 @@ import { TopBar, ToggleButton, NodeText } from "@/app/Util/NodeStyles";
 const UnspecifiedView: React.FC = () => {
   return (
     <Container>
-      Select a node!
+      <NodeSmall>
+        Select a node!
+        <Container>
+
+        </Container>
+      </NodeSmall>
     </Container>
   );
 };

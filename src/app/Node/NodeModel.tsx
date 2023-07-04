@@ -56,6 +56,10 @@ export class NodeModel {
   getID(): number {
     return this.id;
   }
+  
+  setType(type:NodeType): void {
+    this.type = type;
+  }
 
   // Static method
   static fromJson(json: string): NodeModel {
