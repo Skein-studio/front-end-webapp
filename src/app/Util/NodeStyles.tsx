@@ -25,9 +25,6 @@ const TopBar = styled.div`
   border-bottom: 1px solid rgba(0, 123, 255, 0.125);
   padding: 10px;
   margin: 10px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
 `;
 const StyledSelect = styled.select`
   padding: 5px;

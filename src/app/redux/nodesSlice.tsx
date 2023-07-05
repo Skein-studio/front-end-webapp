@@ -1,15 +1,18 @@
 // src/redux/nodesSlice.ts
 
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { Node } from "reactflow";
-import { NodeModel } from "../Node/NodeModel";
+import { Node, Edge } from "reactflow";
 
 interface NodesState {
   nodes: Node[];
+  edges: Edge[],
 }
 
 const initialState: NodesState = {
-  nodes: [],
+  nodes: [
+    
+  ],
+  edges:[],
 };
 
 const nodesSlice = createSlice({
@@ -19,8 +22,14 @@ const nodesSlice = createSlice({
     setNodes: (state, action: PayloadAction<Node[]>) => {
       state.nodes = action.payload;
     },
+    setEdges: (state, action: PayloadAction<Edge[]>) => {
+      state.edges = action.payload;
+    },
     addNode: (state, action: PayloadAction<Node>) => {
       state.nodes.push(action.payload);
+    },
+    addEdge: (state, action: PayloadAction<Edge>) => {
+      state.edges.push(action.payload);
     },
     updateNode: (state, action: PayloadAction<Node>) => {
       const index = state.nodes.findIndex(

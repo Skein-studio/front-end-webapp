@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from "react";
-import ReactFlow, { Node } from "reactflow";
+import React, { useCallback, useEffect, useState } from "react";
+import ReactFlow, { MiniMap, ReactFlowProvider, addEdge, useEdgesState, useNodesState } from "reactflow";
 import SourcePresenter from "../Node/Source/SourcePresenter";
 import UnspecifiedPresenter from "../Node/Unspecified/UnspecifiedPresenter";
 import { NodeModel, NodeType, NodeContext } from "../Node/NodeModel";
@@ -25,8 +25,10 @@ const nodeTypes = {
 
 
 
-const Flow: React.FC = () => {
+const Canvas: React.FC = () => {
   const nodes = useSelector((state: RootState) => state.nodes.nodes);
+  const edges = useSelector((state: RootState) => state.nodes.edges);
+
   const dispatch = useDispatch();
   const [position, setPosition] = useState<{ x: number; y: number }>({
     x: 0,
@@ -67,10 +69,10 @@ const Flow: React.FC = () => {
   useEffect(() => {
     addNewNode(0, 0, NodeType.Source);
   }, []); // Empty array as dependency, so the effect runs only on mount
+  
 
   function onConnectEndHandler() {
     const { x, y } = position;
-
     addNewNode(x, y, NodeType.Unspecified);
   }
 
@@ -78,14 +80,23 @@ const Flow: React.FC = () => {
     <div
       style={{ height: "80vh", width: "80vw", border: "1px solid lightgray" }}
     >
-      <ReactFlow
-        nodes={nodes}
-        nodeTypes={nodeTypes}
-        proOptions={proOptions}
-        onConnectEnd={onConnectEndHandler}
-      />
+        <ReactFlow
+          nodes={nodes}
+          nodeTypes={nodeTypes}
+          proOptions={proOptions}
+          onConnectEnd={onConnectEndHandler}
+          nodesDraggable={true}
+          nodesConnectable={true}
+        ><MiniMap></MiniMap></ReactFlow>
     </div>
   );
 };
+
+function Flow(){
+
+  return (<ReactFlowProvider>
+    <Canvas></Canvas>
+    </ReactFlowProvider>)
+}
 
 export default Flow;

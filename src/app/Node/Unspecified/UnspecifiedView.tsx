@@ -1,8 +1,7 @@
-import { Button, Container, BlankSpace } from "@/app/Util/BaseStyles";
-import { Handle, Position } from "reactflow";
-import { NodeLarge, NodeSmall } from "@/app/Util/NodeStyles";
-import { TopBar, ToggleButton, NodeText } from "@/app/Util/NodeStyles";
+import { Button, Container } from "@/app/Util/BaseStyles";
+import { NodeSmall } from "@/app/Util/NodeStyles";
 import { NodeType } from "../NodeModel";
+import { Handle, Position } from "reactflow";
 
 interface Props {
   setNode: (type: NodeType) => void;

@@ -82,7 +82,7 @@ const SmallView = () => {
         alt="Spectrogram placeholder"
         style={{ width: "100%", height: "auto" }}
       />
-      {audioData && <audio src={URL.createObjectURL(audioData)} controls />}
+      {audioData && <audio src={audioData} controls />}
     </Container>
   );
 };
