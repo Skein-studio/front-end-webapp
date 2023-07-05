@@ -52,12 +52,9 @@ const SourcePresenter: React.FC<PresenterProps> = ({ spectrogramUrl, audioUrl })
     return <div>cargando...</div>
   }
 
-  // dont think about this
-  //const CurrentView = showLargeView ? NodeLarge : NodeSmall;
-
   return (
     <SignalView 
-      spectrogram = {spectrogram}
+      spectrogram={spectrogram}
       currentTime={currentTime}
       duration={duration}
     />

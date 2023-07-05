@@ -32,7 +32,7 @@ const SignalView: React.FC<SignalProps> = ({ spectrogram, currentTime, duration 
     // drawing progress bar
     const progress = (currentTime / duration) * canvas.width;
 
-    ctx.fillStyle = 'red';
+    ctx.fillStyle = 'blue';
     ctx.fillRect(0, canvas.height - 50, progress, 50);
   }, [spectrogram, currentTime, duration]);
 
