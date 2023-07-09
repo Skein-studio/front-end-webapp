@@ -15,7 +15,7 @@ const initialState: NodesState = {
   edges:[],
 };
 
-const nodesSlice = createSlice({
+const sketchSlice = createSlice({
   name: "nodes",
   initialState,
   reducers: {
@@ -42,6 +42,6 @@ const nodesSlice = createSlice({
   },
 });
 
-export const { setNodes, addNode, updateNode } = nodesSlice.actions;
+export const { setNodes, addNode, updateNode, setEdges, addEdge } = sketchSlice.actions;
 
-export default nodesSlice.reducer;
+export default sketchSlice.reducer;

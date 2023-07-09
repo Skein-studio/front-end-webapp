@@ -4,7 +4,7 @@ import { AudioContext } from "@/app/Util/AudioContext";
 import UnspecifiedView from "./UnspecifiedView";
 import { NodeType } from "../NodeModel";
 import { useDispatch } from "react-redux";
-import { updateNode } from "@/app/redux/nodesSlice";
+import { updateNode } from "@/app/redux/sketchSlice";
 import { NodeTypeToString } from "../NodeModel";
 
 const UnspecifiedPresenter: React.FC = () => {

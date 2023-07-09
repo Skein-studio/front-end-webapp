@@ -4,7 +4,7 @@ import SourcePresenter from "../Node/Source/SourcePresenter";
 import UnspecifiedPresenter from "../Node/Unspecified/UnspecifiedPresenter";
 import { NodeModel, NodeType, NodeContext } from "../Node/NodeModel";
 import { useSelector, useDispatch } from "react-redux";
-import { addNode, setNodes } from "../redux/nodesSlice";
+import { addNode, setNodes, setEdges } from "../redux/sketchSlice";
 import { RootState } from "../redux/store";
 import { NodeTypeToString } from "../Node/NodeModel";
 
@@ -30,14 +30,15 @@ const Canvas: React.FC = () => {
   const edges = useSelector((state: RootState) => state.nodes.edges);
 
   const dispatch = useDispatch();
-  const [position, setPosition] = useState<{ x: number; y: number }>({
+  const [mousePosition, setMousePosition] = useState<{ x: number; y: number }>({
     x: 0,
     y: 0,
   });
 
+
   useEffect(() => {
     const updateMousePosition = (ev: MouseEvent) => {
-      setPosition({ x: ev.clientX, y: ev.clientY });
+      setMousePosition({ x: ev.clientX, y: ev.clientY });
     };
 
     window.addEventListener("mousemove", updateMousePosition);
@@ -72,7 +73,7 @@ const Canvas: React.FC = () => {
   
 
   function onConnectEndHandler() {
-    const { x, y } = position;
+    const { x, y } = mousePosition;
     addNewNode(x, y, NodeType.Unspecified);
   }
 
@@ -87,6 +88,9 @@ const Canvas: React.FC = () => {
           onConnectEnd={onConnectEndHandler}
           nodesDraggable={true}
           nodesConnectable={true}
+          onNodesChange={onNodesChange}
+          onEdgesChange={onEdgesChange}
+          onConnect={onConnect}
         ><MiniMap></MiniMap></ReactFlow>
     </div>
   );

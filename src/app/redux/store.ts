@@ -1,7 +1,7 @@
 // src/redux/store.ts
 
 import { configureStore } from "@reduxjs/toolkit";
-import nodesReducer from "./nodesSlice";
+import nodesReducer from "./sketchSlice";
 
 const store = configureStore({
   reducer: {
