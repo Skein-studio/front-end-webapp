@@ -2,11 +2,9 @@ import React, { useCallback, useEffect, useState } from "react";
 import ReactFlow, { MiniMap, ReactFlowProvider, addEdge, useEdgesState, useNodesState } from "reactflow";
 import SourcePresenter from "../Node/Source/SourcePresenter";
 import UnspecifiedPresenter from "../Node/Unspecified/UnspecifiedPresenter";
-import { NodeModel, NodeType, NodeContext } from "../Node/NodeModel";
-import { useSelector, useDispatch } from "react-redux";
-import { addNode, setNodes, setEdges } from "../redux/sketchSlice";
-import { RootState } from "../redux/store";
-import { NodeTypeToString } from "../Node/NodeModel";
+import { NodeState, NodeType, NodeContext } from "../Node/NodeState";
+import { NodeTypeToString } from "../Node/NodeState";
+import { GraphContext } from "../Node/GraphContext";
 
 const proOptions = { hideAttribution: true };
 
@@ -24,12 +22,16 @@ const nodeTypes = {
 };
 
 
-
 const Canvas: React.FC = () => {
-  const nodes = useSelector((state: RootState) => state.nodes.nodes);
-  const edges = useSelector((state: RootState) => state.nodes.edges);
 
-  const dispatch = useDispatch();
+  const [nodes, setNodes, onNodesChange] = useNodesState([]);
+  const [edges, setEdges, onEdgesChange] = useEdgesState([]);
+  const graph = GraphContext;
+
+  const onConnect = useCallback(
+    (connection:any) => setEdges((eds) => addEdge(connection, eds)),
+    [setEdges]
+  );
   const [mousePosition, setMousePosition] = useState<{ x: number; y: number }>({
     x: 0,
     y: 0,
@@ -47,7 +49,7 @@ const Canvas: React.FC = () => {
   }, []);
 
   const addNewNode = (x: number, y: number, nodeType: NodeType) => {
-    const newModel = new NodeModel(x, y, [], [], nodeType);
+    const newModel = new NodeState(x, y, [], [], nodeType);
   
     const newNode = {
       id: newModel.getID().toString(),
@@ -64,7 +66,8 @@ const Canvas: React.FC = () => {
       },
       position: { x: x, y: y },
     };
-    dispatch(addNode(newNode));
+    const newNodes = [...nodes, newNode];
+    setNodes(newNodes);
   };
 
   useEffect(() => {
@@ -81,17 +84,19 @@ const Canvas: React.FC = () => {
     <div
       style={{ height: "80vh", width: "80vw", border: "1px solid lightgray" }}
     >
-        <ReactFlow
-          nodes={nodes}
-          nodeTypes={nodeTypes}
-          proOptions={proOptions}
-          onConnectEnd={onConnectEndHandler}
-          nodesDraggable={true}
-          nodesConnectable={true}
-          onNodesChange={onNodesChange}
-          onEdgesChange={onEdgesChange}
-          onConnect={onConnect}
-        ><MiniMap></MiniMap></ReactFlow>
+      <GraphContext.Provider value={nodes}>
+          <ReactFlow
+            nodes={nodes}
+            nodeTypes={nodeTypes}
+            proOptions={proOptions}
+            onConnectEnd={onConnectEndHandler}
+            nodesDraggable={true}
+            nodesConnectable={true}
+            onNodesChange={onNodesChange}
+            onEdgesChange={onEdgesChange}
+            onConnect={onConnect}
+          ><MiniMap></MiniMap></ReactFlow>
+        </GraphContext.Provider>
     </div>
   );
 };

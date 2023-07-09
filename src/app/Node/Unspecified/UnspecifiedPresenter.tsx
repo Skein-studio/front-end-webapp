@@ -1,11 +1,11 @@
 import React, { useState, useContext } from "react";
-import { NodeContext } from "../NodeModel";
+import { NodeContext } from "../NodeState";
 import { AudioContext } from "@/app/Util/AudioContext";
 import UnspecifiedView from "./UnspecifiedView";
-import { NodeType } from "../NodeModel";
+import { NodeType } from "../NodeState";
 import { useDispatch } from "react-redux";
 import { updateNode } from "@/app/redux/sketchSlice";
-import { NodeTypeToString } from "../NodeModel";
+import { NodeTypeToString } from "../NodeState";
 
 const UnspecifiedPresenter: React.FC = () => {
   const node = useContext(NodeContext); // Use NodeContext to get NodeModel instance

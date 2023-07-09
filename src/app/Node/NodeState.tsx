@@ -17,7 +17,7 @@ type Connection = {
   nodeId: string;
 };
 
-export class NodeModel {
+export class NodeState {
   position: Coordinate;
   id: number;
   inputs: Connection[];
@@ -61,15 +61,15 @@ export class NodeModel {
   }
 
   // Static method
-  static fromJson(json: string): NodeModel {
+  static fromJson(json: string): NodeState {
     const data = JSON.parse(json);
-    return new NodeModel(data.x, data.y, data.inputs, data.outputs, data.type);
+    return new NodeState(data.x, data.y, data.inputs, data.outputs, data.type);
   }
 }
 
 import React from "react";
 
-export const NodeContext = React.createContext<NodeModel | undefined>(
+export const NodeContext = React.createContext<NodeState | undefined>(
   undefined
 );
 
