@@ -5,17 +5,23 @@ import { NodeType } from "../NodeState";
 import { NodeTypeToString } from "../NodeState";
 import { useGraph, updateNode } from "../GraphContext";
 
-
 const UnspecifiedPresenter: React.FC = () => {
   const node = useContext(NodeContext); // Use NodeContext to get NodeModel instance
   const { nodes } = useGraph();
 
-  function setNode(type: NodeType) {    // Create a new node object with updated type
+  function setNode(type: NodeType) {
+    // Create a new node object with updated type
     if (!node) {
       return;
     }
-    
-    const newModel = new NodeState(node.position.x, node.position.y, node.inputs, node.outputs, type);
+
+    const newModel = new NodeState(
+      node.position.x,
+      node.position.y,
+      node.inputs,
+      node.outputs,
+      type
+    );
     newModel.id = node.id;
 
     const updatedNode = {
@@ -27,7 +33,7 @@ const UnspecifiedPresenter: React.FC = () => {
       position: node.position,
     };
 
-    updateNode({nodes}, updatedNode);
+    updateNode({ nodes }, updatedNode);
   }
 
   return <UnspecifiedView setNode={setNode} />;

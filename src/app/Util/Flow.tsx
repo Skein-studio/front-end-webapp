@@ -1,5 +1,11 @@
 import React, { useCallback, useEffect, useState } from "react";
-import ReactFlow, { MiniMap, ReactFlowProvider, addEdge, useEdgesState, useNodesState } from "reactflow";
+import ReactFlow, {
+  MiniMap,
+  ReactFlowProvider,
+  addEdge,
+  useEdgesState,
+  useNodesState,
+} from "reactflow";
 import SourcePresenter from "../Node/Source/SourcePresenter";
 import UnspecifiedPresenter from "../Node/Unspecified/UnspecifiedPresenter";
 import { NodeState, NodeType, NodeContext } from "../Node/NodeState";
@@ -22,18 +28,14 @@ const nodeTypes = {
   ),
 };
 
-
 const Canvas: React.FC = () => {
-
-  const initialNodes = [
-    createNewNode(0, 0, NodeType.Source),
-  ];
+  const initialNodes = [createNewNode(0, 0, NodeType.Source)];
   const [nodes, setNodes, onNodesChange] = useNodesState<Node>(initialNodes);
   const [edges, setEdges, onEdgesChange] = useEdgesState([]);
-  const graph = { nodes }; 
+  const graph = { nodes };
 
   const onConnect = useCallback(
-    (connection:any) => setEdges((eds) => addEdge(connection, eds)),
+    (connection: any) => setEdges((eds) => addEdge(connection, eds)),
     [setEdges]
   );
 
@@ -47,7 +49,6 @@ const Canvas: React.FC = () => {
     y: 0,
   });
 
-
   useEffect(() => {
     const updateMousePosition = (ev: MouseEvent) => {
       setMousePosition({ x: ev.clientX, y: ev.clientY });
@@ -58,14 +59,15 @@ const Canvas: React.FC = () => {
     return () => window.removeEventListener("mousemove", updateMousePosition);
   }, []);
 
-  function createNewNode(x: number, y: number, nodeType: NodeType){
+  function createNewNode(x: number, y: number, nodeType: NodeType) {
     const newModel = new NodeState(x, y, [], [], nodeType);
-  
-    const newNode: Node = {  // specify the type here
+
+    const newNode: Node = {
+      // specify the type here
       id: newModel.getID().toString(),
       type: NodeTypeToString(nodeType),
-      data: { 
-        label: NodeTypeToString(nodeType), 
+      data: {
+        label: NodeTypeToString(nodeType),
         nodeModel: newModel,
       },
       position: { x: x, y: y },
@@ -83,7 +85,7 @@ const Canvas: React.FC = () => {
   useEffect(() => {
     addNewNode(0, 0, NodeType.Source);
   }, []); // Empty array as dependency, so the effect runs only on mount
-*/  
+*/
 
   return (
     <div
@@ -108,11 +110,12 @@ const Canvas: React.FC = () => {
   );
 };
 
-function Flow(){
-
-  return (<ReactFlowProvider>
-    <Canvas></Canvas>
-    </ReactFlowProvider>)
+function Flow() {
+  return (
+    <ReactFlowProvider>
+      <Canvas></Canvas>
+    </ReactFlowProvider>
+  );
 }
 
 export default Flow;

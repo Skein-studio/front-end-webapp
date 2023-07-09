@@ -30,7 +30,7 @@ function FlowExample() {
   const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
 
   const onConnect = useCallback(
-    (connection:any) => setEdges((eds) => addEdge(connection, eds)),
+    (connection: any) => setEdges((eds) => addEdge(connection, eds)),
     [setEdges]
   );
 
@@ -50,7 +50,6 @@ function FlowExample() {
 }
 
 export default FlowExample;
-
 
 /*
 import { useCallback } from "react";
