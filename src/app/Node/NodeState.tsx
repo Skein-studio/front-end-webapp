@@ -8,29 +8,28 @@ export enum NodeType {
   Unspecified,
 }
 
-
 type Coordinate = {
   x: number;
   y: number;
 };
 
 type Connection = {
-  nodeId: string;
+  nodeId: number;
 };
 
-export class NodeModel {
+export class NodeState {
   position: Coordinate;
   id: number;
   inputs: Connection[];
   outputs: Connection[];
-  type:NodeType;
+  type: NodeType;
 
   constructor(
     x: number,
     y: number,
     inputs: Connection[],
     outputs: Connection[],
-    type:NodeType,
+    type: NodeType
   ) {
     this.position = {
       x: x,
@@ -56,18 +55,35 @@ export class NodeModel {
   getID(): number {
     return this.id;
   }
-  
-  setType(type:NodeType): void {
+
+  setType(type: NodeType): void {
     this.type = type;
   }
 
   // Static method
-  static fromJson(json: string): NodeModel {
+  static fromJson(json: string): NodeState {
     const data = JSON.parse(json);
-    return new NodeModel(data.x, data.y, data.inputs, data.outputs, data.type);
+    return new NodeState(data.x, data.y, data.inputs, data.outputs, data.type);
   }
 }
 
-import React from 'react';
+import React from "react";
 
-export const NodeContext = React.createContext<NodeModel | undefined>(undefined);
+export const NodeContext = React.createContext<NodeState | undefined>(
+  undefined
+);
+
+export function NodeTypeToString(nodeType: NodeType): string {
+  switch (nodeType) {
+    case NodeType.Source:
+      return "source";
+    case NodeType.Signal:
+      return "signal";
+    case NodeType.Merge:
+      return "merge";
+    case NodeType.Split:
+      return "split";
+    default:
+      return "unspecified";
+  }
+}

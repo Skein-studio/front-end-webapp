@@ -1,6 +1,6 @@
 import React, { useState, useContext } from "react";
 import SourceView from "./SourceView";
-import { NodeContext } from "../NodeModel";
+import { NodeContext } from "../NodeState";
 import { AudioContext } from "@/app/Util/AudioContext";
 
 const SourcePresenter: React.FC = () => {
@@ -28,14 +28,14 @@ const SourcePresenter: React.FC = () => {
 
   return (
     <AudioContext.Provider value={{ audioData, setAudioData }}>
-    <SourceView
-      showLargeView={showLargeView}
-      handleToggleView={handleToggleView}
-      base={base}
-      handleBaseChange={handleBaseChange}
-      handleDone={handleDone}
-    />
-     </AudioContext.Provider>
+      <SourceView
+        showLargeView={showLargeView}
+        handleToggleView={handleToggleView}
+        base={base}
+        handleBaseChange={handleBaseChange}
+        handleDone={handleDone}
+      />
+    </AudioContext.Provider>
   );
 };
 

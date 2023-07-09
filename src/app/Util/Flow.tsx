@@ -1,9 +1,11 @@
-import React, { useEffect, useState } from "react";
-import ReactFlow, { Node } from "reactflow";
+import React, { useCallback, useEffect, useState } from "react";
+import ReactFlow, { MiniMap, ReactFlowProvider, addEdge, useEdgesState, useNodesState } from "reactflow";
 import SourcePresenter from "../Node/Source/SourcePresenter";
 import UnspecifiedPresenter from "../Node/Unspecified/UnspecifiedPresenter";
-import { NodeModel, NodeType, NodeContext } from "../Node/NodeModel";
-import { Module } from "module";
+import { NodeState, NodeType, NodeContext } from "../Node/NodeState";
+import { NodeTypeToString } from "../Node/NodeState";
+import { GraphContext } from "../Node/GraphContext";
+import { Node } from "reactflow";
 
 const proOptions = { hideAttribution: true };
 
@@ -13,74 +15,104 @@ const nodeTypes = {
       <SourcePresenter />
     </NodeContext.Provider>
   ),
-  unspecified: (nodeData:any) =>(
+  unspecified: (nodeData: any) => (
     <NodeContext.Provider value={nodeData.data.nodeModel}>
       <UnspecifiedPresenter />
     </NodeContext.Provider>
   ),
 };
 
-function NodeTypeToString(nodeType:NodeType) : string{
-  switch(nodeType){
-    case(NodeType.Source):
-      return "source";
-    case(NodeType.Signal):
-      return "signal";
-    case(NodeType.Merge):
-      return "merge";
-    case(NodeType.Split):
-      return "split";
-    default:
-      return "unspecified";
-  }
-}  
 
-const Flow: React.FC = () => {
-  const [nodes, setNodes] = useState<Node[]>([]);  // useState Hook to manage nodes
-  const [position, setPosition] = useState<{x: number, y: number}>({x: 0, y: 0});
+const Canvas: React.FC = () => {
+
+  const initialNodes = [
+    createNewNode(0, 0, NodeType.Source),
+  ];
+  const [nodes, setNodes, onNodesChange] = useNodesState<Node>(initialNodes);
+  const [edges, setEdges, onEdgesChange] = useEdgesState([]);
+  const graph = { nodes }; 
+
+  const onConnect = useCallback(
+    (connection:any) => setEdges((eds) => addEdge(connection, eds)),
+    [setEdges]
+  );
+
+  function onConnectEndHandler() {
+    const { x, y } = mousePosition;
+    addNewNode(x, y, NodeType.Unspecified);
+  }
+
+  const [mousePosition, setMousePosition] = useState<{ x: number; y: number }>({
+    x: 0,
+    y: 0,
+  });
+
 
   useEffect(() => {
     const updateMousePosition = (ev: MouseEvent) => {
-      setPosition({ x: ev.clientX, y: ev.clientY });
+      setMousePosition({ x: ev.clientX, y: ev.clientY });
     };
 
-    window.addEventListener('mousemove', updateMousePosition);
+    window.addEventListener("mousemove", updateMousePosition);
 
-    return () => window.removeEventListener('mousemove', updateMousePosition);
+    return () => window.removeEventListener("mousemove", updateMousePosition);
   }, []);
 
-
-  const addNode = (x:number, y:number, nodeType:NodeType) => {
-    const newModel = new NodeModel(x, y, [], [], nodeType);
-
-    const newNode = {
-      id: newModel.getID().toString(),  // Call the function getID with parenthesis
+  function createNewNode(x: number, y: number, nodeType: NodeType){
+    const newModel = new NodeState(x, y, [], [], nodeType);
+  
+    const newNode: Node = {  // specify the type here
+      id: newModel.getID().toString(),
       type: NodeTypeToString(nodeType),
-      data: { label: NodeTypeToString(nodeType), nodeModel: newModel},
+      data: { 
+        label: NodeTypeToString(nodeType), 
+        nodeModel: newModel,
+      },
       position: { x: x, y: y },
-    }
-    setNodes((prevNodes) => [...prevNodes, newNode]);  // Use setNodes to update the nodes array
-
-    console.log(nodes);
+    };
+    return newNode;
   }
 
-  useEffect(()=>{
-    addNode(0, 0, NodeType.Source);
-  },[]);  // Empty array as dependency, so the effect runs only on mount
+  const addNewNode = (x: number, y: number, nodeType: NodeType) => {
+    const newNode = createNewNode(x, y, nodeType);
+    const newNodes = [...nodes, newNode];
+    setNodes(newNodes);
+  };
 
-  function onConnectEndHandler(){
-    const {x, y} = position;
-
-    addNode(x, y, NodeType.Unspecified);
-  }
+  /*
+  useEffect(() => {
+    addNewNode(0, 0, NodeType.Source);
+  }, []); // Empty array as dependency, so the effect runs only on mount
+*/  
 
   return (
     <div
       style={{ height: "80vh", width: "80vw", border: "1px solid lightgray" }}
     >
-      <ReactFlow nodes={nodes} nodeTypes={nodeTypes} proOptions={proOptions} onConnectEnd={onConnectEndHandler} />
+      <GraphContext.Provider value={graph}>
+        <ReactFlow
+          nodes={nodes}
+          nodeTypes={nodeTypes}
+          proOptions={proOptions}
+          onConnectEnd={onConnectEndHandler}
+          nodesDraggable={true}
+          nodesConnectable={true}
+          onNodesChange={onNodesChange}
+          onEdgesChange={onEdgesChange}
+          onConnect={onConnect}
+        >
+          <MiniMap></MiniMap>
+        </ReactFlow>
+      </GraphContext.Provider>
     </div>
   );
 };
+
+function Flow(){
+
+  return (<ReactFlowProvider>
+    <Canvas></Canvas>
+    </ReactFlowProvider>)
+}
 
 export default Flow;

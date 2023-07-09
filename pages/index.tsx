@@ -2,7 +2,8 @@ import React from "react";
 import ReactFlow from "reactflow";
 import "reactflow/dist/style.css";
 import { Container } from "@/app/Util/BaseStyles";
-import Flow from "@/app/Util/Flow";
+import Canvas from "@/app/Util/Flow";
+import MyFlowDiagram from "@/app/Util/FlowExample";
 /*
 const initialNodes = [
   { id: "1", position: { x: 0, y: 0 }, data: { label: "1" } },
@@ -13,9 +14,12 @@ const initialEdges = [{ id: "e1-2", source: "1", target: "2" }];
 export default function Home() {
   return (
     <Container>
-      <Flow></Flow>
+      <Canvas></Canvas>
 
-      <Container>This content is outside the Flow window</Container>
+      <Container>
+        This content is outside the Flow window
+        {<MyFlowDiagram></MyFlowDiagram>}
+      </Container>
     </Container>
   );
 }

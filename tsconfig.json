@@ -29,8 +29,9 @@
     "**/*.tsx",
     ".next/types/**/*.ts",
     "src/app/Util/AudioContext.jsx",
-    "pages/_document.js",
-    "pages/_document.jsx"
+    "pages/_document.tsx",
+    "pages/_document.jsx",
+    "src/app/Util/FlowExample.tsx"
   ],
   "exclude": ["node_modules"]
 }
