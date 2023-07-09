@@ -1,40 +1,33 @@
 import React, { useState, useContext } from "react";
-import { NodeContext } from "../NodeState";
-import { AudioContext } from "@/app/Util/AudioContext";
+import { NodeContext, NodeState } from "../NodeState";
 import UnspecifiedView from "./UnspecifiedView";
 import { NodeType } from "../NodeState";
-import { useDispatch } from "react-redux";
-import { updateNode } from "@/app/redux/sketchSlice";
 import { NodeTypeToString } from "../NodeState";
+import { useGraph, updateNode } from "../GraphContext";
+
 
 const UnspecifiedPresenter: React.FC = () => {
   const node = useContext(NodeContext); // Use NodeContext to get NodeModel instance
-  const dispatch = useDispatch();
+  const { nodes } = useGraph();
 
-  function setNode(type: NodeType) {
+  function setNode(type: NodeType) {    // Create a new node object with updated type
     if (!node) {
       return;
     }
+    
+    const newModel = new NodeState(node.position.x, node.position.y, node.inputs, node.outputs, type);
+    newModel.id = node.id;
 
-    // Create a new node object with updated type
     const updatedNode = {
       id: node.id.toString(),
       type: NodeTypeToString(type),
       data: {
-        label: NodeTypeToString(type),
-        nodeModel: {
-          position: node.position,
-          id: node.id,
-          inputs: node.inputs,
-          outputs: node.outputs,
-          type: type, // Update the type here
-        },
+        newModel,
       },
       position: node.position,
     };
 
-    // Dispatch the updated node to the store
-    dispatch(updateNode(updatedNode));
+    updateNode({nodes}, updatedNode);
   }
 
   return <UnspecifiedView setNode={setNode} />;

@@ -14,7 +14,7 @@ type Coordinate = {
 };
 
 type Connection = {
-  nodeId: string;
+  nodeId: number;
 };
 
 export class NodeState {
