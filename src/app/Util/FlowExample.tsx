@@ -31,7 +31,7 @@ function FlowExample() {
 
   const onConnect = useCallback(
     (connection: any) => {
-      setEdges((eds) => addEdge(connection, eds))
+      setEdges((eds) => addEdge(connection, eds));
     },
     [setEdges]
   );

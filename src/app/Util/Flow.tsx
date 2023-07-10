@@ -12,7 +12,11 @@ import ReactFlow, {
 import SourcePresenter from "../Node/Source/SourcePresenter";
 import UnspecifiedPresenter from "../Node/Unspecified/UnspecifiedPresenter";
 import { NodeType, NodeContext } from "../Node/NodeState";
-import { addConnection, createNewNode, GraphContext} from "../Node/GraphContext";
+import {
+  addConnection,
+  createNewNode,
+  GraphContext,
+} from "../Node/GraphContext";
 import { Node, Handle, Position } from "reactflow";
 
 const MIN_DIST_FROM_OTHER_NODES = 250;
@@ -30,29 +34,29 @@ const nodeTypes = {
       <UnspecifiedPresenter />
     </NodeContext.Provider>
   ),
-  split: (nodeData:any) => (
-    <NodeContext.Provider value = {nodeData.data.nodeState}>
+  split: (nodeData: any) => (
+    <NodeContext.Provider value={nodeData.data.nodeState}>
       <Handle type="source" position={Position.Top} />
       <Handle type="target" position={Position.Bottom} />
       <div>Empty (split)</div>
     </NodeContext.Provider>
   ),
-  merge: (nodeData:any) => (
-    <NodeContext.Provider value = {nodeData.data.nodeState}>
+  merge: (nodeData: any) => (
+    <NodeContext.Provider value={nodeData.data.nodeState}>
       <Handle type="source" position={Position.Top} />
       <Handle type="target" position={Position.Bottom} />
       <div>Empty (merge)</div>
     </NodeContext.Provider>
   ),
-  signal: (nodeData:any) => (
-    <NodeContext.Provider value = {nodeData.data.nodeState}>
+  signal: (nodeData: any) => (
+    <NodeContext.Provider value={nodeData.data.nodeState}>
       <div>
-      <Handle type="source" position={Position.Top} />
-      <Handle type="target" position={Position.Bottom} />
+        <Handle type="source" position={Position.Top} />
+        <Handle type="target" position={Position.Bottom} />
         Empty (signal)
       </div>
     </NodeContext.Provider>
-  )
+  ),
 };
 
 const Canvas: React.FC = () => {
@@ -70,21 +74,25 @@ const Canvas: React.FC = () => {
       });
     },
     [setEdges, nodes]
-);
+  );
 
-
-  function doesNodeExistAtPosition(x: number, y: number, nodes: Node[]): boolean {
-    return nodes.some(node => 
-      Math.abs(node.position.x - x) < MIN_DIST_FROM_OTHER_NODES && Math.abs(node.position.y - y) < MIN_DIST_FROM_OTHER_NODES
+  function doesNodeExistAtPosition(
+    x: number,
+    y: number,
+    nodes: Node[]
+  ): boolean {
+    return nodes.some(
+      (node) =>
+        Math.abs(node.position.x - x) < MIN_DIST_FROM_OTHER_NODES &&
+        Math.abs(node.position.y - y) < MIN_DIST_FROM_OTHER_NODES
     );
   }
-  
 
   function onConnectEndHandler(event: MouseEvent | TouchEvent) {
     if (event instanceof MouseEvent) {
       const x = event.clientX;
       const y = event.clientY;
-  
+
       // Only add a new node if there isn't one at this position already
       if (!doesNodeExistAtPosition(x, y, nodes)) {
         addNewNode(x, y, NodeType.Unspecified);
@@ -97,14 +105,14 @@ const Canvas: React.FC = () => {
     setNodes(newNodes);
   };
 
-  function onNodeDragStop(event: React.MouseEvent, node: Node, nodes: Node[]) { //update position in nodeState
+  function onNodeDragStop(event: React.MouseEvent, node: Node, nodes: Node[]) {
+    //update position in nodeState
     node.data.nodeState.setPosition(node.position.x, node.position.y);
   }
 
-  useEffect(()=>{
+  useEffect(() => {
     addNewNode(250, 250, NodeType.Source);
-  },[]);
-
+  }, []);
 
   return (
     <div

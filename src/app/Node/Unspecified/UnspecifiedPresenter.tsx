@@ -12,7 +12,8 @@ const UnspecifiedPresenter: React.FC = () => {
   const { nodes, edges } = useGraph();
   const graph = { nodes, edges };
 
-  function changeType(type: NodeType) {  // Create a new node object with updated type
+  function changeType(type: NodeType) {
+    // Create a new node object with updated type
     if (!node) {
       return;
     }
@@ -31,7 +32,7 @@ const UnspecifiedPresenter: React.FC = () => {
       },
       position: node.position,
     };
-    
+
     setNode(graph, updatedNode);
   }
 

@@ -34,26 +34,21 @@ export class NodeState {
     console.log("Created new node:", this);
   }
 
-  setInputs(){
-    switch(this.type){
+  setInputs() {
+    switch (this.type) {
       default:
-        this.inputs = [
-          "in",
-        ];
+        this.inputs = ["in"];
     }
   }
 
-  setOutputs(){
-    switch(this.type){
+  setOutputs() {
+    switch (this.type) {
       default:
-        this.outputs = [
-          "out",
-        ];
+        this.outputs = ["out"];
     }
   }
 
-  setNode(node:NodeState)
-  {
+  setNode(node: NodeState) {
     this.position = node.position;
     this.id = node.id;
     this.inputs = node.inputs;
@@ -79,8 +74,8 @@ export class NodeState {
   setType(type: NodeType): void {
     this.type = type;
   }
-  
-  setPosition(x:number, y:number){
+
+  setPosition(x: number, y: number) {
     this.position.x = x;
     this.position.y = y;
   }
