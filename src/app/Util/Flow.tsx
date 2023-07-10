@@ -7,85 +7,51 @@ import ReactFlow, {
   useNodesState,
 } from "reactflow";
 import SourcePresenter from "../Node/Source/SourcePresenter";
-import UnspecifiedPresenter from "../Node/Unspecified/UnspecifiedPresenter";
-import { NodeState, NodeType, NodeContext } from "../Node/NodeState";
-import { NodeTypeToString } from "../Node/NodeState";
-import { GraphContext } from "../Node/GraphContext";
-import { Node } from "reactflow";
+import SignalPresenter from "../Node/Signal/SignalPresenter";
+import SignalContainer from "../Node/Signal/SignalContainer";
 
 const proOptions = { hideAttribution: true };
 
-const nodeTypes = {
-  source: (nodeData: any) => (
-    <NodeContext.Provider value={nodeData.data.nodeModel}>
-      <SourcePresenter />
-    </NodeContext.Provider>
-  ),
-  unspecified: (nodeData: any) => (
-    <NodeContext.Provider value={nodeData.data.nodeModel}>
-      <UnspecifiedPresenter />
-    </NodeContext.Provider>
-  ),
+interface SignalNodeProps {
+  id: string;
+  data: {
+    spectrogramUrl: string;
+    audioUrl: string;
+  };
+}
+
+const SignalNode: React.FC<SignalNodeProps> = ({ data }) => {
+  return (
+    <SignalPresenter 
+      spectrogramUrl={data.spectrogramUrl} 
+      audioUrl={data.audioUrl} 
+    />
+  );
 };
 
-const Canvas: React.FC = () => {
-  const initialNodes = [createNewNode(0, 0, NodeType.Source)];
-  const [nodes, setNodes, onNodesChange] = useNodesState<Node>(initialNodes);
-  const [edges, setEdges, onEdgesChange] = useEdgesState([]);
-  const graph = { nodes };
+const nodeTypes = {
+  source: SourcePresenter,
+  signalNode: SignalNode,
+};
 
-  const onConnect = useCallback(
-    (connection: any) => setEdges((eds) => addEdge(connection, eds)),
-    [setEdges]
-  );
-
-  function onConnectEndHandler() {
-    const { x, y } = mousePosition;
-    addNewNode(x, y, NodeType.Unspecified);
-  }
-
-  const [mousePosition, setMousePosition] = useState<{ x: number; y: number }>({
-    x: 0,
-    y: 0,
-  });
-
-  useEffect(() => {
-    const updateMousePosition = (ev: MouseEvent) => {
-      setMousePosition({ x: ev.clientX, y: ev.clientY });
-    };
-
-    window.addEventListener("mousemove", updateMousePosition);
-
-    return () => window.removeEventListener("mousemove", updateMousePosition);
-  }, []);
-
-  function createNewNode(x: number, y: number, nodeType: NodeType) {
-    const newModel = new NodeState(x, y, [], [], nodeType);
-
-    const newNode: Node = {
-      // specify the type here
-      id: newModel.getID().toString(),
-      type: NodeTypeToString(nodeType),
-      data: {
-        label: NodeTypeToString(nodeType),
-        nodeModel: newModel,
-      },
-      position: { x: x, y: y },
-    };
-    return newNode;
-  }
-
-  const addNewNode = (x: number, y: number, nodeType: NodeType) => {
-    const newNode = createNewNode(x, y, nodeType);
-    const newNodes = [...nodes, newNode];
-    setNodes(newNodes);
-  };
-
-  /*
-  useEffect(() => {
-    addNewNode(0, 0, NodeType.Source);
-  }, []); // Empty array as dependency, so the effect runs only on mount
-*/
+const nodes: Node[] = [
+  {
+    id: "1", // Unique id for the node
+    type: "source", // This should match with the key in nodeTypes
+    data: { label: "Source Node" }, // Data passed to the node component
+    position: { x: 0, y: 0 }, // Initial position of the node
+  },
+  // more nodes and edges here...
+  {
+    id: "2", // Unique id for the node
+    type: "signalNode", // This should match with the key in nodeTypes
+    data: {
+      spectrogramUrl:  'https://s3.amazonaws.com/izotopedownloads/docs/rx6/img/07g-regular-stft.png',
+      audioUrl: 'https://www2.cs.uic.edu/~i101/SoundFiles/CantinaBand3.wav',
+    }, // Data passed to the node component
+    position: { x: 500, y: 400 }, // Initial position of the node
+  },
+];
 
   return (
     <div
