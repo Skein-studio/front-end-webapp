@@ -2,12 +2,14 @@
 
 import React, { useCallback, useEffect, useState } from "react";
 import ReactFlow, {
+  Node, Handle, Position, Project,
   Edge,
   MiniMap,
   ReactFlowProvider,
   addEdge,
   useEdgesState,
   useNodesState,
+  useReactFlow,
 } from "reactflow";
 import SourcePresenter from "../Node/Source/SourcePresenter";
 import UnspecifiedPresenter from "../Node/Unspecified/UnspecifiedPresenter";
@@ -17,7 +19,6 @@ import {
   createNewNode,
   GraphContext,
 } from "../Node/GraphContext";
-import { Node, Handle, Position } from "reactflow";
 
 const MIN_DIST_FROM_OTHER_NODES = 250;
 
@@ -60,6 +61,7 @@ const nodeTypes = {
 };
 
 const Canvas: React.FC = () => {
+  const reactFlowInstance = useReactFlow();
   const [nodes, setNodes, onNodesChange] = useNodesState<Node>([]);
   const [edges, setEdges, onEdgesChange] = useEdgesState<Edge>([]);
   const graph = { nodes, edges };
@@ -90,15 +92,20 @@ const Canvas: React.FC = () => {
 
   function onConnectEndHandler(event: MouseEvent | TouchEvent) {
     if (event instanceof MouseEvent) {
-      const x = event.clientX;
-      const y = event.clientY;
-
+      const clientX = event.clientX;
+      const clientY = event.clientY;
+  
+      const {x, y} = reactFlowInstance.project({x: clientX, y: clientY});
+  
       // Only add a new node if there isn't one at this position already
-      if (!doesNodeExistAtPosition(x, y, nodes)) {
-        addNewNode(x, y, NodeType.Unspecified);
+      if (!doesNodeExistAtPosition(x-MIN_DIST_FROM_OTHER_NODES, y-MIN_DIST_FROM_OTHER_NODES, nodes)) {
+        addNewNode(x-MIN_DIST_FROM_OTHER_NODES, y-MIN_DIST_FROM_OTHER_NODES, NodeType.Unspecified);
+      } else{
+        console.log("This is too close to an already existing node");
       }
     }
-  }
+  }  
+  
   const addNewNode = (x: number, y: number, nodeType: NodeType) => {
     const newNode = createNewNode(x, y, nodeType, graph);
     const newNodes = [...nodes, newNode];
