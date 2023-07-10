@@ -96,10 +96,12 @@ const Canvas: React.FC = () => {
       const clientY = event.clientY;
   
       const {x, y} = reactFlowInstance.project({x: clientX, y: clientY});
+      const nodeX = x - MIN_DIST_FROM_OTHER_NODES;
+      const nodeY = x - MIN_DIST_FROM_OTHER_NODES;
   
       // Only add a new node if there isn't one at this position already
-      if (!doesNodeExistAtPosition(x-MIN_DIST_FROM_OTHER_NODES, y-MIN_DIST_FROM_OTHER_NODES, nodes)) {
-        addNewNode(x-MIN_DIST_FROM_OTHER_NODES, y-MIN_DIST_FROM_OTHER_NODES, NodeType.Unspecified);
+      if (!doesNodeExistAtPosition(nodeX, nodeY, nodes)) {
+        addNewNode(nodeX, nodeY, NodeType.Unspecified);
       } else{
         console.log("This is too close to an already existing node");
       }
