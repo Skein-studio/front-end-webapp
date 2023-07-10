@@ -1,5 +1,8 @@
+//Flow.tsx
+
 import React, { useCallback, useEffect, useState } from "react";
 import ReactFlow, {
+  Edge,
   MiniMap,
   ReactFlowProvider,
   addEdge,
@@ -8,10 +11,11 @@ import ReactFlow, {
 } from "reactflow";
 import SourcePresenter from "../Node/Source/SourcePresenter";
 import UnspecifiedPresenter from "../Node/Unspecified/UnspecifiedPresenter";
-import { NodeState, NodeType, NodeContext } from "../Node/NodeState";
-import { createNewNode } from "../Node/GraphContext";
-import { GraphContext } from "../Node/GraphContext";
-import { Node } from "reactflow";
+import { NodeType, NodeContext } from "../Node/NodeState";
+import { addConnection, createNewNode, GraphContext} from "../Node/GraphContext";
+import { Node, Handle, Position } from "reactflow";
+
+const MIN_DIST_FROM_OTHER_NODES = 250;
 
 const proOptions = { hideAttribution: true };
 
@@ -26,41 +30,78 @@ const nodeTypes = {
       <UnspecifiedPresenter />
     </NodeContext.Provider>
   ),
+  split: (nodeData:any) => (
+    <NodeContext.Provider value = {nodeData.data.nodeState}>
+      <Handle type="source" position={Position.Top} />
+      <Handle type="target" position={Position.Bottom} />
+      <div>Empty (split)</div>
+    </NodeContext.Provider>
+  ),
+  merge: (nodeData:any) => (
+    <NodeContext.Provider value = {nodeData.data.nodeState}>
+      <Handle type="source" position={Position.Top} />
+      <Handle type="target" position={Position.Bottom} />
+      <div>Empty (merge)</div>
+    </NodeContext.Provider>
+  ),
+  signal: (nodeData:any) => (
+    <NodeContext.Provider value = {nodeData.data.nodeState}>
+      <div>
+      <Handle type="source" position={Position.Top} />
+      <Handle type="target" position={Position.Bottom} />
+        Empty (signal)
+      </div>
+    </NodeContext.Provider>
+  )
 };
 
 const Canvas: React.FC = () => {
-  const initialNodes = [createNewNode(250, 250, NodeType.Source)];
-  const [nodes, setNodes, onNodesChange] = useNodesState<Node>(initialNodes);
-  const [edges, setEdges, onEdgesChange] = useEdgesState([]);
-  const graph = { nodes };
+  const [nodes, setNodes, onNodesChange] = useNodesState<Node>([]);
+  const [edges, setEdges, onEdgesChange] = useEdgesState<Edge>([]);
+  const graph = { nodes, edges };
 
   const onConnect = useCallback(
-    (connection: any) => setEdges((eds) => addEdge(connection, eds)),
+    (connection: any) => {
+      setEdges((eds) => addEdge(connection, eds));
+      addConnection(graph, connection);
+      console.log(edges);
+    },
     [setEdges]
+    
   );
+
+  function doesNodeExistAtPosition(x: number, y: number, nodes: Node[]): boolean {
+    return nodes.some(node => 
+      Math.abs(node.position.x - x) < MIN_DIST_FROM_OTHER_NODES && Math.abs(node.position.y - y) < MIN_DIST_FROM_OTHER_NODES
+    );
+  }
+  
 
   function onConnectEndHandler(event: MouseEvent | TouchEvent) {
     if (event instanceof MouseEvent) {
-      addNewNode(event.clientX, event.clientY, NodeType.Unspecified);
+      const x = event.clientX;
+      const y = event.clientY;
+  
+      // Only add a new node if there isn't one at this position already
+      if (!doesNodeExistAtPosition(x, y, nodes)) {
+        addNewNode(x, y, NodeType.Unspecified);
+      }
     }
   }
-
   const addNewNode = (x: number, y: number, nodeType: NodeType) => {
-    const newNode = createNewNode(x, y, nodeType);
+    const newNode = createNewNode(x, y, nodeType, graph);
     const newNodes = [...nodes, newNode];
     setNodes(newNodes);
   };
 
   function onNodeDragStop(event: React.MouseEvent, node: Node, nodes: Node[]) { //update position in nodeState
     node.data.nodeState.setPosition(node.position.x, node.position.y);
-    console.log(node);
   }
 
-  /*
-  useEffect(() => {
-    addNewNode(0, 0, NodeType.Source);
-  }, []); // Empty array as dependency, so the effect runs only on mount
-*/
+  useEffect(()=>{
+    addNewNode(250, 250, NodeType.Source);
+  },[]);
+
 
   return (
     <div

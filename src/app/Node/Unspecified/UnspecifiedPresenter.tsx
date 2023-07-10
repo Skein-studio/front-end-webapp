@@ -1,3 +1,5 @@
+//UnspecifiedPresenter.tsx
+
 import React, { useState, useContext } from "react";
 import { NodeContext, NodeState } from "../NodeState";
 import UnspecifiedView from "./UnspecifiedView";
@@ -7,7 +9,8 @@ import { useGraph, setNode } from "../GraphContext";
 
 const UnspecifiedPresenter: React.FC = () => {
   const node = useContext(NodeContext); // Use NodeContext to get NodeState instance
-  const { nodes } = useGraph();
+  const { nodes, edges } = useGraph();
+  const graph = { nodes, edges };
 
   function changeType(type: NodeType) {  // Create a new node object with updated type
     if (!node) {
@@ -17,14 +20,11 @@ const UnspecifiedPresenter: React.FC = () => {
     const nodeState = new NodeState(
       node.position.x,
       node.position.y,
-      node.inputs,
-      node.outputs,
-      type
+      type,
+      node.id
     );
-    nodeState.id = node.id;
-
     const updatedNode = {
-      id: node.id.toString(),
+      id: node.id!.toString(),
       type: NodeTypeToString(type),
       data: {
         nodeState,
@@ -32,7 +32,7 @@ const UnspecifiedPresenter: React.FC = () => {
       position: node.position,
     };
     
-    setNode({ nodes }, updatedNode);
+    setNode(graph, updatedNode);
   }
 
   return <UnspecifiedView setNode={changeType} />;

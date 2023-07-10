@@ -1,3 +1,5 @@
+//NodeState.tsx
+
 let nodeID = 0;
 
 export enum NodeType {
@@ -13,32 +15,41 @@ type Coordinate = {
   y: number;
 };
 
-type Connection = {
-  nodeId: number;
-};
-
 export class NodeState {
   position: Coordinate;
   id: number;
-  inputs: Connection[];
-  outputs: Connection[];
+  inputs: string[] | undefined; // later for deciding which output is what
+  outputs: string[] | undefined;
   type: NodeType;
 
-  constructor(
-    x: number,
-    y: number,
-    inputs: Connection[],
-    outputs: Connection[],
-    type: NodeType
-  ) {
+  constructor(x: number, y: number, type: NodeType, id?: number) {
     this.position = {
       x: x,
       y: y,
     };
-    this.id = this.generateID();
-    this.inputs = inputs;
-    this.outputs = outputs;
+    this.id = id || this.generateID();
+    this.setInputs();
+    this.setOutputs();
     this.type = type;
+    console.log("Created new node:", this);
+  }
+
+  setInputs(){
+    switch(this.type){
+      default:
+        this.inputs = [
+          "in",
+        ];
+    }
+  }
+
+  setOutputs(){
+    switch(this.type){
+      default:
+        this.outputs = [
+          "out",
+        ];
+    }
   }
 
   setNode(node:NodeState)
@@ -77,7 +88,7 @@ export class NodeState {
   // Static method
   static fromJson(json: string): NodeState {
     const data = JSON.parse(json);
-    return new NodeState(data.x, data.y, data.inputs, data.outputs, data.type);
+    return new NodeState(data.x, data.y, data.type);
   }
 }
 
