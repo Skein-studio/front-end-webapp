@@ -41,6 +41,15 @@ export class NodeState {
     this.type = type;
   }
 
+  setNode(node:NodeState)
+  {
+    this.position = node.position;
+    this.id = node.id;
+    this.inputs = node.inputs;
+    this.outputs = node.outputs;
+    this.type = node.type;
+  }
+
   // Instance method
   toString(): string {
     return `Node ${this.id}`;
@@ -58,6 +67,11 @@ export class NodeState {
 
   setType(type: NodeType): void {
     this.type = type;
+  }
+  
+  setPosition(x:number, y:number){
+    this.position.x = x;
+    this.position.y = y;
   }
 
   // Static method

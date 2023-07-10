@@ -9,7 +9,7 @@ import ReactFlow, {
 import SourcePresenter from "../Node/Source/SourcePresenter";
 import UnspecifiedPresenter from "../Node/Unspecified/UnspecifiedPresenter";
 import { NodeState, NodeType, NodeContext } from "../Node/NodeState";
-import { NodeTypeToString } from "../Node/NodeState";
+import { createNewNode } from "../Node/GraphContext";
 import { GraphContext } from "../Node/GraphContext";
 import { Node } from "reactflow";
 
@@ -17,19 +17,19 @@ const proOptions = { hideAttribution: true };
 
 const nodeTypes = {
   source: (nodeData: any) => (
-    <NodeContext.Provider value={nodeData.data.nodeModel}>
+    <NodeContext.Provider value={nodeData.data.nodeState}>
       <SourcePresenter />
     </NodeContext.Provider>
   ),
   unspecified: (nodeData: any) => (
-    <NodeContext.Provider value={nodeData.data.nodeModel}>
+    <NodeContext.Provider value={nodeData.data.nodeState}>
       <UnspecifiedPresenter />
     </NodeContext.Provider>
   ),
 };
 
 const Canvas: React.FC = () => {
-  const initialNodes = [createNewNode(0, 0, NodeType.Source)];
+  const initialNodes = [createNewNode(250, 250, NodeType.Source)];
   const [nodes, setNodes, onNodesChange] = useNodesState<Node>(initialNodes);
   const [edges, setEdges, onEdgesChange] = useEdgesState([]);
   const graph = { nodes };
@@ -39,40 +39,10 @@ const Canvas: React.FC = () => {
     [setEdges]
   );
 
-  function onConnectEndHandler() {
-    const { x, y } = mousePosition;
-    addNewNode(x, y, NodeType.Unspecified);
-  }
-
-  const [mousePosition, setMousePosition] = useState<{ x: number; y: number }>({
-    x: 0,
-    y: 0,
-  });
-
-  useEffect(() => {
-    const updateMousePosition = (ev: MouseEvent) => {
-      setMousePosition({ x: ev.clientX, y: ev.clientY });
-    };
-
-    window.addEventListener("mousemove", updateMousePosition);
-
-    return () => window.removeEventListener("mousemove", updateMousePosition);
-  }, []);
-
-  function createNewNode(x: number, y: number, nodeType: NodeType) {
-    const newModel = new NodeState(x, y, [], [], nodeType);
-
-    const newNode: Node = {
-      // specify the type here
-      id: newModel.getID().toString(),
-      type: NodeTypeToString(nodeType),
-      data: {
-        label: NodeTypeToString(nodeType),
-        nodeModel: newModel,
-      },
-      position: { x: x, y: y },
-    };
-    return newNode;
+  function onConnectEndHandler(event: MouseEvent | TouchEvent) {
+    if (event instanceof MouseEvent) {
+      addNewNode(event.clientX, event.clientY, NodeType.Unspecified);
+    }
   }
 
   const addNewNode = (x: number, y: number, nodeType: NodeType) => {
@@ -80,6 +50,11 @@ const Canvas: React.FC = () => {
     const newNodes = [...nodes, newNode];
     setNodes(newNodes);
   };
+
+  function onNodeDragStop(event: React.MouseEvent, node: Node, nodes: Node[]) { //update position in nodeState
+    node.data.nodeState.setPosition(node.position.x, node.position.y);
+    console.log(node);
+  }
 
   /*
   useEffect(() => {
@@ -102,8 +77,9 @@ const Canvas: React.FC = () => {
           onNodesChange={onNodesChange}
           onEdgesChange={onEdgesChange}
           onConnect={onConnect}
+          onNodeDragStop={onNodeDragStop}
         >
-          <MiniMap></MiniMap>
+          {/*<MiniMap></MiniMap>*/}
         </ReactFlow>
       </GraphContext.Provider>
     </div>
