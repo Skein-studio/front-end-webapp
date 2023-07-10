@@ -8,7 +8,7 @@ const SourcePresenter: React.FC = () => {
   const [base, setBase] = useState<string>("");
   const [audioData, setAudioData] = useState<Blob | null>(null);
 
-  const node = useContext(NodeContext); // Use NodeContext to get NodeModel instance
+  const node = useContext(NodeContext); // Use NodeContext to get NodeState instance
 
   //useEffect to load audioData etc from backend upon component load?
 
