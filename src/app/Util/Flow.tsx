@@ -62,13 +62,16 @@ const Canvas: React.FC = () => {
 
   const onConnect = useCallback(
     (connection: any) => {
-      setEdges((eds) => addEdge(connection, eds));
-      addConnection(graph, connection);
-      console.log(edges);
+      setEdges((eds) => {
+        const newEdges = addEdge(connection, eds);
+        addConnection(graph, connection);
+        console.log(edges);
+        return newEdges;
+      });
     },
-    [setEdges]
-    
-  );
+    [setEdges, nodes]
+);
+
 
   function doesNodeExistAtPosition(x: number, y: number, nodes: Node[]): boolean {
     return nodes.some(node => 
@@ -110,6 +113,7 @@ const Canvas: React.FC = () => {
       <GraphContext.Provider value={graph}>
         <ReactFlow
           nodes={nodes}
+          edges={edges}
           nodeTypes={nodeTypes}
           proOptions={proOptions}
           onConnectEnd={onConnectEndHandler}

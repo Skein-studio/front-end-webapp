@@ -27,6 +27,13 @@ export function setNode(context: Graph, node: Node) {
 }
 
 export function addConnection(context:Graph, edge:Edge){
+  for (let i = 0; i < context.edges.length; i++) {
+    const element = context.edges[i];
+    if(element.source == edge.source && element.target == edge.target){
+      console.log("This connection already exists");
+      return;
+    }
+  }
   context.edges.push(edge);
 }
 
