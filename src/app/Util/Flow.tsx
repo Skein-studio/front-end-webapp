@@ -2,6 +2,7 @@ import React from "react";
 import ReactFlow, { Node } from "reactflow";
 import SourcePresenter from "../Node/Source/SourcePresenter";
 import SignalPresenter from "../Node/Signal/SignalPresenter";
+import SignalContainer from "../Node/Signal/SignalContainer";
 
 const proOptions = { hideAttribution: true };
 
