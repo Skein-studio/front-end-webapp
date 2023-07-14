@@ -9,8 +9,7 @@ import { useGraph, setNode } from "../GraphContext";
 
 const UnspecifiedPresenter: React.FC = () => {
   const node = useContext(NodeContext); // Use NodeContext to get NodeState instance
-  const { nodes, edges } = useGraph();
-  const graph = { nodes, edges };
+  const { nodes, edges, reloadComponent } = useGraph();
 
   function changeType(type: NodeType) {
     // Create a new node object with updated type
@@ -33,7 +32,7 @@ const UnspecifiedPresenter: React.FC = () => {
       position: node.position,
     };
 
-    setNode(graph, updatedNode);
+    setNode({nodes, edges, reloadComponent}, updatedNode);
   }
 
   return <UnspecifiedView setNode={changeType} />;

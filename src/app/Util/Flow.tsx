@@ -10,6 +10,7 @@ import ReactFlow, {
   useEdgesState,
   useNodesState,
   useReactFlow,
+  Viewport
 } from "reactflow";
 import SourcePresenter from "../Node/Source/SourcePresenter";
 import UnspecifiedPresenter from "../Node/Unspecified/UnspecifiedPresenter";
@@ -19,6 +20,7 @@ import {
   createNewNode,
   GraphContext,
 } from "../Node/GraphContext";
+import { Container } from "./BaseStyles";
 
 const MIN_DIST_FROM_OTHER_NODES = 250;
 
@@ -64,19 +66,40 @@ const Canvas: React.FC = () => {
   const reactFlowInstance = useReactFlow();
   const [nodes, setNodes, onNodesChange] = useNodesState<Node>([]);
   const [edges, setEdges, onEdgesChange] = useEdgesState<Edge>([]);
-  const graph = { nodes, edges };
+  const [flowKey, setFlowKey] = useState(0);
+  const [viewport, setViewport] = useState<Viewport>({x:0, y:0, zoom:1}) // find a way to save the viewport and pass it to reactflow component 
+
+  function onMove(event: MouseEvent | TouchEvent, viewport: Viewport){
+    setViewport({ x: viewport.x, y: viewport.y, zoom: viewport.zoom });
+  }
+
 
   const onConnect = useCallback(
     (connection: any) => {
       setEdges((eds) => {
         const newEdges = addEdge(connection, eds);
-        addConnection(graph, connection);
+        addConnection({nodes, edges, reloadComponent}, connection);
         console.log(edges);
         return newEdges;
       });
     },
     [setEdges, nodes]
   );
+
+  const reloadComponent = () => {  
+    if(flowKey == 0){
+      setFlowKey(prevKey => prevKey + 1);
+    }else{
+      setFlowKey(prevKey => prevKey - 1);
+    }
+    /*
+      this is just a dumb temporary fix to just refresh by changing
+      a property of the ReactFlow component (key), this function is passed into the GraphContext 
+      so that it can be used to force a refresh from inside the context, like when setting or updating using the
+      functions inside GraphContext.tsx (setNodes() etc).
+      This way, we don't need to double click on any button to make it refresh
+    */
+  };
 
   function doesNodeExistAtPosition(
     x: number,
@@ -107,7 +130,7 @@ const Canvas: React.FC = () => {
   }  
   
   const addNewNode = (x: number, y: number, nodeType: NodeType) => {
-    const newNode = createNewNode(x, y, nodeType, graph);
+    const newNode = createNewNode(x, y, nodeType, {nodes, edges, reloadComponent});
     const newNodes = [...nodes, newNode];
     setNodes(newNodes);
   };
@@ -122,11 +145,14 @@ const Canvas: React.FC = () => {
   }, []);
 
   return (
-    <div
-      style={{ height: "80vh", width: "80vw", border: "1px solid lightgray" }}
+    <Container
+    width="95vw"
+    height="95vh"
+    shadow={true}
     >
-      <GraphContext.Provider value={graph}>
+      <GraphContext.Provider value={{nodes, edges, reloadComponent}}>
         <ReactFlow
+          key={flowKey}  // Add this line
           nodes={nodes}
           edges={edges}
           nodeTypes={nodeTypes}
@@ -138,11 +164,13 @@ const Canvas: React.FC = () => {
           onEdgesChange={onEdgesChange}
           onConnect={onConnect}
           onNodeDragStop={onNodeDragStop}
+          defaultViewport={viewport}
+          onMove={onMove} 
         >
           {/*<MiniMap></MiniMap>*/}
         </ReactFlow>
       </GraphContext.Provider>
-    </div>
+    </Container>
   );
 };
 
