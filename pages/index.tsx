@@ -1,25 +1,32 @@
+//index.tsx
+
 import React from "react";
 import ReactFlow from "reactflow";
 import "reactflow/dist/style.css";
 import { Container } from "@/app/Util/BaseStyles";
 import Canvas from "@/app/Util/Flow";
 import MyFlowDiagram from "@/app/Util/FlowExample";
-/*
-const initialNodes = [
-  { id: "1", position: { x: 0, y: 0 }, data: { label: "1" } },
-  { id: "2", position: { x: 0, y: 100 }, data: { label: "2" } },
-];
-const initialEdges = [{ id: "e1-2", source: "1", target: "2" }];
-*/
+import { styled } from "styled-components";
+const ApplicationFrame = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 100%;
+`;
+
+
 export default function Home() {
   return (
-    <Container>
+    <ApplicationFrame
+    >
       <Canvas></Canvas>
 
       <Container>
         This content is outside the Flow window
-        {<MyFlowDiagram></MyFlowDiagram>}
+        {/*<MyFlowDiagram></MyFlowDiagram>*/}
       </Container>
-    </Container>
+    </ApplicationFrame>
   );
 }

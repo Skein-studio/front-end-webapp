@@ -7,6 +7,7 @@ import { Edge, Node } from "reactflow";
 type Graph = {
   nodes: Node[];
   edges: Edge[];
+  reloadComponent: () => void;
 };
 
 export function getNode(context: Graph, id: number) {
@@ -21,6 +22,7 @@ export function setNode(context: Graph, node: Node) {
   for (let i = 0; i < context.nodes.length; i++) {
     if (context.nodes[i].id == node.id) {
       context.nodes[i] = node;
+      context.reloadComponent();
       return;
     }
   }
@@ -35,6 +37,7 @@ export function addConnection(context: Graph, edge: Edge) {
     }
   }
   context.edges.push(edge);
+  context.reloadComponent();
 }
 
 export function createNewNode(
@@ -73,6 +76,7 @@ export function createNewNode(
 export const GraphContext = createContext<Graph>({
   nodes: [],
   edges: [],
+  reloadComponent: () => {}
 });
 
 export function useGraph() {

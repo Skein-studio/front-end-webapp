@@ -66,6 +66,9 @@ const Button = styled.button<ButtonProps>`
 
 interface BoxProps {
   flexdir?: string;
+  width?:string;
+  height?:string;
+  shadow?:boolean;
 }
 
 const Container = styled.div<BoxProps>`
@@ -73,8 +76,10 @@ const Container = styled.div<BoxProps>`
   flex-direction: ${(props) => (props.flexdir ? props.flexdir : "column")};
   justify-content: space-around;
   align-items: center;
-  width: 90%;
-  height: 100%; // Set height to 100%
+  align-self: center;
+  width: ${(props) => (props.width ? props.width : "90%")};
+  height: ${(props) => (props.height ? props.height : "100%")}; // Set height to 100%
+  box-shadow: ${(props) => (props.shadow ? "0px 2px 8px rgba(0, 0, 0, 0.25)" : "0px")};
   padding: 4px;
   margin: 4px;
 `;
