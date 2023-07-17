@@ -1,11 +1,9 @@
 //Flow.tsx
 
 import React, { useCallback, useEffect, useState } from "react";
-import ReactFlow, {
-  Node, Handle, Position, Project,
+import {
+  Node, Handle, Position,
   Edge,
-  MiniMap,
-  Background, BackgroundVariant,
   ReactFlowProvider,
   addEdge,
   useEdgesState,
@@ -21,8 +19,8 @@ import {
   createNewNode,
   GraphContext,
 } from "../../Node/GraphContext";
-import { GraphNameInput, OuterBox } from "../BaseStyles";
 import OpenNodePresenter from "@/app/Node/OpenNode/OpenNodePresenter";
+import FlowView from "./FlowView";
 
 const MIN_DIST_FROM_OTHER_NODES = 75;
 
@@ -163,35 +161,26 @@ const Canvas: React.FC = () => {
     addNewNode(250, 250, NodeType.Source);
   }, []);
 
-  return (// Needs a bit of separation of concerns, possibly inty a FlowPresenter + FlowView
-    <OuterBox
-    width="95vw"
-    height="95vh"
-    >
-      <GraphNameInput defaultValue={"violet-york-mayflower"}/>
-      <GraphContext.Provider value={{nodes, edges, reloadComponent, setOpenNode}}>
-        {openNodeView()}
-        <ReactFlow
-          key={flowKey}  
-          nodes={nodes}
-          edges={edges}
-          nodeTypes={nodeTypes}
-          proOptions={proOptions}
-          onConnectEnd={onConnectEndHandler}
-          nodesDraggable={true}
-          nodesConnectable={true}
-          onNodesChange={onNodesChange}
-          onEdgesChange={onEdgesChange}
-          onConnect={onConnect}
-          onNodeDragStop={onNodeDragStop}
-          defaultViewport={viewport}
-          onMove={onMove} 
-        >
-          {<MiniMap></MiniMap>}
-          <Background color="#ccc" variant={BackgroundVariant.Cross} />
-        </ReactFlow>
-      </GraphContext.Provider>
-    </OuterBox>
+  return (
+      (<ReactFlowProvider>
+        <GraphContext.Provider value={{nodes, edges, reloadComponent, setOpenNode}}>
+          <FlowView
+            flowKey={flowKey}
+            nodes={nodes}
+            edges={edges}
+            nodeTypes={nodeTypes}
+            proOptions={proOptions}
+            onConnectEndHandler={onConnectEndHandler}
+            onNodesChange={onNodesChange}
+            onEdgesChange={onEdgesChange}
+            onConnect={onConnect}
+            onNodeDragStop={onNodeDragStop}
+            viewport={viewport}
+            onMove={onMove}
+            openNodeView={openNodeView}
+          />
+        </GraphContext.Provider>
+      </ReactFlowProvider>)
   );
 };
 
