@@ -8,6 +8,7 @@ import ReactFlow, {
   Node, Edge, Viewport, NodeChange, EdgeChange,
 } from "reactflow";
 import { OuterBox, GraphNameInput } from "../BaseStyles";
+import styled from "styled-components";
 
 interface Props {
   flowKey: number;
@@ -45,6 +46,7 @@ const FlowView: React.FC<Props> = (props) => {
   return (
     <OuterBox width="95vw" height="95vh">
       <GraphNameInput defaultValue={"violet-york-mayflower"} />
+      <Overlay show={openNodeView() != undefined} />
       {openNodeView()}
       <ReactFlow
         key={flowKey}
@@ -70,3 +72,18 @@ const FlowView: React.FC<Props> = (props) => {
 };
 
 export default FlowView;
+
+interface OverLayProps{
+    show:boolean
+}
+
+const Overlay = styled.div<OverLayProps>`
+  background-color: rgba(255, 255, 255, 0.5); // half transparent white
+  position: fixed; // to cover the whole screen
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: 1; // higher than the content but lower than the openNodeView
+  display: ${(props) => (props.show ? "block" : "none")};
+`;

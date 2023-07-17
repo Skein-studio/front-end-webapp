@@ -82,7 +82,7 @@ interface NodeProps {
   const Window = styled.div<NodeProps>`
   display: flex;
   position: absolute;
-  top: 80px;
+  top: 100px;
   font-family: verdana;
   flex-direction: ${(props) => (props.flexdir ? props.flexdir : "column")};
   justify-content: center;
@@ -96,7 +96,7 @@ interface NodeProps {
   border-radius: 10px;
   box-shadow: 0px 0px 0px ${purple};
   transition: box-shadow 0.3s ease;
-  z-index: 1;
+  z-index: 2;
 
   @media (min-width: 768px) { // When screen is larger than 768px
     width: 50%;
