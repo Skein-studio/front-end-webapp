@@ -93,6 +93,7 @@ const Canvas: React.FC = () => {
     */
   };
   function selectNode(nodeState: NodeState | undefined) {
+    deselectNode(graph);
     setSelectedNode(nodeState);
     nodeState!.selected = true;
   }
