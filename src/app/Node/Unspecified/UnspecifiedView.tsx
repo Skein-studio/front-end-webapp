@@ -1,7 +1,7 @@
 //UnspecifiedView.tsx
 
-import { Button, Container } from "@/app/Util/BaseStyles";
-import { NodeSmall } from "@/app/Util/NodeStyles";
+import { BlankSpace, Button, Container } from "@/app/Util/BaseStyles";
+import { NodeSmall, NodeTitle } from "@/app/Util/Flow/NodeStyles";
 import { NodeType } from "../NodeState";
 import { Handle, Position } from "reactflow";
 
@@ -16,9 +16,10 @@ function UnspecifiedView(props: Props) {
 
   return (
     <Container>
-      <NodeSmall>
-        New Node
-        <Container>
+      <NodeSmall widthextension={0}>
+        <NodeTitle>New Node</NodeTitle>
+        <BlankSpace width={1} height={10}></BlankSpace>
+        <Container flexdir="row">
           <Button
             onClick={() => {
               setNode(NodeType.Source);

@@ -1,44 +1,32 @@
+//SourceView.tsx
+
 import { Button, Container, BlankSpace } from "@/app/Util/BaseStyles";
 import { Handle, Position } from "reactflow";
-import { NodeLarge, NodeSmall } from "@/app/Util/NodeStyles";
-import { TopBar, ToggleButton, NodeText } from "@/app/Util/NodeStyles";
+import { NodeSmall, NodeTitle, NodeIcon } from "@/app/Util/Flow/NodeStyles";
 import RecordPresenter from "@/app/Util/AudioRecorder/RecordPresenter";
 import ImportAudio from "@/app/Util/AudioImporter/ImportAudio";
 import GenerateAudio from "@/app/Util/AudioGenerator/GenerateAudio";
 import { useAudio } from "@/app/Util/AudioContext";
+import { useGraph } from "../GraphContext";
+import { NodeContext } from "../NodeState";
+import { useContext } from "react";
+import { styled } from "styled-components";
+import SourceImg from './source.svg';
 
-const spectrogramPlaceHolder =
-  "https://s3.amazonaws.com/izotopedownloads/docs/rx6/img/07g-regular-stft.png";
-
-const TopBarView = ({ base }: { base: string }) => (
-  <TopBar>
-    <NodeText>Source{base != "" ? `: ${base}` : ""}</NodeText>
-  </TopBar>
-);
-
-const ToggleButtonView = ({
-  showLargeView,
-  handleClick,
-}: {
-  showLargeView: boolean;
-  handleClick: (e: React.MouseEvent) => void;
-}) => (
-  <ToggleButton onClick={handleClick}>{showLargeView ? "-" : "+"}</ToggleButton>
-);
 
 const BaseOptionsView = ({
   handleBaseChange,
 }: {
   handleBaseChange: (text: string) => void;
 }) => (
-  <Container>
-    <Button onClick={() => handleBaseChange("Record")}>Record</Button>
-    <Button onClick={() => handleBaseChange("Import")}>Import</Button>
-    <Button onClick={() => handleBaseChange("Generate")}>Generate</Button>
+  <Container flexdir="row">
+    <Button onClick={() => handleBaseChange("record")}>record</Button>
+    <Button onClick={() => handleBaseChange("import")}>import</Button>
+    <Button onClick={() => handleBaseChange("generate")}>generate</Button>
   </Container>
 );
 
-const BaseComponent = ({ base }: { base: string }) => {
+export const BaseComponent = ({ base }: { base: string }) => {
   switch (base) {
     case "Record":
       return <RecordPresenter />;
@@ -51,84 +39,59 @@ const BaseComponent = ({ base }: { base: string }) => {
   }
 };
 
-const LargeView = ({
-  base,
-  handleDone,
-}: {
-  base: string;
-  handleDone: (e: React.MouseEvent) => void;
-}) => (
-  <Container>
-    <img
-      src={spectrogramPlaceHolder}
-      alt="Spectrogram placeholder"
-      style={{ width: "100%", height: "auto" }} // change here
-    />{" "}
-    {/* Use Image component here */}
-    <BaseComponent base={base}></BaseComponent>
-    <Button>
-      <NodeText onClick={handleDone}>Done</NodeText>
-    </Button>
-  </Container>
-);
-
 const SmallView = () => {
   const { audioData, setAudioData } = useAudio();
 
   return (
     <Container>
-      <img
-        src={spectrogramPlaceHolder}
-        alt="Spectrogram placeholder"
-        style={{ width: "100%", height: "auto" }}
-      />
-      {audioData && <audio src={audioData} controls />}
+      {audioData && audioData.toString()}
+      {/*audioData && <audio src={audioData} controls /> this is removed since we currently decided not to have a play button in the source file*/}
     </Container>
   );
 };
 
 type SourceProps = {
-  showLargeView: boolean;
-  handleToggleView: (e: React.MouseEvent) => void;
   base: string;
   handleBaseChange: (text: string) => void;
-  handleDone: (e: React.MouseEvent) => void;
 };
 
 const SourceView: React.FC<SourceProps> = ({
-  showLargeView,
-  handleToggleView,
   base,
   handleBaseChange,
-  handleDone,
 }) => {
-  const CurrentNode = showLargeView ? NodeLarge : NodeSmall;
 
-  return (
-    <CurrentNode>
-      <Container>
-        <TopBarView base={base} />
-        {base && (
-          <ToggleButtonView
-            showLargeView={showLargeView}
-            handleClick={handleToggleView}
-          />
-        )}
+  const graph = useGraph();
+  const node = useContext(NodeContext); // Use NodeContext to get NodeState instance
+
+  function openNode(){ // set the currently open node to this node
+    graph.setOpenNode(node);
+  }
+
+  return ( //can extend width by multiplying a value times the number of outputs - 10 or something in that manner
+    <NodeSmall widthextension={0}>
+        <BlankSpace height={5} width={5}></BlankSpace>
+        {<NodeIcon src={SourceImg} />}
+        <NodeTitle>source{base != "" ? `[${base}]` : ""}</NodeTitle>
+        <SelectButton onClick={openNode}>select</SelectButton>
         <Container style={{ flex: 1 }}>
           {base ? (
-            showLargeView ? (
-              <LargeView base={base} handleDone={handleDone} />
-            ) : (
-              <SmallView />
-            )
-          ) : (
-            <BaseOptionsView handleBaseChange={handleBaseChange} />
+              <SmallView />)
+           : (
+              <BaseOptionsView handleBaseChange={handleBaseChange} />
           )}
           <Handle type="target" position={Position.Bottom} />
         </Container>
-      </Container>
-    </CurrentNode>
+    </NodeSmall>
   );
 };
 
 export default SourceView;
+
+//temp
+const SelectButton = styled.button`
+font-family: verdana;
+border-radius: 10px;
+position:absolute;
+right: 5px;
+top: 5px; 
+`

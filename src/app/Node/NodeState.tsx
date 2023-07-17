@@ -18,10 +18,10 @@ type Coordinate = {
 export class NodeState {
   position: Coordinate;
   id: number;
-  inputs: string[] | undefined; // later for deciding which output is what
+  inputs: string[] | undefined; // later for deciding which output is what, - these are just strings representing the name of each in/output
   outputs: string[] | undefined;
   type: NodeType;
-
+  data:any = {};
   constructor(x: number, y: number, type: NodeType, id?: number) {
     this.position = {
       x: x,

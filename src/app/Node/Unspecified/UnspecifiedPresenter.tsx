@@ -7,9 +7,14 @@ import { NodeType } from "../NodeState";
 import { NodeTypeToString } from "../NodeState";
 import { useGraph, setNode } from "../GraphContext";
 
-const UnspecifiedPresenter: React.FC = () => {
+/*
+  We don't know if we will use tis class or not, but the purpose is 
+  to have an unspecified node which you can choose the type of
+*/
+
+const UnspecifiedPresenter: React.FC = () => { 
   const node = useContext(NodeContext); // Use NodeContext to get NodeState instance
-  const { nodes, edges, reloadComponent } = useGraph();
+  const { nodes, edges, reloadComponent, setOpenNode } = useGraph();
 
   function changeType(type: NodeType) {
     // Create a new node object with updated type
@@ -32,7 +37,7 @@ const UnspecifiedPresenter: React.FC = () => {
       position: node.position,
     };
 
-    setNode({nodes, edges, reloadComponent}, updatedNode);
+    setNode({nodes, edges, reloadComponent, setOpenNode}, updatedNode);
   }
 
   return <UnspecifiedView setNode={changeType} />;
