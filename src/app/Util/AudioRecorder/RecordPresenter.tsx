@@ -1,22 +1,24 @@
 import React, { useState, useEffect, useRef, useContext } from "react";
 import RecordView from "./RecordView";
-import { useAudio } from "../AudioContext";
 import { NodeContext } from "@/app/Node/NodeState";
 
 const RecordPresenter: React.FC = () => {
   const [isRecording, setIsRecording] = useState<boolean>(false);
   const node = useContext(NodeContext); // Use NodeContext to get NodeState instance
-  const { audioData, setAudioData } = useAudio();
+  const audioData = node?.data.audio;
   const mediaRecorder = useRef<MediaRecorder | null>(null);
+  const [refresh, setRefresh] = useState(false);
 
   useEffect(() => {
     navigator.mediaDevices.getUserMedia({ audio: true }).then((stream) => {
       mediaRecorder.current = new MediaRecorder(stream);
       mediaRecorder.current.ondataavailable = (e) => {
-        setAudioData(e.data);
-        if(node){
+        if (node) {
           node.data.audio = e.data;
+        } else {
+          console.error("No nodecontext found", this);
         }
+        setRefresh(!refresh);
       };
     });
   }, []);

@@ -15,11 +15,9 @@ const ApplicationFrame = styled.div`
   height: 100%;
 `;
 
-
 export default function Home() {
   return (
-    <ApplicationFrame
-    >
+    <ApplicationFrame>
       <Canvas></Canvas>
 
       <Container>

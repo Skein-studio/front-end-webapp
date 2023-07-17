@@ -36,7 +36,7 @@ interface ButtonProps {
 
 const Button = styled.button<ButtonProps>`
   display: flex;
-  font-family:verdana;
+  font-family: verdana;
   justify-content: center;
   align-items: center;
   padding: 4px;
@@ -66,23 +66,23 @@ const Button = styled.button<ButtonProps>`
 `;
 
 const GraphNameInput = styled.input`
-z-index: 1; /* Add a higher z-index value */
-position: absolute;
-top: 40px;
-left: 40px;
-font-size: 18px;
-width: 250px;
-padding: 8px;
-font-family: verdana;
-border: 1px solid ${spookwhite};
-border-radius: 10px;
-`
+  z-index: 1; /* Add a higher z-index value */
+  position: absolute;
+  top: 40px;
+  left: 40px;
+  font-size: 18px;
+  width: 250px;
+  padding: 8px;
+  font-family: verdana;
+  border: 1px solid ${spookwhite};
+  border-radius: 10px;
+`;
 
 interface OuterBoxProps {
   flexdir?: string;
-  width?:string;
-  height?:string;
-  shadow?:boolean;
+  width?: string;
+  height?: string;
+  shadow?: boolean;
 }
 
 const OuterBox = styled.div<OuterBoxProps>`
@@ -92,20 +92,21 @@ const OuterBox = styled.div<OuterBoxProps>`
   align-items: center;
   align-self: center;
   width: ${(props) => (props.width ? props.width : "90%")};
-  height: ${(props) => (props.height ? props.height : "100%")}; // Set height to 100%
-  box-shadow: ${(props) => (props.shadow ? "0px 2px 8px rgba(0, 0, 0, 0.25)" : "0px")};
+  height: ${(props) =>
+    props.height ? props.height : "100%"}; // Set height to 100%
+  box-shadow: ${(props) =>
+    props.shadow ? "0px 2px 8px rgba(0, 0, 0, 0.25)" : "0px"};
   border-radius: 10px;
   border: 4px solid black;
   padding: 4px;
   margin: 4px;
 `;
 
-
 interface BoxProps {
   flexdir?: string;
-  width?:string;
-  height?:string;
-  shadow?:boolean;
+  width?: string;
+  height?: string;
+  shadow?: boolean;
 }
 
 const Container = styled.div<BoxProps>`
@@ -115,8 +116,10 @@ const Container = styled.div<BoxProps>`
   align-items: center;
   align-self: center;
   width: ${(props) => (props.width ? props.width : "90%")};
-  height: ${(props) => (props.height ? props.height : "100%")}; // Set height to 100%
-  box-shadow: ${(props) => (props.shadow ? "0px 2px 8px rgba(0, 0, 0, 0.25)" : "0px")};
+  height: ${(props) =>
+    props.height ? props.height : "100%"}; // Set height to 100%
+  box-shadow: ${(props) =>
+    props.shadow ? "0px 2px 8px rgba(0, 0, 0, 0.25)" : "0px"};
   padding: 4px;
   margin: 4px;
 `;

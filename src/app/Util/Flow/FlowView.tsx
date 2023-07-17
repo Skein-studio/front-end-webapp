@@ -5,7 +5,11 @@ import ReactFlow, {
   MiniMap,
   Background,
   BackgroundVariant,
-  Node, Edge, Viewport, NodeChange, EdgeChange,
+  Node,
+  Edge,
+  Viewport,
+  NodeChange,
+  EdgeChange,
 } from "reactflow";
 import { OuterBox, GraphNameInput } from "../BaseStyles";
 import styled from "styled-components";
@@ -40,7 +44,7 @@ const FlowView: React.FC<Props> = (props) => {
     onNodeDragStop,
     viewport,
     onMove,
-    openNodeView
+    openNodeView,
   } = props;
 
   return (
@@ -73,8 +77,8 @@ const FlowView: React.FC<Props> = (props) => {
 
 export default FlowView;
 
-interface OverLayProps{
-    show:boolean
+interface OverLayProps {
+  show: boolean;
 }
 
 const Overlay = styled.div<OverLayProps>`

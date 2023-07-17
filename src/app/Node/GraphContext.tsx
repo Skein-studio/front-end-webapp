@@ -12,7 +12,7 @@ type Graph = {
   nodes: Node[];
   edges: Edge[];
   reloadComponent: () => void;
-  setOpenNode:React.Dispatch<React.SetStateAction<NodeState | undefined>>
+  setOpenNode: React.Dispatch<React.SetStateAction<NodeState | undefined>>;
 };
 
 export function getNode(context: Graph, id: number) {
@@ -82,7 +82,7 @@ export const GraphContext = createContext<Graph>({
   nodes: [],
   edges: [],
   reloadComponent: () => {},
-  setOpenNode:() => {},
+  setOpenNode: () => {},
 });
 
 export function useGraph() {
