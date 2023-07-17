@@ -1,5 +1,9 @@
 //GraphContext.tsx
 
+/*
+  I am thinking that this file should be the base of what is the "SketchModel"
+*/
+
 import { createContext, useContext } from "react";
 import { NodeState, NodeTypeToString, NodeType } from "./NodeState";
 import { Edge, Node } from "reactflow";
@@ -8,6 +12,7 @@ type Graph = {
   nodes: Node[];
   edges: Edge[];
   reloadComponent: () => void;
+  setOpenNode:React.Dispatch<React.SetStateAction<NodeState | undefined>>
 };
 
 export function getNode(context: Graph, id: number) {
@@ -46,27 +51,27 @@ export function createNewNode(
   nodeType: NodeType,
   context: Graph
 ) {
-  let newModel;
+  let newNodeState;
   const existingNode = context.nodes.find(
     (node) => node.type === NodeTypeToString(nodeType)
   );
 
   if (existingNode && existingNode.data.nodeState) {
-    newModel = new NodeState(
+    newNodeState = new NodeState(
       x,
       y,
       nodeType,
       existingNode.data.nodeState.getID()
     );
   } else {
-    newModel = new NodeState(x, y, nodeType);
+    newNodeState = new NodeState(x, y, nodeType);
   }
 
   const newNode: Node = {
-    id: newModel.getID().toString(),
+    id: newNodeState.getID().toString(),
     type: NodeTypeToString(nodeType),
     data: {
-      nodeState: newModel,
+      nodeState: newNodeState,
     },
     position: { x: x, y: y },
   };
@@ -76,7 +81,8 @@ export function createNewNode(
 export const GraphContext = createContext<Graph>({
   nodes: [],
   edges: [],
-  reloadComponent: () => {}
+  reloadComponent: () => {},
+  setOpenNode:() => {},
 });
 
 export function useGraph() {

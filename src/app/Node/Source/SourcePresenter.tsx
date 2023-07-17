@@ -4,36 +4,38 @@ import { NodeContext } from "../NodeState";
 import { AudioContext } from "@/app/Util/AudioContext";
 
 const SourcePresenter: React.FC = () => {
-  const [showLargeView, setShowLargeView] = useState<boolean>(false);
-  const [base, setBase] = useState<string>("");
-  const [audioData, setAudioData] = useState<Blob | null>(null);
-
   const node = useContext(NodeContext); // Use NodeContext to get NodeState instance
+  const [base, setBase] = useState<string>(loadBase);
+  const [audioData, setAudioData] = useState<Blob | null>(loadAudio);
+
+  function loadAudio(){
+    if(node){
+      return node.data.audio;
+    }
+    return null;
+  }
+  function loadBase(){ //type of source (Record, Import, Generate) is set in nodeState.data.base
+    if(node){
+      return node.data.base;
+    }
+    return "";
+  }
 
   //useEffect to load audioData etc from backend upon component load?
 
   const handleBaseChange = (text: string) => {
     setBase(text);
+    if (node) { 
+      node.data.base = text;
+    }
   };
 
-  const handleDone = (e: React.MouseEvent) => {
-    e.stopPropagation();
-    setShowLargeView(false);
-  };
-
-  const handleToggleView = (e: React.MouseEvent) => {
-    e.stopPropagation();
-    setShowLargeView(!showLargeView);
-  };
 
   return (
     <AudioContext.Provider value={{ audioData, setAudioData }}>
       <SourceView
-        showLargeView={showLargeView}
-        handleToggleView={handleToggleView}
         base={base}
         handleBaseChange={handleBaseChange}
-        handleDone={handleDone}
       />
     </AudioContext.Provider>
   );

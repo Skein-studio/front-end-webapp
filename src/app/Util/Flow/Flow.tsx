@@ -5,6 +5,7 @@ import ReactFlow, {
   Node, Handle, Position, Project,
   Edge,
   MiniMap,
+  Background, BackgroundVariant,
   ReactFlowProvider,
   addEdge,
   useEdgesState,
@@ -12,17 +13,18 @@ import ReactFlow, {
   useReactFlow,
   Viewport
 } from "reactflow";
-import SourcePresenter from "../Node/Source/SourcePresenter";
-import UnspecifiedPresenter from "../Node/Unspecified/UnspecifiedPresenter";
-import { NodeType, NodeContext } from "../Node/NodeState";
+import SourcePresenter from "../../Node/Source/SourcePresenter";
+import UnspecifiedPresenter from "../../Node/Unspecified/UnspecifiedPresenter";
+import { NodeType, NodeContext, NodeState } from "../../Node/NodeState"; 
 import {
   addConnection,
   createNewNode,
   GraphContext,
-} from "../Node/GraphContext";
-import { Container } from "./BaseStyles";
+} from "../../Node/GraphContext";
+import { GraphNameInput, OuterBox } from "../BaseStyles";
+import OpenNodePresenter from "@/app/Node/OpenNode/OpenNodePresenter";
 
-const MIN_DIST_FROM_OTHER_NODES = 250;
+const MIN_DIST_FROM_OTHER_NODES = 75;
 
 const proOptions = { hideAttribution: true };
 
@@ -37,16 +39,16 @@ const nodeTypes = {
       <UnspecifiedPresenter />
     </NodeContext.Provider>
   ),
-  split: (nodeData: any) => (
+  split: (nodeData: any) => ( 
     <NodeContext.Provider value={nodeData.data.nodeState}>
-      <Handle type="source" position={Position.Top} />
+      <Handle type="source" position={Position.Top} /> {/*This stuff should be replaced with SplitPresenter.tsx*/}
       <Handle type="target" position={Position.Bottom} />
       <div>Empty (split)</div>
     </NodeContext.Provider>
   ),
   merge: (nodeData: any) => (
     <NodeContext.Provider value={nodeData.data.nodeState}>
-      <Handle type="source" position={Position.Top} />
+      <Handle type="source" position={Position.Top} />{/*This stuff should be replaced with MergePresenter.tsx*/}
       <Handle type="target" position={Position.Bottom} />
       <div>Empty (merge)</div>
     </NodeContext.Provider>
@@ -54,7 +56,7 @@ const nodeTypes = {
   signal: (nodeData: any) => (
     <NodeContext.Provider value={nodeData.data.nodeState}>
       <div>
-        <Handle type="source" position={Position.Top} />
+        <Handle type="source" position={Position.Top} /> {/*This stuff should be replaced with SignalPresenter.tsx*/}
         <Handle type="target" position={Position.Bottom} />
         Empty (signal)
       </div>
@@ -67,7 +69,8 @@ const Canvas: React.FC = () => {
   const [nodes, setNodes, onNodesChange] = useNodesState<Node>([]);
   const [edges, setEdges, onEdgesChange] = useEdgesState<Edge>([]);
   const [flowKey, setFlowKey] = useState(0);
-  const [viewport, setViewport] = useState<Viewport>({x:0, y:0, zoom:1}) // find a way to save the viewport and pass it to reactflow component 
+  const [viewport, setViewport] = useState<Viewport>({x:0, y:0, zoom:1}) // find a way to save the viewport and pass it to reactflow component
+  const [openNode, setOpenNode] = useState<NodeState>(); 
 
   function onMove(event: MouseEvent | TouchEvent, viewport: Viewport){
     setViewport({ x: viewport.x, y: viewport.y, zoom: viewport.zoom });
@@ -78,7 +81,7 @@ const Canvas: React.FC = () => {
     (connection: any) => {
       setEdges((eds) => {
         const newEdges = addEdge(connection, eds);
-        addConnection({nodes, edges, reloadComponent}, connection);
+        addConnection({nodes, edges, reloadComponent, setOpenNode}, connection);
         console.log(edges);
         return newEdges;
       });
@@ -92,6 +95,7 @@ const Canvas: React.FC = () => {
     }else{
       setFlowKey(prevKey => prevKey - 1);
     }
+    console.log(nodes);
     /*
       this is just a dumb temporary fix to just refresh by changing
       a property of the ReactFlow component (key), this function is passed into the GraphContext 
@@ -130,7 +134,7 @@ const Canvas: React.FC = () => {
   }  
   
   const addNewNode = (x: number, y: number, nodeType: NodeType) => {
-    const newNode = createNewNode(x, y, nodeType, {nodes, edges, reloadComponent});
+    const newNode = createNewNode(x, y, nodeType, {nodes, edges, reloadComponent, setOpenNode});
     const newNodes = [...nodes, newNode];
     setNodes(newNodes);
   };
@@ -140,19 +144,35 @@ const Canvas: React.FC = () => {
     node.data.nodeState.setPosition(node.position.x, node.position.y);
   }
 
+  function openNodeView(){
+    
+    function closeOpenNode(){
+      setOpenNode(undefined);
+    }
+
+    if(openNode){
+      return <OpenNodePresenter state={openNode} closeWindow={closeOpenNode}/>
+    }
+    else{
+      return null;
+    }
+
+  }
+
   useEffect(() => {
     addNewNode(250, 250, NodeType.Source);
   }, []);
 
-  return (
-    <Container
+  return (// Needs a bit of separation of concerns, possibly inty a FlowPresenter + FlowView
+    <OuterBox
     width="95vw"
     height="95vh"
-    shadow={true}
     >
-      <GraphContext.Provider value={{nodes, edges, reloadComponent}}>
+      <GraphNameInput defaultValue={"violet-york-mayflower"}/>
+      <GraphContext.Provider value={{nodes, edges, reloadComponent, setOpenNode}}>
+        {openNodeView()}
         <ReactFlow
-          key={flowKey}  // Add this line
+          key={flowKey}  
           nodes={nodes}
           edges={edges}
           nodeTypes={nodeTypes}
@@ -167,10 +187,11 @@ const Canvas: React.FC = () => {
           defaultViewport={viewport}
           onMove={onMove} 
         >
-          {/*<MiniMap></MiniMap>*/}
+          {<MiniMap></MiniMap>}
+          <Background color="#ccc" variant={BackgroundVariant.Cross} />
         </ReactFlow>
       </GraphContext.Provider>
-    </Container>
+    </OuterBox>
   );
 };
 

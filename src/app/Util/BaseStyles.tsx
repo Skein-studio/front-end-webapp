@@ -1,4 +1,5 @@
 import styled from "styled-components";
+import { purple, spookwhite } from "./Flow/NodeStyles";
 
 interface TextProps {
   size?: number;
@@ -35,34 +36,70 @@ interface ButtonProps {
 
 const Button = styled.button<ButtonProps>`
   display: flex;
+  font-family:verdana;
   justify-content: center;
   align-items: center;
-  padding: 16px;
-  margin: 4px;
-  height: 36px; // Set a specific height
-  background-color: ${({ bgColor }) => (bgColor ? bgColor : "#FFFFFF")};
-  color: ${({ color }) => (color ? color : "rgba(0, 123, 255, 0.5)")};
+  padding: 4px;
+  height: fit-content; // Set a specific height
+  background-color: ${({ bgColor }) => (bgColor ? bgColor : "#404040")};
+  color: ${({ color }) => (color ? color : purple)};
   border: none;
   border-radius: 10px;
-  box-shadow: 0px 2px 8px rgba(0, 123, 255, 0.25);
+  box-shadow: 0px 1px 0px ${purple};
   font-family: "Roboto", "Helvetica", "Arial", sans-serif;
-  font-size: 16px;
-  font-weight: 500;
+  font-size: 12px;
+
   text-align: center;
   cursor: pointer;
   transition: background-color 0.3s ease, color 0.3s ease, box-shadow 0.3s ease;
 
   &:hover {
     background-color: ${({ hoverBgColor }) =>
-      hoverBgColor ? hoverBgColor : "#f8f9fa"};
-    color: ${({ hoverColor }) => (hoverColor ? hoverColor : "#0056b3")};
-    box-shadow: 0px 2px 8px rgba(0, 123, 255, 0.5);
+      hoverBgColor ? hoverBgColor : "#757575"};
+    color: ${({ hoverColor }) => (hoverColor ? hoverColor : "#404040")};
+    box-shadow: 0px 0px 0px ${purple};
   }
 
   &:focus {
     outline: none;
   }
 `;
+
+const GraphNameInput = styled.input`
+z-index: 1; /* Add a higher z-index value */
+position: absolute;
+top: 40px;
+left: 40px;
+font-size: 18px;
+width: 250px;
+padding: 8px;
+font-family: verdana;
+border: 1px solid ${spookwhite};
+border-radius: 10px;
+`
+
+interface OuterBoxProps {
+  flexdir?: string;
+  width?:string;
+  height?:string;
+  shadow?:boolean;
+}
+
+const OuterBox = styled.div<OuterBoxProps>`
+  display: flex;
+  flex-direction: ${(props) => (props.flexdir ? props.flexdir : "column")};
+  justify-content: space-around;
+  align-items: center;
+  align-self: center;
+  width: ${(props) => (props.width ? props.width : "90%")};
+  height: ${(props) => (props.height ? props.height : "100%")}; // Set height to 100%
+  box-shadow: ${(props) => (props.shadow ? "0px 2px 8px rgba(0, 0, 0, 0.25)" : "0px")};
+  border-radius: 10px;
+  border: 4px solid black;
+  padding: 4px;
+  margin: 4px;
+`;
+
 
 interface BoxProps {
   flexdir?: string;
@@ -100,4 +137,4 @@ const BlankSpace = styled.div<BlankProps>`
   margin: 4px;
 `;
 
-export { Text, Button, Container, BlankSpace };
+export { Text, Button, Container, BlankSpace, OuterBox, GraphNameInput };

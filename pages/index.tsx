@@ -4,7 +4,7 @@ import React from "react";
 import ReactFlow from "reactflow";
 import "reactflow/dist/style.css";
 import { Container } from "@/app/Util/BaseStyles";
-import Canvas from "@/app/Util/Flow";
+import Canvas from "@/app/Util/Flow/Flow";
 import MyFlowDiagram from "@/app/Util/FlowExample";
 import { styled } from "styled-components";
 const ApplicationFrame = styled.div`
