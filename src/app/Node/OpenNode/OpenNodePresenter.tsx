@@ -3,7 +3,7 @@ import OpenNodeView from "./OpenNodeView";
 
 interface Props {
   state: NodeState; // the state of the currently selected (open) node
-  deselectWindow: () => void;
+  closeWindow: () => void;
 }
 
 export default function OpenNodePresenter(props: Props) {
@@ -11,7 +11,7 @@ export default function OpenNodePresenter(props: Props) {
     <NodeContext.Provider value={props.state}>
       <OpenNodeView
         nodeState={props.state}
-        deselectWindow={props.deselectWindow}
+        closeWindow={props.closeWindow}
       />
     </NodeContext.Provider>
   );

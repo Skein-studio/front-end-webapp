@@ -190,7 +190,7 @@ const Canvas: React.FC = () => {
   function openNodeView() {
     if (selectedNode) {
       return (
-        <OpenNodePresenter state={selectedNode} deselectWindow={stopSelect} />
+        <OpenNodePresenter state={selectedNode} closeWindow={stopSelect} />
       );
     } else {
       return null;

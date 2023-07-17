@@ -11,7 +11,7 @@ import SignalImg from "../Signal/signal.svg";
 
 interface Props {
   nodeState: NodeState;
-  deselectWindow: () => void;
+  closeWindow: () => void;
 }
 export default function OpenNodeView(props: Props) {
   const Contents = () => {
@@ -44,7 +44,7 @@ export default function OpenNodeView(props: Props) {
     <Window>
       <BlankSpace width={1} height={75}></BlankSpace>
       {Icon()}
-      <CloseButton onClick={props.deselectWindow}>X</CloseButton>
+      <CloseButton onClick={props.closeWindow}>X</CloseButton>
       <NodeTitle>{NodeTypeToString(props.nodeState.type)}</NodeTitle>
       <InnerBox>{Contents()}</InnerBox>
     </Window>
