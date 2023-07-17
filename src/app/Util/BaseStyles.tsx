@@ -66,6 +66,9 @@ const Button = styled.button<ButtonProps>`
 
 interface BoxProps {
   flexdir?: string;
+  width?:string;
+  height?:string;
+  shadow?:boolean;
 }
 
 const Container = styled.div<BoxProps>`
@@ -73,8 +76,10 @@ const Container = styled.div<BoxProps>`
   flex-direction: ${(props) => (props.flexdir ? props.flexdir : "column")};
   justify-content: space-around;
   align-items: center;
-  width: 90%;
-  height: 100%; // Set height to 100%
+  align-self: center;
+  width: ${(props) => (props.width ? props.width : "90%")};
+  height: ${(props) => (props.height ? props.height : "100%")}; // Set height to 100%
+  box-shadow: ${(props) => (props.shadow ? "0px 2px 8px rgba(0, 0, 0, 0.25)" : "0px")};
   padding: 4px;
   margin: 4px;
 `;
@@ -95,4 +100,57 @@ const BlankSpace = styled.div<BlankProps>`
   margin: 4px;
 `;
 
-export { Text, Button, Container, BlankSpace };
+
+const RowContainer = styled.div`
+  display: grid;
+  grid-template-columns: 1fr 2fr; 
+  align-items: center;  
+  width: 100%;  
+  padding: 10px 0;
+`;
+
+const ProgressBarContainer = styled.div<{ audioComputed: boolean }>`
+  display: flex;
+  align-items: center;
+  width: 100%;
+  position: relative;
+  background-color: #1133;
+  height: 20px;
+  
+  border: 2px solid ${(props) => (props.audioComputed ? "transparent" : "red")};
+`;
+
+const ProgressBarWrapper = styled.div`
+  position: relative;
+  flex-grow: 1;
+  display: flex;
+  justify-content: center
+  align-items: cetner;
+  height: 100%;
+`;
+
+
+interface ProgressBarProps {
+  progress: number;
+}
+
+const ProgressBar = styled.div.attrs<ProgressBarProps>((props) => ({
+  style: {
+    width: `${props.progress}%`,
+  },
+}))`
+  position: absolute;
+  height: 100%;
+  background-color: #673147;
+`;
+
+const PlayButton = styled.button`
+  margin-left: auto;
+`;
+
+const ProgressBarText = styled.div`
+  position: absolute;
+  color: red;
+`;
+
+export { Text, Button, Container, RowContainer, BlankSpace, ProgressBarContainer, ProgressBarWrapper, ProgressBar, ProgressBarText, PlayButton };

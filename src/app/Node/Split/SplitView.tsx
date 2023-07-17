@@ -3,7 +3,7 @@ import {  RowContainer, ProgressBar, ProgressBarContainer, ProgressBarWrapper, P
 import { NodeSmall } from "@/app/Util/NodeStyles";
 import GenerateHandles from '@/app/Util/HandleHandler';
 
-interface SignalViewProps{
+interface SplitViewProps{
   numberOfSourceHandles: number;
   numberOfTargetHandles: number;
   currentTime: number;
@@ -14,7 +14,7 @@ interface SignalViewProps{
   isComputing: boolean;
 }
 
-const SignalView: React.FC<SignalViewProps> = ({ onPlayPause, playing, currentTime, duration, numberOfSourceHandles, numberOfTargetHandles, audioComputed, isComputing}) => {
+const SplitView: React.FC<SplitViewProps> = ({ onPlayPause, playing, currentTime, duration, numberOfSourceHandles, numberOfTargetHandles, audioComputed, isComputing}) => {
     const progress = (currentTime / duration) * 100;
 
 
@@ -44,4 +44,4 @@ const SignalView: React.FC<SignalViewProps> = ({ onPlayPause, playing, currentTi
   );
 }
 
-export default SignalView;
+export default SplitView;

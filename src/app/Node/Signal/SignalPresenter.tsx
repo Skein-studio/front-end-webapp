@@ -1,150 +1,102 @@
-import {NodeLarge, NodeSmall } from "@/app/Util/NodeStyles";;
 import React, { useState, useEffect, useRef, ReactNode } from "react";
 import SignalView from "./SignalView";
-import Drawer from "../../Util/Drawer";
 
+const SignalPresenter: React.FC = () => {
+  const [isComputing, setIsComputing] = useState<boolean>(false);
+  const [audioComputed, setAudioComputed] = useState<boolean>(false);
+  const [audio, setAudio] = useState<HTMLAudioElement | null>(null); 
 
-// Functions:
-//  - playback of "spectrogram" with a small button 
-//  - large view with a toggle button
-//  - the large view should introduce a drawer with additional buttons
-
-// load the presenter with the image to the spectrogram:
-//const spectrogramUrl = 'https://s3.amazonaws.com/izotopedownloads/docs/rx6/img/07g-regular-stft.png';
-type SignalPresenterProps = {
-  spectrogramUrl: string;
-  audioUrl: string;
-}
-
-const SignalPresenter: React.FC<SignalPresenterProps> = ({ spectrogramUrl, audioUrl }) => {
-  const [spectrogram, setSpectrogram] = useState<HTMLImageElement | null>(null);
-  const [audio, setAudio] = useState<HTMLAudioElement | null>(null); // perhaps just load some sample thing
   const [currentTime, setCurrentTime] = useState<number>(0);
   const [duration, setDuration] = useState<number>(0);
   const [isPlaying, setIsPlaying] = useState<boolean>(false);
-  const [drawerOpen, setDrawerOpen] = useState<boolean>(false);
 
-  const canvasRef = useRef<HTMLCanvasElement>(null);
+  const [numberOfTargetHandles, setNumberOfTargetHandles] = useState<number>(1);
+  const [numberOfSourceHandles, setNumberOfSourceHandles] = useState<number>(1);
 
-// loading spectrogram image from url
-  useEffect(()=> {
-    const img = new Image();
-    img.src = spectrogramUrl;
-    img.onload = () => {
-      setSpectrogram(img)
-    };
-  }, [spectrogramUrl]);
 
-  // loading audio from url
-  useEffect(() => {
+  // temporary fetch. 
+  // The audio state for each signal node will be updated in 
+  //    some other way when implementing the backend. 
+  // Each signal node should know which audio it should recieve based on some id mapping in the bucket.
+  const fetchAudio = async () => {
+    await new Promise(resolve => setTimeout(resolve, 500));
+    return "https://www2.cs.uic.edu/~i101/SoundFiles/CantinaBand3.wav";
+  }
+
+// This handles the play/payse with three states:
+/*
+  1. signal is uncomputed 
+  2. computed signal,  not playing
+  3. computed signal,  playing
+*/
+const handlePlayPause = async () => {
+  if (isComputing) {
+    return;
+  }
+  if (!audioComputed) {   //1.
+    setIsComputing(true);
+    const audioUrl = await fetchAudio();
     const audio = new Audio(audioUrl);
 
     audio.onloadedmetadata = () => {
       setDuration(audio.duration);
+      setAudio(audio);
+      setAudioComputed(true);
+      setIsComputing(false);
     };
+
+    audio.onended = () => {
+      setCurrentTime(0);
+      setIsPlaying(false);
+    }
+    audio.onerror = () => {
+      console.error("Something went wrong while fetching audio.");
+      setIsComputing(false);
+    };
+    return;
+  } 
+  if (audio && audioComputed) { //2.
+    if (audio.paused) {
+      audio.play();
+      setIsPlaying(true);
+    } else {  //3.
+      audio.pause();
+      setIsPlaying(false);
+    }
+  }
+};
+
+// This is for the progress bar. Needs some refactoring as I'm not sure if this is efficient.
+useEffect(() => { 
+    let intervalId: number | undefined;
+
     const updateCurrentTime = () => {
-        if (!audio.paused) {
+        if (audio && !audio.paused) {
             setCurrentTime(audio.currentTime);
         }
         requestAnimationFrame(updateCurrentTime);
     };
 
-    updateCurrentTime();
-    setAudio(audio)
+    intervalId = window.setInterval(updateCurrentTime, 1000);
 
     return () => {
-      audio.pause();
+      if (intervalId) {
+        window.clearInterval(intervalId);
+      }
     };
-  }, [audioUrl]);
-
-  const handlePlayPause = () => {
-    if (!audio) {
-        return;
-    }
-    if (audio.paused) {
-      audio.play();
-      setIsPlaying(true);
-    } else {
-      audio.pause();
-      setIsPlaying(false);
-    }
-  };
-
-  // simple progress bar with canvas
-  useEffect(() => {
-    const canvas = canvasRef.current;
-    if (!canvas || !spectrogram) {
-      return;
-    }
-    const ctx = canvas.getContext('2d');
-    if (!ctx) {
-      return;
-    }
-
-    // drawing spectrogram on canvas
-    ctx.drawImage(spectrogram, 0, 0, canvas.width, canvas.height);
-
-    // drawing progress bar
-    const progress = (currentTime / duration) * canvas.width;
-    ctx.beginPath();
-    ctx.moveTo(progress, 0);
-    ctx.lineTo(progress, canvas.height);
-    ctx.strokeStyle= 'black';
-    ctx.stroke();
-  }, [spectrogram, currentTime, duration]);
-
-    const [newGenerations, setNewGenerations] = useState<Array<ReactNode>>([]);
-
-    // replace with fetch that gets image and audio data
-    const generateVariations = () => {
-        const newSpectrograms = [
-            'https://s3.amazonaws.com/izotopedownloads/docs/rx6/img/07g-regular-stft.png',
-            'https://s3.amazonaws.com/izotopedownloads/docs/rx6/img/07g-regular-stft.png',
-            'https://s3.amazonaws.com/izotopedownloads/docs/rx6/img/07g-regular-stft.png',
-            'https://s3.amazonaws.com/izotopedownloads/docs/rx6/img/07g-regular-stft.png',
-            ];
-        const variations = [];    
-        for (let i = 0; i < 4; i++) {
-            variations.push(
-                <SignalView
-                    key={i}
-                    spectrogramUrl={newSpectrograms[i]}
-                    currentTime={currentTime}
-                    duration={duration}
-                    onPlayPause={handlePlayPause}
-                    playing={false}
-                    showExpand={false}
-                />
-            );
-        }
-        setNewGenerations(variations);
-    };
-
-  if (!spectrogram || !audio) {
-    return <div>cargando...</div>
-  }
+  }, [audio]);
 
   return (
-    <div>
-    <canvas ref={canvasRef} width={500} height={300} />
       <SignalView 
-        spectrogramUrl={spectrogramUrl}
+        audioComputed={audioComputed}
         currentTime={currentTime}
+        numberOfSourceHandles={numberOfSourceHandles}
+        numberOfTargetHandles={numberOfTargetHandles}
         duration={duration}
-        onToggleDrawer={() => setDrawerOpen(!drawerOpen)} 
         onPlayPause={handlePlayPause}
         playing={isPlaying}
-        drawerOpen={drawerOpen}
-        showExpand={true}
+        isComputing={isComputing}
       />
-        <Drawer isOpen={drawerOpen} >
-            <button onClick={generateVariations}> generate variations </button>
-            <button> export </button>
-            <button> edit </button>
-            // another SignalPresenter should exist here
-            {newGenerations}
-        </Drawer>
-    </div>
   );
 };
 

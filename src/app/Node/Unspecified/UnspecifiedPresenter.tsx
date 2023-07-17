@@ -3,40 +3,42 @@ import { NodeContext, NodeState } from "../NodeState";
 import UnspecifiedView from "./UnspecifiedView";
 import { NodeType } from "../NodeState";
 import { NodeTypeToString } from "../NodeState";
-import { useGraph, updateNode } from "../GraphContext";
+import { useGraph, setNode } from "../GraphContext";
 
-const UnspecifiedPresenter: React.FC = () => {
-  const node = useContext(NodeContext); // Use NodeContext to get NodeModel instance
-  const { nodes } = useGraph();
+/*
+  We don't know if we will use tis class or not, but the purpose is 
+  to have an unspecified node which you can choose the type of
+*/
 
-  function setNode(type: NodeType) {
+const UnspecifiedPresenter: React.FC = () => { 
+  const node = useContext(NodeContext); // Use NodeContext to get NodeState instance
+  const { nodes, edges, reloadComponent, setOpenNode } = useGraph();
+
+  function changeType(type: NodeType) {
     // Create a new node object with updated type
     if (!node) {
       return;
     }
 
-    const newModel = new NodeState(
+    const nodeState = new NodeState(
       node.position.x,
       node.position.y,
-      node.inputs,
-      node.outputs,
-      type
+      type,
+      node.id
     );
-    newModel.id = node.id;
-
     const updatedNode = {
-      id: node.id.toString(),
+      id: node.id!.toString(),
       type: NodeTypeToString(type),
       data: {
-        newModel,
+        nodeState,
       },
       position: node.position,
     };
 
-    updateNode({ nodes }, updatedNode);
+    setNode({nodes, edges, reloadComponent, setOpenNode}, updatedNode);
   }
 
-  return <UnspecifiedView setNode={setNode} />;
+  return <UnspecifiedView setNode={changeType} />;
 };
 
 export default UnspecifiedPresenter;

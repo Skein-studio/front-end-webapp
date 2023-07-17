@@ -50,8 +50,8 @@ const NodeSmall = styled.div<NodeProps>`
   justify-content: center;
   align-items: center;
   align-self: center;
-  width: 300px;
-  height: 300px;
+  height: 40px;
+  width: 500px;
   margin: 2px 0; // Apply margin only on top and bottom
   padding: 2px;
   background-color: #ffffff;
