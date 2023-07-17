@@ -8,12 +8,20 @@ import { createContext, useContext } from "react";
 import { NodeState, NodeTypeToString, NodeType } from "./NodeState";
 import { Edge, Node } from "reactflow";
 
-type Graph = {
+export type Graph = {
   nodes: Node[];
   edges: Edge[];
   reloadComponent: () => void;
-  setOpenNode: React.Dispatch<React.SetStateAction<NodeState | undefined>>;
+  selectNode: (nodeState: NodeState | undefined) => void;
+  selectedNode: NodeState | undefined;
 };
+
+export function deselectNode(context: Graph) {
+  if (context.selectedNode) {
+    context.selectedNode.selected = false;
+  }
+  context.selectedNode = undefined;
+}
 
 export function getNode(context: Graph, id: number) {
   for (const element of context.nodes) {
@@ -82,7 +90,8 @@ export const GraphContext = createContext<Graph>({
   nodes: [],
   edges: [],
   reloadComponent: () => {},
-  setOpenNode: () => {},
+  selectNode: (nodeState: NodeState | undefined) => {},
+  selectedNode: undefined,
 });
 
 export function useGraph() {

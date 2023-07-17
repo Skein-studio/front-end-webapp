@@ -9,7 +9,7 @@ import GenerateAudio from "@/app/Util/AudioGenerator/GenerateAudio";
 import { useAudio } from "@/app/Util/AudioContext";
 import { useGraph } from "../GraphContext";
 import { NodeContext } from "../NodeState";
-import { useContext } from "react";
+import { useContext, useEffect, useState } from "react";
 import { styled } from "styled-components";
 import SourceImg from "./source.svg";
 
@@ -58,18 +58,20 @@ const SourceView: React.FC<SourceProps> = ({ base, handleBaseChange }) => {
   const graph = useGraph();
   const node = useContext(NodeContext); // Use NodeContext to get NodeState instance
 
-  function openNode() {
-    // set the currently open node to this node
-    graph.setOpenNode(node);
+  function selectNode() {
+    graph.selectNode(node);
   }
 
   return (
     //can extend width by multiplying a value times the number of outputs - 10 or something in that manner
-    <NodeSmall widthextension={0}>
+    <NodeSmall
+      widthextension={0}
+      selected={node?.selected ?? false}
+      onClick={selectNode}
+    >
       <BlankSpace height={5} width={5}></BlankSpace>
       {<NodeIcon src={SourceImg} />}
       <NodeTitle>source{base != "" ? `[${base}]` : ""}</NodeTitle>
-      <SelectButton onClick={openNode}>select</SelectButton>
       <Container style={{ flex: 1 }}>
         {base ? (
           <SmallView />

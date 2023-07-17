@@ -1,13 +1,14 @@
 import React, { useState, useEffect, useRef, useContext } from "react";
 import RecordView from "./RecordView";
 import { NodeContext } from "@/app/Node/NodeState";
+import { useGraph } from "@/app/Node/GraphContext";
 
 const RecordPresenter: React.FC = () => {
   const [isRecording, setIsRecording] = useState<boolean>(false);
   const node = useContext(NodeContext); // Use NodeContext to get NodeState instance
   const audioData = node?.data.audio;
   const mediaRecorder = useRef<MediaRecorder | null>(null);
-  const [refresh, setRefresh] = useState(false);
+  const graph = useGraph();
 
   useEffect(() => {
     navigator.mediaDevices.getUserMedia({ audio: true }).then((stream) => {
@@ -18,7 +19,7 @@ const RecordPresenter: React.FC = () => {
         } else {
           console.error("No nodecontext found", this);
         }
-        setRefresh(!refresh);
+        graph.reloadComponent();
       };
     });
   }, []);

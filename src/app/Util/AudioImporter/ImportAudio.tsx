@@ -1,11 +1,13 @@
 import React, { useContext, useState } from "react";
 import { useAudio } from "../AudioContext";
 import { NodeContext } from "@/app/Node/NodeState";
+import { useGraph } from "@/app/Node/GraphContext";
 
 const ImportAudio: React.FC = () => {
   const node = useContext(NodeContext); // Use NodeContext to get NodeState instance
   const audioData = node?.data.audio;
-  const [refresh, setRefresh] = useState(false);
+
+  const graph = useGraph();
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files) {
@@ -14,7 +16,7 @@ const ImportAudio: React.FC = () => {
       } else {
         console.error("No nodecontext found", this);
       }
-      setRefresh(!refresh);
+      graph.reloadComponent();
     }
   };
 

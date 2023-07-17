@@ -52,6 +52,7 @@ const ToggleButton = styled.button`
 interface NodeProps {
   flexdir?: string;
   widthextension: number;
+  selected: boolean;
 }
 
 const NodeSmall = styled.div<NodeProps>`
@@ -67,11 +68,14 @@ const NodeSmall = styled.div<NodeProps>`
   padding: 4px;
   background-color: #404040;
   border-radius: 10px;
-  box-shadow: 0px 0px 0px ${purple};
+  box-shadow: ${(props) =>
+    props.selected
+      ? "0px 4px 8px rgba(100, 0, 255, 1)"
+      : "0px 2px 8px rgba(100, 0, 255, 0)"};
   transition: box-shadow 0.3s ease;
 
   &:hover {
-    box-shadow: 0px 2px 8px rgba(100, 0, 255, 0.625);
+    box-shadow: 0px 2px 8px rgba(100, 0, 255, 0.5);
   }
 `;
 
