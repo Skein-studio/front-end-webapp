@@ -13,10 +13,13 @@ import {
   useReactFlow,
   Viewport,
 } from "reactflow";
+
 import SourcePresenter from "../../Node/Source/SourcePresenter";
 import UnspecifiedPresenter from "../../Node/Unspecified/UnspecifiedPresenter";
 import SignalPresenter from "@/app/Node/Signal/SignalPresenter";
 import SplitPresenter from "@/app/Node/Split/SplitPresenter";
+import MergePresenter from "@/app/Node/Merge/MergePresenter";
+
 import { NodeType, NodeContext, NodeState } from "../../Node/NodeState";
 import {
   addConnection,
@@ -50,10 +53,7 @@ const nodeTypes = {
   ),
   merge: (nodeData: any) => (
     <NodeContext.Provider value={nodeData.data.nodeState}>
-      <Handle type="target" position={Position.Top} />
-      {/*This stuff should be replaced with MergePresenter.tsx*/}
-      <Handle type="source" position={Position.Bottom} />
-      <div>Empty (merge)</div>
+      <MergePresenter />
     </NodeContext.Provider>
   ),
   signal: (nodeData: any) => (

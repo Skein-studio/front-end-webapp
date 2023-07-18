@@ -79,6 +79,15 @@ const NodeSmall = styled.div<NodeProps>`
   }
 `;
 
+const HandleLabel = styled.div`
+  font-family: verdana;
+  font-size: 0.2em;
+  position: relative;
+  text-align: center;
+  color: ${purple};
+`;
+
+
 const RowContainer = styled.div`
   display: grid;
   grid-template-columns: 1fr 2fr; 
@@ -140,6 +149,7 @@ export {
   ToggleButton,
   NodeSmall,
   NodeTitle,
+  HandleLabel,
   purple,
   spookwhite,
   NodeIcon,

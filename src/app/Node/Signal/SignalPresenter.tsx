@@ -20,7 +20,7 @@ const SignalPresenter: React.FC = () => {
   // Each signal node should know which audio it should recieve based on some id mapping in the bucket.
   const fetchAudio = async () => {
     await new Promise(resolve => setTimeout(resolve, 500));
-    return "https://www2.cs.uic.edu/~i101/SoundFiles/CantinaBand3.wav";
+    return "https://www2.cs.uic.edu/~i101/SoundFiles/gettysburg10.wav";
   }
 
 // This handles the play/payse with three states:

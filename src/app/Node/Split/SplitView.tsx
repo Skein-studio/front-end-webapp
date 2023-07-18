@@ -1,9 +1,20 @@
 import React, { useContext } from 'react';
 import { Container, BlankSpace } from "@/app/Util/BaseStyles";
-import { NodeSmall, RowContainer, ProgressBar, ProgressBarContainer, ProgressBarWrapper, ProgressBarText, PlayButton,  } from "@/app/Util/Flow/NodeStyles";
+import { NodeSmall, RowContainer, ProgressBar, ProgressBarContainer, ProgressBarWrapper, ProgressBarText, PlayButton, NodeIcon, NodeTitle,  } from "@/app/Util/Flow/NodeStyles";
 import GenerateHandles from '@/app/Util/HandleHandler';
 import { useGraph } from '../GraphContext';
 import { NodeContext } from '../NodeState';
+
+import SplitImg from "./split.svg";
+
+
+const SmallView = () => {
+  return (
+    <Container>
+    </Container>
+  );
+};
+
 
 interface SplitViewProps{
   numberOfSourceHandles: number;
@@ -21,20 +32,29 @@ const SplitView: React.FC<SplitViewProps> = ({ numberOfSourceHandles, numberOfTa
 
   return (
     <NodeSmall
-    widthextension={0}
-    selected={node?.selected ?? false}
-    onClick={selectNode}
+      widthextension={0}
+      selected={node?.selected ?? false}
+      onClick={selectNode}
     >
-      <GenerateHandles splitNode= {true} handleType="target" numberOfHandles={numberOfTargetHandles} />
-      <RowContainer>
+      <GenerateHandles 
+        splitNode = {false} 
+        handleType ="target" 
+        numberOfHandles = {numberOfTargetHandles} 
+      />
+        
+      <NodeIcon src={SplitImg}></NodeIcon>
+      <NodeTitle>split</NodeTitle>
 
-        <span>{"-< split"}</span>
+      <SmallView />
 
-      </RowContainer>
-
-      <GenerateHandles splitNode = {true} handleType="source" numberOfHandles={numberOfSourceHandles}/>
+      <GenerateHandles 
+        splitNode = {true} 
+        handleType = "source" 
+        numberOfHandles = {numberOfSourceHandles}
+      />
     </NodeSmall>
   );
 }
+
 
 export default SplitView;

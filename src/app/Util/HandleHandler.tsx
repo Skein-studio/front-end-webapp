@@ -1,51 +1,66 @@
 import { Handle, Position } from "reactflow";
 import styled from "styled-components";
+import { NodeSmall, RowContainer, ProgressBar, ProgressBarContainer, ProgressBarWrapper, ProgressBarText, PlayButton, NodeIcon, NodeTitle, HandleLabel } from "@/app/Util/Flow/NodeStyles";
 
 /*
   Generates input|target / output|source handles and stacks them.
 */
-interface GenerateHandleProps{
-    handleType: 'source' | 'target';
-    numberOfHandles: number;
-    splitNode?: boolean;
-  }
+interface HandleProps{
+  handleType: 'source' | 'target';
+  numberOfHandles: number;
+  splitNode?: boolean;
+}
 
-const HandleLabel = styled.div`
+const HandleWrapper = styled.div`
+  flex: 1;
   position: relative;
-  top: -20px;
-  left: 50%;
-  transform: translateX(-50%);
-  text-align: center;
-  width: 50px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
 `;
-  
-const GenerateHandles: React.FC<GenerateHandleProps> = ({ handleType, numberOfHandles, splitNode}) => {
+
+const HandleContainer = styled.div`
+  display: flex;
+  justify-content: flex-start;
+  flex-direction: row;
+  width: 100%;
+`
+
+//const HandleLabel = styled.div`
+//  position: relative;
+//  text-align: center;
+//`;
+
+const GenerateHandles: React.FC<HandleProps> = ({ handleType, numberOfHandles, splitNode}) => {
 
     let handles = [];
-    const handleNames = ['drums', 'bass', 'piano', 'guitar', 'voice', 'other'];
+    const splitNames = ['drums', 'bass', 'piano', 'guitar', 'voice', 'other'];
 
     for (let i = 0; i < numberOfHandles; i++) {
-        const handleStyle = { 
-          left: `${10 * (i+1)}%`, 
-          background: '#555',
-          height: '10px',
-          width: '10px'
-        };
+          {handles.push(
+            <HandleWrapper key={i}>
+              {handleType === 'source' && splitNode && <HandleLabel>{splitNames[i]}</HandleLabel>}
+            
+            <Handle 
+              type={handleType}
+              id={`${handleType}${i}`}
+              position={handleType === 'source'? Position.Bottom : Position.Top}
+              style={{
+                background: '#757574',
+                height: '20px',
+                width: '20px',
+                overflow: 'hidden',
+                transform: handleType === 'source' ? 'translateY(50%) translateX(-50%)' : 'translateY(-50%) translateX(-50%)',
+                borderRadius: handleType === 'target' ? '100% 100% 0% 0%' : '0 0 90% 90%',
+                zIndex: '-1', // couldn't get them to be nice semicircles
+              }}
+            />
 
-        handles.push(
-          <div key={i} style={{ position: 'relative' }}>
-            {handleType === 'source' && splitNode && <HandleLabel>{handleNames[i]}</HandleLabel>}
-          <Handle // should be some naming scheme here for bass/drums etc.
-            key={i}
-            type={handleType}
-            id={`${handleType}${i}`}
-            position={handleType === 'source'? Position.Bottom : Position.Top}
-            style={handleStyle}
-          />
-          </div>
-        );
+            </HandleWrapper>
+          )};
     }
-    return <>{handles}</>
+    return <HandleContainer>{handles}</HandleContainer>
   };
   
   export default GenerateHandles;
