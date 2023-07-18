@@ -79,6 +79,59 @@ const NodeSmall = styled.div<NodeProps>`
   }
 `;
 
+const RowContainer = styled.div`
+  display: grid;
+  grid-template-columns: 1fr 2fr; 
+  align-items: center;  
+  width: 100%;  
+  padding: 10px 0;
+`;
+
+const ProgressBarContainer = styled.div<{ audioComputed: boolean }>`
+  display: flex;
+  align-items: center;
+  width: 100%;
+  position: relative;
+  background-color: #1133;
+  height: 20px;
+  
+  border: 2px solid ${(props) => (props.audioComputed ? "transparent" : "red")};
+`;
+
+const ProgressBarWrapper = styled.div`
+  position: relative;
+  flex-grow: 1;
+  display: flex;
+  justify-content: center
+  align-items: cetner;
+  height: 100%;
+`;
+
+
+interface ProgressBarProps {
+  progress: number;
+}
+
+const ProgressBar = styled.div.attrs<ProgressBarProps>((props) => ({
+  style: {
+    width: `${props.progress}%`,
+  },
+}))`
+  position: absolute;
+  height: 100%;
+  background-color: #673147;
+`;
+
+const PlayButton = styled.button`
+  margin-left: auto;
+`;
+
+const ProgressBarText = styled.div`
+  position: absolute;
+  color: red;
+`;
+
+
 export {
   StyledSelect,
   ToggleButton,
@@ -87,4 +140,10 @@ export {
   purple,
   spookwhite,
   NodeIcon,
+  RowContainer,
+  ProgressBarContainer,
+  ProgressBarWrapper,
+  ProgressBar,
+  PlayButton,
+  ProgressBarText,
 };

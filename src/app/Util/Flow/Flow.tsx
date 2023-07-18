@@ -15,6 +15,8 @@ import {
 } from "reactflow";
 import SourcePresenter from "../../Node/Source/SourcePresenter";
 import UnspecifiedPresenter from "../../Node/Unspecified/UnspecifiedPresenter";
+import SignalPresenter from "@/app/Node/Signal/SignalPresenter";
+import SplitPresenter from "@/app/Node/Split/SplitPresenter";
 import { NodeType, NodeContext, NodeState } from "../../Node/NodeState";
 import {
   addConnection,
@@ -43,10 +45,7 @@ const nodeTypes = {
   ),
   split: (nodeData: any) => (
     <NodeContext.Provider value={nodeData.data.nodeState}>
-      <Handle type="source" position={Position.Top} />{" "}
-      {/*This stuff should be replaced with SplitPresenter.tsx*/}
-      <Handle type="target" position={Position.Bottom} />
-      <div>Empty (split)</div>
+      <SplitPresenter/>
     </NodeContext.Provider>
   ),
   merge: (nodeData: any) => (
@@ -59,12 +58,7 @@ const nodeTypes = {
   ),
   signal: (nodeData: any) => (
     <NodeContext.Provider value={nodeData.data.nodeState}>
-      <div>
-        <Handle type="source" position={Position.Top} />{" "}
-        {/*This stuff should be replaced with SignalPresenter.tsx*/}
-        <Handle type="target" position={Position.Bottom} />
-        Empty (signal)
-      </div>
+      <SignalPresenter/>
     </NodeContext.Provider>
   ),
 };

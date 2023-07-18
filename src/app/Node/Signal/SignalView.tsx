@@ -1,7 +1,9 @@
-import React from 'react';
-import {  RowContainer, ProgressBar, ProgressBarContainer, ProgressBarWrapper, ProgressBarText, PlayButton, Container, BlankSpace } from "@/app/Util/BaseStyles";
-import { NodeSmall } from "@/app/Util/NodeStyles";
+import React, { useContext } from 'react';
+import { Container, BlankSpace } from "@/app/Util/BaseStyles";
+import { NodeSmall, RowContainer, ProgressBar, ProgressBarContainer, ProgressBarWrapper, ProgressBarText, PlayButton} from "@/app/Util/Flow/NodeStyles";
 import GenerateHandles from '@/app/Util/HandleHandler';
+import { NodeContext } from '../NodeState';
+import { useGraph } from '../GraphContext';
 
 interface SignalViewProps{
   numberOfSourceHandles: number;
@@ -17,9 +19,20 @@ interface SignalViewProps{
 const SignalView: React.FC<SignalViewProps> = ({ onPlayPause, playing, currentTime, duration, numberOfSourceHandles, numberOfTargetHandles, audioComputed, isComputing}) => {
     const progress = (currentTime / duration) * 100;
 
+    const graph = useGraph();
+    const node = useContext(NodeContext); // Use NodeContext to get NodeState instance
+  
+    function selectNode() {
+      graph.selectNode(node);
+    }
+
 
   return (
-    <NodeSmall>
+    <NodeSmall 
+    widthextension={0}
+    selected={node?.selected ?? false}
+    onClick={selectNode}
+    >
       <GenerateHandles handleType="target" numberOfHandles={numberOfTargetHandles}/>
       <RowContainer>
 
