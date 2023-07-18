@@ -50,9 +50,9 @@ const nodeTypes = {
   ),
   merge: (nodeData: any) => (
     <NodeContext.Provider value={nodeData.data.nodeState}>
-      <Handle type="source" position={Position.Top} />
+      <Handle type="target" position={Position.Top} />
       {/*This stuff should be replaced with MergePresenter.tsx*/}
-      <Handle type="target" position={Position.Bottom} />
+      <Handle type="source" position={Position.Bottom} />
       <div>Empty (merge)</div>
     </NodeContext.Provider>
   ),
