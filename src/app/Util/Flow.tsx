@@ -20,6 +20,7 @@ import {
 } from "../Node/GraphContext";
 import { Container } from "./BaseStyles";
 import SignalPresenter from "../Node/Signal/SignalPresenter";
+import SplitPresenter from "../Node/Split/SplitPresenter";
 
 const MIN_DIST_FROM_OTHER_NODES = 50;
 
@@ -40,7 +41,7 @@ const nodeTypes = {
     <NodeContext.Provider value={nodeData.data.nodeState}>
       <Handle type="target" position={Position.Top} />
       <Handle type="source" position={Position.Bottom} />
-      <div>Empty (split)</div>
+      <SplitPresenter />
     </NodeContext.Provider>
   ),
   merge: (nodeData: any) => (
@@ -52,7 +53,7 @@ const nodeTypes = {
   ),
   signal: (nodeData: any) => (
     <NodeContext.Provider value={nodeData.data.nodeState}>
-        <SignalPresenter audioUrl="https://www2.cs.uic.edu/~i101/SoundFiles/CantinaBand3.wav"/>
+        <SignalPresenter />
     </NodeContext.Provider>
   ),
 };

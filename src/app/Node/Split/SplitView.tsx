@@ -6,40 +6,20 @@ import GenerateHandles from '@/app/Util/HandleHandler';
 interface SplitViewProps{
   numberOfSourceHandles: number;
   numberOfTargetHandles: number;
-  currentTime: number;
-  duration: number;
-  audioComputed: boolean;
-  onPlayPause: () => void;
-  playing: boolean;
-  isComputing: boolean;
 }
 
-const SplitView: React.FC<SplitViewProps> = ({ onPlayPause, playing, currentTime, duration, numberOfSourceHandles, numberOfTargetHandles, audioComputed, isComputing}) => {
-    const progress = (currentTime / duration) * 100;
-
+const SplitView: React.FC<SplitViewProps> = ({ numberOfSourceHandles, numberOfTargetHandles }) => {
 
   return (
     <NodeSmall>
-      <GenerateHandles type="target" numberOfHandles={numberOfTargetHandles}/>
+      <GenerateHandles splitNode= {true} handleType="target" numberOfHandles={numberOfTargetHandles} />
       <RowContainer>
 
-        <span>~ signal</span>
+        <span>{"-< split"}</span>
 
-        <ProgressBarContainer audioComputed={audioComputed}> 
-          <ProgressBarWrapper>
-            {!audioComputed && <ProgressBarText>compute for 3 tokens</ProgressBarText>}
-            <ProgressBar progress={progress}/>
-          </ProgressBarWrapper>
-
-          {isComputing? "computing...":
-          <PlayButton onClick={onPlayPause}> 
-            {playing? "pause" : "play"}  
-          </PlayButton>
-          }
-        </ProgressBarContainer>
       </RowContainer>
 
-      <GenerateHandles type="source" numberOfHandles={numberOfSourceHandles}/>
+      <GenerateHandles splitNode = {true} handleType="source" numberOfHandles={numberOfSourceHandles}/>
     </NodeSmall>
   );
 }

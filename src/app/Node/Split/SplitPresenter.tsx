@@ -15,7 +15,10 @@ const SplitPresenter: React.FC = () => {
 
     return (
         <div>
-            hi
+            <SplitView 
+                numberOfSourceHandles={numberOfSourceHandles}
+                numberOfTargetHandles={numberOfTargetHandles}
+            />
         </div>
     )
 }

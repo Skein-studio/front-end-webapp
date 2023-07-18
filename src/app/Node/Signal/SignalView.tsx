@@ -20,7 +20,7 @@ const SignalView: React.FC<SignalViewProps> = ({ onPlayPause, playing, currentTi
 
   return (
     <NodeSmall>
-      <GenerateHandles type="target" numberOfHandles={numberOfTargetHandles}/>
+      <GenerateHandles handleType="target" numberOfHandles={numberOfTargetHandles}/>
       <RowContainer>
 
         <span>~ signal</span>
@@ -39,7 +39,7 @@ const SignalView: React.FC<SignalViewProps> = ({ onPlayPause, playing, currentTi
         </ProgressBarContainer>
       </RowContainer>
 
-      <GenerateHandles type="source" numberOfHandles={numberOfSourceHandles}/>
+      <GenerateHandles handleType="source" numberOfHandles={numberOfSourceHandles}/>
     </NodeSmall>
   );
 }
