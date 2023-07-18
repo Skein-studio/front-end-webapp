@@ -1,3 +1,5 @@
+//UnspecifiedPresenter.tsx
+
 import React, { useState, useContext } from "react";
 import { NodeContext, NodeState } from "../NodeState";
 import UnspecifiedView from "./UnspecifiedView";
@@ -10,9 +12,14 @@ import { useGraph, setNode } from "../GraphContext";
   to have an unspecified node which you can choose the type of
 */
 
-const UnspecifiedPresenter: React.FC = () => { 
+const UnspecifiedPresenter: React.FC = () => {
   const node = useContext(NodeContext); // Use NodeContext to get NodeState instance
-  const { nodes, edges, reloadComponent, setOpenNode } = useGraph();
+  const {
+    nodes,
+    edges,
+    reloadComponent,
+    setSelectedNode: setOpenNode,
+  } = useGraph();
 
   function changeType(type: NodeType) {
     // Create a new node object with updated type
@@ -35,7 +42,10 @@ const UnspecifiedPresenter: React.FC = () => {
       position: node.position,
     };
 
-    setNode({nodes, edges, reloadComponent, setOpenNode}, updatedNode);
+    setNode(
+      { nodes, edges, reloadComponent, setSelectedNode: setOpenNode },
+      updatedNode
+    );
   }
 
   return <UnspecifiedView setNode={changeType} />;

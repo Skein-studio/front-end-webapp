@@ -1,14 +1,24 @@
-import React, { useState } from "react";
+//GenerateAudio.tsx
+
+import React, { useContext, useState } from "react";
 import { Button, Container } from "../BaseStyles";
-import { useAudio } from "../AudioContext";
+import { NodeContext } from "@/app/Node/NodeState";
+import { useGraph } from "@/app/Node/GraphContext";
 
 const GenerateAudio: React.FC = () => {
-  const { audioData, setAudioData } = useAudio();
+  const node = useContext(NodeContext); // Use NodeContext to get NodeState instance
+  const audioData = node?.data.audio;
+  const graph = useGraph();
 
   const handleClick = () => {
     // This is where you would call your backend service to generate the audio
     // For now, we'll use a dummy audio file
-    setAudioData("/dummy.mp3"); // Changed this line
+    if (node) {
+      node.data.audio = "/dummy.mp3";
+    } else {
+      console.error("No nodecontext found", this);
+    }
+    graph.reloadComponent();
   };
 
   return (
