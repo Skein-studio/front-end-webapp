@@ -89,8 +89,11 @@ const RowContainer = styled.div`
 
 const ProgressBarContainer = styled.div<{ audiocomputed: boolean|undefined }>`
   display: flex;
+  position: absolute;
   align-items: center;
-  width: 100%;
+  right: -50px;
+  top: -20px;
+  width: 70%;
   position: relative;
   background-color: #1133;
   height: 20px;
