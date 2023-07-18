@@ -1,9 +1,11 @@
 import React, { useContext } from 'react';
 import { Container, BlankSpace } from "@/app/Util/BaseStyles";
-import { NodeSmall, RowContainer, ProgressBar, ProgressBarContainer, ProgressBarWrapper, ProgressBarText, PlayButton} from "@/app/Util/Flow/NodeStyles";
+import { NodeIcon, NodeSmall, RowContainer, ProgressBar, ProgressBarContainer, ProgressBarWrapper, ProgressBarText, PlayButton, NodeTitle} from "@/app/Util/Flow/NodeStyles";
 import GenerateHandles from '@/app/Util/HandleHandler';
 import { NodeContext } from '../NodeState';
 import { useGraph } from '../GraphContext';
+import SignalImg from "./signal.svg";
+
 
 interface SignalViewProps{
   numberOfSourceHandles: number;
@@ -17,7 +19,7 @@ interface SignalViewProps{
 }
 
 const SignalView: React.FC<SignalViewProps> = ({ onPlayPause, playing, currentTime, duration, numberOfSourceHandles, numberOfTargetHandles, audioComputed, isComputing}) => {
-    const progress = (currentTime / duration) * 100;
+    const progress = duration != 0 ? (currentTime / duration) * 100 : 0;
 
     const graph = useGraph();
     const node = useContext(NodeContext); // Use NodeContext to get NodeState instance
@@ -34,11 +36,11 @@ const SignalView: React.FC<SignalViewProps> = ({ onPlayPause, playing, currentTi
     onClick={selectNode}
     >
       <GenerateHandles handleType="target" numberOfHandles={numberOfTargetHandles}/>
-      <RowContainer>
-
-        <span>~ signal</span>
-
-        <ProgressBarContainer audioComputed={audioComputed}> 
+      <NodeIcon src={SignalImg}></NodeIcon>
+      <NodeTitle>signal</NodeTitle>
+      <Container flexdir='row'>
+        
+        <ProgressBarContainer audiocomputed={audioComputed ? true : undefined}> 
           <ProgressBarWrapper>
             {!audioComputed && <ProgressBarText>compute for 3 tokens</ProgressBarText>}
             <ProgressBar progress={progress}/>
@@ -50,7 +52,7 @@ const SignalView: React.FC<SignalViewProps> = ({ onPlayPause, playing, currentTi
           </PlayButton>
           }
         </ProgressBarContainer>
-      </RowContainer>
+      </Container>
 
       <GenerateHandles handleType="source" numberOfHandles={numberOfSourceHandles}/>
     </NodeSmall>
