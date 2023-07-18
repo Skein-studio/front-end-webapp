@@ -61,7 +61,7 @@ const FlowView: React.FC<Props> = (props) => {
     <OuterBox width="95vw" height="95vh">
       <GraphNameInput defaultValue={"violet-york-mayflower"} />
       <OptionsView toggle={showSelected} />
-      <Overlay show={openSelectedNode} />
+      <Overlay show={openSelectedNode ? true : undefined} />
       {openSelectedNode && openNodeView()}
       <ReactFlow
         key={flowKey}
@@ -99,7 +99,7 @@ const FlowView: React.FC<Props> = (props) => {
 export default FlowView;
 
 interface OverLayProps {
-  show: boolean;
+  show: boolean|undefined;
 }
 
 const Overlay = styled.div<OverLayProps>`

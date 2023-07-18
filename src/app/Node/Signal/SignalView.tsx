@@ -17,7 +17,7 @@ interface SignalViewProps{
 }
 
 const SignalView: React.FC<SignalViewProps> = ({ onPlayPause, playing, currentTime, duration, numberOfSourceHandles, numberOfTargetHandles, audioComputed, isComputing}) => {
-    const progress = (currentTime / duration) * 100;
+    const progress = duration != 0 ? (currentTime / duration) * 100 : 0;
 
     const graph = useGraph();
     const node = useContext(NodeContext); // Use NodeContext to get NodeState instance
@@ -38,7 +38,7 @@ const SignalView: React.FC<SignalViewProps> = ({ onPlayPause, playing, currentTi
 
         <span>~ signal</span>
 
-        <ProgressBarContainer audioComputed={audioComputed}> 
+        <ProgressBarContainer audiocomputed={audioComputed ? true : undefined}> 
           <ProgressBarWrapper>
             {!audioComputed && <ProgressBarText>compute for 3 tokens</ProgressBarText>}
             <ProgressBar progress={progress}/>

@@ -87,7 +87,7 @@ const RowContainer = styled.div`
   padding: 10px 0;
 `;
 
-const ProgressBarContainer = styled.div<{ audioComputed: boolean }>`
+const ProgressBarContainer = styled.div<{ audiocomputed: boolean|undefined }>`
   display: flex;
   align-items: center;
   width: 100%;
@@ -95,7 +95,7 @@ const ProgressBarContainer = styled.div<{ audioComputed: boolean }>`
   background-color: #1133;
   height: 20px;
   
-  border: 2px solid ${(props) => (props.audioComputed ? "transparent" : "red")};
+  border: 2px solid ${(props) => (props.audiocomputed ? "transparent" : "red")};
 `;
 
 const ProgressBarWrapper = styled.div`
