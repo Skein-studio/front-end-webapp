@@ -5,7 +5,6 @@ import ReactFlow from "reactflow";
 import "reactflow/dist/style.css";
 import { Container } from "@/app/Util/BaseStyles";
 import Canvas from "@/app/Util/Flow/Flow";
-import MyFlowDiagram from "@/app/Util/FlowExample";
 import { styled } from "styled-components";
 const ApplicationFrame = styled.div`
   display: flex;
@@ -16,11 +15,9 @@ const ApplicationFrame = styled.div`
   height: 100%;
 `;
 
-
 export default function Home() {
   return (
-    <ApplicationFrame
-    >
+    <ApplicationFrame>
       <Canvas></Canvas>
 
       <Container>

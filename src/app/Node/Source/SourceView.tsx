@@ -9,10 +9,9 @@ import GenerateAudio from "@/app/Util/AudioGenerator/GenerateAudio";
 import { useAudio } from "@/app/Util/AudioContext";
 import { useGraph } from "../GraphContext";
 import { NodeContext } from "../NodeState";
-import { useContext } from "react";
+import { useContext, useEffect, useState } from "react";
 import { styled } from "styled-components";
-import SourceImg from './source.svg';
-
+import SourceImg from "./source.svg";
 
 const BaseOptionsView = ({
   handleBaseChange,
@@ -28,14 +27,14 @@ const BaseOptionsView = ({
 
 export const BaseComponent = ({ base }: { base: string }) => {
   switch (base) {
-    case "Record":
+    case "record":
       return <RecordPresenter />;
-    case "Import":
+    case "import":
       return <ImportAudio />;
-    case "Generate":
+    case "generate":
       return <GenerateAudio />;
     default:
-      return null;
+      return <div>Choose a base first!</div>;
   }
 };
 
@@ -55,32 +54,32 @@ type SourceProps = {
   handleBaseChange: (text: string) => void;
 };
 
-const SourceView: React.FC<SourceProps> = ({
-  base,
-  handleBaseChange,
-}) => {
-
+const SourceView: React.FC<SourceProps> = ({ base, handleBaseChange }) => {
   const graph = useGraph();
   const node = useContext(NodeContext); // Use NodeContext to get NodeState instance
 
-  function openNode(){ // set the currently open node to this node
-    graph.setOpenNode(node);
+  function selectNode() {
+    graph.selectNode(node);
   }
 
-  return ( //can extend width by multiplying a value times the number of outputs - 10 or something in that manner
-    <NodeSmall widthextension={0}>
-        <BlankSpace height={5} width={5}></BlankSpace>
-        {<NodeIcon src={SourceImg} />}
-        <NodeTitle>source{base != "" ? `[${base}]` : ""}</NodeTitle>
-        <SelectButton onClick={openNode}>select</SelectButton>
-        <Container style={{ flex: 1 }}>
-          {base ? (
-              <SmallView />)
-           : (
-              <BaseOptionsView handleBaseChange={handleBaseChange} />
-          )}
-          <Handle type="target" position={Position.Bottom} />
-        </Container>
+  return (
+    //can extend width by multiplying a value times the number of outputs - 10 or something in that manner
+    <NodeSmall
+      widthextension={0}
+      selected={node?.selected ?? false}
+      onClick={selectNode}
+    >
+      <BlankSpace height={5} width={5}></BlankSpace>
+      {<NodeIcon src={SourceImg} />}
+      <NodeTitle>source{base != "" ? `[${base}]` : ""}</NodeTitle>
+      <Container style={{ flex: 1 }}>
+        {base ? (
+          <SmallView />
+        ) : (
+          <BaseOptionsView handleBaseChange={handleBaseChange} />
+        )}
+        <Handle type="target" position={Position.Bottom} />
+      </Container>
     </NodeSmall>
   );
 };
@@ -89,9 +88,9 @@ export default SourceView;
 
 //temp
 const SelectButton = styled.button`
-font-family: verdana;
-border-radius: 10px;
-position:absolute;
-right: 5px;
-top: 5px; 
-`
+  font-family: verdana;
+  border-radius: 10px;
+  position: absolute;
+  right: 5px;
+  top: 5px;
+`;

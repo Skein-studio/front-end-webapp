@@ -21,7 +21,8 @@ export class NodeState {
   inputs: string[] | undefined; // later for deciding which output is what, - these are just strings representing the name of each in/output
   outputs: string[] | undefined;
   type: NodeType;
-  data:any = {};
+  data: any = {};
+  selected: boolean;
   constructor(x: number, y: number, type: NodeType, id?: number) {
     this.position = {
       x: x,
@@ -31,6 +32,7 @@ export class NodeState {
     this.setInputs();
     this.setOutputs();
     this.type = type;
+    this.selected = false;
     console.log("Created new node:", this);
   }
 

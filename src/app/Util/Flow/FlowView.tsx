@@ -1,13 +1,20 @@
 //FlowView.tsx
 
-import React from "react";
+import React, { useState } from "react";
 import ReactFlow, {
   MiniMap,
   Background,
   BackgroundVariant,
-  Node, Edge, Viewport, NodeChange, EdgeChange,
+  Node,
+  Edge,
+  Viewport,
+  NodeChange,
+  EdgeChange,
 } from "reactflow";
 import { OuterBox, GraphNameInput } from "../BaseStyles";
+import styled from "styled-components";
+import OptionsView from "./OptionsView/OptionsView";
+import { NodeState } from "@/app/Node/NodeState";
 
 interface Props {
   flowKey: number;
@@ -23,6 +30,10 @@ interface Props {
   viewport: Viewport;
   onMove: (event: MouseEvent | TouchEvent, viewport: Viewport) => void;
   openNodeView: () => JSX.Element | null;
+  openSelectedNode: boolean;
+  showSelected: () => void;
+  hideSelected: () => void;
+  handlePaneClick: () => void;
 }
 
 const FlowView: React.FC<Props> = (props) => {
@@ -39,13 +50,19 @@ const FlowView: React.FC<Props> = (props) => {
     onNodeDragStop,
     viewport,
     onMove,
-    openNodeView
+    openNodeView,
+    openSelectedNode,
+    showSelected,
+    hideSelected,
+    handlePaneClick,
   } = props;
 
   return (
     <OuterBox width="95vw" height="95vh">
       <GraphNameInput defaultValue={"violet-york-mayflower"} />
-      {openNodeView()}
+      <OptionsView toggle={showSelected} />
+      <Overlay show={openSelectedNode} />
+      {openSelectedNode && openNodeView()}
       <ReactFlow
         key={flowKey}
         nodes={nodes}
@@ -61,8 +78,18 @@ const FlowView: React.FC<Props> = (props) => {
         onNodeDragStop={onNodeDragStop}
         defaultViewport={viewport}
         onMove={onMove}
+        onPaneClick={handlePaneClick}
       >
-        <MiniMap></MiniMap>
+        <MiniMap
+          style={{
+            position: "absolute",
+            bottom: "-25px",
+            right: "-25px",
+            borderRadius: "10px",
+            border: "1px solid black",
+            transform: "scale(0.625)",
+          }}
+        />
         <Background color="#ccc" variant={BackgroundVariant.Cross} />
       </ReactFlow>
     </OuterBox>
@@ -70,3 +97,18 @@ const FlowView: React.FC<Props> = (props) => {
 };
 
 export default FlowView;
+
+interface OverLayProps {
+  show: boolean;
+}
+
+const Overlay = styled.div<OverLayProps>`
+  background-color: rgba(255, 255, 255, 0.5); // half transparent white
+  position: fixed; // to cover the whole screen
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: 1; // higher than the content but lower than the openNodeView
+  display: ${(props) => (props.show ? "block" : "none")};
+`;

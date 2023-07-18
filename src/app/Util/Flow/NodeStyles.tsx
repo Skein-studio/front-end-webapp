@@ -5,36 +5,36 @@ const spookwhite = "#d9d9d9";
 
 const NodeTitle = styled.p`
   position: absolute;
-  top:0px;
+  top: 0px;
   left: 50px;
-  font-family:verdana;
+  font-family: verdana;
   font-size: 16px;
   color: ${purple};
 `;
 
 const IconContainer = styled.div`
-position: absolute;
-left: 10px;
-top: 10px;
-width:32px;
-height: 32px;
-`
+  position: absolute;
+  left: 10px;
+  top: 10px;
+  width: 32px;
+  height: 32px;
+`;
 const Icon = styled.img`
-height: 100%;
-width: 100%;
-`
+  height: 100%;
+  width: 100%;
+`;
 
-interface IconProps{
-  src:string, 
+interface IconProps {
+  src: string;
 }
 
-const NodeIcon = (
-  props:IconProps,
-) => {
-  return (<IconContainer>
-    <Icon src={props.src}></Icon>
-  </IconContainer>)
-}
+const NodeIcon = (props: IconProps) => {
+  return (
+    <IconContainer>
+      <Icon src={props.src}></Icon>
+    </IconContainer>
+  );
+};
 
 const StyledSelect = styled.select`
   padding: 5px;
@@ -51,27 +51,31 @@ const ToggleButton = styled.button`
 
 interface NodeProps {
   flexdir?: string;
-  widthextension:number;
+  widthextension: number;
+  selected: boolean;
 }
 
 const NodeSmall = styled.div<NodeProps>`
   display: flex;
-  font-family:verdana;
+  font-family: verdana;
   flex-direction: ${(props) => (props.flexdir ? props.flexdir : "column")};
   justify-content: center;
   align-items: center;
   align-self: center;
-  width: ${(props) => (props.widthextension + 300)}px;
+  width: ${(props) => props.widthextension + 300}px;
   height: 75px;
   margin: 2px 0; // Apply margin only on top and bottom
   padding: 4px;
   background-color: #404040;
   border-radius: 10px;
-  box-shadow: 0px 0px 0px ${purple};
+  box-shadow: ${(props) =>
+    props.selected
+      ? "0px 4px 8px rgba(100, 0, 255, 1)"
+      : "0px 2px 8px rgba(100, 0, 255, 0)"};
   transition: box-shadow 0.3s ease;
 
   &:hover {
-    box-shadow: 0px 2px 8px rgba(100, 0, 255, 0.625);
+    box-shadow: 0px 2px 8px rgba(100, 0, 255, 0.5);
   }
 `;
 
