@@ -26,6 +26,16 @@ const BaseOptionsView = ({
 );
 
 export const BaseComponent = ({ base }: { base: string }) => {
+  const graph = useGraph();
+  const node = useContext(NodeContext);
+
+  const handleBaseChange = (text: string) => {
+    if (node) {
+      node.data.base = text;
+      graph.reloadComponent();
+    }
+  };
+
   switch (base) {
     case "record":
       return <RecordPresenter />;
@@ -34,27 +44,33 @@ export const BaseComponent = ({ base }: { base: string }) => {
     case "generate":
       return <GenerateAudio />;
     default:
-      return <div>Choose a base first!</div>;
+      return <BaseOptionsView handleBaseChange={handleBaseChange}/>;
   }
 };
+
+const PreviewText = styled.p`
+color: white;
+position: absolute;
+bottom: -15px;
+`
+
 
 const SmallView = () => {
   const { audioData, setAudioData } = useAudio();
 
   return (
-    <Container>
-      {audioData && audioData.toString()}
+    <>
+      <PreviewText>{audioData && audioData.toString()}</PreviewText>
       {/*audioData && <audio src={audioData} controls /> this is removed since we currently decided not to have a play button in the source file*/}
-    </Container>
+    </>
   );
 };
 
 type SourceProps = {
   base: string;
-  handleBaseChange: (text: string) => void;
 };
 
-const SourceView: React.FC<SourceProps> = ({ base, handleBaseChange }) => {
+const SourceView: React.FC<SourceProps> = ({ base }) => {
   const graph = useGraph();
   const node = useContext(NodeContext); // Use NodeContext to get NodeState instance
 
@@ -76,9 +92,9 @@ const SourceView: React.FC<SourceProps> = ({ base, handleBaseChange }) => {
         {base ? (
           <SmallView />
         ) : (
-          <BaseOptionsView handleBaseChange={handleBaseChange} />
+          <></>
         )}
-        <Handle type="target" position={Position.Bottom} />
+        <Handle type="source" position={Position.Bottom} />
       </Container>
     </NodeSmall>
   );

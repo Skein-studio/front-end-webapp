@@ -48,7 +48,7 @@ interface OptionsButtonProps {
   callback: () => void;
 }
 
-const OptionsButton: React.FC<OptionsButtonProps> = ({ img, callback }) => {
+export const OptionsButton: React.FC<OptionsButtonProps> = ({ img, callback }) => {
   return (
     <StyledOptionsButton onClick={callback}>
       <NodeIcon src={img} />
@@ -68,6 +68,7 @@ const StyledOptionsButton = styled.button`
   transition: background-color 0.3s ease, box-shadow 0.3s ease;
   box-shadow: 0px 1px 0px ${purple};
   cursor: pointer;
+  z-index: 1;
 
   &:hover {
     background-color: #757575;

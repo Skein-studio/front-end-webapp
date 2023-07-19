@@ -64,9 +64,7 @@ export class NodeState {
   }
 
   generateID(): number {
-    let newID = nodeID;
-    nodeID++;
-    return newID;
+    return nodeID++;
   }
 
   getID(): number {
