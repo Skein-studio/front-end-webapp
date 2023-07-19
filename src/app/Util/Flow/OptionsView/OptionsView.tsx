@@ -1,3 +1,5 @@
+//OptionsView.tsx
+
 import React from "react";
 import styled from "styled-components";
 import { purple } from "../NodeStyles";
@@ -7,36 +9,44 @@ import trashcan from "./trashcan.svg";
 import undo from "./undo.svg";
 import enlarge from "./enlarge.svg";
 
+/* This component is the options view for the flow editor. 
+It contains the options buttons in the corner of the window */
+
 interface Props {
   toggle: () => void;
+  deleteSelectedNode: () => void;
+  deleteSelectedEdge: () => void;
+  addButtonHandler: () => void;
 }
 
 export default function OptionsView(props: Props) {
+  
   return (
     <OptionsContainer>
       <OptionsButton img={enlarge} callback={props.toggle} />
       <OptionsButton
         img={trashcan}
         callback={() => {
-          console.log("do something");
+          props.deleteSelectedNode();
+          props.deleteSelectedEdge();
         }}
       />
       <OptionsButton
         img={undo}
         callback={() => {
-          console.log("do something");
+          console.log("undo");
         }}
       />
       <OptionsButton
         img={redo}
         callback={() => {
-          console.log("do something");
+          console.log("redo");
         }}
       />
       <OptionsButton
         img={plus}
         callback={() => {
-          console.log("do something");
+          props.addButtonHandler();
         }}
       />
     </OptionsContainer>

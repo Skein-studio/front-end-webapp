@@ -12,8 +12,8 @@ import {
   useNodesState,
   useReactFlow,
   Viewport,
-  Connection,
   OnConnectStartParams,
+  OnSelectionChangeParams,
 } from "reactflow";
 import SourcePresenter from "../../Node/Source/SourcePresenter";
 import UnspecifiedPresenter from "../../Node/Unspecified/UnspecifiedPresenter";
@@ -26,16 +26,23 @@ import {
   Graph,
   GraphContext,
   deselectNode,
+  deleteNodes,
+  deleteEdges,
+  getNode,
 } from "../../Node/GraphContext";
 import OpenNodePresenter from "@/app/Node/OpenNode/OpenNodePresenter";
 import FlowView from "./FlowView";
+
+/* This component's purpose is to create the flowchart 
+view and handle the logic for the flowchart. 
+It is the central file of the app. */
 
 const NODE_WIDTH = 300;
 const NODE_HEIGHT = 50;
 
 const proOptions = { hideAttribution: true };
 
-const nodeTypes = {
+const nodeTypes = { // this is where we define the node types
   source: (nodeData: any) => (
     <NodeContext.Provider value={nodeData.data.nodeState}>
       <SourcePresenter />
@@ -72,7 +79,8 @@ const Canvas: React.FC = () => {
   const [edges, setEdges, onEdgesChange] = useEdgesState<Edge>([]);
   const [flowKey, setFlowKey] = useState(0);
   const [viewport, setViewport] = useState<Viewport>({ x: 0, y: 0, zoom: 1 }); // find a way to save the viewport and pass it to reactflow component
-  const [selectedNode, setSelectedNode] = useState<NodeState>();
+  const [selectedNode, setSelectedNode] = useState<NodeState>(); // do not use this directly, use selectNode() instead 
+  const [selectedEdge, setSelectedEdge] = useState<Edge>();
   const [openSelectedNode, setOpenSelectedNode] = useState<boolean>(false);
   const [connectStartNode, setConnectStartNode] = useState<Node>();
 
@@ -96,28 +104,67 @@ const Canvas: React.FC = () => {
     setSelectedNode(nodeState);
     nodeState!.selected = true;
   }
+  function deleteSelectedNode() { // this is called when the user clicks on the delete button
+    if(graph.selectedNode){
+      const nodeToDelete = getNode(graph, graph.selectedNode.id);
+      if (nodeToDelete) {
+        deleteNodes(graph, [nodeToDelete]);
+      } else {
+        console.log(`No node found with id: ${graph.selectedNode.id}`);
+      }
+    } 
+  }
+
+  function deleteSelectedEdge() { // this is called when the user clicks on the delete button
+    if(selectedEdge){
+      const edgeToDelete = selectedEdge;
+      if (edgeToDelete) {
+        deleteEdges(graph, [edgeToDelete]);
+      } else {
+        console.log("huh");
+      }
+    }
+  }
+
 
     /*
     We wrap the value passed to the provider in a useMemo hook. 
     The useMemo hook returns a memoized value that only recomputes when any of its dependencies change, 
     making sure that the reference stays the same if the values of the variables didn't change.
+    This is the graph object that is passed to the GraphContext.Provider
     */
   const graph: Graph = useMemo(
     () => ({ nodes, edges, reloadComponent, selectNode, selectedNode }),
     [nodes, edges, reloadComponent, selectNode, selectedNode]
-  );
+  ); 
 
-  function stopSelect() {
+  function stopSelect() { // this is called when the user clicks on the canvas
     deselectNode(graph);
     setSelectedNode(undefined);
     setOpenSelectedNode(false);
   }
 
-  function onMove(event: MouseEvent | TouchEvent, viewport: Viewport) {
-    setViewport({ x: viewport.x, y: viewport.y, zoom: viewport.zoom });
+  function onSelectionChange(params:OnSelectionChangeParams){ // this is called when an edge selection is changed
+    if(params.edges.length == 0){ // if no edges are selected
+      setSelectedEdge(undefined);// deselect the edge
+    }else {// if an edge is selected
+      setSelectedEdge(params.edges[0]);// select the edge that is first in the list of selected edges
+    }
   }
 
-  const onConnect = useCallback(
+  function onMove(event: MouseEvent | TouchEvent, viewport: Viewport) {// this is called when the user moves the canvas
+    setViewport({ x: viewport.x, y: viewport.y, zoom: viewport.zoom }); // save the viewport
+  }
+
+  function onNodesDelete(nodesToDelete: Node[]) { // this is called when the user deletes a node
+      deleteNodes(graph, nodesToDelete);//  delete the node from the graph
+  }
+
+  function onEdgesDelete(edgesToDelete: Edge[]) { // this is called when the user deletes an edge
+      deleteEdges(graph, edgesToDelete); // delete the edge from the graph
+  }
+
+  const onConnect = useCallback( // this is called when the user connects two nodes
     (connection: any) => {
       setEdges((eds) => {
         const newEdges = addEdge(connection, eds);
@@ -129,7 +176,7 @@ const Canvas: React.FC = () => {
     [setEdges, nodes]
   );
 
-  function handlePaneClick() {
+  function handlePaneClick() {// this is called when the user clicks on the canvas
     stopSelect();
   }
 
@@ -145,7 +192,7 @@ const Canvas: React.FC = () => {
     );
   }
 
-  function onConnectStart(event: React.MouseEvent<Element, MouseEvent> | React.TouchEvent<Element>, params: OnConnectStartParams) {
+  function onConnectStart(event: React.MouseEvent<Element, MouseEvent> | React.TouchEvent<Element>, params: OnConnectStartParams) { // this is called when the user starts connecting by dragging from a node handle
     let nodeId = params.nodeId;
     let node : Node | undefined = nodes.find((node) => node.id === nodeId);
     if (node) {
@@ -154,7 +201,7 @@ const Canvas: React.FC = () => {
     }
   }
 
-  function onConnectEnd(event: MouseEvent | TouchEvent) {
+  function onConnectEnd(event: MouseEvent | TouchEvent) { // this is called when the user stops connecting by dragging from a node handle
     if (event instanceof MouseEvent) {
       const clientX = event.clientX;
       const clientY = event.clientY;
@@ -216,30 +263,29 @@ const Canvas: React.FC = () => {
   
   
 
-  const addNewNode = (x: number, y: number, nodeType: NodeType) => {
-    const newNode = createNewNode(x, y, nodeType, graph);
+  const addNewNode = (x: number, y: number, nodeType: NodeType) => { // this is called when the user adds a new node
+    const newNode = createNewNode(x, y, nodeType, graph); // create a new node in the graph
     const newNodes = [...nodes, newNode];
     setNodes(newNodes);
     return newNode;
   };
 
-  function onNodeDragStop(event: React.MouseEvent, node: Node, nodes: Node[]) {
-    //update position in nodeState
-    node.data.nodeState.setPosition(node.position.x, node.position.y);
+  function onNodeDragStop(event: React.MouseEvent, node: Node, nodes: Node[]) { // this is called when the user stops dragging a node
+    node.data.nodeState.setPosition(node.position.x, node.position.y);     //update position in nodeState
   }
 
-  function showSelected() {
+  function showSelected() { // this is called when the user clicks on a node
     if (selectedNode) {
       setOpenSelectedNode(true);
     } else {
       console.log("Cannot enlarge without selecting a node");
     }
   }
-  function hideSelected() {
+  function hideSelected() { // this is called when the user clicks on the "close" button in the node view
     setOpenSelectedNode(false);
   }
 
-  function openNodeView() {
+  function openNodeView() { // this is called when the user clicks on a the "open" button in the node view
     if (selectedNode) {
       return (
         <OpenNodePresenter state={selectedNode} closeWindow={stopSelect} />
@@ -249,32 +295,45 @@ const Canvas: React.FC = () => {
     }
   }
 
-  useMemo(() => {
-    addNewNode(250, 250, NodeType.Source);
+  useMemo(() => { // this is called when the component is first rendered, so we can add a source node
+      if(!getNode(graph, 1)){ // if the source node doesn't exist
+        addNewNode(250, 250, NodeType.Source);
+    }
   }, []);
+
+  function addButtonHandler() { // this is called when the user clicks on the "add" button
+    addNewNode(250-viewport.x+NODE_WIDTH/8, 250-viewport.y+NODE_HEIGHT*2, NodeType.Unspecified);
+  }
 
   return (
     <ReactFlowProvider>
       <GraphContext.Provider value={graph}>
         <FlowView
           flowKey={flowKey}
-          nodes={nodes}
-          edges={edges}
-          nodeTypes={nodeTypes}
           proOptions={proOptions}
+          nodes={nodes}
+          nodeTypes={nodeTypes}
+          onNodesChange={onNodesChange}
+          onNodesDelete={onNodesDelete}
+          deleteSelectedNode={deleteSelectedNode}
+          onNodeDragStop={onNodeDragStop}
+          openNodeView={openNodeView}
+          edges={edges}
+          onEdgesDelete={onEdgesDelete}
+          onEdgesChange={onEdgesChange}
+          deleteSelectedEdge={deleteSelectedEdge}
+          onConnect={onConnect}
           onConnectStart={onConnectStart}
           onConnectEnd={onConnectEnd}
-          onNodesChange={onNodesChange}
-          onEdgesChange={onEdgesChange}
-          onConnect={onConnect}
-          onNodeDragStop={onNodeDragStop}
           viewport={viewport}
           onMove={onMove}
-          openNodeView={openNodeView}
           openSelectedNode={openSelectedNode}
           showSelected={showSelected}
           hideSelected={hideSelected}
           handlePaneClick={handlePaneClick}
+          onSelectionChange={onSelectionChange}
+          addButtonHandler={addButtonHandler}
+          
         />
       </GraphContext.Provider>
     </ReactFlowProvider>

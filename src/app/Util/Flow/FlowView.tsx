@@ -10,6 +10,7 @@ import ReactFlow, {
   Viewport,
   NodeChange,
   EdgeChange,
+  OnSelectionChangeParams,
 } from "reactflow";
 import { OuterBox, GraphNameInput } from "../BaseStyles";
 import styled from "styled-components";
@@ -33,55 +34,47 @@ interface Props {
   openNodeView: () => JSX.Element | null;
   openSelectedNode: boolean;
   showSelected: () => void;
+  onSelectionChange: (params:OnSelectionChangeParams) => void;
   hideSelected: () => void;
   handlePaneClick: () => void;
+  onNodesDelete: (nodes: Node[]) => void;
+  onEdgesDelete: (edges: Edge[]) => void;
+  deleteSelectedNode: () => void;
+  deleteSelectedEdge: () => void;
+  addButtonHandler: () => void;
 }
 
-const FlowView: React.FC<Props> = (props) => {
-  const {
-    flowKey,
-    nodes,
-    edges,
-    nodeTypes,
-    proOptions,
-    onConnectStart,
-    onConnectEnd,
-    onNodesChange,
-    onEdgesChange,
-    onConnect,
-    onNodeDragStop,
-    viewport,
-    onMove,
-    openNodeView,
-    openSelectedNode,
-    showSelected,
-    hideSelected,
-    handlePaneClick,
-  } = props;
+/* This component is the main view for the flow editor. 
+It contains the reactflow graph, the options view, and the overlay. */
+
+function FlowView(props:Props) {
 
   return (
     <OuterBox width="95vw" height="95vh">
       <GraphNameInput defaultValue={"violet-york-mayflower"} />
-      <OptionsView toggle={showSelected} />
-      <Overlay show={openSelectedNode ? true : undefined} />
-      {openSelectedNode && openNodeView()}
+      <OptionsView toggle={props.showSelected} deleteSelectedNode={props.deleteSelectedNode} deleteSelectedEdge={props.deleteSelectedEdge} addButtonHandler={props.addButtonHandler}/>
+      <Overlay show={props.openSelectedNode ? true : undefined} />
+      {props.openSelectedNode && props.openNodeView()}
       <ReactFlow
-        key={flowKey}
-        nodes={nodes}
-        edges={edges}
-        nodeTypes={nodeTypes}
-        proOptions={proOptions}
-        onConnectStart={onConnectStart}
-        onConnectEnd={onConnectEnd}
+        key={props.flowKey}
+        proOptions={props.proOptions}
+        nodes={props.nodes}
+        nodeTypes={props.nodeTypes}
+        onNodesDelete={props.onNodesDelete}
+        onNodesChange={props.onNodesChange}
+        onNodeDragStop={props.onNodeDragStop}
         nodesDraggable={true}
         nodesConnectable={true}
-        onNodesChange={onNodesChange}
-        onEdgesChange={onEdgesChange}
-        onConnect={onConnect}
-        onNodeDragStop={onNodeDragStop}
-        defaultViewport={viewport}
-        onMove={onMove}
-        onPaneClick={handlePaneClick}
+        edges={props.edges}
+        onEdgesDelete={props.onEdgesDelete}
+        onEdgesChange={props.onEdgesChange}
+        onSelectionChange={props.onSelectionChange}
+        onConnect={props.onConnect}
+        onConnectStart={props.onConnectStart}
+        onConnectEnd={props.onConnectEnd}
+        defaultViewport={props.viewport}
+        onMove={props.onMove}
+        onPaneClick={props.handlePaneClick}
       >
         <MiniMap
           style={{

@@ -1,7 +1,9 @@
 //GraphContext.tsx
 
 /*
-  I am thinking that this file should be the base of what is the "SketchModel"
+  This file contains the GraphContext, 
+  which is used to store the state of the graph, 
+  which can then be accessed by any component that needs it.
 */
 
 import { createContext, useContext } from "react";
@@ -15,6 +17,30 @@ export type Graph = {
   selectNode: (nodeState: NodeState | undefined) => void;
   selectedNode: NodeState | undefined;
 };
+
+export function deleteNodes(context: Graph, nodes: Node[]) {
+  for (const node of nodes) {
+    for (let i = 0; i < context.nodes.length; i++) {
+      if (context.nodes[i].id == node.id) {
+        context.nodes.splice(i, 1);//remove the node from the array
+        break;
+      }
+    }
+  }
+  context.reloadComponent();
+}
+
+export function deleteEdges(context: Graph, edges: Edge[]) {
+  for (const edge of edges) {
+    for (let i = 0; i < context.edges.length; i++) {
+      if (context.edges[i].id == edge.id) {
+        context.edges.splice(i, 1);//remove the edge from the array
+        break;
+      }
+    }
+  }
+  context.reloadComponent();
+}
 
 export function deselectNode(context: Graph) {
   if (context.selectedNode) {
