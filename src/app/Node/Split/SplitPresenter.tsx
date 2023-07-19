@@ -7,11 +7,14 @@
 */
 import React, { useState, useEffect, useRef, ReactNode } from "react";
 import SplitView from "./SplitView";
+import { useGraph, addConnection } from "../GraphContext";
 
 const SplitPresenter: React.FC = () => {
 
   const [numberOfTargetHandles, setNumberOfTargetHandles] = useState<number>(1);
   const [numberOfSourceHandles, setNumberOfSourceHandles] = useState<number>(6);
+
+  const graph = useGraph()  
 
     return (
         <div>
