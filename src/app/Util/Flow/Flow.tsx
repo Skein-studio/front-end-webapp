@@ -201,36 +201,43 @@ const Canvas: React.FC = () => {
     }
   }
 
-  function onConnectEnd(event: MouseEvent | TouchEvent) { // this is called when the user stops connecting by dragging from a node handle
+  function onConnectEnd(event: MouseEvent | TouchEvent) { 
+    let clientX = 0, clientY = 0;
+    
+    // Extract clientX and clientY based on event type
     if (event instanceof MouseEvent) {
-      const clientX = event.clientX;
-      const clientY = event.clientY;
-
-      let { x, y } = reactFlowInstance.project({ x: clientX, y: clientY });
-
-         // Add the viewport's position to the projected coordinates
-      x -= viewport.x;
-      y -= viewport.y;
-
-      // Only add a new node if there isn't one at this position already
-      if (
-        !doesNodeExistAtPosition(
-          x - NODE_WIDTH,
-          y - NODE_HEIGHT, // height of the node
-          nodes
-        )
-      ) {
-        let newNode = addNewNode(
-          x - NODE_WIDTH/2,
-          y - NODE_HEIGHT/2, // half the height of the node
-          NodeType.Signal
-        );
-        // add a connection with the new node
-      } else {
-        console.log("This is too close to an already existing node");
-      }
+      clientX = event.clientX;
+      clientY = event.clientY;
+    } else if (event instanceof TouchEvent && event.changedTouches[0]) {
+      clientX = event.changedTouches[0].clientX;
+      clientY = event.changedTouches[0].clientY;
+    }
+  
+    let { x, y } = reactFlowInstance.project({ x: clientX, y: clientY });
+  
+    // Add the viewport's position to the projected coordinates
+    x -= viewport.x;
+    y -= viewport.y;
+  
+    // Only add a new node if there isn't one at this position already
+    if (
+      !doesNodeExistAtPosition(
+        x - NODE_WIDTH,
+        y - NODE_HEIGHT, // height of the node
+        nodes
+      )
+    ) {
+      let newNode = addNewNode(
+        x - NODE_WIDTH/2,
+        y - NODE_HEIGHT/2, // half the height of the node
+        NodeType.Signal
+      );
+      // add a connection with the new node
+    } else {
+      console.log("This is too close to an already existing node");
     }
   }
+  
 
   useEffect(() => { // this is called when a node is added, so we can add a connection between the start node and the new node
     if (connectStartNode) {
