@@ -1,5 +1,6 @@
-import React, { useState, useEffect, useRef, ReactNode } from "react";
+import React, { useState, useEffect, useRef, ReactNode, useContext } from "react";
 import SignalView from "./SignalView";
+import { NodeContext } from "../NodeState";
 
 const SignalPresenter: React.FC = () => {
   const [isComputing, setIsComputing] = useState<boolean>(false);
@@ -9,9 +10,10 @@ const SignalPresenter: React.FC = () => {
   const [currentTime, setCurrentTime] = useState<number>(0);
   const [duration, setDuration] = useState<number>(0);
   const [isPlaying, setIsPlaying] = useState<boolean>(false);
+  const node = useContext(NodeContext); // Use NodeContext to get NodeState instance
 
-  const [numberOfTargetHandles, setNumberOfTargetHandles] = useState<number>(1);
-  const [numberOfSourceHandles, setNumberOfSourceHandles] = useState<number>(1);
+  const [numberOfTargetHandles, setNumberOfTargetHandles] = useState<number>(node?.inputs?.length ?? 1);
+  const [numberOfSourceHandles, setNumberOfSourceHandles] = useState<number>(node?.outputs?.length ?? 1);
 
 
   // temporary fetch. 

@@ -22,13 +22,14 @@ interface Props {
   edges: Edge[];
   nodeTypes: any;
   proOptions: any;
-  onConnectEndHandler: (event: MouseEvent | TouchEvent) => void;
+  onConnectStart: (event: React.MouseEvent<Element, MouseEvent> | React.TouchEvent<Element>, params: any) => void;
+  onConnectEnd: (event: MouseEvent | TouchEvent) => void;
+  onMove: (event: MouseEvent | TouchEvent, viewport: Viewport) => void;
   onNodesChange: (change: NodeChange[]) => void;
   onEdgesChange: (change: EdgeChange[]) => void;
   onConnect: (connection: any) => void;
   onNodeDragStop: (event: React.MouseEvent, node: Node, nodes: Node[]) => void;
   viewport: Viewport;
-  onMove: (event: MouseEvent | TouchEvent, viewport: Viewport) => void;
   openNodeView: () => JSX.Element | null;
   openSelectedNode: boolean;
   showSelected: () => void;
@@ -43,7 +44,8 @@ const FlowView: React.FC<Props> = (props) => {
     edges,
     nodeTypes,
     proOptions,
-    onConnectEndHandler,
+    onConnectStart,
+    onConnectEnd,
     onNodesChange,
     onEdgesChange,
     onConnect,
@@ -69,7 +71,8 @@ const FlowView: React.FC<Props> = (props) => {
         edges={edges}
         nodeTypes={nodeTypes}
         proOptions={proOptions}
-        onConnectEnd={onConnectEndHandler}
+        onConnectStart={onConnectStart}
+        onConnectEnd={onConnectEnd}
         nodesDraggable={true}
         nodesConnectable={true}
         onNodesChange={onNodesChange}

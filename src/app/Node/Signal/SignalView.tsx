@@ -1,11 +1,14 @@
 import React, { useContext } from 'react';
 import { Container, BlankSpace } from "@/app/Util/BaseStyles";
-import { NodeIcon, NodeSmall, RowContainer, ProgressBar, ProgressBarContainer, ProgressBarWrapper, ProgressBarText, PlayButton, NodeTitle} from "@/app/Util/Flow/NodeStyles";
+import { NodeIcon, NodeSmall, RowContainer, ProgressBar, ProgressBarContainer, ProgressBarText, NodeTitle} from "@/app/Util/Flow/NodeStyles";
 import GenerateHandles from '@/app/Util/HandleHandler';
 import { NodeContext } from '../NodeState';
 import { useGraph } from '../GraphContext';
 import SignalImg from "./signal.svg";
-
+import PauseImg from "./pause.svg";
+import PlayImg from "./play.svg";
+import { styled } from 'styled-components';
+import { Handle, Position } from 'reactflow';
 
 interface SignalViewProps{
   numberOfSourceHandles: number;
@@ -35,28 +38,59 @@ const SignalView: React.FC<SignalViewProps> = ({ onPlayPause, playing, currentTi
     selected={node?.selected ?? false}
     onClick={selectNode}
     >
-      <GenerateHandles handleType="target" numberOfHandles={numberOfTargetHandles}/>
+      {/*<GenerateHandles handleType="target" numberOfHandles={numberOfTargetHandles}/> away for now*/}
+      <Handle type="target" position={Position.Top} />
+      <Handle type="source" position={Position.Bottom} />
       <NodeIcon src={SignalImg}></NodeIcon>
       <NodeTitle>signal</NodeTitle>
       <Container flexdir='row'>
         
-        <ProgressBarContainer audiocomputed={audioComputed ? true : undefined}> 
-          <ProgressBarWrapper>
-            {!audioComputed && <ProgressBarText>compute for 3 tokens</ProgressBarText>}
+        <ProgressBarContainer> 
+          
+            {!audioComputed && !isComputing&& <ProgressBarText>compute for 3 tokens</ProgressBarText>}
             <ProgressBar progress={progress}/>
-          </ProgressBarWrapper>
-
-          {isComputing? "computing...":
-          <PlayButton onClick={onPlayPause}> 
-            {playing? "pause" : "play"}  
-          </PlayButton>
-          }
+            <ButtonContainer>
+              {isComputing ? 
+                  "computing..." 
+                  :
+                  playing ? <PlayButton img={PauseImg} callback={onPlayPause}/> : <PlayButton img={PlayImg} callback={onPlayPause}/>
+              }
+            </ButtonContainer>
         </ProgressBarContainer>
       </Container>
 
-      <GenerateHandles handleType="source" numberOfHandles={numberOfSourceHandles}/>
+      {/*<GenerateHandles handleType="source" numberOfHandles={numberOfSourceHandles}/> away for now */}
     </NodeSmall>
   );
 }
 
 export default SignalView;
+
+const ButtonContainer = styled.div`
+right:10px;
+position:absolute;
+`
+
+interface PlayButtonProps {
+  img: string;
+  callback: () => void;
+}
+
+export const PlayButton: React.FC<PlayButtonProps> = ({ img, callback }) => {
+  return (
+    <StyledPlayButton onClick={callback}>
+      <img src={img} />
+    </StyledPlayButton>
+  );
+};
+
+const StyledPlayButton = styled.button`
+  height: 32px;
+  width: 32px;
+  border:none;
+  border-radius: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: lightgrey;
+`;

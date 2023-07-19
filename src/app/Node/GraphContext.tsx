@@ -45,7 +45,7 @@ export function addConnection(context: Graph, edge: Edge) {
   for (let i = 0; i < context.edges.length; i++) {
     const element = context.edges[i];
     if (element.source == edge.source && element.target == edge.target) {
-      console.log("This connection already exists");
+      console.log("This connection already exists", context.edges);
       return;
     }
   }
@@ -59,21 +59,7 @@ export function createNewNode(
   nodeType: NodeType,
   context: Graph
 ) {
-  let newNodeState;
-  const existingNode = context.nodes.find(
-    (node) => node.type === NodeTypeToString(nodeType)
-  );
-
-  if (existingNode && existingNode.data.nodeState) {
-    newNodeState = new NodeState(
-      x,
-      y,
-      nodeType,
-      existingNode.data.nodeState.getID()
-    );
-  } else {
-    newNodeState = new NodeState(x, y, nodeType);
-  }
+  let newNodeState = new NodeState(x, y, nodeType);
 
   const newNode: Node = {
     id: newNodeState.getID().toString(),
@@ -85,6 +71,7 @@ export function createNewNode(
   };
   return newNode;
 }
+
 
 export const GraphContext = createContext<Graph>({
   nodes: [],

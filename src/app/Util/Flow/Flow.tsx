@@ -12,6 +12,8 @@ import {
   useNodesState,
   useReactFlow,
   Viewport,
+  Connection,
+  OnConnectStartParams,
 } from "reactflow";
 import SourcePresenter from "../../Node/Source/SourcePresenter";
 import UnspecifiedPresenter from "../../Node/Unspecified/UnspecifiedPresenter";
@@ -28,7 +30,8 @@ import {
 import OpenNodePresenter from "@/app/Node/OpenNode/OpenNodePresenter";
 import FlowView from "./FlowView";
 
-const MIN_DIST_FROM_OTHER_NODES = 75;
+const NODE_WIDTH = 300;
+const NODE_HEIGHT = 50;
 
 const proOptions = { hideAttribution: true };
 
@@ -71,6 +74,8 @@ const Canvas: React.FC = () => {
   const [viewport, setViewport] = useState<Viewport>({ x: 0, y: 0, zoom: 1 }); // find a way to save the viewport and pass it to reactflow component
   const [selectedNode, setSelectedNode] = useState<NodeState>();
   const [openSelectedNode, setOpenSelectedNode] = useState<boolean>(false);
+  const [connectStartNode, setConnectStartNode] = useState<Node>();
+
   const reloadComponent = () => {
     if (flowKey == 0) {
       setFlowKey((prevKey) => prevKey + 1);
@@ -91,6 +96,12 @@ const Canvas: React.FC = () => {
     setSelectedNode(nodeState);
     nodeState!.selected = true;
   }
+
+    /*
+    We wrap the value passed to the provider in a useMemo hook. 
+    The useMemo hook returns a memoized value that only recomputes when any of its dependencies change, 
+    making sure that the reference stays the same if the values of the variables didn't change.
+    */
   const graph: Graph = useMemo(
     () => ({ nodes, edges, reloadComponent, selectNode, selectedNode }),
     [nodes, edges, reloadComponent, selectNode, selectedNode]
@@ -129,41 +140,87 @@ const Canvas: React.FC = () => {
   ): boolean {
     return nodes.some(
       (node) =>
-        Math.abs(node.position.x - x) < MIN_DIST_FROM_OTHER_NODES &&
-        Math.abs(node.position.y - y) < MIN_DIST_FROM_OTHER_NODES
+        Math.abs(node.position.x - x) < NODE_WIDTH &&
+        Math.abs(node.position.y - y) < NODE_HEIGHT
     );
   }
 
-  function onConnectEndHandler(event: MouseEvent | TouchEvent) {
+  function onConnectStart(event: React.MouseEvent<Element, MouseEvent> | React.TouchEvent<Element>, params: OnConnectStartParams) {
+    let nodeId = params.nodeId;
+    let node : Node | undefined = nodes.find((node) => node.id === nodeId);
+    if (node) {
+      setConnectStartNode(node);
+      console.log("connect start node: " + node.id);
+    }
+  }
+
+  function onConnectEnd(event: MouseEvent | TouchEvent) {
     if (event instanceof MouseEvent) {
       const clientX = event.clientX;
       const clientY = event.clientY;
 
-      const { x, y } = reactFlowInstance.project({ x: clientX, y: clientY });
+      let { x, y } = reactFlowInstance.project({ x: clientX, y: clientY });
+
+         // Add the viewport's position to the projected coordinates
+      x -= viewport.x;
+      y -= viewport.y;
 
       // Only add a new node if there isn't one at this position already
       if (
         !doesNodeExistAtPosition(
-          x - MIN_DIST_FROM_OTHER_NODES,
-          y - MIN_DIST_FROM_OTHER_NODES,
+          x - NODE_WIDTH,
+          y - NODE_HEIGHT, // height of the node
           nodes
         )
       ) {
-        addNewNode(
-          x - MIN_DIST_FROM_OTHER_NODES,
-          y - MIN_DIST_FROM_OTHER_NODES,
-          NodeType.Unspecified
+        let newNode = addNewNode(
+          x - NODE_WIDTH/2,
+          y - NODE_HEIGHT/2, // half the height of the node
+          NodeType.Signal
         );
+        // add a connection with the new node
       } else {
         console.log("This is too close to an already existing node");
       }
     }
   }
 
+  useEffect(() => { // this is called when a node is added, so we can add a connection between the start node and the new node
+    if (connectStartNode) {
+      const lastNode = nodes[nodes.length - 1]; // the node that was just added
+      if (lastNode) {
+        setEdges((eds) => {
+          const edgeId = `e${connectStartNode.id}-${lastNode.id}`; // generate a unique id for the edge
+          const newEdges = addEdge(
+            { 
+              id: edgeId, 
+              source: connectStartNode.id, 
+              target: lastNode.id, 
+              animated: true 
+            }, 
+            eds
+          );
+          addConnection(graph, 
+            { 
+              id: edgeId,
+              source: connectStartNode.id, 
+              target: lastNode.id, 
+            }
+          );
+          return newEdges;
+        });
+      }
+      setConnectStartNode(undefined);
+    }
+  }, [nodes]);
+  
+  
+
   const addNewNode = (x: number, y: number, nodeType: NodeType) => {
     const newNode = createNewNode(x, y, nodeType, graph);
     const newNodes = [...nodes, newNode];
     setNodes(newNodes);
+    return newNode;
   };
 
   function onNodeDragStop(event: React.MouseEvent, node: Node, nodes: Node[]) {
@@ -192,15 +249,10 @@ const Canvas: React.FC = () => {
     }
   }
 
-  useEffect(() => {
+  useMemo(() => {
     addNewNode(250, 250, NodeType.Source);
   }, []);
 
-  /*
-We wrap the value passed to the provider in a useMemo hook. 
-The useMemo hook returns a memoized value that only recomputes when any of its dependencies change, 
-making sure that the reference stays the same if the values of the variables didn't change.
-*/
   return (
     <ReactFlowProvider>
       <GraphContext.Provider value={graph}>
@@ -210,7 +262,8 @@ making sure that the reference stays the same if the values of the variables did
           edges={edges}
           nodeTypes={nodeTypes}
           proOptions={proOptions}
-          onConnectEndHandler={onConnectEndHandler}
+          onConnectStart={onConnectStart}
+          onConnectEnd={onConnectEnd}
           onNodesChange={onNodesChange}
           onEdgesChange={onEdgesChange}
           onConnect={onConnect}
