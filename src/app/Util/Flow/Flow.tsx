@@ -159,7 +159,11 @@ const Canvas: React.FC = () => {
       const clientX = event.clientX;
       const clientY = event.clientY;
 
-      const { x, y } = reactFlowInstance.project({ x: clientX, y: clientY });
+      let { x, y } = reactFlowInstance.project({ x: clientX, y: clientY });
+
+         // Add the viewport's position to the projected coordinates
+      x -= viewport.x;
+      y -= viewport.y;
 
       // Only add a new node if there isn't one at this position already
       if (
