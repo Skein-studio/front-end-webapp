@@ -16,6 +16,7 @@ interface Props {
   toggle: () => void;
   deleteSelectedNode: () => void;
   deleteSelectedEdge: () => void;
+  addButtonHandler: () => void;
 }
 
 export default function OptionsView(props: Props) {
@@ -33,19 +34,19 @@ export default function OptionsView(props: Props) {
       <OptionsButton
         img={undo}
         callback={() => {
-          console.log("do something");
+          console.log("undo");
         }}
       />
       <OptionsButton
         img={redo}
         callback={() => {
-          console.log("do something");
+          console.log("redo");
         }}
       />
       <OptionsButton
         img={plus}
         callback={() => {
-          console.log("do something");
+          props.addButtonHandler();
         }}
       />
     </OptionsContainer>

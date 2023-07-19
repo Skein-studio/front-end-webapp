@@ -296,8 +296,14 @@ const Canvas: React.FC = () => {
   }
 
   useMemo(() => { // this is called when the component is first rendered, so we can add a source node
-    addNewNode(250, 250, NodeType.Source);
+      if(!getNode(graph, 1)){ // if the source node doesn't exist
+        addNewNode(250, 250, NodeType.Source);
+    }
   }, []);
+
+  function addButtonHandler() { // this is called when the user clicks on the "add" button
+    addNewNode(250-viewport.x+NODE_WIDTH/8, 250-viewport.y+NODE_HEIGHT*2, NodeType.Unspecified);
+  }
 
   return (
     <ReactFlowProvider>
@@ -326,6 +332,7 @@ const Canvas: React.FC = () => {
           hideSelected={hideSelected}
           handlePaneClick={handlePaneClick}
           onSelectionChange={onSelectionChange}
+          addButtonHandler={addButtonHandler}
           
         />
       </GraphContext.Provider>

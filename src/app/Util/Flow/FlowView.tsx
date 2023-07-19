@@ -41,6 +41,7 @@ interface Props {
   onEdgesDelete: (edges: Edge[]) => void;
   deleteSelectedNode: () => void;
   deleteSelectedEdge: () => void;
+  addButtonHandler: () => void;
 }
 
 /* This component is the main view for the flow editor. 
@@ -51,7 +52,7 @@ function FlowView(props:Props) {
   return (
     <OuterBox width="95vw" height="95vh">
       <GraphNameInput defaultValue={"violet-york-mayflower"} />
-      <OptionsView toggle={props.showSelected} deleteSelectedNode={props.deleteSelectedNode} deleteSelectedEdge={props.deleteSelectedEdge} />
+      <OptionsView toggle={props.showSelected} deleteSelectedNode={props.deleteSelectedNode} deleteSelectedEdge={props.deleteSelectedEdge} addButtonHandler={props.addButtonHandler}/>
       <Overlay show={props.openSelectedNode ? true : undefined} />
       {props.openSelectedNode && props.openNodeView()}
       <ReactFlow
