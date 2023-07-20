@@ -1,3 +1,5 @@
+//SignalView.tsx
+
 import React, { useContext } from 'react';
 import { Container, BlankSpace } from "@/app/Util/BaseStyles";
 import { NodeIcon, NodeSmall, RowContainer, ProgressBar, ProgressBarContainer, ProgressBarText, NodeTitle} from "@/app/Util/Flow/NodeStyles";
@@ -10,7 +12,7 @@ import PlayImg from "./play.svg";
 import { styled } from 'styled-components';
 import { Handle, Position } from 'reactflow';
 
-interface SignalViewProps{
+interface Props{
   numberOfSourceHandles: number;
   numberOfTargetHandles: number;
   currentTime: number;
@@ -20,9 +22,8 @@ interface SignalViewProps{
   playing: boolean;
   isComputing: boolean;
 }
-
-const SignalView: React.FC<SignalViewProps> = ({ onPlayPause, playing, currentTime, duration, numberOfSourceHandles, numberOfTargetHandles, audioComputed, isComputing}) => {
-    const progress = duration != 0 ? (currentTime / duration) * 100 : 0;
+function SignalView(props:Props) {
+    const progress = props.duration != 0 ? (props.currentTime / props.duration) * 100 : 0;
 
     const graph = useGraph();
     const node = useContext(NodeContext); // Use NodeContext to get NodeState instance
@@ -47,13 +48,13 @@ const SignalView: React.FC<SignalViewProps> = ({ onPlayPause, playing, currentTi
         
         <ProgressBarContainer> 
           
-            {!audioComputed && !isComputing&& <ProgressBarText>compute for 3 tokens</ProgressBarText>}
+            {!props.audioComputed && !props.isComputing&& <ProgressBarText>compute for 3 tokens</ProgressBarText>}
             <ProgressBar progress={progress}/>
             <ButtonContainer>
-              {isComputing ? 
+              {props.isComputing ? 
                   "computing..." 
                   :
-                  playing ? <PlayButton img={PauseImg} callback={onPlayPause}/> : <PlayButton img={PlayImg} callback={onPlayPause}/>
+                  props.playing ? <PlayButton img={PauseImg} callback={props.onPlayPause}/> : <PlayButton img={PlayImg} callback={props.onPlayPause}/>
               }
             </ButtonContainer>
         </ProgressBarContainer>
@@ -65,6 +66,7 @@ const SignalView: React.FC<SignalViewProps> = ({ onPlayPause, playing, currentTi
 }
 
 export default SignalView;
+
 
 const ButtonContainer = styled.div`
 right:10px;

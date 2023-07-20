@@ -13,41 +13,6 @@ import { useContext, useEffect, useState } from "react";
 import { styled } from "styled-components";
 import SourceImg from "./source.svg";
 
-const BaseOptionsView = ({
-  handleBaseChange,
-}: {
-  handleBaseChange: (text: string) => void;
-}) => (
-  <Container flexdir="row">
-    <Button onClick={() => handleBaseChange("record")}>record</Button>
-    <Button onClick={() => handleBaseChange("import")}>import</Button>
-    <Button onClick={() => handleBaseChange("generate")}>generate</Button>
-  </Container>
-);
-
-export const BaseComponent = ({ base }: { base: string }) => {
-  const graph = useGraph();
-  const node = useContext(NodeContext);
-
-  const handleBaseChange = (text: string) => {
-    if (node) {
-      node.data.base = text;
-      graph.reloadComponent();
-    }
-  };
-
-  switch (base) {
-    case "record":
-      return <RecordPresenter />;
-    case "import":
-      return <ImportAudio />;
-    case "generate":
-      return <GenerateAudio />;
-    default:
-      return <BaseOptionsView handleBaseChange={handleBaseChange}/>;
-  }
-};
-
 const PreviewText = styled.p`
 color: white;
 position: absolute;

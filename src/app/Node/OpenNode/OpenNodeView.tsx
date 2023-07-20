@@ -2,30 +2,31 @@ import { NodeState } from "../NodeState";
 import { styled } from "styled-components";
 import { purple, NodeTitle, NodeIcon } from "@/app/Util/Flow/NodeStyles";
 import { NodeTypeToString, NodeType } from "../NodeState";
-import { BaseComponent } from "../Source/SourceView";
+import OpenSourcePresenter from "../Source/OpenSourcePresenter";
 import { BlankSpace } from "@/app/Util/BaseStyles";
 import SourceImg from "../Source/source.svg";
 import SplitImg from "../Split/split.svg";
 import MergeImg from "../Merge/merge.svg";
 import SignalImg from "../Signal/signal.svg";
+import OpenSignalPresenter from "../Signal/OpenSignalPresenter";
 
 interface Props {
   nodeState: NodeState;
   closeWindow: () => void;
 }
 export default function OpenNodeView(props: Props) {
-  const Contents = () => {
+  function Contents() {
     switch (props.nodeState.type) {
       case NodeType.Source:
-        return <BaseComponent base={props.nodeState.data.base} />;
+        return <OpenSourcePresenter/>;
       case NodeType.Signal:
-        return <div>Signal Contents</div>;
+        return <OpenSignalPresenter/>
       default:
         return <div>NodeType Error</div>;
     }
   };
 
-  const Icon = () => {
+  function Icon () {
     switch (props.nodeState.type) {
       case NodeType.Source:
         return <NodeIcon src={SourceImg} />;

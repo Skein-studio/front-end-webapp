@@ -99,6 +99,7 @@ const Canvas: React.FC = () => {
       This way, we don't need to double click on any button to make it refresh
     */
   };
+
   function selectNode(nodeState: NodeState | undefined) {
     deselectNode(graph);
     setSelectedNode(nodeState);
@@ -268,8 +269,6 @@ const Canvas: React.FC = () => {
     }
   }, [nodes]);
   
-  
-
   const addNewNode = (x: number, y: number, nodeType: NodeType) => { // this is called when the user adds a new node
     const newNode = createNewNode(x, y, nodeType, graph); // create a new node in the graph
     const newNodes = [...nodes, newNode];
