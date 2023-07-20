@@ -21,6 +21,10 @@ export default function OpenNodeView(props: Props) {
         return <OpenSourcePresenter/>;
       case NodeType.Signal:
         return <OpenSignalPresenter/>
+      case NodeType.Merge:
+        return <div>merge</div>;
+      case NodeType.Split:
+        return <div>split</div>;
       default:
         return <div>NodeType Error</div>;
     }
@@ -45,7 +49,7 @@ export default function OpenNodeView(props: Props) {
     <Window>
       <BlankSpace width={1} height={75}></BlankSpace>
       {Icon()}
-      <CloseButton onClick={props.closeWindow}>X</CloseButton>
+      <CloseButton onClick={props.closeWindow}>-</CloseButton>
       <NodeTitle>{NodeTypeToString(props.nodeState.type)}</NodeTitle>
       <InnerBox>{Contents()}</InnerBox>
     </Window>
@@ -58,9 +62,21 @@ interface NodeProps {
 
 const CloseButton = styled.button<NodeProps>`
   position: absolute;
+  font-size: 16px;
   right: 10px;
   top: 10px;
+  border-radius: 4px;
+  border: none;
+  
+  &:hover {
+    background-color: #b3b3b3; // Change as needed
+  }
+
+  &:active {
+    background-color: #808080; // Change as needed
+  }
 `;
+
 
 const InnerBox = styled.div<NodeProps>`
   display: flex;
