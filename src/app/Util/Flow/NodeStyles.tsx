@@ -8,7 +8,7 @@ const NodeTitle = styled.p`
   top: 0px;
   left: 50px;
   font-family: verdana;
-  font-size: 16px;
+  font-size: 18px;
   color: ${purple};
 `;
 
@@ -87,9 +87,9 @@ const ProgressBarContainer = styled.div`
   display: flex;
   position: absolute;
   align-items: center;
-  right: -50px;
+  right: -55px;
   top: 0px;
-  width: 72.5%;
+  width: 70%;
   position: relative;
   border-radius: 10px;
   height: 140%;
