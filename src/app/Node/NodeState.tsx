@@ -1,5 +1,9 @@
 //NodeState.tsx
 
+/* This file contains the NodeState class, 
+which is used to store the individual state of 
+each node in the graph. */
+
 let nodeID = 0;
 
 export enum NodeType {
@@ -33,7 +37,7 @@ export class NodeState {
     this.setOutputs();
     this.type = type;
     this.selected = false;
-    console.log("Created new node:", this);
+    //console.log("Created new node:", this);
   }
 
   setInputs() {
@@ -64,9 +68,7 @@ export class NodeState {
   }
 
   generateID(): number {
-    let newID = nodeID;
-    nodeID++;
-    return newID;
+    return nodeID++;
   }
 
   getID(): number {

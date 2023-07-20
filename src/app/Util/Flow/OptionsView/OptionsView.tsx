@@ -1,3 +1,5 @@
+//OptionsView.tsx
+
 import React from "react";
 import styled from "styled-components";
 import { purple } from "../NodeStyles";
@@ -7,36 +9,44 @@ import trashcan from "./trashcan.svg";
 import undo from "./undo.svg";
 import enlarge from "./enlarge.svg";
 
+/* This component is the options view for the flow editor. 
+It contains the options buttons in the corner of the window */
+
 interface Props {
   toggle: () => void;
+  deleteSelectedNode: () => void;
+  deleteSelectedEdge: () => void;
+  addButtonHandler: () => void;
 }
 
 export default function OptionsView(props: Props) {
+  
   return (
     <OptionsContainer>
       <OptionsButton img={enlarge} callback={props.toggle} />
       <OptionsButton
         img={trashcan}
         callback={() => {
-          console.log("do something");
+          props.deleteSelectedNode();
+          props.deleteSelectedEdge();
         }}
       />
       <OptionsButton
         img={undo}
         callback={() => {
-          console.log("do something");
+          console.log("undo");
         }}
       />
       <OptionsButton
         img={redo}
         callback={() => {
-          console.log("do something");
+          console.log("redo");
         }}
       />
       <OptionsButton
         img={plus}
         callback={() => {
-          console.log("do something");
+          props.addButtonHandler();
         }}
       />
     </OptionsContainer>
@@ -48,7 +58,7 @@ interface OptionsButtonProps {
   callback: () => void;
 }
 
-const OptionsButton: React.FC<OptionsButtonProps> = ({ img, callback }) => {
+export const OptionsButton: React.FC<OptionsButtonProps> = ({ img, callback }) => {
   return (
     <StyledOptionsButton onClick={callback}>
       <NodeIcon src={img} />
@@ -68,6 +78,7 @@ const StyledOptionsButton = styled.button`
   transition: background-color 0.3s ease, box-shadow 0.3s ease;
   box-shadow: 0px 1px 0px ${purple};
   cursor: pointer;
+  z-index: 1;
 
   &:hover {
     background-color: #757575;

@@ -13,48 +13,29 @@ import { useContext, useEffect, useState } from "react";
 import { styled } from "styled-components";
 import SourceImg from "./source.svg";
 
-const BaseOptionsView = ({
-  handleBaseChange,
-}: {
-  handleBaseChange: (text: string) => void;
-}) => (
-  <Container flexdir="row">
-    <Button onClick={() => handleBaseChange("record")}>record</Button>
-    <Button onClick={() => handleBaseChange("import")}>import</Button>
-    <Button onClick={() => handleBaseChange("generate")}>generate</Button>
-  </Container>
-);
+const PreviewText = styled.p`
+color: white;
+position: absolute;
+bottom: -15px;
+`
 
-export const BaseComponent = ({ base }: { base: string }) => {
-  switch (base) {
-    case "record":
-      return <RecordPresenter />;
-    case "import":
-      return <ImportAudio />;
-    case "generate":
-      return <GenerateAudio />;
-    default:
-      return <div>Choose a base first!</div>;
-  }
-};
 
 const SmallView = () => {
   const { audioData, setAudioData } = useAudio();
 
   return (
-    <Container>
-      {audioData && audioData.toString()}
+    <>
+      <PreviewText>{audioData && audioData.toString()}</PreviewText>
       {/*audioData && <audio src={audioData} controls /> this is removed since we currently decided not to have a play button in the source file*/}
-    </Container>
+    </>
   );
 };
 
 type SourceProps = {
   base: string;
-  handleBaseChange: (text: string) => void;
 };
 
-const SourceView: React.FC<SourceProps> = ({ base, handleBaseChange }) => {
+const SourceView: React.FC<SourceProps> = ({ base }) => {
   const graph = useGraph();
   const node = useContext(NodeContext); // Use NodeContext to get NodeState instance
 
@@ -76,9 +57,9 @@ const SourceView: React.FC<SourceProps> = ({ base, handleBaseChange }) => {
         {base ? (
           <SmallView />
         ) : (
-          <BaseOptionsView handleBaseChange={handleBaseChange} />
+          <></>
         )}
-        <Handle type="target" position={Position.Bottom} />
+        <Handle type="source" position={Position.Bottom} />
       </Container>
     </NodeSmall>
   );

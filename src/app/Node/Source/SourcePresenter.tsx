@@ -21,19 +21,13 @@ const SourcePresenter: React.FC = () => {
     }
     return "";
   }
+  
 
   //useEffect to load audioData etc from backend upon component load?
 
-  const handleBaseChange = (text: string) => {
-    setBase(text);
-    if (node) {
-      node.data.base = text;
-    }
-  };
-
   return (
     <AudioContext.Provider value={{ audioData, setAudioData }}>
-      <SourceView base={base} handleBaseChange={handleBaseChange} />
+      <SourceView base={base} />
     </AudioContext.Provider>
   );
 };

@@ -2,30 +2,35 @@ import { NodeState } from "../NodeState";
 import { styled } from "styled-components";
 import { purple, NodeTitle, NodeIcon } from "@/app/Util/Flow/NodeStyles";
 import { NodeTypeToString, NodeType } from "../NodeState";
-import { BaseComponent } from "../Source/SourceView";
+import OpenSourcePresenter from "../Source/OpenSourcePresenter";
 import { BlankSpace } from "@/app/Util/BaseStyles";
 import SourceImg from "../Source/source.svg";
 import SplitImg from "../Split/split.svg";
 import MergeImg from "../Merge/merge.svg";
 import SignalImg from "../Signal/signal.svg";
+import OpenSignalPresenter from "../Signal/OpenSignalPresenter";
 
 interface Props {
   nodeState: NodeState;
   closeWindow: () => void;
 }
 export default function OpenNodeView(props: Props) {
-  const Contents = () => {
+  function Contents() {
     switch (props.nodeState.type) {
       case NodeType.Source:
-        return <BaseComponent base={props.nodeState.data.base} />;
+        return <OpenSourcePresenter/>;
       case NodeType.Signal:
-        return <div>Signal Contents</div>;
+        return <OpenSignalPresenter/>
+      case NodeType.Merge:
+        return <div>merge</div>;
+      case NodeType.Split:
+        return <div>split</div>;
       default:
         return <div>NodeType Error</div>;
     }
   };
 
-  const Icon = () => {
+  function Icon () {
     switch (props.nodeState.type) {
       case NodeType.Source:
         return <NodeIcon src={SourceImg} />;
@@ -44,7 +49,7 @@ export default function OpenNodeView(props: Props) {
     <Window>
       <BlankSpace width={1} height={75}></BlankSpace>
       {Icon()}
-      <CloseButton onClick={props.closeWindow}>X</CloseButton>
+      <CloseButton onClick={props.closeWindow}>-</CloseButton>
       <NodeTitle>{NodeTypeToString(props.nodeState.type)}</NodeTitle>
       <InnerBox>{Contents()}</InnerBox>
     </Window>
@@ -57,9 +62,21 @@ interface NodeProps {
 
 const CloseButton = styled.button<NodeProps>`
   position: absolute;
+  font-size: 16px;
   right: 10px;
   top: 10px;
+  border-radius: 4px;
+  border: none;
+  
+  &:hover {
+    background-color: #b3b3b3; // Change as needed
+  }
+
+  &:active {
+    background-color: #808080; // Change as needed
+  }
 `;
+
 
 const InnerBox = styled.div<NodeProps>`
   display: flex;

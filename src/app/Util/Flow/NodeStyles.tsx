@@ -8,7 +8,7 @@ const NodeTitle = styled.p`
   top: 0px;
   left: 50px;
   font-family: verdana;
-  font-size: 16px;
+  font-size: 18px;
   color: ${purple};
 `;
 
@@ -36,13 +36,6 @@ const NodeIcon = (props: IconProps) => {
   );
 };
 
-const StyledSelect = styled.select`
-  padding: 5px;
-  margin: 20px;
-  border: 1px solid #ccc;
-  border-radius: 5px;
-`;
-
 const ToggleButton = styled.button`
   position: absolute; // Change from absolute to relative
   top: 10px;
@@ -63,7 +56,7 @@ const NodeSmall = styled.div<NodeProps>`
   align-items: center;
   align-self: center;
   width: ${(props) => props.widthextension + 300}px;
-  height: 75px;
+  height: 50px;
   margin: 2px 0; // Apply margin only on top and bottom
   padding: 4px;
   background-color: #404040;
@@ -75,7 +68,10 @@ const NodeSmall = styled.div<NodeProps>`
   transition: box-shadow 0.3s ease;
 
   &:hover {
-    box-shadow: 0px 2px 8px rgba(100, 0, 255, 0.5);
+    box-shadow: ${(props) =>
+      props.selected
+        ? "0px 4px 8px rgba(100, 0, 255, 1)"
+        : "0px 2px 8px rgba(100, 0, 255, 1)"};
   }
 `;
 
@@ -96,28 +92,20 @@ const RowContainer = styled.div`
   padding: 10px 0;
 `;
 
-const ProgressBarContainer = styled.div<{ audiocomputed: boolean|undefined }>`
+const ProgressBarContainer = styled.div`
   display: flex;
   position: absolute;
   align-items: center;
-  right: -50px;
-  top: -20px;
+  right: -55px;
+  top: 0px;
   width: 70%;
   position: relative;
-  background-color: #1133;
-  height: 20px;
+  border-radius: 10px;
+  height: 140%;
   
-  border: 2px solid ${(props) => (props.audiocomputed ? "transparent" : "red")};
+  border: 2px solid white;
 `;
 
-const ProgressBarWrapper = styled.div`
-  position: relative;
-  flex-grow: 1;
-  display: flex;
-  justify-content: center
-  align-items: cetner;
-  height: 100%;
-`;
 
 
 interface ProgressBarProps {
@@ -131,21 +119,26 @@ const ProgressBar = styled.div.attrs<ProgressBarProps>((props) => ({
 }))`
   position: absolute;
   height: 100%;
-  background-color: #673147;
+  background-color: lightgrey;
+  border-radius: 8px;
+  wrap: no-wrap;
 `;
 
 const PlayButton = styled.button`
-  margin-left: auto;
+  position: absolute;
+  right: 10px;
 `;
 
 const ProgressBarText = styled.div`
+  font-size: 12px;
+  font-family: verdana;
   position: absolute;
-  color: red;
+  left: 10px;
+  color: crimson;
 `;
 
 
 export {
-  StyledSelect,
   ToggleButton,
   NodeSmall,
   NodeTitle,
@@ -155,7 +148,6 @@ export {
   NodeIcon,
   RowContainer,
   ProgressBarContainer,
-  ProgressBarWrapper,
   ProgressBar,
   PlayButton,
   ProgressBarText,
