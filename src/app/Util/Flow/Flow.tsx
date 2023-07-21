@@ -165,17 +165,28 @@ const Canvas: React.FC = () => {
       deleteEdges(graph, edgesToDelete); // delete the edge from the graph
   }
 
-  const onConnect = useCallback( // this is called when the user connects two nodes
+  const onConnect = useCallback(
     (connection: any) => {
-      setEdges((eds) => {
-        const newEdges = addEdge(connection, eds);
-        addConnection(graph, connection);
-        console.log(edges);
-        return newEdges;
-      });
+        // Get the source and target nodes
+        const sourceNode = nodes.find(node => node.id === connection.source);
+        const targetNode = nodes.find(node => node.id === connection.target);
+        
+        // If both nodes exist and they have different types, create a connection
+        if (sourceNode && targetNode && sourceNode.type !== targetNode.type) {
+            setEdges((eds) => {
+              const newEdges = addEdge(connection, eds);
+              addConnection(graph, connection);
+              console.log("edges: ", edges);
+              return newEdges;
+            });
+        } else {
+            // Log a warning if a connection was prevented
+            console.log(`Cannot connect nodes of the same type: ${sourceNode?.type}`);
+        }
     },
     [setEdges, nodes]
   );
+  
 
   function handlePaneClick() {// this is called when the user clicks on the canvas
     stopSelect();
@@ -198,7 +209,6 @@ const Canvas: React.FC = () => {
     let node : Node | undefined = nodes.find((node) => node.id === nodeId);
     if (node) {
       setConnectStartNode(node);
-      console.log("connect start node: " + node.id);
     }
   }
 
@@ -243,29 +253,35 @@ const Canvas: React.FC = () => {
   useEffect(() => { // this is called when a node is added, so we can add a connection between the start node and the new node
     if (connectStartNode) {
       const lastNode = nodes[nodes.length - 1]; // the node that was just added
-      if (lastNode) {
-        setEdges((eds) => {
-          const edgeId = `e${connectStartNode.id}-${lastNode.id}`; // generate a unique id for the edge
-          const newEdges = addEdge(
-            { 
-              id: edgeId, 
-              source: connectStartNode.id, 
-              target: lastNode.id, 
-              animated: true 
-            }, 
-            eds
-          );
-          addConnection(graph, 
-            { 
-              id: edgeId,
-              source: connectStartNode.id, 
-              target: lastNode.id, 
-            }
-          );
-          return newEdges;
-        });
+      if (lastNode && lastNode.type != "unspecified") {
+          if(lastNode.type != connectStartNode.type){ // if the node is not the same type as the start node, add a connection
+          setEdges((eds) => {
+            const edgeId = `e${connectStartNode.id}-${lastNode.id}`; // generate a unique id for the edge
+            const newEdges = addEdge(
+              { 
+                id: edgeId, 
+                source: connectStartNode.id, 
+                target: lastNode.id, 
+                animated: true 
+              }, 
+              eds
+            ); // add the edge to the list of edges, in the local state
+            addConnection(graph, 
+              { 
+                id: edgeId,
+                source: connectStartNode.id, 
+                target: lastNode.id, 
+              }
+            );
+            return newEdges;
+          }); // add the edge to the list of edges, in the graph
+        } else {
+          console.log("Cannot connect nodes of the same type: ", lastNode.type);
+        }
+        
       }
-      setConnectStartNode(undefined);
+      setConnectStartNode(undefined); // reset the start node
+
     }
   }, [nodes]);
   

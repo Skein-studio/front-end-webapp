@@ -19,11 +19,7 @@ export default function Home() {
   return (
     <ApplicationFrame>
       <Canvas></Canvas>
-
-      <Container>
-        This content is outside the Flow window
-        {/*<MyFlowDiagram></MyFlowDiagram>*/}
-      </Container>
+        {/*This content is outside the Flow window*/}
     </ApplicationFrame>
   );
 }

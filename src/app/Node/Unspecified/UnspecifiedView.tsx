@@ -2,8 +2,9 @@
 
 import { BlankSpace, Button, Container } from "@/app/Util/BaseStyles";
 import { NodeSmall, NodeTitle } from "@/app/Util/Flow/NodeStyles";
-import { NodeType } from "../NodeState";
+import { NodeContext, NodeType } from "../NodeState";
 import { Handle, Position } from "reactflow";
+import { useContext } from "react";
 
 interface Props {
   setNode: (type: NodeType) => void;
@@ -14,9 +15,11 @@ function UnspecifiedView(props: Props) {
     props.setNode(type);
   }
 
+  const node = useContext(NodeContext); // Use NodeContext to get NodeState instance
+
   return (
     <Container>
-      <NodeSmall widthextension={0}>
+      <NodeSmall widthextension={0} selected={node?.selected ?? false}> 
         <NodeTitle>New Node</NodeTitle>
         <BlankSpace width={1} height={10}></BlankSpace>
         <Container flexdir="row">
@@ -27,13 +30,15 @@ function UnspecifiedView(props: Props) {
           >
             Source
           </Button>
-          <Button
+          {/*<Button
             onClick={() => {
               setNode(NodeType.Signal);
-            }}
-          >
+            }} >
             Signal
           </Button>
+          We do not need Signal node when we create a new node from the menu.
+          */}
+          
           <Button
             onClick={() => {
               setNode(NodeType.Merge);
