@@ -1,5 +1,5 @@
 ## MVP TO-DO
-sorted by decreasing importance going downwards.
+sorted by decreasing importance.
 
 #### Bigger Picture Stuff
 * Refactor current frontend code into the updated model.
@@ -26,16 +26,31 @@ sorted by decreasing importance going downwards.
 * When in a large view of a node, you should be able to return to the canvas by just clicking on the side.
     
 ##### Bugs:
-* Signals that are computed gets "uncomputed" a new node is created.
 * Multiple edges created from a single "movement"
 This is happens for many more cases, any new node in fact.
     1. Create signal node
     2. Click "+" to create 1 merge and 1 split
     3. Connect signal and merge
     4. Two edges are created (signal - merge, signal, split)
+
+###### Source Node
 * When importing a file in a source node, the name of it appears as [object File] instead of the actual name.
-*  Adding new handle after connecting one does not update the location of the edge [still a bug?].
-*  Connecting handle to a merge node removes the old state [still a bug?].
+
+###### Signal Node
+* Signals that are computed gets "uncomputed" a new node is created.
+* Signal nodes only appear from the first output handle.
+
+###### Merge Node
+* For merge node handles, standard is one input, but when that one is connected -
+    a new handle appears next to it.
+* The handle state is not functional at the moment.
+    - you cannot connect more than one edge
+*  Adding new handle after connecting one does not update the location of the edge.
+*  Connecting handle to a merge node removes the old state.
+
+###### Split Node
+* When connecting two edges from a split output, you cannot do it again until you update the state manually.
+    - I think you need the "reload component" or something similar to fix this.
 
 
 
