@@ -1,7 +1,5 @@
 import OpenSourceView from "./OpenSourceView";
 
-
-export default function OpenSourcePresenter(){
-
-    return <OpenSourceView/>;
+export default function OpenSourcePresenter() {
+  return <OpenSourceView />;
 }

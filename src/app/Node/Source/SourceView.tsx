@@ -6,7 +6,6 @@ import { NodeSmall, NodeTitle, NodeIcon } from "@/app/Util/Flow/NodeStyles";
 import RecordPresenter from "@/app/Util/AudioRecorder/RecordPresenter";
 import ImportAudio from "@/app/Util/AudioImporter/ImportAudio";
 import GenerateAudio from "@/app/Util/AudioGenerator/GenerateAudio";
-import { useAudio } from "@/app/Util/AudioContext";
 import { useGraph } from "../GraphContext";
 import { NodeContext } from "../NodeState";
 import { useContext, useEffect, useState } from "react";
@@ -14,18 +13,19 @@ import { styled } from "styled-components";
 import SourceImg from "./source.svg";
 
 const PreviewText = styled.p`
-color: white;
-position: absolute;
-bottom: -15px;
-`
-
+  color: white;
+  overflow: hidden;
+  font-size: 8px;
+  position: absolute;
+  bottom: 0px;
+`;
 
 const SmallView = () => {
-  const { audioData, setAudioData } = useAudio();
+  const node = useContext(NodeContext); // Use NodeContext to get NodeState instance
 
   return (
     <>
-      <PreviewText>{audioData && audioData.toString()}</PreviewText>
+      <PreviewText>{node?.data.audio && node.data.audio}</PreviewText>
       {/*audioData && <audio src={audioData} controls /> this is removed since we currently decided not to have a play button in the source file*/}
     </>
   );
@@ -54,11 +54,7 @@ const SourceView: React.FC<SourceProps> = ({ base }) => {
       {<NodeIcon src={SourceImg} />}
       <NodeTitle>source{base != "" ? `[${base}]` : ""}</NodeTitle>
       <Container style={{ flex: 1 }}>
-        {base ? (
-          <SmallView />
-        ) : (
-          <></>
-        )}
+        {base ? <SmallView /> : <></>}
         <Handle type="source" position={Position.Bottom} />
       </Container>
     </NodeSmall>

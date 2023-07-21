@@ -18,9 +18,9 @@ export default function OpenNodeView(props: Props) {
   function Contents() {
     switch (props.nodeState.type) {
       case NodeType.Source:
-        return <OpenSourcePresenter/>;
+        return <OpenSourcePresenter />;
       case NodeType.Signal:
-        return <OpenSignalPresenter/>
+        return <OpenSignalPresenter />;
       case NodeType.Merge:
         return <div>merge</div>;
       case NodeType.Split:
@@ -28,9 +28,9 @@ export default function OpenNodeView(props: Props) {
       default:
         return <div>NodeType Error</div>;
     }
-  };
+  }
 
-  function Icon () {
+  function Icon() {
     switch (props.nodeState.type) {
       case NodeType.Source:
         return <NodeIcon src={SourceImg} />;
@@ -43,7 +43,7 @@ export default function OpenNodeView(props: Props) {
       default:
         return null;
     }
-  };
+  }
 
   return (
     <Window>
@@ -67,7 +67,7 @@ const CloseButton = styled.button<NodeProps>`
   top: 10px;
   border-radius: 4px;
   border: none;
-  
+
   &:hover {
     background-color: #b3b3b3; // Change as needed
   }
@@ -76,7 +76,6 @@ const CloseButton = styled.button<NodeProps>`
     background-color: #808080; // Change as needed
   }
 `;
-
 
 const InnerBox = styled.div<NodeProps>`
   display: flex;

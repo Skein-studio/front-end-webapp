@@ -23,7 +23,10 @@ interface Props {
   edges: Edge[];
   nodeTypes: any;
   proOptions: any;
-  onConnectStart: (event: React.MouseEvent<Element, MouseEvent> | React.TouchEvent<Element>, params: any) => void;
+  onConnectStart: (
+    event: React.MouseEvent<Element, MouseEvent> | React.TouchEvent<Element>,
+    params: any
+  ) => void;
   onConnectEnd: (event: MouseEvent | TouchEvent) => void;
   onMove: (event: MouseEvent | TouchEvent, viewport: Viewport) => void;
   onNodesChange: (change: NodeChange[]) => void;
@@ -34,7 +37,7 @@ interface Props {
   openNodeView: () => JSX.Element | null;
   openSelectedNode: boolean;
   showSelected: () => void;
-  onSelectionChange: (params:OnSelectionChangeParams) => void;
+  onSelectionChange: (params: OnSelectionChangeParams) => void;
   hideSelected: () => void;
   handlePaneClick: () => void;
   onNodesDelete: (nodes: Node[]) => void;
@@ -47,12 +50,16 @@ interface Props {
 /* This component is the main view for the flow editor. 
 It contains the reactflow graph, the options view, and the overlay. */
 
-function FlowView(props:Props) {
-
+function FlowView(props: Props) {
   return (
     <OuterBox width="95vw" height="95vh">
       <GraphNameInput defaultValue={"violet-york-mayflower"} />
-      <OptionsView toggle={props.showSelected} deleteSelectedNode={props.deleteSelectedNode} deleteSelectedEdge={props.deleteSelectedEdge} addButtonHandler={props.addButtonHandler}/>
+      <OptionsView
+        toggle={props.showSelected}
+        deleteSelectedNode={props.deleteSelectedNode}
+        deleteSelectedEdge={props.deleteSelectedEdge}
+        addButtonHandler={props.addButtonHandler}
+      />
       <Overlay show={props.openSelectedNode ? true : undefined} />
       {props.openSelectedNode && props.openNodeView()}
       <ReactFlow
@@ -90,12 +97,12 @@ function FlowView(props:Props) {
       </ReactFlow>
     </OuterBox>
   );
-};
+}
 
 export default FlowView;
 
 interface OverLayProps {
-  show: boolean|undefined;
+  show: boolean | undefined;
 }
 
 const Overlay = styled.div<OverLayProps>`

@@ -45,7 +45,8 @@ const NODE_HEIGHT = 50;
 
 const proOptions = { hideAttribution: true };
 
-const nodeTypes = { // this is where we define the node types
+const nodeTypes = {
+  // this is where we define the node types
   source: (nodeData: any) => (
     <NodeContext.Provider value={nodeData.data.nodeState}>
       <SourcePresenter />
@@ -58,7 +59,7 @@ const nodeTypes = { // this is where we define the node types
   ),
   split: (nodeData: any) => (
     <NodeContext.Provider value={nodeData.data.nodeState}>
-      <SplitPresenter/>
+      <SplitPresenter />
     </NodeContext.Provider>
   ),
   merge: (nodeData: any) => (
@@ -68,7 +69,7 @@ const nodeTypes = { // this is where we define the node types
   ),
   signal: (nodeData: any) => (
     <NodeContext.Provider value={nodeData.data.nodeState}>
-      <SignalPresenter/>
+      <SignalPresenter />
     </NodeContext.Provider>
   ),
 };
@@ -79,7 +80,7 @@ const Canvas: React.FC = () => {
   const [edges, setEdges, onEdgesChange] = useEdgesState<Edge>([]);
   const [flowKey, setFlowKey] = useState(0);
   const [viewport, setViewport] = useState<Viewport>({ x: 0, y: 0, zoom: 1 }); // find a way to save the viewport and pass it to reactflow component
-  const [selectedNode, setSelectedNode] = useState<NodeState>(); // do not use this directly, use selectNode() instead 
+  const [selectedNode, setSelectedNode] = useState<NodeState>(); // do not use this directly, use selectNode() instead
   const [selectedEdge, setSelectedEdge] = useState<Edge>();
   const [openSelectedNode, setOpenSelectedNode] = useState<boolean>(false);
   const [connectStartNode, setConnectStartNode] = useState<Node>();
@@ -105,19 +106,21 @@ const Canvas: React.FC = () => {
     setSelectedNode(nodeState);
     nodeState!.selected = true;
   }
-  function deleteSelectedNode() { // this is called when the user clicks on the delete button
-    if(graph.selectedNode){
+  function deleteSelectedNode() {
+    // this is called when the user clicks on the delete button
+    if (graph.selectedNode) {
       const nodeToDelete = getNode(graph, graph.selectedNode.id);
       if (nodeToDelete) {
         deleteNodes(graph, [nodeToDelete]);
       } else {
         console.log(`No node found with id: ${graph.selectedNode.id}`);
       }
-    } 
+    }
   }
 
-  function deleteSelectedEdge() { // this is called when the user clicks on the delete button
-    if(selectedEdge){
+  function deleteSelectedEdge() {
+    // this is called when the user clicks on the delete button
+    if (selectedEdge) {
       const edgeToDelete = selectedEdge;
       if (edgeToDelete) {
         deleteEdges(graph, [edgeToDelete]);
@@ -127,8 +130,7 @@ const Canvas: React.FC = () => {
     }
   }
 
-
-    /*
+  /*
     We wrap the value passed to the provider in a useMemo hook. 
     The useMemo hook returns a memoized value that only recomputes when any of its dependencies change, 
     making sure that the reference stays the same if the values of the variables didn't change.
@@ -137,58 +139,67 @@ const Canvas: React.FC = () => {
   const graph: Graph = useMemo(
     () => ({ nodes, edges, reloadComponent, selectNode, selectedNode }),
     [nodes, edges, reloadComponent, selectNode, selectedNode]
-  ); 
+  );
 
-  function stopSelect() { // this is called when the user clicks on the canvas
+  function stopSelect() {
+    // this is called when the user clicks on the canvas
     deselectNode(graph);
     setSelectedNode(undefined);
     setOpenSelectedNode(false);
   }
 
-  function onSelectionChange(params:OnSelectionChangeParams){ // this is called when an edge selection is changed
-    if(params.edges.length == 0){ // if no edges are selected
-      setSelectedEdge(undefined);// deselect the edge
-    }else {// if an edge is selected
-      setSelectedEdge(params.edges[0]);// select the edge that is first in the list of selected edges
+  function onSelectionChange(params: OnSelectionChangeParams) {
+    // this is called when an edge selection is changed
+    if (params.edges.length == 0) {
+      // if no edges are selected
+      setSelectedEdge(undefined); // deselect the edge
+    } else {
+      // if an edge is selected
+      setSelectedEdge(params.edges[0]); // select the edge that is first in the list of selected edges
     }
   }
 
-  function onMove(event: MouseEvent | TouchEvent, viewport: Viewport) {// this is called when the user moves the canvas
+  function onMove(event: MouseEvent | TouchEvent, viewport: Viewport) {
+    // this is called when the user moves the canvas
     setViewport({ x: viewport.x, y: viewport.y, zoom: viewport.zoom }); // save the viewport
   }
 
-  function onNodesDelete(nodesToDelete: Node[]) { // this is called when the user deletes a node
-      deleteNodes(graph, nodesToDelete);//  delete the node from the graph
+  function onNodesDelete(nodesToDelete: Node[]) {
+    // this is called when the user deletes a node
+    deleteNodes(graph, nodesToDelete); //  delete the node from the graph
   }
 
-  function onEdgesDelete(edgesToDelete: Edge[]) { // this is called when the user deletes an edge
-      deleteEdges(graph, edgesToDelete); // delete the edge from the graph
+  function onEdgesDelete(edgesToDelete: Edge[]) {
+    // this is called when the user deletes an edge
+    deleteEdges(graph, edgesToDelete); // delete the edge from the graph
   }
 
   const onConnect = useCallback(
     (connection: any) => {
-        // Get the source and target nodes
-        const sourceNode = nodes.find(node => node.id === connection.source);
-        const targetNode = nodes.find(node => node.id === connection.target);
-        
-        // If both nodes exist and they have different types, create a connection
-        if (sourceNode && targetNode && sourceNode.type !== targetNode.type) {
-            setEdges((eds) => {
-              const newEdges = addEdge(connection, eds);
-              addConnection(graph, connection);
-              console.log("edges: ", edges);
-              return newEdges;
-            });
-        } else {
-            // Log a warning if a connection was prevented
-            console.log(`Cannot connect nodes of the same type: ${sourceNode?.type}`);
-        }
+      // Get the source and target nodes
+      const sourceNode = nodes.find((node) => node.id === connection.source);
+      const targetNode = nodes.find((node) => node.id === connection.target);
+
+      // If both nodes exist and they have different types, create a connection
+      if (sourceNode && targetNode && sourceNode.type !== targetNode.type) {
+        setEdges((eds) => {
+          const newEdges = addEdge(connection, eds);
+          addConnection(graph, connection);
+          console.log("edges: ", edges);
+          return newEdges;
+        });
+      } else {
+        // Log a warning if a connection was prevented
+        console.log(
+          `Cannot connect nodes of the same type: ${sourceNode?.type}`
+        );
+      }
     },
     [setEdges, nodes]
   );
-  
 
-  function handlePaneClick() {// this is called when the user clicks on the canvas
+  function handlePaneClick() {
+    // this is called when the user clicks on the canvas
     stopSelect();
   }
 
@@ -204,22 +215,27 @@ const Canvas: React.FC = () => {
     );
   }
 
-  function onConnectStart(event: React.MouseEvent<Element, MouseEvent> | React.TouchEvent<Element>, params: OnConnectStartParams) { // this is called when the user starts connecting by dragging from a node handle
+  function onConnectStart(
+    event: React.MouseEvent<Element, MouseEvent> | React.TouchEvent<Element>,
+    params: OnConnectStartParams
+  ) {
+    // this is called when the user starts connecting by dragging from a node handle
     let nodeId = params.nodeId;
-    let node : Node | undefined = nodes.find((node) => node.id === nodeId);
+    let node: Node | undefined = nodes.find((node) => node.id === nodeId);
     if (node) {
       setConnectStartNode(node);
     }
   }
 
-  function onConnectEnd(event: MouseEvent | TouchEvent) { 
-    let clientX = 0, clientY = 0;
+  function onConnectEnd(event: MouseEvent | TouchEvent) {
+    let clientX = 0,
+      clientY = 0;
 
-    if(connectStartNode?.type =="signal"){
+    if (connectStartNode?.type == "signal") {
       console.log("you can't create a signal from a signal");
       return;
     }
-    
+
     // Extract clientX and clientY based on event type
     if (event instanceof MouseEvent) {
       clientX = event.clientX;
@@ -228,13 +244,13 @@ const Canvas: React.FC = () => {
       clientX = event.changedTouches[0].clientX;
       clientY = event.changedTouches[0].clientY;
     }
-  
+
     let { x, y } = reactFlowInstance.project({ x: clientX, y: clientY });
-  
+
     // Add the viewport's position to the projected coordinates
     x -= viewport.x;
     y -= viewport.y;
-  
+
     // Only add a new node if there isn't one at this position already
     if (
       !doesNodeExistAtPosition(
@@ -244,75 +260,76 @@ const Canvas: React.FC = () => {
       )
     ) {
       let newNode = addNewNode(
-        x - NODE_WIDTH/2,
-        y - NODE_HEIGHT/2, // half the height of the node
+        x - NODE_WIDTH / 2,
+        y - NODE_HEIGHT / 2, // half the height of the node
         NodeType.Signal
       );
-      // add a connection with the new node
     } else {
       console.log("This is too close to an already existing node");
     }
   }
-  
 
-  useEffect(() => { // this is called when a node is added, so we can add a connection between the start node and the new node
+  useEffect(() => {
+    // this is called when a node is added, so we can add a connection between the start node and the new node
     if (connectStartNode) {
       const lastNode = nodes[nodes.length - 1]; // the node that was just added
       if (lastNode && lastNode.type != "unspecified") {
-          if(lastNode.type != connectStartNode.type){ // if the node is not the same type as the start node, add a connection
+        if (lastNode.type != connectStartNode.type) {
+          // if the node is not the same type as the start node, add a connection
           setEdges((eds) => {
             const edgeId = `e${connectStartNode.id}-${lastNode.id}`; // generate a unique id for the edge
             const newEdges = addEdge(
-              { 
-                id: edgeId, 
-                source: connectStartNode.id, 
-                target: lastNode.id, 
-                animated: true 
-              }, 
+              {
+                id: edgeId,
+                source: connectStartNode.id,
+                target: lastNode.id,
+                animated: true,
+              },
               eds
             ); // add the edge to the list of edges, in the local state
-            addConnection(graph, 
-              { 
-                id: edgeId,
-                source: connectStartNode.id, 
-                target: lastNode.id, 
-              }
-            );
+            addConnection(graph, {
+              id: edgeId,
+              source: connectStartNode.id,
+              target: lastNode.id,
+            });
             return newEdges;
           }); // add the edge to the list of edges, in the graph
         } else {
           console.log("Cannot connect nodes of the same type: ", lastNode.type);
         }
-        
       }
       setConnectStartNode(undefined); // reset the start node
-
     }
   }, [nodes]);
-  
-  const addNewNode = (x: number, y: number, nodeType: NodeType) => { // this is called when the user adds a new node
+
+  const addNewNode = (x: number, y: number, nodeType: NodeType) => {
+    // this is called when the user adds a new node
     const newNode = createNewNode(x, y, nodeType, graph); // create a new node in the graph
     const newNodes = [...nodes, newNode];
     setNodes(newNodes);
     return newNode;
   };
 
-  function onNodeDragStop(event: React.MouseEvent, node: Node, nodes: Node[]) { // this is called when the user stops dragging a node
-    node.data.nodeState.setPosition(node.position.x, node.position.y);     //update position in nodeState
+  function onNodeDragStop(event: React.MouseEvent, node: Node, nodes: Node[]) {
+    // this is called when the user stops dragging a node
+    node.data.nodeState.setPosition(node.position.x, node.position.y); //update position in nodeState
   }
 
-  function showSelected() { // this is called when the user clicks on a node
+  function showSelected() {
+    // this is called when the user clicks on a node
     if (selectedNode) {
       setOpenSelectedNode(true);
     } else {
       console.log("Cannot enlarge without selecting a node");
     }
   }
-  function hideSelected() { // this is called when the user clicks on the "close" button in the node view
+  function hideSelected() {
+    // this is called when the user clicks on the "close" button in the node view
     setOpenSelectedNode(false);
   }
 
-  function openNodeView() { // this is called when the user clicks on a the "open" button in the node view
+  function openNodeView() {
+    // this is called when the user clicks on a the "open" button in the node view
     if (selectedNode) {
       return (
         <OpenNodePresenter state={selectedNode} closeWindow={stopSelect} />
@@ -322,14 +339,21 @@ const Canvas: React.FC = () => {
     }
   }
 
-  useMemo(() => { // this is called when the component is first rendered, so we can add a source node
-      if(!getNode(graph, 1)){ // if the source node doesn't exist
-        addNewNode(250, 250, NodeType.Source);
+  useMemo(() => {
+    // this is called when the component is first rendered, so we can add a source node
+    if (!getNode(graph, 1)) {
+      // if the source node doesn't exist
+      addNewNode(250, 250, NodeType.Source);
     }
   }, []);
 
-  function addButtonHandler() { // this is called when the user clicks on the "add" button
-    addNewNode(250-viewport.x+NODE_WIDTH/8, 250-viewport.y+NODE_HEIGHT*2, NodeType.Unspecified);
+  function addButtonHandler() {
+    // this is called when the user clicks on the "add" button
+    addNewNode(
+      250 - viewport.x + NODE_WIDTH / 8,
+      250 - viewport.y + NODE_HEIGHT * 2,
+      NodeType.Unspecified
+    );
   }
 
   return (
@@ -360,7 +384,6 @@ const Canvas: React.FC = () => {
           handlePaneClick={handlePaneClick}
           onSelectionChange={onSelectionChange}
           addButtonHandler={addButtonHandler}
-          
         />
       </GraphContext.Provider>
     </ReactFlowProvider>

@@ -1,7 +1,7 @@
 import { Container } from "@/app/Util/BaseStyles";
 import styled from "styled-components";
 import StarImg from "../Signal/stars.svg";
-import { useState } from 'react';
+import { useState } from "react";
 
 interface Props {
   currentTime: number;
@@ -13,17 +13,19 @@ interface Props {
 }
 
 export default function OpenSignalView(props: Props) {
-  const [selectedInstrument, setSelectedInstrument] = useState('Solo Guitar');
+  const [selectedInstrument, setSelectedInstrument] = useState("Solo Guitar");
 
-  const handleInstrumentChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
+  const handleInstrumentChange = (
+    event: React.ChangeEvent<HTMLSelectElement>
+  ) => {
     setSelectedInstrument(event.target.value);
   };
 
   return (
     <Container>
-      <Container> 
+      <Container>
         <FieldTitle>
-          <img src={StarImg} alt="Star"/>
+          <img src={StarImg} alt="Star" />
           <span>Style Edit</span>
         </FieldTitle>
         <Dropdown>
@@ -38,23 +40,21 @@ export default function OpenSignalView(props: Props) {
   );
 }
 
-
 const FieldTitle = styled.div`
-position: relative;
-left: -150px;
-font-size: 14px;
-font-family: verdana;
-display: flex;
-align-items: center;
-margin-bottom: 10px;
+  position: relative;
+  left: -150px;
+  font-size: 14px;
+  font-family: verdana;
+  display: flex;
+  align-items: center;
+  margin-bottom: 10px;
 
-& > img {
-  width: 16px;
-  height: 16px;
-  margin-right: 4px; // Add some space between the image and the text
-}
+  & > img {
+    width: 16px;
+    height: 16px;
+    margin-right: 4px; // Add some space between the image and the text
+  }
 `;
-
 
 const Dropdown = styled.div`
   width: 100%;

@@ -6,7 +6,7 @@ export default function OpenSignalPresenter() {
   const audioState = useAudio();
 
   return (
-    <OpenSignalView 
+    <OpenSignalView
       audioComputed={audioState.audioComputed}
       currentTime={audioState.currentTime}
       duration={audioState.duration}
@@ -15,4 +15,4 @@ export default function OpenSignalPresenter() {
       isComputing={audioState.isComputing}
     />
   );
-};
+}

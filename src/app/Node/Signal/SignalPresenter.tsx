@@ -9,19 +9,12 @@ export default function SignalPresenter() {
 
   const node = useContext(NodeContext); // Use NodeContext to get NodeState instance
 
-  const [numberOfTargetHandles, setNumberOfTargetHandles] = useState<number>(node?.inputs?.length ?? 1);
-  const [numberOfSourceHandles, setNumberOfSourceHandles] = useState<number>(node?.outputs?.length ?? 1);
-
-  return (
-    <SignalView 
-      audioComputed={audioState.audioComputed}
-      currentTime={audioState.currentTime}
-      numberOfSourceHandles={numberOfSourceHandles}
-      numberOfTargetHandles={numberOfTargetHandles}
-      duration={audioState.duration}
-      onPlayPause={audioState.handlePlayPause}
-      playing={audioState.isPlaying}
-      isComputing={audioState.isComputing}
-    />
+  const [numberOfTargetHandles, setNumberOfTargetHandles] = useState<number>(
+    node?.inputs?.length ?? 1
   );
-};
+  const [numberOfSourceHandles, setNumberOfSourceHandles] = useState<number>(
+    node?.outputs?.length ?? 1
+  );
+
+  return <SignalView audioState={audioState} />;
+}

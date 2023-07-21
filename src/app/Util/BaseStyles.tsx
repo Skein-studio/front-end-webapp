@@ -107,6 +107,7 @@ interface BoxProps {
   width?: string;
   height?: string;
   shadow?: boolean;
+  backgroundColor?: string;
 }
 
 const Container = styled.div<BoxProps>`
@@ -115,6 +116,7 @@ const Container = styled.div<BoxProps>`
   justify-content: space-around;
   align-items: center;
   align-self: center;
+  background-color: ${(props) => props.backgroundColor};
   width: ${(props) => (props.width ? props.width : "90%")};
   height: ${(props) =>
     props.height ? props.height : "100%"}; // Set height to 100%
@@ -139,5 +141,4 @@ const BlankSpace = styled.div<BlankProps>`
   padding: 4px;
   margin: 4px;
 `;
-
 export { Text, Button, Container, BlankSpace, OuterBox, GraphNameInput };

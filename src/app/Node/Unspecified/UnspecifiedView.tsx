@@ -19,7 +19,7 @@ function UnspecifiedView(props: Props) {
 
   return (
     <Container>
-      <NodeSmall widthextension={0} selected={node?.selected ?? false}> 
+      <NodeSmall widthextension={0} selected={node?.selected ?? false}>
         <NodeTitle>New Node</NodeTitle>
         <BlankSpace width={1} height={10}></BlankSpace>
         <Container flexdir="row">
@@ -38,7 +38,7 @@ function UnspecifiedView(props: Props) {
           </Button>
           We do not need Signal node when we create a new node from the menu.
           */}
-          
+
           <Button
             onClick={() => {
               setNode(NodeType.Merge);

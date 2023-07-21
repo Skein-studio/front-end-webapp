@@ -19,7 +19,7 @@ export default function Home() {
   return (
     <ApplicationFrame>
       <Canvas></Canvas>
-        {/*This content is outside the Flow window*/}
+      {/*This content is outside the Flow window*/}
     </ApplicationFrame>
   );
 }

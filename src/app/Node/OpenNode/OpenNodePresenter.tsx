@@ -9,10 +9,7 @@ interface Props {
 export default function OpenNodePresenter(props: Props) {
   return (
     <NodeContext.Provider value={props.state}>
-      <OpenNodeView
-        nodeState={props.state}
-        closeWindow={props.closeWindow}
-      />
+      <OpenNodeView nodeState={props.state} closeWindow={props.closeWindow} />
     </NodeContext.Provider>
   );
 }

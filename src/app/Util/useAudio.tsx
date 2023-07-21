@@ -12,46 +12,55 @@ The useAudio hook returns an object with the following properties:
     - handlePlayPause: () => void
 */
 
-const useAudio = (source?:string) => { // source is the url of the audio file to be played, later delete the question mark and make it required
+const standardAudioUrl =
+  "https://www2.cs.uic.edu/~i101/SoundFiles/CantinaBand3.wav";
+
+const useAudio = (source?: string) => {
+  // source is the url of the audio file to be played, later delete the question mark and make it required
   const [isComputing, setIsComputing] = useState<boolean>(false);
   const [audioComputed, setAudioComputed] = useState<boolean>(false);
-  const [audio, setAudio] = useState<HTMLAudioElement | null>(null); 
+  const [audio, setAudio] = useState<HTMLAudioElement | null>(null);
 
   const [currentTime, setCurrentTime] = useState<number>(0);
   const [duration, setDuration] = useState<number>(0);
   const [isPlaying, setIsPlaying] = useState<boolean>(false);
 
+  // compute progress as a percentage based on currentTime and duration
+  const progress = duration > 0 ? (currentTime / duration) * 100 : 0;
+
   const fetchAudio = async () => {
     setIsComputing(true);
-    await new Promise(resolve => setTimeout(resolve, 500));
+    try {
+      await new Promise((resolve) => setTimeout(resolve, 500));
 
-    const audioUrl = source ? source : "https://www2.cs.uic.edu/~i101/SoundFiles/CantinaBand3.wav"; //If no source is provided, use this default source
-    const audio = new Audio(audioUrl);
+      const audioUrl = source ? source : standardAudioUrl; //If no source is provided, use this default source
+      const audio = new Audio(audioUrl);
 
-    audio.onloadedmetadata = () => {
-      setDuration(audio.duration);
-      setAudio(audio);
-      setAudioComputed(true);
-      setIsComputing(false);
-    };
+      audio.onloadedmetadata = () => {
+        setDuration(audio.duration);
+        setAudio(audio);
+        setAudioComputed(true);
+        setIsComputing(false);
+      };
 
-    audio.onended = () => {
-      setCurrentTime(0);
-      setIsPlaying(false);
-    }
-    audio.onerror = () => {
+      audio.onended = () => {
+        setCurrentTime(0);
+        setIsPlaying(false);
+      };
+    } catch (error) {
       console.error("Something went wrong while fetching audio.");
       setIsComputing(false);
-    };
+    }
   };
 
-  const handlePlayPause = async () => { // This function is called when the user clicks the play/pause button
+  const handlePlayPause = async () => {
+    // This function is called when the user clicks the play/pause button
     if (isComputing) {
       return;
     }
     if (!audioComputed) {
       await fetchAudio();
-    } 
+    }
     if (audio && audioComputed) {
       if (audio.paused) {
         audio.play();
@@ -63,7 +72,8 @@ const useAudio = (source?:string) => { // source is the url of the audio file to
     }
   };
 
-  useEffect(() => {  // This effect is called when the audio is playing and updates the currentTime state
+  useEffect(() => {
+    // This effect is called when the audio is playing and updates the currentTime state
     let intervalId: number | undefined;
 
     const updateCurrentTime = () => {
@@ -72,7 +82,7 @@ const useAudio = (source?:string) => { // source is the url of the audio file to
       }
     };
 
-    intervalId = window.setInterval(updateCurrentTime, 1000);
+    intervalId = window.setInterval(updateCurrentTime, 10);
 
     return () => {
       if (intervalId) {
@@ -81,13 +91,25 @@ const useAudio = (source?:string) => { // source is the url of the audio file to
     };
   }, [audio]);
 
+  useEffect(() => {
+    // When the component unmounts, pause the audio and reset the currentTime
+    return () => {
+      if (audio) {
+        audio.pause();
+        audio.currentTime = 0; // reset the audio time
+      }
+    };
+  }, [audio]);
+
   return {
+    src: source ? source : standardAudioUrl, // change source to src to match with AudioPlayerProps
     isComputing,
     audioComputed,
+    playing: isPlaying, // change isPlaying to playing to match with AudioPlayerProps
+    onPlayPause: handlePlayPause, // change handlePlayPause to onPlayPause to match with AudioPlayerProps
     currentTime,
     duration,
-    isPlaying,
-    handlePlayPause
+    progress,
   };
 };
 

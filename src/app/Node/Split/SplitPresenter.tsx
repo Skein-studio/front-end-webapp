@@ -10,20 +10,19 @@ import SplitView from "./SplitView";
 import { useGraph, addConnection } from "../GraphContext";
 
 const SplitPresenter: React.FC = () => {
-
   const [numberOfTargetHandles, setNumberOfTargetHandles] = useState<number>(1);
   const [numberOfSourceHandles, setNumberOfSourceHandles] = useState<number>(6);
 
-  const graph = useGraph()  
+  const graph = useGraph();
 
-    return (
-        <div>
-            <SplitView 
-                numberOfSourceHandles={numberOfSourceHandles}
-                numberOfTargetHandles={numberOfTargetHandles}
-            />
-        </div>
-    )
-}
+  return (
+    <div>
+      <SplitView
+        numberOfSourceHandles={numberOfSourceHandles}
+        numberOfTargetHandles={numberOfTargetHandles}
+      />
+    </div>
+  );
+};
 
 export default SplitPresenter;

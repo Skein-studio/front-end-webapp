@@ -20,7 +20,6 @@ interface Props {
 }
 
 export default function OptionsView(props: Props) {
-  
   return (
     <OptionsContainer>
       <OptionsButton img={enlarge} callback={props.toggle} />
@@ -58,7 +57,10 @@ interface OptionsButtonProps {
   callback: () => void;
 }
 
-export const OptionsButton: React.FC<OptionsButtonProps> = ({ img, callback }) => {
+export const OptionsButton: React.FC<OptionsButtonProps> = ({
+  img,
+  callback,
+}) => {
   return (
     <StyledOptionsButton onClick={callback}>
       <NodeIcon src={img} />

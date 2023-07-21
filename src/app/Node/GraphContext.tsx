@@ -22,7 +22,7 @@ export function deleteNodes(context: Graph, nodes: Node[]) {
   for (const node of nodes) {
     for (let i = 0; i < context.nodes.length; i++) {
       if (context.nodes[i].id == node.id) {
-        context.nodes.splice(i, 1);//remove the node from the array
+        context.nodes.splice(i, 1); //remove the node from the array
         break;
       }
     }
@@ -34,7 +34,7 @@ export function deleteEdges(context: Graph, edges: Edge[]) {
   for (const edge of edges) {
     for (let i = 0; i < context.edges.length; i++) {
       if (context.edges[i].id == edge.id) {
-        context.edges.splice(i, 1);//remove the edge from the array
+        context.edges.splice(i, 1); //remove the edge from the array
         break;
       }
     }
@@ -97,7 +97,6 @@ export function createNewNode(
   };
   return newNode;
 }
-
 
 export const GraphContext = createContext<Graph>({
   nodes: [],

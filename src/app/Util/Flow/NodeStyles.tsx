@@ -5,7 +5,7 @@ const spookwhite = "#d9d9d9";
 
 const NodeTitle = styled.p`
   position: absolute;
-  top: 0px;
+  top: -4px;
   left: 50px;
   font-family: verdana;
   font-size: 18px;
@@ -83,60 +83,13 @@ const HandleLabel = styled.div`
   color: ${purple};
 `;
 
-
 const RowContainer = styled.div`
   display: grid;
-  grid-template-columns: 1fr 2fr; 
-  align-items: center;  
-  width: 100%;  
+  grid-template-columns: 1fr 2fr;
+  align-items: center;
+  width: 100%;
   padding: 10px 0;
 `;
-
-const ProgressBarContainer = styled.div`
-  display: flex;
-  position: absolute;
-  align-items: center;
-  right: -55px;
-  top: 0px;
-  width: 70%;
-  position: relative;
-  border-radius: 10px;
-  height: 140%;
-  
-  border: 2px solid white;
-`;
-
-
-
-interface ProgressBarProps {
-  progress: number;
-}
-
-const ProgressBar = styled.div.attrs<ProgressBarProps>((props) => ({
-  style: {
-    width: `${props.progress}%`,
-  },
-}))`
-  position: absolute;
-  height: 100%;
-  background-color: lightgrey;
-  border-radius: 8px;
-  wrap: no-wrap;
-`;
-
-const PlayButton = styled.button`
-  position: absolute;
-  right: 10px;
-`;
-
-const ProgressBarText = styled.div`
-  font-size: 12px;
-  font-family: verdana;
-  position: absolute;
-  left: 10px;
-  color: crimson;
-`;
-
 
 export {
   ToggleButton,
@@ -147,8 +100,4 @@ export {
   spookwhite,
   NodeIcon,
   RowContainer,
-  ProgressBarContainer,
-  ProgressBar,
-  PlayButton,
-  ProgressBarText,
 };

@@ -1,12 +1,10 @@
 import React, { useState, useContext, useEffect } from "react";
 import SourceView from "./SourceView";
 import { NodeContext } from "../NodeState";
-import { AudioContext } from "@/app/Util/AudioContext";
 
 const SourcePresenter: React.FC = () => {
   const node = useContext(NodeContext); // Use NodeContext to get NodeState instance
   const [base, setBase] = useState<string>(loadBase);
-  const [audioData, setAudioData] = useState<Blob | null>(loadAudio);
 
   function loadAudio() {
     if (node) {
@@ -21,15 +19,10 @@ const SourcePresenter: React.FC = () => {
     }
     return "";
   }
-  
 
   //useEffect to load audioData etc from backend upon component load?
 
-  return (
-    <AudioContext.Provider value={{ audioData, setAudioData }}>
-      <SourceView base={base} />
-    </AudioContext.Provider>
-  );
+  return <SourceView base={base} />;
 };
 
 export default SourcePresenter;
