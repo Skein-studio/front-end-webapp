@@ -1,3 +1,48 @@
+## MVP TODO
+sorted by decreasing importance going downwards.
+
+#### Bigger Picture Stuff
+* Refactor current frontend code into the updated model
+* Playback of signals should actually play 
+
+
+#### Front End Stuff
+
+##### To-Do:
+* Merge "split" and "merge" from branch
+* Remove "This content is outside..."
+* Should you be able to continuously create signal nodes from a single signal node?
+* The playback inside the source node is a different player than the signal. Perhaps just remove the source player for now.
+* Make handles larger
+* Styling check for texts and stuff inside nodes.
+    - The "compute for 3 tokens" text should fit more neatly inside the progress bar.
+    - The "source[undefined]" label looks a bit scuffed, remove [undefined].
+    - The text after generating sounds in the source node is center-aligned instead of left-aligned. It is also the color white.
+    - The white background.
+    - Style Edit inside the signal node. Should there be a "set" button or something similar?
+* Increase playback of progress from 1fps. This used to be smoother, but it might have 
+    been very inefficient.
+* Map and items in corner should change placement if screen is too narrow.
+* When in a large view of a node, you should be able to return to the canvas by just clicking on the side.
+    
+##### Bugs:
+* Signals that are computed gets "uncomputed" a new node is created.
+* Multiple edges created from a single "movement"
+This is happens for many more cases, any new node in fact.
+    1. Create signal node
+    2. Click "+" to create 1 merge and 1 split
+    3. Connect signal and merge
+    4. Two edges are created (signal - merge, signal, split)
+* When importing a file, the name of it appears as [object File] instead of the actual name.
+*  Adding new handle after connecting one does not update the location of the edge [still a bug?].
+*  Connecting handle to a merge node removes the old state [still a bug?].
+
+
+
+
+___________________
+Node.js stuff below
+___________________
 This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
 
 ## Getting Started
