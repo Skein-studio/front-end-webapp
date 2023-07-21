@@ -214,6 +214,11 @@ const Canvas: React.FC = () => {
 
   function onConnectEnd(event: MouseEvent | TouchEvent) { 
     let clientX = 0, clientY = 0;
+
+    if(connectStartNode?.type =="signal"){
+      console.log("you can't create a signal from a signal");
+      return;
+    }
     
     // Extract clientX and clientY based on event type
     if (event instanceof MouseEvent) {
