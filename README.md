@@ -1,17 +1,17 @@
-## MVP TODO
+## MVP TO-DO
 sorted by decreasing importance going downwards.
 
 #### Bigger Picture Stuff
-* Refactor current frontend code into the updated model
-* Playback of signals should actually play 
+* Refactor current frontend code into the updated model.
+* Playback of signals should actually play the output of the parent node.
 
 
 #### Front End Stuff
-
 ##### To-Do:
 * Merge "split" and "merge" from branch
 * Remove "This content is outside..."
 * Should you be able to continuously create signal nodes from a single signal node?
+* The compute/play/pause button is not in the larger view.
 * The playback inside the source node is a different player than the signal. Perhaps just remove the source player for now.
 * Make handles larger
 * Styling check for texts and stuff inside nodes.
@@ -33,10 +33,9 @@ This is happens for many more cases, any new node in fact.
     2. Click "+" to create 1 merge and 1 split
     3. Connect signal and merge
     4. Two edges are created (signal - merge, signal, split)
-* When importing a file, the name of it appears as [object File] instead of the actual name.
+* When importing a file in a source node, the name of it appears as [object File] instead of the actual name.
 *  Adding new handle after connecting one does not update the location of the edge [still a bug?].
 *  Connecting handle to a merge node removes the old state [still a bug?].
-
 
 
 
