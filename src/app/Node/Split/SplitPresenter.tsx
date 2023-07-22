@@ -1,3 +1,4 @@
+//SplitPresenter.tsx
 /*
     Split should have:
         1. 1 target handle
@@ -5,23 +6,26 @@
             - drums, bass, piano, vocals, guitar, voice, other
 
 */
-import React, { useState, useEffect, useRef, ReactNode } from "react";
+import React, { useState, useEffect, useRef, ReactNode, useContext } from "react";
 import SplitView from "./SplitView";
-import { useGraph, addConnection } from "../GraphContext";
+import { NodeContext } from "../NodeState";
 
 const SplitPresenter: React.FC = () => {
-  const [numberOfTargetHandles, setNumberOfTargetHandles] = useState<number>(1);
-  const [numberOfSourceHandles, setNumberOfSourceHandles] = useState<number>(6);
+  const [reloadComponent , setReloadComponent] = useState(false); // Used to force component to reload
+  const node = useContext(NodeContext);
 
-  const graph = useGraph();
+  function reload() {
+    setReloadComponent(!reloadComponent);
+  }
+  
+  useEffect(() => {
+  }, [node]);
 
   return (
-    <div>
       <SplitView
-        numberOfSourceHandles={numberOfSourceHandles}
-        numberOfTargetHandles={numberOfTargetHandles}
+        numberOfSourceHandles={node?.outputs?.length || 0}
+        numberOfTargetHandles={node?.inputs?.length || 0}
       />
-    </div>
   );
 };
 

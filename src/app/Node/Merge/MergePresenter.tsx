@@ -1,3 +1,5 @@
+//MergePresenter.tsx
+
 /*
     Merge should have 
         1. 1 target handle and a way to add additional target handles
@@ -5,25 +7,39 @@
             
 
 */
-import React, { useState, useEffect, useRef, ReactNode } from "react";
+import React, { useState, useEffect, useRef, ReactNode, useContext } from "react";
 import MergeView from "./MergeView";
+import { NodeContext } from "../NodeState";
 
 const MergePresenter: React.FC = () => {
-  const [numberOfTargetHandles, setNumberOfTargetHandles] = useState<number>(1);
-  const [numberOfSourceHandles, setNumberOfSourceHandles] = useState<number>(1);
+  const [reloadComponent , setReloadComponent] = useState(false); // Used to force component to reload
+  const node = useContext(NodeContext);
+
+  function reload() {
+    setReloadComponent(!reloadComponent);
+  }
+  
+  useEffect(() => {
+  }, [node]);
 
   const addTargetHandle = () => {
-    setNumberOfTargetHandles(numberOfTargetHandles + 1);
+    if (!node) {
+      return;
+    }
+    if(!node.inputs) {
+      node.inputs = [];
+    }
+    node.inputs = [...node.inputs, "in"];
+
+    reload();
   };
 
   return (
-    <div>
       <MergeView
-        numberOfSourceHandles={numberOfSourceHandles}
-        numberOfTargetHandles={numberOfTargetHandles}
+        numberOfSourceHandles={node?.outputs?.length || 0}
+        numberOfTargetHandles={node?.inputs?.length || 0}
         addTargetHandle={addTargetHandle}
       />
-    </div>
   );
 };
 

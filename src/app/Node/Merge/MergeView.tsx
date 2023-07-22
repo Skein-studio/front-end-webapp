@@ -1,11 +1,13 @@
+//MergeView.tsx
+
 import React, { useContext } from "react";
 import { Container, BlankSpace } from "@/app/Util/BaseStyles";
 import { NodeSmall, NodeIcon, NodeTitle } from "@/app/Util/Flow/NodeStyles";
-import GenerateHandles from "@/app/Util/HandleHandler";
 import { useGraph } from "../GraphContext";
 import { NodeContext } from "../NodeState";
 
 import MergeImg from "./merge.svg";
+import { Handle, Position } from "reactflow";
 
 interface SplitViewProps {
   numberOfSourceHandles: number;
@@ -13,11 +15,11 @@ interface SplitViewProps {
   addTargetHandle: () => void;
 }
 
-const MergeView: React.FC<SplitViewProps> = ({
+function MergeView({
   numberOfSourceHandles,
   numberOfTargetHandles,
   addTargetHandle,
-}) => {
+} : SplitViewProps){
   const graph = useGraph();
   const node = useContext(NodeContext); // Use NodeContext to get NodeState instance
 
@@ -31,11 +33,8 @@ const MergeView: React.FC<SplitViewProps> = ({
       selected={node?.selected ?? false}
       onClick={selectNode}
     >
-      <GenerateHandles
-        splitNode={false}
-        handleType="target"
-        numberOfHandles={numberOfTargetHandles}
-      />
+      <Handle type="target" position={Position.Top} />
+      <Handle type="source" position={Position.Bottom} />
 
       <NodeIcon src={MergeImg}></NodeIcon>
       <NodeTitle>merge</NodeTitle>
@@ -43,12 +42,7 @@ const MergeView: React.FC<SplitViewProps> = ({
       <Container>
         <button onClick={addTargetHandle}>+</button>
       </Container>
-
-      <GenerateHandles
-        splitNode={false}
-        handleType="source"
-        numberOfHandles={numberOfSourceHandles}
-      />
+      
     </NodeSmall>
   );
 };

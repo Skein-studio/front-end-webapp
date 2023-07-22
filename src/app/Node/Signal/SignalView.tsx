@@ -3,7 +3,7 @@
 import React, { useContext } from "react";
 import { Container } from "@/app/Util/BaseStyles";
 import { NodeIcon, NodeSmall, NodeTitle } from "@/app/Util/Flow/NodeStyles";
-import GenerateHandles from "@/app/Util/HandleHandler";
+import GenerateHandles from "@/app/Util/GenerateHandles";
 import { NodeContext } from "../NodeState";
 import { useGraph } from "../GraphContext";
 import SignalImg from "./signal.svg";
