@@ -2,7 +2,7 @@
 
 import React, { useContext } from "react";
 import { Container, BlankSpace } from "@/app/Util/BaseStyles";
-import { NodeSmall, NodeIcon, NodeTitle } from "@/app/Util/Flow/NodeStyles";
+import { NodeSmall, NodeIcon, NodeTitle, StyledHandle } from "@/app/Util/Flow/NodeStyles";
 import { useGraph } from "../GraphContext";
 import { NodeContext } from "../NodeState";
 
@@ -33,8 +33,8 @@ function MergeView({
       selected={node?.selected ?? false}
       onClick={selectNode}
     >
-      <Handle type="target" position={Position.Top} />
-      <Handle type="source" position={Position.Bottom} />
+      <StyledHandle handleType="target" position={Position.Top}/>
+      <StyledHandle handleType="source" position={Position.Bottom}/>
 
       <NodeIcon src={MergeImg}></NodeIcon>
       <NodeTitle>merge</NodeTitle>

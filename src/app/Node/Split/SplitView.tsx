@@ -6,6 +6,7 @@ import {
   NodeSmall,
   NodeIcon,
   NodeTitle,
+  StyledHandle,
 } from "@/app/Util/Flow/NodeStyles";
 import { useGraph } from "../GraphContext";
 import { NodeContext } from "../NodeState";
@@ -39,8 +40,8 @@ function SplitView({
       selected={node?.selected ?? false}
       onClick={selectNode}
     >
-      <Handle type="target" position={Position.Top} />
-      <Handle type="source" position={Position.Bottom} />
+      <StyledHandle handleType="target" position={Position.Top}/>
+      <StyledHandle handleType="source" position={Position.Bottom}/>
 
       <NodeIcon src={SplitImg}></NodeIcon>
       <NodeTitle>split</NodeTitle>

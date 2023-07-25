@@ -2,8 +2,7 @@
 
 import React, { useContext } from "react";
 import { Container } from "@/app/Util/BaseStyles";
-import { NodeIcon, NodeSmall, NodeTitle } from "@/app/Util/Flow/NodeStyles";
-import GenerateHandles from "@/app/Util/GenerateHandles";
+import { NodeIcon, NodeSmall, NodeTitle, StyledHandle } from "@/app/Util/Flow/NodeStyles";
 import { NodeContext } from "../NodeState";
 import { useGraph } from "../GraphContext";
 import SignalImg from "./signal.svg";
@@ -29,8 +28,8 @@ function SignalView(props: Props) {
       onClick={selectNode}
     >
       {/*<GenerateHandles handleType="target" numberOfHandles={numberOfTargetHandles}/> away for now*/}
-      <Handle type="target" position={Position.Top} />
-      <Handle type="source" position={Position.Bottom} />
+      <StyledHandle handleType="target" position={Position.Top}/>
+      <StyledHandle handleType="source" position={Position.Bottom}/>
 
       <NodeIcon src={SignalImg}></NodeIcon>
       <NodeTitle>signal</NodeTitle>

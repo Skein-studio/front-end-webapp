@@ -6,7 +6,7 @@
             - drums, bass, piano, vocals, guitar, voice, other
 
 */
-import React, { useState, useEffect, useRef, ReactNode, useContext } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import SplitView from "./SplitView";
 import { NodeContext } from "../NodeState";
 

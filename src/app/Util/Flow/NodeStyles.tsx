@@ -1,7 +1,28 @@
 import styled from "styled-components";
+import {Handle, Position, HandleType} from "reactflow";
 
 const purple = "#b892d4";
 const spookwhite = "#d9d9d9";
+
+interface HandleProps {
+  handleType: HandleType;
+  position: Position;
+  id: string;
+}
+
+function StyledHandle (props:HandleProps) {
+  return (
+    <Handle type={props.handleType} position={props.position} style={{
+      background: '#757574',
+      height: '20px',
+      width: '20px',
+      overflow: 'hidden',
+      transform: props.handleType === 'source' ? 'translateY(50%) translateX(-50%)' : 'translateY(-50%) translateX(-50%)',
+      borderRadius: props.handleType === 'target' ? '100% 100% 0% 0%' : '0 0 90% 90%',
+      zIndex: '-1', // couldn't get them to be nice semicircles
+    }}/>
+  );
+}
 
 const NodeTitle = styled.p`
   position: absolute;
@@ -100,4 +121,5 @@ export {
   spookwhite,
   NodeIcon,
   RowContainer,
+  StyledHandle,
 };
