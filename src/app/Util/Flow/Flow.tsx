@@ -39,8 +39,8 @@ import FlowView from "./FlowView";
 /* This component's purpose is to create the flowchart 
 view and handle the logic for the flowchart. 
 It is the central file of the app. */
+import { NODE_WIDTH } from "./NodeStyles";
 
-const NODE_WIDTH = 300;
 const NODE_HEIGHT = 50;
 
 const proOptions = { hideAttribution: true };
@@ -84,6 +84,8 @@ const Canvas: React.FC = () => {
   const [selectedEdge, setSelectedEdge] = useState<Edge>();
   const [openSelectedNode, setOpenSelectedNode] = useState<boolean>(false);
   const [connectStartNode, setConnectStartNode] = useState<Node>();
+  const [connectStartHandleId, setConnectStartHandleId] = useState<string>();
+
 
   const reloadComponent = () => {
     if (flowKey == 0) {
@@ -179,7 +181,30 @@ const Canvas: React.FC = () => {
       // Get the source and target nodes
       const sourceNode = nodes.find((node) => node.id === connection.source);
       const targetNode = nodes.find((node) => node.id === connection.target);
-
+  
+      // Check if this source handle is already connected to another node
+      let handleConnectedEdge = edges.find(
+        (edge) =>
+          edge.sourceHandle === connection.sourceHandle ||
+          edge.targetHandle === connection.sourceHandle
+      );
+  
+      // If not, check if this target handle is already connected to another node
+      if (!handleConnectedEdge) {
+        handleConnectedEdge = edges.find(
+          (edge) =>
+            edge.sourceHandle === connection.targetHandle ||
+            edge.targetHandle === connection.targetHandle
+        );
+      }
+  
+      if (handleConnectedEdge) {
+        console.log(
+          `Cannot connect more than one node to the same handle: ${connection.sourceHandle} or ${connection.targetHandle}`
+        );
+        return;
+      }
+  
       // If both nodes exist and they have different types, create a connection
       if (sourceNode && targetNode && sourceNode.type !== targetNode.type) {
         setEdges((eds) => {
@@ -197,6 +222,8 @@ const Canvas: React.FC = () => {
     },
     [setEdges, nodes]
   );
+  
+
 
   function handlePaneClick() {
     // this is called when the user clicks on the canvas
@@ -221,15 +248,27 @@ const Canvas: React.FC = () => {
   ) {
     // this is called when the user starts connecting by dragging from a node handle
     let nodeId = params.nodeId;
+    let handleId = params.handleId || undefined; // get the handle id or undefined if it is null
+
     let node: Node | undefined = nodes.find((node) => node.id === nodeId);
     if (node) {
       setConnectStartNode(node);
+      setConnectStartHandleId(handleId); // set the handle id
     }
   }
 
   function onConnectEnd(event: MouseEvent | TouchEvent) {
     let clientX = 0,
       clientY = 0;
+
+      const handleConnectedEdge = edges.find(
+        (edge) => edge.sourceHandle === connectStartHandleId
+      );
+    
+      if (handleConnectedEdge) {
+        console.log(`Cannot create new node. Handle: ${connectStartHandleId} is already connected to another node.`);
+        return;
+      }
 
     if (connectStartNode?.type == "signal") {
       console.log("you can't create a signal from a signal");
@@ -276,6 +315,15 @@ const Canvas: React.FC = () => {
       if (lastNode && lastNode.type != "unspecified") {
         if (lastNode.type != connectStartNode.type) {
           // if the node is not the same type as the start node, add a connection
+          const handleConnectedEdge = edges.find(
+            (edge) => edge.sourceHandle === connectStartHandleId || edge.targetHandle === connectStartHandleId
+          );
+    
+          if (handleConnectedEdge) {
+            console.log(`Cannot create new connection. Handle: ${connectStartHandleId} is already connected to another node.`);
+            return;
+          }
+
           setEdges((eds) => {
             const edgeId = `e${connectStartNode.id}-${lastNode.id}`; // generate a unique id for the edge
             const newEdges = addEdge(
@@ -283,6 +331,7 @@ const Canvas: React.FC = () => {
                 id: edgeId,
                 source: connectStartNode.id,
                 target: lastNode.id,
+                sourceHandle: connectStartHandleId, // set the handle id for the source node
                 animated: true,
               },
               eds
@@ -291,6 +340,7 @@ const Canvas: React.FC = () => {
               id: edgeId,
               source: connectStartNode.id,
               target: lastNode.id,
+              sourceHandle: connectStartHandleId, // set the handle id for the source node
             });
             return newEdges;
           }); // add the edge to the list of edges, in the graph
@@ -299,8 +349,10 @@ const Canvas: React.FC = () => {
         }
       }
       setConnectStartNode(undefined); // reset the start node
+      setConnectStartHandleId(""); // reset the handle id
     }
   }, [nodes]);
+
 
   const addNewNode = (x: number, y: number, nodeType: NodeType) => {
     // this is called when the user adds a new node

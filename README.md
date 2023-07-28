@@ -1,47 +1,46 @@
 ## MVP TO-DO
+
 sorted by decreasing importance.
 
 #### Bigger Picture Stuff
-* Refactor current frontend code into the updated model.
-* Playback of signals should actually play the output of the parent node.
 
+- Refactor current frontend code into the updated model.
+- Playback of signals should actually play the output of the parent node.
 
 #### Front End Stuff
+
 ##### To-Do:
-* Styling check for texts and stuff inside nodes.
-    - The "compute for 3 tokens" text should fit more neatly inside the progress bar.  (??)
-    - The text after generating sounds in the source node is center-aligned instead of left-aligned. It is also the color white. (what should it be?)
-    - The white background. (??)
-    - Style Edit inside the signal node. Should there be a "set" button or something similar? 
-* Map and items in corner should change placement if screen is too narrow.
-* When in a large view of a node, you should be able to return to the canvas by just clicking on the side.
-    
+
+- Styling check for texts and stuff inside nodes.
+  - The "compute for 3 tokens" text should fit more neatly inside the progress bar. (??)
+  - The text after generating sounds in the source node is center-aligned instead of left-aligned. It is also the color white. (what should it be?)
+  - The white background. (??)
+  - Style Edit inside the signal node. Should there be a "set" button or something similar?
+- Map and items in corner should change placement if screen is too narrow.
+- When in a large view of a node, you should be able to return to the canvas by just clicking on the side.
+
 ##### Bugs:
+
+###### Nodes
 
 ###### Source Node
 
 ###### Signal Node
-* Signals that are computed gets "uncomputed" a new node is created.
-* Signal nodes only appear from the first output handle. (?)
+
+- Signals that are computed gets "uncomputed" a new node is created.
+- Signal nodes only appear from the first output handle. (?)
 
 ###### Merge Node
-* For merge node handles, standard is one input, but when that one is connected -
-    a new handle appears next to it.
-* The handle state is not functional at the moment.
-    - you cannot connect more than one edge
-*  Adding new handle after connecting one does not update the location of the edge.
-*  Connecting handle to a merge node removes the old state.
-[Above stuff will all be remade]
 
 ###### Split Node
-* When connecting two edges from a split output, you cannot do it again until you update the state manually.
-    - I think you need the "reload component" or something similar to fix this.
-[Above stuff will all be remade]
 
 
-___________________
+---
+
 Node.js stuff below
-___________________
+
+---
+
 This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
 
 ## Getting Started

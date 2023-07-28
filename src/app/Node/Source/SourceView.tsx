@@ -1,16 +1,19 @@
 //SourceView.tsx
 
-import { Button, Container, BlankSpace } from "@/app/Util/BaseStyles";
+import { Container, BlankSpace } from "@/app/Util/BaseStyles";
 import { Handle, Position } from "reactflow";
-import { NodeSmall, NodeTitle, NodeIcon } from "@/app/Util/Flow/NodeStyles";
-import RecordPresenter from "@/app/Util/AudioRecorder/RecordPresenter";
-import ImportAudio from "@/app/Util/AudioImporter/ImportAudio";
-import GenerateAudio from "@/app/Util/AudioGenerator/GenerateAudio";
+import {
+  NodeSmall,
+  NodeTitle,
+  NodeIcon,
+  StyledHandle,
+} from "@/app/Util/Flow/NodeStyles";
 import { useGraph } from "../GraphContext";
 import { NodeContext } from "../NodeState";
-import { useContext, useEffect, useState } from "react";
+import { useContext } from "react";
 import { styled } from "styled-components";
 import SourceImg from "./source.svg";
+import { GenerateHandles } from "@/app/Util/Handles";
 
 const PreviewText = styled.p`
   color: white;
@@ -52,10 +55,12 @@ const SourceView: React.FC<SourceProps> = ({ base }) => {
     >
       <BlankSpace height={5} width={5}></BlankSpace>
       {<NodeIcon src={SourceImg} />}
-      <NodeTitle>source{base != "" && base != undefined ? `[${base}]` : ""}</NodeTitle>
+      <NodeTitle>
+        source{base != "" && base != undefined ? `[${base}]` : ""}
+      </NodeTitle>
       <Container style={{ flex: 1 }}>
         {base ? <SmallView /> : <></>}
-        <Handle type="source" position={Position.Bottom} />
+        {GenerateHandles(node)}
       </Container>
     </NodeSmall>
   );

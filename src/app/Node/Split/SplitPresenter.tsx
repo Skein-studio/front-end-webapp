@@ -6,26 +6,25 @@
             - drums, bass, piano, vocals, guitar, voice, other
 
 */
-import React, { useState, useEffect, useRef, ReactNode, useContext } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import SplitView from "./SplitView";
 import { NodeContext } from "../NodeState";
 
 const SplitPresenter: React.FC = () => {
-  const [reloadComponent , setReloadComponent] = useState(false); // Used to force component to reload
+  const [reloadComponent, setReloadComponent] = useState(false); // Used to force component to reload
   const node = useContext(NodeContext);
 
   function reload() {
     setReloadComponent(!reloadComponent);
   }
-  
-  useEffect(() => {
-  }, [node]);
+
+  useEffect(() => {}, [node]);
 
   return (
-      <SplitView
-        numberOfSourceHandles={node?.outputs?.length || 0}
-        numberOfTargetHandles={node?.inputs?.length || 0}
-      />
+    <SplitView
+      numberOfSourceHandles={node?.outputs?.length || 0}
+      numberOfTargetHandles={node?.inputs?.length || 0}
+    />
   );
 };
 
