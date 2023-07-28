@@ -16,6 +16,7 @@ function StyledHandle(props: HandleProps) {
     <Handle
       type={props.handleType}
       position={props.position}
+      id={props.id}
       style={{
         background: "#757574",
         height: "20px",

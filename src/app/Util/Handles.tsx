@@ -37,7 +37,6 @@ export function GenerateHandles(node: NodeState | undefined) {
             />
           </HandleSpacing>
         );
-        console.log("node!.outputs[i]: ", node!.outputs[i]);
       }
     }
     return handles;
@@ -53,6 +52,7 @@ export function GenerateHandles(node: NodeState | undefined) {
               handleType="target"
               position={Position.Top}
               id={node!.inputs[i]}
+            
             />
           </HandleSpacing>
         );
