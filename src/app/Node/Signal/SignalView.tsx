@@ -2,14 +2,19 @@
 
 import React, { useContext } from "react";
 import { Container } from "@/app/Util/BaseStyles";
-import { NodeIcon, NodeSmall, NodeTitle, StyledHandle } from "@/app/Util/Flow/NodeStyles";
+import {
+  NodeIcon,
+  NodeSmall,
+  NodeTitle,
+  StyledHandle,
+} from "@/app/Util/Flow/NodeStyles";
 import { NodeContext } from "../NodeState";
 import { useGraph } from "../GraphContext";
 import SignalImg from "./signal.svg";
 import { styled } from "styled-components";
 import { Handle, Position } from "reactflow";
 import AudioPlayer from "@/app/Util/AudioPlayer/AudioPlayer";
-
+import { GenerateHandles, GetWidthExtension } from "@/app/Util/Handles";
 interface Props {
   audioState: any;
 }
@@ -23,13 +28,12 @@ function SignalView(props: Props) {
 
   return (
     <NodeSmall
-      widthextension={0}
+      widthextension={GetWidthExtension(node)}
       selected={node?.selected ?? false}
       onClick={selectNode}
     >
       {/*<GenerateHandles handleType="target" numberOfHandles={numberOfTargetHandles}/> away for now*/}
-      <StyledHandle handleType="target" position={Position.Top}/>
-      <StyledHandle handleType="source" position={Position.Bottom}/>
+      {GenerateHandles(node)}
 
       <NodeIcon src={SignalImg}></NodeIcon>
       <NodeTitle>signal</NodeTitle>

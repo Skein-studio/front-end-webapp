@@ -7,39 +7,44 @@
             
 
 */
-import React, { useState, useEffect, useRef, ReactNode, useContext } from "react";
+import React, {
+  useState,
+  useEffect,
+  useRef,
+  ReactNode,
+  useContext,
+} from "react";
 import MergeView from "./MergeView";
 import { NodeContext } from "../NodeState";
 
 const MergePresenter: React.FC = () => {
-  const [reloadComponent , setReloadComponent] = useState(false); // Used to force component to reload
+  const [reloadComponent, setReloadComponent] = useState(false); // Used to force component to reload
   const node = useContext(NodeContext);
 
   function reload() {
     setReloadComponent(!reloadComponent);
   }
-  
-  useEffect(() => {
-  }, [node]);
+
+  useEffect(() => {}, [node]);
 
   const addTargetHandle = () => {
     if (!node) {
       return;
     }
-    if(!node.inputs) {
+    if (!node.inputs) {
       node.inputs = [];
     }
-    node.inputs = [...node.inputs, "in"];
+    node.inputs = [...node.inputs, "in" + node.inputs.length];
 
     reload();
   };
 
   return (
-      <MergeView
-        numberOfSourceHandles={node?.outputs?.length || 0}
-        numberOfTargetHandles={node?.inputs?.length || 0}
-        addTargetHandle={addTargetHandle}
-      />
+    <MergeView
+      numberOfSourceHandles={node?.outputs?.length || 0}
+      numberOfTargetHandles={node?.inputs?.length || 0}
+      addTargetHandle={addTargetHandle}
+    />
   );
 };
 

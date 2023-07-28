@@ -20,7 +20,6 @@ const useAudio = (source?: string) => {
   const [isComputing, setIsComputing] = useState<boolean>(false);
   const [audioComputed, setAudioComputed] = useState<boolean>(false);
   const [audio, setAudio] = useState<HTMLAudioElement | null>(null);
-
   const [currentTime, setCurrentTime] = useState<number>(0);
   const [duration, setDuration] = useState<number>(0);
   const [isPlaying, setIsPlaying] = useState<boolean>(false);

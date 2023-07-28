@@ -1,22 +1,12 @@
 //SplitView.tsx
 
 import React, { useContext } from "react";
-import { Container } from "@/app/Util/BaseStyles";
-import {
-  NodeSmall,
-  NodeIcon,
-  NodeTitle,
-  StyledHandle,
-} from "@/app/Util/Flow/NodeStyles";
+import { NodeSmall, NodeIcon, NodeTitle } from "@/app/Util/Flow/NodeStyles";
 import { useGraph } from "../GraphContext";
 import { NodeContext } from "../NodeState";
-
 import SplitImg from "./split.svg";
-import { Handle, Position } from "reactflow";
-
-const SmallView = () => {
-  return <Container></Container>;
-};
+import { Position } from "reactflow";
+import { GenerateHandles, GetWidthExtension } from "@/app/Util/Handles";
 
 interface SplitViewProps {
   numberOfSourceHandles: number;
@@ -26,7 +16,7 @@ interface SplitViewProps {
 function SplitView({
   numberOfSourceHandles,
   numberOfTargetHandles,
-}: SplitViewProps){
+}: SplitViewProps) {
   const graph = useGraph();
   const node = useContext(NodeContext); // Use NodeContext to get NodeState instance
 
@@ -36,20 +26,16 @@ function SplitView({
 
   return (
     <NodeSmall
-      widthextension={0}
+      widthextension={GetWidthExtension(node)}
       selected={node?.selected ?? false}
       onClick={selectNode}
     >
-      <StyledHandle handleType="target" position={Position.Top}/>
-      <StyledHandle handleType="source" position={Position.Bottom}/>
+      {GenerateHandles(node)}
 
       <NodeIcon src={SplitImg}></NodeIcon>
       <NodeTitle>split</NodeTitle>
-
-      <SmallView />
-
     </NodeSmall>
   );
-};
+}
 
 export default SplitView;

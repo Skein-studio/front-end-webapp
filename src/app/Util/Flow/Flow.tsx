@@ -39,8 +39,8 @@ import FlowView from "./FlowView";
 /* This component's purpose is to create the flowchart 
 view and handle the logic for the flowchart. 
 It is the central file of the app. */
+import { NODE_WIDTH } from "./NodeStyles";
 
-const NODE_WIDTH = 300;
 const NODE_HEIGHT = 50;
 
 const proOptions = { hideAttribution: true };
@@ -180,8 +180,18 @@ const Canvas: React.FC = () => {
       const sourceNode = nodes.find((node) => node.id === connection.source);
       const targetNode = nodes.find((node) => node.id === connection.target);
 
-      // If both nodes exist and they have different types, create a connection
-      if (sourceNode && targetNode && sourceNode.type !== targetNode.type) {
+      // Check if this source node is already connected to another node
+      const sourceConnectedEdge = edges.find(
+        (edge) => edge.source === connection.source || edge.target === connection.source
+      );
+
+      // If both nodes exist and they have different types, and the source node is not already connected, create a connection
+      if (
+        sourceNode &&
+        targetNode &&
+        sourceNode.type !== targetNode.type &&
+        !sourceConnectedEdge
+      ) {
         setEdges((eds) => {
           const newEdges = addEdge(connection, eds);
           addConnection(graph, connection);
@@ -190,12 +200,18 @@ const Canvas: React.FC = () => {
         });
       } else {
         // Log a warning if a connection was prevented
-        console.log(
-          `Cannot connect nodes of the same type: ${sourceNode?.type}`
-        );
+        if (sourceConnectedEdge) {
+          console.log(
+            `Cannot connect more than one node to the same source: ${sourceNode?.type}`
+          );
+        } else {
+          console.log(
+            `Cannot connect nodes of the same type: ${sourceNode?.type}`
+          );
+        }
       }
     },
-    [setEdges, nodes]
+    [setEdges, nodes, edges] // added edges to the dependencies list
   );
 
   function handlePaneClick() {
@@ -236,6 +252,16 @@ const Canvas: React.FC = () => {
       return;
     }
 
+    // Check if this source node is already connected to another node
+    const sourceConnectedEdge = edges.find(
+      (edge) => edge.source === connectStartNode?.id || edge.target === connectStartNode?.id
+    );
+
+    if (sourceConnectedEdge) {
+      console.log(`Cannot connect more than one node to the same source: ${connectStartNode?.type}`);
+      return;
+    }
+
     // Extract clientX and clientY based on event type
     if (event instanceof MouseEvent) {
       clientX = event.clientX;
@@ -268,6 +294,7 @@ const Canvas: React.FC = () => {
       console.log("This is too close to an already existing node");
     }
   }
+
 
   useEffect(() => {
     // this is called when a node is added, so we can add a connection between the start node and the new node
