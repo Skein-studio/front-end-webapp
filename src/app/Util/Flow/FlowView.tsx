@@ -55,12 +55,12 @@ function FlowView(props: Props) {
     <OuterBox width="95vw" height="95vh">
       <GraphNameInput defaultValue={"violet-york-mayflower"} />
       <StyledMiniMap
-      style={{ 
-        position: "absolute",
-        bottom: "10px",
-        right: "10px",
-       }}
-/>
+        style={{
+          position: "absolute",
+          bottom: "10px",
+          right: "10px",
+        }}
+      />
       <OptionsView
         toggle={props.showSelected}
         deleteSelectedNode={props.deleteSelectedNode}
@@ -93,7 +93,6 @@ function FlowView(props: Props) {
         onMove={props.onMove}
         onPaneClick={props.handlePaneClick}
       >
-
         <Background color="#ccc" variant={BackgroundVariant.Cross} />
       </ReactFlow>
     </OuterBox>

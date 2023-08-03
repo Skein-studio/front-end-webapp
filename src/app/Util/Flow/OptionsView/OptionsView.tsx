@@ -134,4 +134,3 @@ const OptionsContainer = styled.div`
     margin: auto;
   }
 `;
-
