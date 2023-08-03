@@ -60,7 +60,10 @@ function FlowView(props: Props) {
         deleteSelectedEdge={props.deleteSelectedEdge}
         addButtonHandler={props.addButtonHandler}
       />
-      <Overlay show={props.openSelectedNode ? true : undefined} />
+      <Overlay
+        show={props.openSelectedNode ? true : undefined}
+        onClick={props.hideSelected}
+      />
       {props.openSelectedNode && props.openNodeView()}
       <ReactFlow
         key={props.flowKey}

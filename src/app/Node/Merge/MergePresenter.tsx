@@ -34,7 +34,7 @@ const MergePresenter: React.FC = () => {
     if (!node.inputs) {
       node.inputs = [];
     }
-    node.inputs = [...node.inputs, node.id+"in" + node.inputs.length];
+    node.inputs = [...node.inputs, node.id + "in" + node.inputs.length];
 
     reload();
   };
