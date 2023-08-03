@@ -6,6 +6,11 @@
   which can then be accessed by any component that needs it.
 */
 
+/*
+ Possible TODOs:
+ - Set NodeState's dirty property to true when a node is changed
+*/
+
 import { createContext, useContext } from "react";
 import { NodeState, NodeTypeToString, NodeType } from "./NodeState";
 import { Edge, Node } from "reactflow";
@@ -18,7 +23,7 @@ export type Graph = {
   selectedNode: NodeState | undefined;
 };
 
-export function deleteNodes(context: Graph, nodes: Node[]) {
+export function deleteNodes(context: Graph, nodes: Node[]) { // This function is used to delete the nodes in the graph
   for (const node of nodes) {
     for (let i = 0; i < context.nodes.length; i++) {
       if (context.nodes[i].id == node.id) {
@@ -30,7 +35,7 @@ export function deleteNodes(context: Graph, nodes: Node[]) {
   context.reloadComponent();
 }
 
-export function deleteEdges(context: Graph, edges: Edge[]) {
+export function deleteEdges(context: Graph, edges: Edge[]) { // This function is used to delete the edges in the graph
   for (const edge of edges) {
     for (let i = 0; i < context.edges.length; i++) {
       if (context.edges[i].id == edge.id) {
@@ -42,14 +47,14 @@ export function deleteEdges(context: Graph, edges: Edge[]) {
   context.reloadComponent();
 }
 
-export function deselectNode(context: Graph) {
+export function deselectNode(context: Graph) { // This function is used to deselect the node in the graph
   if (context.selectedNode) {
     context.selectedNode.selected = false;
   }
   context.selectedNode = undefined;
 }
 
-export function getNode(context: Graph, id: number) {
+export function getNode(context: Graph, id: number) { // This function is used to get the node from the graph
   for (const element of context.nodes) {
     if (element.id == id.toString()) {
       return element;
@@ -57,9 +62,9 @@ export function getNode(context: Graph, id: number) {
   }
 }
 
-export function setNode(context: Graph, node: Node) {
+export function setNode(context: Graph, node: Node) { // This function is used to update the node in the graph
   for (let i = 0; i < context.nodes.length; i++) {
-    if (context.nodes[i].id == node.id) {
+    if (context.nodes[i].id == node.id) { 
       context.nodes[i] = node;
       context.reloadComponent();
       return;
@@ -67,10 +72,10 @@ export function setNode(context: Graph, node: Node) {
   }
 }
 
-export function addConnection(context: Graph, edge: Edge) {
+export function addConnection(context: Graph, edge: Edge) { // This function is used to add a connection in the graph
   for (let i = 0; i < context.edges.length; i++) {
     const element = context.edges[i];
-    if (element.source == edge.source && element.target == edge.target) {
+    if (element.source == edge.source && element.target == edge.target) { 
       console.log("This connection already exists", context.edges);
       return;
     }
@@ -79,7 +84,7 @@ export function addConnection(context: Graph, edge: Edge) {
   context.reloadComponent();
 }
 
-export function createNewNode(
+export function createNewNode( // This function is used to create a new node in the graph
   x: number,
   y: number,
   nodeType: NodeType,
@@ -98,7 +103,7 @@ export function createNewNode(
   return newNode;
 }
 
-export const GraphContext = createContext<Graph>({
+export const GraphContext = createContext<Graph>({ // This is the GraphContext, which is used to store the state of the graph, which can then be accessed by any component that needs it.
   nodes: [],
   edges: [],
   reloadComponent: () => {},
@@ -106,6 +111,6 @@ export const GraphContext = createContext<Graph>({
   selectedNode: undefined,
 });
 
-export function useGraph() {
+export function useGraph() { // This function is used to get the graph from the GraphContext
   return useContext(GraphContext);
 }

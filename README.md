@@ -5,7 +5,6 @@ sorted by decreasing importance.
 #### Bigger Picture Stuff
 
 - Refactor current frontend code into the updated model.
-- Playback of signals should actually play the output of the parent node.
 
 #### Front End Stuff
 
