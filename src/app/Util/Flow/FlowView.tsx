@@ -54,6 +54,13 @@ function FlowView(props: Props) {
   return (
     <OuterBox width="95vw" height="95vh">
       <GraphNameInput defaultValue={"violet-york-mayflower"} />
+      <StyledMiniMap
+      style={{ 
+        position: "absolute",
+        bottom: "10px",
+        right: "10px",
+       }}
+/>
       <OptionsView
         toggle={props.showSelected}
         deleteSelectedNode={props.deleteSelectedNode}
@@ -86,16 +93,7 @@ function FlowView(props: Props) {
         onMove={props.onMove}
         onPaneClick={props.handlePaneClick}
       >
-        <MiniMap
-          style={{
-            position: "absolute",
-            bottom: "-25px",
-            right: "-25px",
-            borderRadius: "10px",
-            border: "1px solid black",
-            transform: "scale(0.625)",
-          }}
-        />
+
         <Background color="#ccc" variant={BackgroundVariant.Cross} />
       </ReactFlow>
     </OuterBox>
@@ -117,4 +115,18 @@ const Overlay = styled.div<OverLayProps>`
   height: 100vh;
   z-index: 1; // higher than the content but lower than the openNodeView
   display: ${(props) => (props.show ? "block" : "none")};
+`;
+
+const StyledMiniMap = styled(MiniMap)`
+  position: absolute;
+  border-radius: 10px;
+  border: 1px solid black;
+  transform: scale(0.625);
+  margin: auto;
+  width: 200px; // You can replace with any fixed width you want
+  height: 150px; // You can replace with any fixed height you want
+
+  @media (max-width: 768px) {
+    left: 0;
+  }
 `;

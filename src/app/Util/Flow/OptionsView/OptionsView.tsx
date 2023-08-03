@@ -113,7 +113,9 @@ const NodeIcon = (props: IconProps) => {
 const OptionsContainer = styled.div`
   position: absolute;
   bottom: 50px;
-  right: 200px;
+  right: 0;
+  left: 0;
+  margin: auto;
   display: flex;
   flex-direction: row;
   justify-content: space-between;
@@ -125,4 +127,11 @@ const OptionsContainer = styled.div`
   background-color: white;
   border-radius: 10px;
   border: 1px solid black;
+  @media (max-width: 768px) {
+    right: 0;
+    left: 0;
+    bottom: 150px; // adjust this for mobile devices
+    margin: auto;
+  }
 `;
+
