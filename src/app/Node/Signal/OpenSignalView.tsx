@@ -26,7 +26,7 @@ export default function OpenSignalView(props: Props) {
       <Container>
         <FieldTitle>
           <img src={StarImg} alt="Star" />
-          <span>Style Edit</span>
+          <p>Style Edit</p>
         </FieldTitle>
         <Dropdown>
           <select value={selectedInstrument} onChange={handleInstrumentChange}>
@@ -41,18 +41,18 @@ export default function OpenSignalView(props: Props) {
 }
 
 const FieldTitle = styled.div`
-  position: relative;
-  left: -150px;
+  left: 0;
   font-size: 14px;
   font-family: verdana;
   display: flex;
   align-items: center;
+  margin-right: auto; // pushes the element to the left
   margin-bottom: 10px;
 
   & > img {
     width: 16px;
     height: 16px;
-    margin-right: 4px; // Add some space between the image and the text
+    margin-right: 4px;
   }
 `;
 
