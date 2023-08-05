@@ -33,7 +33,8 @@ function MergeView({
     graph.selectNode(node);
   }
   function renderButton() {
-    if (node!.inputs!.length < 10) { // If the number of inputs is less than 10, then the button is enabled
+    if (node!.inputs!.length < 10) {
+      // If the number of inputs is less than 10, then the button is enabled
       return <AddButton onClick={addTargetHandle}>+</AddButton>;
     } else {
       return <AddButton disabled={true}>+</AddButton>;

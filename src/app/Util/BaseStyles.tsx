@@ -100,6 +100,7 @@ const OuterBox = styled.div<OuterBoxProps>`
   border: 4px solid black;
   padding: 4px;
   margin: 4px;
+  overflow: hidden;
 `;
 
 interface BoxProps {

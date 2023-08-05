@@ -26,6 +26,7 @@ export class NodeState {
   outputs: string[] | undefined;
   type: NodeType;
   data: any = {};
+  dirty: boolean = false; // not sure if this should be initialized to true or false
   selected: boolean;
 
   constructor(x: number, y: number, type: NodeType, id?: number) {
@@ -38,30 +39,40 @@ export class NodeState {
     this.selected = false;
     this.setInputs();
     this.setOutputs();
-    console.log("Created new node:", this);
+    //console.log("Created new node:", this);
   }
 
-  setInputs() { // HandleIDs must be unique, so we add the node ID to the beginning of each handle ID
+  setInputs() {
+    // HandleIDs must be unique, so we add the node ID to the beginning of each handle ID
     switch (this.type) {
       case NodeType.Source:
         this.inputs = [];
         break;
       case NodeType.Merge:
-        this.inputs = [this.id+"in0", this.id+"in1"];
+        this.inputs = [this.id + "in0", this.id + "in1"];
         break;
       default:
-        this.inputs = [this.id+"in0"];
+        this.inputs = [this.id + "in0"];
         break;
     }
   }
 
   setOutputs() {
-    switch (this.type) { // HandleIDs must be unique, so we add the node ID to the beginning of each handle ID
+    switch (
+      this.type // HandleIDs must be unique, so we add the node ID to the beginning of each handle ID
+    ) {
       case NodeType.Split:
-        this.outputs = [this.id+"out0", this.id+"out1", this.id+"out2", this.id+"out3", this.id+"out4", this.id+"out5"];
+        this.outputs = [
+          this.id + "out0",
+          this.id + "out1",
+          this.id + "out2",
+          this.id + "out3",
+          this.id + "out4",
+          this.id + "out5",
+        ];
         break;
       default:
-        this.outputs = [this.id+"out0"];
+        this.outputs = [this.id + "out0"];
         break;
     }
   }

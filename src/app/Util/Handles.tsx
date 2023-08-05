@@ -52,7 +52,6 @@ export function GenerateHandles(node: NodeState | undefined) {
               handleType="target"
               position={Position.Top}
               id={node!.inputs[i]}
-            
             />
           </HandleSpacing>
         );
@@ -88,9 +87,10 @@ export function GetWidthExtension(node: NodeState | undefined) {
       node.inputs.length > node.outputs.length
         ? node.inputs.length
         : node.outputs.length;
-    if (length > 5) {
-      return (length - 5) * 50; // 50 is the width of a handle and 5 is the number of handles that fit in the default width
-    }
   }
+  if (length > 5) {
+    return (length - 5) * 50; // 50 is the width of a handle and 5 is the number of handles that fit in the default width
+  }
+
   return 0;
 }
