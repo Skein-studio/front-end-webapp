@@ -274,6 +274,12 @@ const Canvas: React.FC = () => {
       return;
     }
 
+    if(connectStartHandleId?.includes("in")){
+      console.log("you can't create a signal from an input");
+      return;
+    }
+
+
     // Extract clientX and clientY based on event type
     if (event instanceof MouseEvent) {
       clientX = event.clientX;
