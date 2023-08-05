@@ -122,3 +122,8 @@ export function useGraph() {
   // This function is used to get the graph from the GraphContext
   return useContext(GraphContext);
 }
+
+export function generateEdgeID(sourceId:string, targetId:string): string {
+  // This function is used to generate an ID for an edge
+  return `e${sourceId}-${targetId}`;
+}

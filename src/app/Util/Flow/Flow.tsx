@@ -1,6 +1,6 @@
 //Flow.tsx
 
-import React, { useCallback, useEffect, useMemo, useState } from "react";
+import React, { use, useCallback, useEffect, useMemo, useState } from "react";
 import {
   Node,
   Handle,
@@ -32,6 +32,7 @@ import {
   deleteNodes,
   deleteEdges,
   getNode,
+  generateEdgeID,
 } from "../../Node/GraphContext";
 import OpenNodePresenter from "@/app/Node/OpenNode/OpenNodePresenter";
 import FlowView from "./FlowView";
@@ -88,6 +89,10 @@ const Canvas: React.FC = () => {
   const [connectStartHandleId, setConnectStartHandleId] = useState<string>();
   const window = useWindowDimensions();
 
+  useEffect(() => {
+    console.log("edges changed", edges);
+  } , [edges]);
+
 
   const reloadComponent = () => {
     if (flowKey == 0) {
@@ -95,7 +100,6 @@ const Canvas: React.FC = () => {
     } else {
       setFlowKey((prevKey) => prevKey - 1);
     }
-    console.log(nodes);
     /*
       this is just a dumb temporary fix to just refresh by changing
       a property of the ReactFlow component (key), this function is passed into the GraphContext 
@@ -212,7 +216,6 @@ const Canvas: React.FC = () => {
         setEdges((eds) => {
           const newEdges = addEdge(connection, eds);
           addConnection(graph, connection);
-          console.log("edges: ", edges);
           return newEdges;
         });
       } else {
@@ -337,7 +340,7 @@ const Canvas: React.FC = () => {
           }
 
           setEdges((eds) => {
-            const edgeId = `e${connectStartNode.id}-${lastNode.id}`; // generate a unique id for the edge
+            const edgeId = generateEdgeID(connectStartNode.id, lastNode.id); // generate a unique id for the edge
             const newEdges = addEdge(
               {
                 id: edgeId,
@@ -370,6 +373,7 @@ const Canvas: React.FC = () => {
     const newNode = createNewNode(x, y, nodeType, graph); // create a new node in the graph
     const newNodes = [...nodes, newNode];
     setNodes(newNodes);
+    console.log("nodes updated: ", newNodes);
     return newNode;
   };
 
