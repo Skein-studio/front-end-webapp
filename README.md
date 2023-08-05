@@ -15,8 +15,6 @@ sorted by decreasing importance.
   - The text after generating sounds in the source node is center-aligned instead of left-aligned. It is also the color white. (what should it be?)
   - The white background. (??)
   - Style Edit inside the signal node. Should there be a "set" button or something similar?
-- Map and items in corner should change placement if screen is too narrow.
-- When in a large view of a node, you should be able to return to the canvas by just clicking on the side.
 
 ##### Bugs:
 
@@ -27,7 +25,6 @@ sorted by decreasing importance.
 ###### Signal Node
 
 - Signals that are computed gets "uncomputed" a new node is created.
-- Signal nodes only appear from the first output handle. (?)
 
 ###### Merge Node
 
