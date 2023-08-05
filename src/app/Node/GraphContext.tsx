@@ -77,16 +77,9 @@ export function setNode(context: Graph, node: Node) {
   }
 }
 
-export function addConnection(context: Graph, edge: Edge) {
-  // This function is used to add a connection in the graph
-  for (let i = 0; i < context.edges.length; i++) {
-    const element = context.edges[i];
-    if (element.source == edge.source && element.target == edge.target) {
-      console.log("This connection already exists", context.edges);
-      return;
-    }
-  }
-  context.edges.push(edge);
+export function setGraphEdges(context: Graph, edges: Edge[]) {
+  // This function is used to update the edges in the graph
+  context.edges = edges;
   context.reloadComponent();
 }
 
@@ -123,7 +116,14 @@ export function useGraph() {
   return useContext(GraphContext);
 }
 
-export function generateEdgeID(sourceId:string, targetId:string): string {
-  // This function is used to generate an ID for an edge
-  return `e${sourceId}-${targetId}`;
+export function connectionExists(context: Graph, sourceId:string, targetId:string) {
+  let exists = false;
+
+  for (const edge of context.edges) {
+    if (edge.source == sourceId && edge.target == targetId) {
+      exists = true;
+      break;
+    }
+  }
+  return exists;
 }

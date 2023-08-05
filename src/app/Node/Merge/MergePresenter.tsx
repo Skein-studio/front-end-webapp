@@ -33,11 +33,7 @@ const MergePresenter: React.FC = () => {
     if (!node) {
       return;
     }
-    if (!node.inputs) {
-      node.inputs = [];
-    }
-    node.inputs = [...node.inputs, node.id + "in" + node.inputs.length];
-
+    node.addTargetHandle();
     reload();
     
   };

@@ -34,46 +34,59 @@ export class NodeState {
       x: x,
       y: y,
     };
-    this.id = id || this.generateID();
+    this.id = id ?? this.generateID();
     this.type = type;
     this.selected = false;
     this.setInputs();
     this.setOutputs();
-    //console.log("Created new node:", this);
+  }
+
+  addTargetHandle(){
+    if (!this.inputs) {
+      this.inputs = [];
+    }
+    this.inputs = [...this.inputs, this.id + "in[" + this.inputs.length + "]"];
+  }
+  addSourceHandle(){
+    if (!this.outputs) {
+      this.outputs = [];
+    }
+    this.outputs = [...this.outputs, this.id + "out[" + this.outputs.length + "]"];
   }
 
   setInputs() {
+    let numInputs = 0;
     // HandleIDs must be unique, so we add the node ID to the beginning of each handle ID
     switch (this.type) {
       case NodeType.Source:
-        this.inputs = [];
+        numInputs = 0;
         break;
       case NodeType.Merge:
-        this.inputs = [this.id + "in0", this.id + "in1"];
+        numInputs = 2;
         break;
       default:
-        this.inputs = [this.id + "in0"];
+        numInputs = 1;
         break;
+    }
+    for (let i = 0; i < numInputs; i++) {
+      this.addTargetHandle();
     }
   }
 
   setOutputs() {
+    let numOutputs = 0;
     switch (
       this.type // HandleIDs must be unique, so we add the node ID to the beginning of each handle ID
     ) {
       case NodeType.Split:
-        this.outputs = [
-          this.id + "out0",
-          this.id + "out1",
-          this.id + "out2",
-          this.id + "out3",
-          this.id + "out4",
-          this.id + "out5",
-        ];
+        numOutputs = 6;
         break;
       default:
-        this.outputs = [this.id + "out0"];
+        numOutputs = 1;
         break;
+    }
+    for (let i = 0; i < numOutputs; i++) {
+      this.addSourceHandle();
     }
   }
 

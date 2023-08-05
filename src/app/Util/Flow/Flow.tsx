@@ -1,10 +1,8 @@
 //Flow.tsx
 
-import React, { use, useCallback, useEffect, useMemo, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 import {
   Node,
-  Handle,
-  Position,
   Edge,
   ReactFlowProvider,
   addEdge,
@@ -14,6 +12,7 @@ import {
   Viewport,
   OnConnectStartParams,
   OnSelectionChangeParams,
+  Connection,
 } from "reactflow";
 
 import SourcePresenter from "../../Node/Source/SourcePresenter";
@@ -24,7 +23,7 @@ import MergePresenter from "@/app/Node/Merge/MergePresenter";
 
 import { NodeType, NodeContext, NodeState } from "../../Node/NodeState";
 import {
-  addConnection,
+  setGraphEdges,
   createNewNode,
   Graph,
   GraphContext,
@@ -32,7 +31,7 @@ import {
   deleteNodes,
   deleteEdges,
   getNode,
-  generateEdgeID,
+  connectionExists,
 } from "../../Node/GraphContext";
 import OpenNodePresenter from "@/app/Node/OpenNode/OpenNodePresenter";
 import FlowView from "./FlowView";
@@ -188,6 +187,11 @@ const Canvas: React.FC = () => {
       const sourceNode = nodes.find((node) => node.id === connection.source);
       const targetNode = nodes.find((node) => node.id === connection.target);
 
+      if(connectionExists(graph, connection.source, connection.target)) {
+        console.log("Connection already exists");
+        return;
+      }
+
       // Check if this source handle is already connected to another node
       let handleConnectedEdge = edges.find(
         (edge) =>
@@ -214,10 +218,11 @@ const Canvas: React.FC = () => {
       // If both nodes exist and they have different types, create a connection
       if (sourceNode && targetNode && sourceNode.type !== targetNode.type) {
         setEdges((eds) => {
-          const newEdges = addEdge(connection, eds);
-          addConnection(graph, connection);
+          const newEdges = addEdge(connection, eds
+          ); // add the edge to the list of edges, in the local state
+          setGraphEdges(graph, newEdges); // add the edge to the list of edges, in the graph
           return newEdges;
-        });
+        }); // add the edge to the list of edges, in the graph
       } else {
         // Log a warning if a connection was prevented
         console.log(
@@ -251,7 +256,7 @@ const Canvas: React.FC = () => {
   ) {
     // this is called when the user starts connecting by dragging from a node handle
     let nodeId = params.nodeId;
-    let handleId = params.handleId || undefined; // get the handle id or undefined if it is null
+    let handleId = params.handleId ?? undefined; // get the handle id or undefined if it is null
 
     let node: Node | undefined = nodes.find((node) => node.id === nodeId);
     if (node) {
@@ -308,7 +313,7 @@ const Canvas: React.FC = () => {
         nodes
       )
     ) {
-      let newNode = addNewNode(
+      addNewNode(
         x,
         y,
         NodeType.Signal
@@ -338,25 +343,18 @@ const Canvas: React.FC = () => {
             );
             return;
           }
-
+          
+          let newConnection : Connection = {
+            source: connectStartNode.id,
+            target: lastNode.id,
+            sourceHandle: connectStartHandleId!,
+            targetHandle: (lastNode.data as any).nodeState.inputs[0], // connect to the first input, using Type Assertion to avoid errors (this is a hack)
+          };
           setEdges((eds) => {
-            const edgeId = generateEdgeID(connectStartNode.id, lastNode.id); // generate a unique id for the edge
-            const newEdges = addEdge(
-              {
-                id: edgeId,
-                source: connectStartNode.id,
-                target: lastNode.id,
-                sourceHandle: connectStartHandleId, // set the handle id for the source node
-                animated: true,
-              },
+            const newEdges = addEdge(newConnection,
               eds
             ); // add the edge to the list of edges, in the local state
-            addConnection(graph, {
-              id: edgeId,
-              source: connectStartNode.id,
-              target: lastNode.id,
-              sourceHandle: connectStartHandleId, // set the handle id for the source node
-            });
+            setGraphEdges(graph, newEdges); // add the edge to the list of edges, in the graph
             return newEdges;
           }); // add the edge to the list of edges, in the graph
         } else {
