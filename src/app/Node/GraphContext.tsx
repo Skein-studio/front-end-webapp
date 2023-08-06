@@ -116,14 +116,32 @@ export function useGraph() {
   return useContext(GraphContext);
 }
 
-export function connectionExists(context: Graph, sourceId:string, targetId:string) {
+export function connectionExists(context: Graph, sourceId:string, targetId:string, sourceHandle:string, targetHandle:string) { // This function is used to check if a connection already exists between two nodes
   let exists = false;
 
-  for (const edge of context.edges) {
+  for (const edge of context.edges) { // Check if a connection already exists between the two nodes
     if (edge.source == sourceId && edge.target == targetId) {
       exists = true;
       break;
     }
+    if(edge.targetHandle == targetHandle){ // Check if the targetHandle is already connected to another node
+      exists = true;
+      break;
+    }
+    if(edge.sourceHandle == sourceHandle){ // Check if the sourceHandle is already connected to another node
+      exists = true;
+      break;
+    }
+    if(edge.sourceHandle == targetHandle){ // Check if the sourceHandle is already connected to another node
+      exists = true;
+      break;
+    }
+    if(edge.targetHandle == sourceHandle){ // Check if the targetHandle is already connected to another node
+      exists = true;
+      break;
+    }
   }
+
+
   return exists;
 }

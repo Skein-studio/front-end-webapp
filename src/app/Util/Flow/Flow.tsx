@@ -187,7 +187,7 @@ const Canvas: React.FC = () => {
       const sourceNode = nodes.find((node) => node.id === connection.source);
       const targetNode = nodes.find((node) => node.id === connection.target);
 
-      if(connectionExists(graph, connection.source, connection.target)) {
+      if(connectionExists(graph, connection.source, connection.target, connection.sourceHandle, connection.targetHandle)) {
         console.log("Connection already exists");
         return;
       }
