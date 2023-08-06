@@ -96,6 +96,9 @@ export class NodeState {
     this.inputs = node.inputs;
     this.outputs = node.outputs;
     this.type = node.type;
+    this.data = node.data;
+    this.selected = node.selected;
+    this.dirty = node.dirty;
   }
 
   // Instance method
