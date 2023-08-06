@@ -69,7 +69,7 @@ interface ProgressBarContainerProps {
   smallplayer?: boolean;
 }
 
-const ProgressBarContainer = styled.div<ProgressBarContainerProps>`
+const ProgressBarContainer = styled(({ smallplayer, ...rest }: ProgressBarContainerProps & React.HTMLProps<HTMLDivElement>) => <div {...rest} />)`
   position: relative;
   display: flex;
   align-items: center;
@@ -79,6 +79,7 @@ const ProgressBarContainer = styled.div<ProgressBarContainerProps>`
   border: 2px solid lightgrey;
   border-radius: 10px;
 `;
+
 
 const ProgressBar = styled.div.attrs<ProgressBarProps>((props) => ({
   style: {

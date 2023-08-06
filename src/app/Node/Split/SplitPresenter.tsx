@@ -10,14 +10,9 @@ import React, { useState, useEffect, useContext } from "react";
 import SplitView from "./SplitView";
 import { NodeContext } from "../NodeState";
 
-const SplitPresenter: React.FC = () => {
-  const [reloadComponent, setReloadComponent] = useState(false); // Used to force component to reload
+function SplitPresenter() {
+
   const node = useContext(NodeContext);
-
-  function reload() {
-    setReloadComponent(!reloadComponent);
-  }
-
   useEffect(() => {}, [node]);
 
   return (

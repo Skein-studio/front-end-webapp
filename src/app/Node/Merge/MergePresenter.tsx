@@ -16,13 +16,15 @@ import React, {
 } from "react";
 import MergeView from "./MergeView";
 import { NodeContext } from "../NodeState";
+import { useGraph } from "../GraphContext";
 
 const MergePresenter: React.FC = () => {
-  const [reloadComponent, setReloadComponent] = useState(false); // Used to force component to reload
+ 
   const node = useContext(NodeContext);
+  const graph = useGraph();
 
   function reload() {
-    setReloadComponent(!reloadComponent);
+    graph?.reloadComponent();
   }
 
   useEffect(() => {}, [node]);
@@ -31,12 +33,9 @@ const MergePresenter: React.FC = () => {
     if (!node) {
       return;
     }
-    if (!node.inputs) {
-      node.inputs = [];
-    }
-    node.inputs = [...node.inputs, node.id + "in" + node.inputs.length];
-
+    node.addTargetHandle();
     reload();
+    
   };
 
   return (

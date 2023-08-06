@@ -3,8 +3,6 @@
 import React, { useCallback, useEffect, useMemo, useState } from "react";
 import {
   Node,
-  Handle,
-  Position,
   Edge,
   ReactFlowProvider,
   addEdge,
@@ -14,6 +12,7 @@ import {
   Viewport,
   OnConnectStartParams,
   OnSelectionChangeParams,
+  Connection,
 } from "reactflow";
 
 import SourcePresenter from "../../Node/Source/SourcePresenter";
@@ -24,7 +23,7 @@ import MergePresenter from "@/app/Node/Merge/MergePresenter";
 
 import { NodeType, NodeContext, NodeState } from "../../Node/NodeState";
 import {
-  addConnection,
+  setGraphEdges,
   createNewNode,
   Graph,
   GraphContext,
@@ -32,6 +31,7 @@ import {
   deleteNodes,
   deleteEdges,
   getNode,
+  connectionExists,
 } from "../../Node/GraphContext";
 import OpenNodePresenter from "@/app/Node/OpenNode/OpenNodePresenter";
 import FlowView from "./FlowView";
@@ -40,6 +40,7 @@ import FlowView from "./FlowView";
 view and handle the logic for the flowchart. 
 It is the central file of the app. */
 import { NODE_WIDTH } from "./NodeStyles";
+import useWindowDimensions from "../windowDimensions";
 
 const NODE_HEIGHT = 50;
 
@@ -79,12 +80,18 @@ const Canvas: React.FC = () => {
   const [nodes, setNodes, onNodesChange] = useNodesState<Node>([]);
   const [edges, setEdges, onEdgesChange] = useEdgesState<Edge>([]);
   const [flowKey, setFlowKey] = useState(0);
-  const [viewport, setViewport] = useState<Viewport>({ x: 0, y: 0, zoom: 1 }); // find a way to save the viewport and pass it to reactflow component
+  const [viewport, setViewport] = useState<Viewport>({ x: 0, y: 0, zoom: 0.75 }); // find a way to save the viewport and pass it to reactflow component
   const [selectedNode, setSelectedNode] = useState<NodeState>(); // do not use this directly, use selectNode() instead
   const [selectedEdge, setSelectedEdge] = useState<Edge>();
   const [openSelectedNode, setOpenSelectedNode] = useState<boolean>(false);
   const [connectStartNode, setConnectStartNode] = useState<Node>();
   const [connectStartHandleId, setConnectStartHandleId] = useState<string>();
+  const window = useWindowDimensions();
+
+  useEffect(() => {
+    console.log("edges changed", edges);
+  } , [edges]);
+
 
   const reloadComponent = () => {
     if (flowKey == 0) {
@@ -92,7 +99,6 @@ const Canvas: React.FC = () => {
     } else {
       setFlowKey((prevKey) => prevKey - 1);
     }
-    console.log(nodes);
     /*
       this is just a dumb temporary fix to just refresh by changing
       a property of the ReactFlow component (key), this function is passed into the GraphContext 
@@ -181,6 +187,11 @@ const Canvas: React.FC = () => {
       const sourceNode = nodes.find((node) => node.id === connection.source);
       const targetNode = nodes.find((node) => node.id === connection.target);
 
+      if(connectionExists(graph, connection.source, connection.target, connection.sourceHandle, connection.targetHandle)) {
+        console.log("Connection already exists");
+        return;
+      }
+
       // Check if this source handle is already connected to another node
       let handleConnectedEdge = edges.find(
         (edge) =>
@@ -207,11 +218,11 @@ const Canvas: React.FC = () => {
       // If both nodes exist and they have different types, create a connection
       if (sourceNode && targetNode && sourceNode.type !== targetNode.type) {
         setEdges((eds) => {
-          const newEdges = addEdge(connection, eds);
-          addConnection(graph, connection);
-          console.log("edges: ", edges);
+          const newEdges = addEdge(connection, eds
+          ); // add the edge to the list of edges, in the local state
+          setGraphEdges(graph, newEdges); // add the edge to the list of edges, in the graph
           return newEdges;
-        });
+        }); // add the edge to the list of edges, in the graph
       } else {
         // Log a warning if a connection was prevented
         console.log(
@@ -245,7 +256,7 @@ const Canvas: React.FC = () => {
   ) {
     // this is called when the user starts connecting by dragging from a node handle
     let nodeId = params.nodeId;
-    let handleId = params.handleId || undefined; // get the handle id or undefined if it is null
+    let handleId = params.handleId ?? undefined; // get the handle id or undefined if it is null
 
     let node: Node | undefined = nodes.find((node) => node.id === nodeId);
     if (node) {
@@ -257,29 +268,28 @@ const Canvas: React.FC = () => {
   function onConnectEnd(event: MouseEvent | TouchEvent) {
     let clientX = 0,
       clientY = 0;
-
+  
     const handleConnectedEdge = edges.find(
       (edge) => edge.sourceHandle === connectStartHandleId
     );
-
+  
     if (handleConnectedEdge) {
       console.log(
         `Cannot create new node. Handle: ${connectStartHandleId} is already connected to another node.`
       );
       return;
     }
-
+  
     if (connectStartNode?.type == "signal") {
       console.log("you can't create a signal from a signal");
       return;
     }
-
-    if(connectStartHandleId?.includes("in")){
+  
+    if (connectStartHandleId?.includes("in")) {
       console.log("you can't create a signal from an input");
       return;
     }
-
-
+  
     // Extract clientX and clientY based on event type
     if (event instanceof MouseEvent) {
       clientX = event.clientX;
@@ -288,30 +298,31 @@ const Canvas: React.FC = () => {
       clientX = event.changedTouches[0].clientX;
       clientY = event.changedTouches[0].clientY;
     }
-
+  
     let { x, y } = reactFlowInstance.project({ x: clientX, y: clientY });
-
-    // Add the viewport's position to the projected coordinates
-    x -= viewport.x;
-    y -= viewport.y;
-
+  
+    // Subtract viewport's position from the projected coordinates and adjust for the zoom level
+    x = (x - viewport.x) / viewport.zoom  - NODE_WIDTH / 2;
+    y = (y - viewport.y) / viewport.zoom  - NODE_HEIGHT / 2;
+  
     // Only add a new node if there isn't one at this position already
     if (
       !doesNodeExistAtPosition(
-        x - NODE_WIDTH,
-        y - NODE_HEIGHT, // height of the node
+        x,
+        y, // half the width and height of the node
         nodes
       )
     ) {
-      let newNode = addNewNode(
-        x - NODE_WIDTH / 2,
-        y - NODE_HEIGHT / 2, // half the height of the node
+      addNewNode(
+        x,
+        y,
         NodeType.Signal
       );
     } else {
       console.log("This is too close to an already existing node");
     }
   }
+  
 
   useEffect(() => {
     // this is called when a node is added, so we can add a connection between the start node and the new node
@@ -332,25 +343,18 @@ const Canvas: React.FC = () => {
             );
             return;
           }
-
+          
+          let newConnection : Connection = {
+            source: connectStartNode.id,
+            target: lastNode.id,
+            sourceHandle: connectStartHandleId!,
+            targetHandle: (lastNode.data as any).nodeState.inputs[0], // connect to the first input, using Type Assertion to avoid errors (this is a hack)
+          };
           setEdges((eds) => {
-            const edgeId = `e${connectStartNode.id}-${lastNode.id}`; // generate a unique id for the edge
-            const newEdges = addEdge(
-              {
-                id: edgeId,
-                source: connectStartNode.id,
-                target: lastNode.id,
-                sourceHandle: connectStartHandleId, // set the handle id for the source node
-                animated: true,
-              },
+            const newEdges = addEdge(newConnection,
               eds
             ); // add the edge to the list of edges, in the local state
-            addConnection(graph, {
-              id: edgeId,
-              source: connectStartNode.id,
-              target: lastNode.id,
-              sourceHandle: connectStartHandleId, // set the handle id for the source node
-            });
+            setGraphEdges(graph, newEdges); // add the edge to the list of edges, in the graph
             return newEdges;
           }); // add the edge to the list of edges, in the graph
         } else {
@@ -367,6 +371,7 @@ const Canvas: React.FC = () => {
     const newNode = createNewNode(x, y, nodeType, graph); // create a new node in the graph
     const newNodes = [...nodes, newNode];
     setNodes(newNodes);
+    console.log("nodes updated: ", newNodes);
     return newNode;
   };
 
@@ -403,18 +408,22 @@ const Canvas: React.FC = () => {
     // this is called when the component is first rendered, so we can add a source node
     if (!getNode(graph, 1)) {
       // if the source node doesn't exist
-      addNewNode(250, 250, NodeType.Source);
+      addNewNode(window.width/2, window.height/2 - NODE_HEIGHT, NodeType.Source);
     }
   }, []);
 
   function addButtonHandler() {
     // this is called when the user clicks on the "add" button
+  
+    let x = (window.width/2 - viewport.x) / viewport.zoom - NODE_WIDTH/2; // half the width of the node, so it's centered, relative to the viewport, not the window
+    let y = (window.height/2 - viewport.y) / viewport.zoom - NODE_HEIGHT/2; // half the height of the node, so it's centered, relative to the viewport, not the window
     addNewNode(
-      250 - viewport.x + NODE_WIDTH / 8,
-      250 - viewport.y + NODE_HEIGHT * 2,
+      x,
+      y, 
       NodeType.Unspecified
     );
   }
+  
 
   return (
     <ReactFlowProvider>

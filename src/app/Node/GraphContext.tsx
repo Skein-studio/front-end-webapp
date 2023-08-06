@@ -77,16 +77,9 @@ export function setNode(context: Graph, node: Node) {
   }
 }
 
-export function addConnection(context: Graph, edge: Edge) {
-  // This function is used to add a connection in the graph
-  for (let i = 0; i < context.edges.length; i++) {
-    const element = context.edges[i];
-    if (element.source == edge.source && element.target == edge.target) {
-      console.log("This connection already exists", context.edges);
-      return;
-    }
-  }
-  context.edges.push(edge);
+export function setGraphEdges(context: Graph, edges: Edge[]) {
+  // This function is used to update the edges in the graph
+  context.edges = edges;
   context.reloadComponent();
 }
 
@@ -121,4 +114,34 @@ export const GraphContext = createContext<Graph>({
 export function useGraph() {
   // This function is used to get the graph from the GraphContext
   return useContext(GraphContext);
+}
+
+export function connectionExists(context: Graph, sourceId:string, targetId:string, sourceHandle:string, targetHandle:string) { // This function is used to check if a connection already exists between two nodes
+  let exists = false;
+
+  for (const edge of context.edges) { // Check if a connection already exists between the two nodes
+    if (edge.source == sourceId && edge.target == targetId) {
+      exists = true;
+      break;
+    }
+    if(edge.targetHandle == targetHandle){ // Check if the targetHandle is already connected to another node
+      exists = true;
+      break;
+    }
+    if(edge.sourceHandle == sourceHandle){ // Check if the sourceHandle is already connected to another node
+      exists = true;
+      break;
+    }
+    if(edge.sourceHandle == targetHandle){ // Check if the sourceHandle is already connected to another node
+      exists = true;
+      break;
+    }
+    if(edge.targetHandle == sourceHandle){ // Check if the targetHandle is already connected to another node
+      exists = true;
+      break;
+    }
+  }
+
+
+  return exists;
 }
