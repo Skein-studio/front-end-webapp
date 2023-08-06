@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from "react";
 
 interface WindowDimensions {
   width: number;
@@ -6,7 +6,7 @@ interface WindowDimensions {
 }
 
 const useWindowDimensions = (): WindowDimensions => {
-  const hasWindow = typeof window !== 'undefined';
+  const hasWindow = typeof window !== "undefined";
 
   const [windowDimensions, setWindowDimensions] = useState<WindowDimensions>({
     width: hasWindow ? window.innerWidth : 0,
@@ -22,12 +22,12 @@ const useWindowDimensions = (): WindowDimensions => {
         });
       };
 
-      window.addEventListener('resize', handleResize);
-      return () => window.removeEventListener('resize', handleResize);
+      window.addEventListener("resize", handleResize);
+      return () => window.removeEventListener("resize", handleResize);
     }
   }, []); // Empty array ensures that effect is only run on mount and unmount
 
   return windowDimensions;
-}
+};
 
 export default useWindowDimensions;

@@ -41,17 +41,20 @@ export class NodeState {
     this.setOutputs();
   }
 
-  addTargetHandle(){
+  addTargetHandle() {
     if (!this.inputs) {
       this.inputs = [];
     }
     this.inputs = [...this.inputs, this.id + "in[" + this.inputs.length + "]"];
   }
-  addSourceHandle(){
+  addSourceHandle() {
     if (!this.outputs) {
       this.outputs = [];
     }
-    this.outputs = [...this.outputs, this.id + "out[" + this.outputs.length + "]"];
+    this.outputs = [
+      ...this.outputs,
+      this.id + "out[" + this.outputs.length + "]",
+    ];
   }
 
   setInputs() {

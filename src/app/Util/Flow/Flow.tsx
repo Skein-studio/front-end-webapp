@@ -80,18 +80,17 @@ const Canvas: React.FC = () => {
   const [nodes, setNodes, onNodesChange] = useNodesState<Node>([]);
   const [edges, setEdges, onEdgesChange] = useEdgesState<Edge>([]);
   const [flowKey, setFlowKey] = useState(0);
-  const [viewport, setViewport] = useState<Viewport>({ x: 0, y: 0, zoom: 0.75 }); // find a way to save the viewport and pass it to reactflow component
+  const [viewport, setViewport] = useState<Viewport>({
+    x: 0,
+    y: 0,
+    zoom: 0.75,
+  }); // find a way to save the viewport and pass it to reactflow component
   const [selectedNode, setSelectedNode] = useState<NodeState>(); // do not use this directly, use selectNode() instead
   const [selectedEdge, setSelectedEdge] = useState<Edge>();
   const [openSelectedNode, setOpenSelectedNode] = useState<boolean>(false);
   const [connectStartNode, setConnectStartNode] = useState<Node>();
   const [connectStartHandleId, setConnectStartHandleId] = useState<string>();
   const window = useWindowDimensions();
-
-  useEffect(() => {
-    console.log("edges changed", edges);
-  } , [edges]);
-
 
   const reloadComponent = () => {
     if (flowKey == 0) {
@@ -148,6 +147,10 @@ const Canvas: React.FC = () => {
     [nodes, edges, reloadComponent, selectNode, selectedNode]
   );
 
+  useEffect(() => {
+    console.log("edges changed", edges);
+  }, [edges]);
+
   function stopSelect() {
     // this is called when the user clicks on the canvas
     deselectNode(graph);
@@ -181,17 +184,42 @@ const Canvas: React.FC = () => {
     deleteEdges(graph, edgesToDelete); // delete the edge from the graph
   }
 
+  function handlePaneClick() {
+    // this is called when the user clicks on the canvas
+    stopSelect();
+  }
+
+  function doesNodeExistAtPosition(
+    x: number,
+    y: number,
+    nodes: Node[]
+  ): boolean {
+    return nodes.some(
+      (node) =>
+        Math.abs(node.position.x - x) < NODE_WIDTH &&
+        Math.abs(node.position.y - y) < NODE_HEIGHT
+    );
+  }
+
   const onConnect = useCallback(
     (connection: any) => {
       // Get the source and target nodes
       const sourceNode = nodes.find((node) => node.id === connection.source);
       const targetNode = nodes.find((node) => node.id === connection.target);
 
-      if(connectionExists(graph, connection.source, connection.target, connection.sourceHandle, connection.targetHandle)) {
-        console.log("Connection already exists");
+      if (
+        connectionExists(
+          graph,
+          connection.source,
+          connection.target,
+          connection.sourceHandle,
+          connection.targetHandle
+        )
+      ) {
+        console.log("Connection already exists", connection, edges);
+        reloadComponent();
         return;
       }
-
       // Check if this source handle is already connected to another node
       let handleConnectedEdge = edges.find(
         (edge) =>
@@ -218,8 +246,7 @@ const Canvas: React.FC = () => {
       // If both nodes exist and they have different types, create a connection
       if (sourceNode && targetNode && sourceNode.type !== targetNode.type) {
         setEdges((eds) => {
-          const newEdges = addEdge(connection, eds
-          ); // add the edge to the list of edges, in the local state
+          const newEdges = addEdge(connection, eds); // add the edge to the list of edges, in the local state
           setGraphEdges(graph, newEdges); // add the edge to the list of edges, in the graph
           return newEdges;
         }); // add the edge to the list of edges, in the graph
@@ -232,23 +259,6 @@ const Canvas: React.FC = () => {
     },
     [setEdges, nodes]
   );
-
-  function handlePaneClick() {
-    // this is called when the user clicks on the canvas
-    stopSelect();
-  }
-
-  function doesNodeExistAtPosition(
-    x: number,
-    y: number,
-    nodes: Node[]
-  ): boolean {
-    return nodes.some(
-      (node) =>
-        Math.abs(node.position.x - x) < NODE_WIDTH &&
-        Math.abs(node.position.y - y) < NODE_HEIGHT
-    );
-  }
 
   function onConnectStart(
     event: React.MouseEvent<Element, MouseEvent> | React.TouchEvent<Element>,
@@ -268,28 +278,28 @@ const Canvas: React.FC = () => {
   function onConnectEnd(event: MouseEvent | TouchEvent) {
     let clientX = 0,
       clientY = 0;
-  
+
     const handleConnectedEdge = edges.find(
       (edge) => edge.sourceHandle === connectStartHandleId
     );
-  
+
     if (handleConnectedEdge) {
       console.log(
         `Cannot create new node. Handle: ${connectStartHandleId} is already connected to another node.`
       );
       return;
     }
-  
+
     if (connectStartNode?.type == "signal") {
       console.log("you can't create a signal from a signal");
       return;
     }
-  
+
     if (connectStartHandleId?.includes("in")) {
       console.log("you can't create a signal from an input");
       return;
     }
-  
+
     // Extract clientX and clientY based on event type
     if (event instanceof MouseEvent) {
       clientX = event.clientX;
@@ -298,14 +308,14 @@ const Canvas: React.FC = () => {
       clientX = event.changedTouches[0].clientX;
       clientY = event.changedTouches[0].clientY;
     }
-  
+
     let { x, y } = reactFlowInstance.project({ x: clientX, y: clientY });
-  
+
     // Subtract viewport's position from the projected coordinates and adjust for the zoom level
-    x = (x - viewport.x) / viewport.zoom  - NODE_WIDTH / 2;
-    y = (y - viewport.y) / viewport.zoom  - NODE_HEIGHT / 2;
-  
+    x = (x - viewport.x) / viewport.zoom - NODE_WIDTH / 2;
+    y = (y - viewport.y) / viewport.zoom - NODE_HEIGHT / 2;
     // Only add a new node if there isn't one at this position already
+    let newNode = null;
     if (
       !doesNodeExistAtPosition(
         x,
@@ -313,58 +323,51 @@ const Canvas: React.FC = () => {
         nodes
       )
     ) {
-      addNewNode(
-        x,
-        y,
-        NodeType.Signal
-      );
+      newNode = addNewNode(x, y, NodeType.Signal);
     } else {
       console.log("This is too close to an already existing node");
     }
-  }
-  
 
-  useEffect(() => {
-    // this is called when a node is added, so we can add a connection between the start node and the new node
-    if (connectStartNode) {
-      const lastNode = nodes[nodes.length - 1]; // the node that was just added
-      if (lastNode && lastNode.type != "unspecified") {
-        if (lastNode.type != connectStartNode.type) {
-          // if the node is not the same type as the start node, add a connection
-          const handleConnectedEdge = edges.find(
-            (edge) =>
-              edge.sourceHandle === connectStartHandleId ||
-              edge.targetHandle === connectStartHandleId
-          );
+    // If a node was created by dragging, automatically connect it
+    if (connectStartNode && newNode) {
+      const lastNode = newNode; // the node that was just added
 
-          if (handleConnectedEdge) {
-            console.log(
-              `Cannot create new connection. Handle: ${connectStartHandleId} is already connected to another node.`
-            );
-            return;
-          }
-          
-          let newConnection : Connection = {
+      if (
+        lastNode &&
+        lastNode.type !== "unspecified" &&
+        lastNode.type !== connectStartNode.type
+      ) {
+        const handleConnectedEdge = edges.find(
+          (edge) =>
+            edge.sourceHandle === connectStartHandleId ||
+            edge.targetHandle === connectStartHandleId
+        );
+
+        if (!handleConnectedEdge) {
+          let newConnection: Connection = {
             source: connectStartNode.id,
             target: lastNode.id,
             sourceHandle: connectStartHandleId!,
-            targetHandle: (lastNode.data as any).nodeState.inputs[0], // connect to the first input, using Type Assertion to avoid errors (this is a hack)
+            targetHandle: (lastNode.data as any).nodeState.inputs[0],
           };
           setEdges((eds) => {
-            const newEdges = addEdge(newConnection,
-              eds
-            ); // add the edge to the list of edges, in the local state
-            setGraphEdges(graph, newEdges); // add the edge to the list of edges, in the graph
+            const newEdges = addEdge(newConnection, eds);
+            setGraphEdges(graph, newEdges);
             return newEdges;
-          }); // add the edge to the list of edges, in the graph
+          });
         } else {
-          console.log("Cannot connect nodes of the same type: ", lastNode.type);
+          console.log(
+            `Cannot create new connection. Handle: ${connectStartHandleId} is already connected to another node.`
+          );
         }
+      } else if (lastNode && lastNode.type === connectStartNode.type) {
+        console.log("Cannot connect nodes of the same type: ", lastNode.type);
       }
+
       setConnectStartNode(undefined); // reset the start node
       setConnectStartHandleId(""); // reset the handle id
     }
-  }, [nodes]);
+  }
 
   const addNewNode = (x: number, y: number, nodeType: NodeType) => {
     // this is called when the user adds a new node
@@ -408,22 +411,21 @@ const Canvas: React.FC = () => {
     // this is called when the component is first rendered, so we can add a source node
     if (!getNode(graph, 1)) {
       // if the source node doesn't exist
-      addNewNode(window.width/2, window.height/2 - NODE_HEIGHT, NodeType.Source);
+      addNewNode(
+        window.width / 2,
+        window.height / 2 - NODE_HEIGHT,
+        NodeType.Source
+      );
     }
   }, []);
 
   function addButtonHandler() {
     // this is called when the user clicks on the "add" button
-  
-    let x = (window.width/2 - viewport.x) / viewport.zoom - NODE_WIDTH/2; // half the width of the node, so it's centered, relative to the viewport, not the window
-    let y = (window.height/2 - viewport.y) / viewport.zoom - NODE_HEIGHT/2; // half the height of the node, so it's centered, relative to the viewport, not the window
-    addNewNode(
-      x,
-      y, 
-      NodeType.Unspecified
-    );
+
+    let x = (window.width / 2 - viewport.x) / viewport.zoom - NODE_WIDTH / 2; // half the width of the node, so it's centered, relative to the viewport, not the window
+    let y = (window.height / 2 - viewport.y) / viewport.zoom - NODE_HEIGHT / 2; // half the height of the node, so it's centered, relative to the viewport, not the window
+    addNewNode(x, y, NodeType.Unspecified);
   }
-  
 
   return (
     <ReactFlowProvider>

@@ -11,7 +11,6 @@ import SplitView from "./SplitView";
 import { NodeContext } from "../NodeState";
 
 function SplitPresenter() {
-
   const node = useContext(NodeContext);
   useEffect(() => {}, [node]);
 
@@ -21,6 +20,6 @@ function SplitPresenter() {
       numberOfTargetHandles={node?.inputs?.length || 0}
     />
   );
-};
+}
 
 export default SplitPresenter;
