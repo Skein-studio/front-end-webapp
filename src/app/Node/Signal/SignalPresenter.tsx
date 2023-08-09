@@ -8,7 +8,7 @@ export default function SignalPresenter() {
   const audioState = useAudio();
 
   const node = useContext(NodeContext); // Use NodeContext to get NodeState instance
-
+  
   const [numberOfTargetHandles, setNumberOfTargetHandles] = useState<number>(
     node?.inputs?.length ?? 1
   );

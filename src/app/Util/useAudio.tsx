@@ -14,7 +14,7 @@ The useAudio hook returns an object with the following properties:
 
 const standardAudioUrl =
   "https://www2.cs.uic.edu/~i101/SoundFiles/CantinaBand3.wav";
-
+  
 const useAudio = (source?: string) => {
   // source is the url of the audio file to be played, later delete the question mark and make it required
   const [isComputing, setIsComputing] = useState<boolean>(false);
@@ -30,8 +30,6 @@ const useAudio = (source?: string) => {
   const fetchAudio = async () => {
     setIsComputing(true);
     try {
-      await new Promise((resolve) => setTimeout(resolve, 500));
-
       const audioUrl = source ? source : standardAudioUrl; //If no source is provided, use this default source
       const audio = new Audio(audioUrl);
 
@@ -58,7 +56,7 @@ const useAudio = (source?: string) => {
       return;
     }
     if (!audioComputed) {
-      await fetchAudio();
+      fetchAudio();
     }
     if (audio && audioComputed) {
       if (audio.paused) {

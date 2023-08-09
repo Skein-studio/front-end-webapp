@@ -1,9 +1,12 @@
 // SignalDetailPresenter.tsx
 import useAudio from "@/app/Util/useAudio";
 import OpenSignalView from "./OpenSignalView";
+import { transformJSONtoTypescript } from "@/app/Util/modelTransformation";
 
 export default function OpenSignalPresenter() {
   const audioState = useAudio();
+
+  console.log(JSON.stringify(transformJSONtoTypescript()))
 
   return (
     <OpenSignalView
