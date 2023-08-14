@@ -1,5 +1,5 @@
 import { Node } from "reactflow";
-import { useGraph } from "../Node/GraphContext";
+import { Graph, useGraph } from "../Node/GraphContext";
 import { NodeContext, NodeState } from "../Node/NodeState";
 import { transformtoTypescriptTypes } from "./modelTransformation"
 import { useContext } from "react";
@@ -46,41 +46,32 @@ type outputs = {
 }
 const sleep = (ms:number) => new Promise(r => setTimeout(r, ms));
 
-export async function getSoundFromNodeID(): Promise<string>{
-    let nodeContext = useContext(NodeContext)
-    debugger;
-    let id = nodeContext?nodeContext.id: 0
+export async function getSoundFromNodeID(id: number, graphContext: Graph): Promise<string> {
+
+console.log(graphContext)
     let idString = `${id}`
     let endpoint = "http://localhost:5001/compute/poll"
     let outputs: outputs
-    let nestedDict: nodesDict
+    let nestedDict: nodesDict = {}
     let count = 0
     while(true){
-        const response = await fetch(endpoint)
-        nestedDict = await response.json()
-        if (count == 2){
-            let node: NodeState = useGraph().nodes[id].data.nodeState
-            let handle: string = node.outputs? node.outputs[0]: ""
-            nestedDict[idString][handle] =   "https://www2.cs.uic.edu/~i101/SoundFiles/CantinaBand3.wav";
-        }
+        // const response = await fetch(endpoint)
+        // nestedDict = await response.json()
+        nestedDict["2"]['2out[0]'] = "https://www2.cs.uic.edu/~i101/SoundFiles/gettysburg10.wav"
         if (nestedDict[idString]){
             outputs = nestedDict[idString]
             break
         }
 
-        sleep(2000)
-        count++;
     }
-
-    let graphContext =  useGraph()
    
-    graphContext.nodes.forEach((node: Node)=>{
-        node.data.nodeState.dirty = false
-        node.data.nodeState.data.audio = outputs[idString]
-    })
-    //set current nodeID sound output handle name to correct url
-    let node: NodeState = graphContext.nodes[id].data.nodeState
-    let handle: string = node.outputs? node.outputs[0]: ""
+    // graphContext.nodes.forEach((node: Node)=>{
+    //     node.data.nodeState.dirty = false
+    //     node.data.nodeState.data.audio = outputs[idString]
+    // })
+    // //set current nodeID sound output handle name to correct url
+    // let node: NodeState = graphContext.nodes[id].data.nodeState
+    // let handle: string = node.outputs? node.outputs[0]: ""
     
-    return nestedDict[id as number][handle]
+    return  nestedDict["2"]['2out[0]']
 }
