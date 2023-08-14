@@ -51,9 +51,8 @@ export const dummyData: Root = createDummyRoot();
 
 
 
-export const transformJSONtoTypescript = (): Root => {
+export const transformtoTypescriptTypes = (): Root => {
     let graphContext =  useGraph()
-    
     const transformNodeInputs = (input: string): Input =>{
         return   {
             Name: input,
@@ -68,6 +67,30 @@ export const transformJSONtoTypescript = (): Root => {
 
     const transformNode = (node: flowNode): Node => {
         let data = node.data.nodeState as NodeState
+        let typeData: SourceType | SignalType | MergeType | SplitType;
+        switch (NodeTypeToString(data.type)){
+            case "signal":{
+              data.data = {
+                Prompt: "promptasdf",
+                Seed: "seed1230",
+              }
+              break
+            }
+          
+            case "source":{
+              data.data = {
+                URL: "www.sound.com",
+              }  
+              break
+            }
+            // case "merge":{}
+            // case "split":{}
+
+            default:{
+              data.data = {}
+            }
+          }
+
         return {
             Type: NodeTypeToString(data.type),
             Dirty: data.dirty,

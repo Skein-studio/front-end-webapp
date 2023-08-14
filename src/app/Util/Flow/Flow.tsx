@@ -243,8 +243,8 @@ const Canvas: React.FC = () => {
         return;
       }
 
-      // If both nodes exist and they have different types, create a connection
-      if (sourceNode && targetNode && sourceNode.type !== targetNode.type) {
+      // If both nodes exist and they have different ids, create a connection
+      if (sourceNode && targetNode && sourceNode.id !== targetNode.id) {
         setEdges((eds) => {
           const newEdges = addEdge(connection, eds); // add the edge to the list of edges, in the local state
           setGraphEdges(graph, newEdges); // add the edge to the list of edges, in the graph

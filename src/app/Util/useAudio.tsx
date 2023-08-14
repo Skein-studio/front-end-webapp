@@ -1,5 +1,7 @@
 // useAudio.tsx
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
+import { NodeContext, NodeState } from "../Node/NodeState";
+import { SendGraphForCompute, getSoundFromNodeID } from "./ComputeAPI";
 
 /* The purpose of this hook is to provide a way to play audio in the application.
 The way to use it is to call the useAudio hook in the component that needs to play audio.
@@ -18,32 +20,39 @@ const standardAudioUrl =
 const useAudio = (source?: string) => {
   // source is the url of the audio file to be played, later delete the question mark and make it required
   const [isComputing, setIsComputing] = useState<boolean>(false);
-  const [audioComputed, setAudioComputed] = useState<boolean>(false);
+  const [audioComputed, setAudioComputed] = useState<boolean|undefined>(useContext(NodeContext)?.dirty);
   const [audio, setAudio] = useState<HTMLAudioElement | null>(null);
   const [currentTime, setCurrentTime] = useState<number>(0);
   const [duration, setDuration] = useState<number>(0);
   const [isPlaying, setIsPlaying] = useState<boolean>(false);
-
+  
   // compute progress as a percentage based on currentTime and duration
   const progress = duration > 0 ? (currentTime / duration) * 100 : 0;
 
   const fetchAudio = async () => {
     setIsComputing(true);
     try {
-      const audioUrl = source ? source : standardAudioUrl; //If no source is provided, use this default source
-      const audio = new Audio(audioUrl);
+      //TODO get audioURL with while loop until node with nodeID is found in computed nodes
+      // await SendGraphForCompute()
+      // let audioUrl:string
 
-      audio.onloadedmetadata = () => {
-        setDuration(audio.duration);
-        setAudio(audio);
-        setAudioComputed(true);
-        setIsComputing(false);
-      };
+      getSoundFromNodeID().then(res => {
+        const audioUrl = res
+        const audio = new Audio(audioUrl);
+        audio.onloadedmetadata = () => {
+          setDuration(audio.duration);
+          setAudio(audio)
+          setAudioComputed(true);
+          setIsComputing(false);
+        };
+  
+        audio.onended = () => {
+          setCurrentTime(0);
+          setIsPlaying(false);
+        };
+      })
+      // const audioUrl = standardAudioUrl
 
-      audio.onended = () => {
-        setCurrentTime(0);
-        setIsPlaying(false);
-      };
     } catch (error) {
       console.error("Something went wrong while fetching audio.");
       setIsComputing(false);
