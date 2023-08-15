@@ -11,7 +11,7 @@ export async function SendGraphForCompute(){
 
     let endpoint = "http://localhost:5001/audio/put"
 
-    const response = await fetch(endpoint, {
+    await fetch(endpoint, {
         method: "POST", // or 'PUT'
         headers: {
             "Content-Type": "application/json",
@@ -46,32 +46,63 @@ type outputs = {
 }
 const sleep = (ms:number) => new Promise(r => setTimeout(r, ms));
 
-export async function getSoundFromNodeID(id: number, graphContext: Graph): Promise<string> {
+export async function getSoundFromNodeID(
+    id: number, 
+    graphContext: Graph,
+    endpoint: string = "http://localhost:5001/compute/poll",
+    maxRetries: number = 20,
+    retryDelay: number = 2000
+): Promise<string> {
 
-console.log(graphContext)
+    //console.log(graphContext)
     let idString = `${id}`
-    let endpoint = "http://localhost:5001/compute/poll"
+    //let endpoint = "http://localhost:5001/compute/poll"
     let outputs: outputs
     let nestedDict: nodesDict = {}
-    let count = 0
-    while(true){
-        // const response = await fetch(endpoint)
-        // nestedDict = await response.json()
-        nestedDict["2"]['2out[0]'] = "https://www2.cs.uic.edu/~i101/SoundFiles/gettysburg10.wav"
-        if (nestedDict[idString]){
-            outputs = nestedDict[idString]
-            break
-        }
+    let retries = 0;
 
+    while(retries < maxRetries){
+        try {
+            const response = await fetch(endpoint)
+                if (!response.ok) {
+                    throw new Error('{$response.status}');
+                }
+
+            nestedDict = await response.json()
+                //nestedDict['2'] = {}
+                //nestedDict['2']['2out[0]'] = "https://www2.cs.uic.edu/~i101/SoundFiles/gettysburg10.wav";
+
+                if (nestedDict[idString]){
+                    outputs = nestedDict[idString]
+                        break
+                }
+            retries++;
+            if (retries < maxRetries) {
+                sleep(retryDelay);
+            }
+        } catch (error) {
+            console.error(error);
+            retries++;
+            if (retries < maxRetries) {
+                sleep(retryDelay);
+
+            }
+        }
+    }
+
+    if (retries == maxRetries) {
+        throw new Error("Max amount of fetch retries. Cancelling...")
     }
    
-    // graphContext.nodes.forEach((node: Node)=>{
-    //     node.data.nodeState.dirty = false
-    //     node.data.nodeState.data.audio = outputs[idString]
-    // })
-    // //set current nodeID sound output handle name to correct url
-    // let node: NodeState = graphContext.nodes[id].data.nodeState
-    // let handle: string = node.outputs? node.outputs[0]: ""
+     graphContext.nodes.forEach((node: Node)=>{
+         node.data.nodeState.dirty = false
+         node.data.nodeState.data.audio = outputs[idString]
+     })
+     
+     //set current nodeID sound output handle name to correct url
+     let node: NodeState = graphContext.nodes[id].data.nodeState
+     let handle: string = node.outputs? node.outputs[0]: ""
     
-    return  nestedDict["2"]['2out[0]']
+    //return  nestedDict['2']['2out[0]']
+    return nestedDict[id as number][handle]
 }

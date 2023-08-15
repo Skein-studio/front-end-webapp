@@ -48,7 +48,7 @@ const useAudio = (source?: string) => {
 
       audio.onloadedmetadata = () => {
         setDuration(audio.duration);
-        setAudio(audio)
+        setAudio(audio);
         setAudioComputed(true);
         setIsComputing(false);
       };
