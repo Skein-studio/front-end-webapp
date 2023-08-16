@@ -3,6 +3,7 @@ import { useState, useEffect, useContext } from "react";
 import { NodeContext, NodeState } from "../Node/NodeState";
 import { SendGraphForCompute, getSoundFromNodeID } from "./ComputeAPI";
 import { Graph, GraphContext, useGraph } from "../Node/GraphContext";
+import { transformtoTypescriptTypes } from "./modelTransformation";
 
 /* The purpose of this hook is to provide a way to play audio in the application.
 The way to use it is to call the useAudio hook in the component that needs to play audio.
@@ -36,11 +37,12 @@ const useAudio = (source?: string) => {
     setIsComputing(true);
     try {
       //TODO get audioURL with while loop until node with nodeID is found in computed nodes
-      await SendGraphForCompute()
+      await SendGraphForCompute(transformtoTypescriptTypes(graph))
       let audioUrl: string
     
-      if (node && node.id) {
-        audioUrl = await getSoundFromNodeID(node.id,graph);
+      if (node && node.id) {      
+      audioUrl = await getSoundFromNodeID(node.id, graph);
+      
     } else {
         audioUrl = standardAudioUrl;
     }      // const audioUrl = standardAudioUrl

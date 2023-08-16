@@ -41,6 +41,7 @@ view and handle the logic for the flowchart.
 It is the central file of the app. */
 import { NODE_WIDTH } from "./NodeStyles";
 import useWindowDimensions from "../windowDimensions";
+import { handleType } from "../modelTransformation";
 
 const NODE_HEIGHT = 50;
 
@@ -203,9 +204,13 @@ const Canvas: React.FC = () => {
 
   const onConnect = useCallback(
     (connection: any) => {
+      console.log(connection)
+      
       // Get the source and target nodes
       const sourceNode = nodes.find((node) => node.id === connection.source);
       const targetNode = nodes.find((node) => node.id === connection.target);
+      
+          
 
       if (
         connectionExists(
@@ -245,7 +250,25 @@ const Canvas: React.FC = () => {
 
       // If both nodes exist and they have different ids, create a connection
       if (sourceNode && targetNode && sourceNode.id !== targetNode.id) {
+        let edge = connection as Connection
+        
         setEdges((eds) => {
+          // console.log(edge)
+          // let n = (nodes.find(node => node.id == edge.source)?.data as any).nodeState as NodeState
+          // console.log(n)
+          // if (n.type == NodeType.Split){
+          //   console.log(connection.sourceHandle.split("[", 2)[1].split("]",2)[0])
+          //   switch(connection.sourceHandle.split("[", 2)[1].split("]",2)[0]){
+          //     case handleType.bass:
+          //     case handleType.drums:
+          //     case handleType.guitar:
+          //     case handleType.other:
+          //     case handleType.piano:
+          //     case handleType.vocal:
+          //   }
+          // }
+          // console.log(connection.sourceHandle.split("[", 2)[1].split("]",2)[0])
+          eds.map(e => e.data)
           const newEdges = addEdge(connection, eds); // add the edge to the list of edges, in the local state
           setGraphEdges(graph, newEdges); // add the edge to the list of edges, in the graph
           return newEdges;

@@ -1,15 +1,12 @@
 import { Node } from "reactflow";
 import { Graph, useGraph } from "../Node/GraphContext";
 import { NodeContext, NodeState } from "../Node/NodeState";
-import { transformtoTypescriptTypes } from "./modelTransformation"
+import { Root, transformtoTypescriptTypes } from "./modelTransformation"
 import { useContext } from "react";
 
-export async function SendGraphForCompute(){
-
-    let graph = transformtoTypescriptTypes()
-
-
-    let endpoint = "http://localhost:5001/audio/put"
+export async function SendGraphForCompute(graph: Root){
+    console.log(graph)
+    let endpoint = "http://localhost:5001/compute"
 
     await fetch(endpoint, {
         method: "POST", // or 'PUT'
@@ -22,11 +19,10 @@ export async function SendGraphForCompute(){
 
 export async function postSoundBLOB(blob: Blob): Promise<string>{
     let endpoint = "http://localhost:5001/audio/put"
-
     const formData = new FormData();
     formData.append('audiofile', blob);
 
-    return fetch(endpoint+'/upload', {
+    return fetch(endpoint, {
         method: 'POST',
         body: formData
     })
@@ -49,8 +45,8 @@ const sleep = (ms:number) => new Promise(r => setTimeout(r, ms));
 export async function getSoundFromNodeID(
     id: number, 
     graphContext: Graph,
-    endpoint: string = "http://localhost:5001/compute/poll",
-    maxRetries: number = 20,
+    endpoint: string = "http://localhost:5001/compute/get_computed_nodes",
+    maxRetries: number = 100,
     retryDelay: number = 2000
 ): Promise<string> {
 
@@ -67,6 +63,8 @@ export async function getSoundFromNodeID(
                 if (!response.ok) {
                     throw new Error('{$response.status}');
                 }
+                console.log(response)
+
 
             nestedDict = await response.json()
                 //nestedDict['2'] = {}
@@ -78,32 +76,42 @@ export async function getSoundFromNodeID(
                 }
             retries++;
             if (retries < maxRetries) {
-                sleep(retryDelay);
+                await sleep(retryDelay);
             }
         } catch (error) {
             console.error(error);
             retries++;
             if (retries < maxRetries) {
-                sleep(retryDelay);
+                await sleep(retryDelay);
 
             }
         }
+        console.log(nestedDict)
     }
 
     if (retries == maxRetries) {
         throw new Error("Max amount of fetch retries. Cancelling...")
     }
-   
-     graphContext.nodes.forEach((node: Node)=>{
+
+    graphContext.nodes.forEach((node: Node)=>{
         //TODO uncomment when dirty propagation is completed
         //  node.data.nodeState.dirty = false
-         node.data.nodeState.data.audio = outputs[idString]
+        console.log("1",node)
+        
+        
+        node.data.nodeState.data.audio = Object.values(nestedDict[idString])[0]
+        console.log("2", node)
+
      })
-     
      //set current nodeID sound output handle name to correct url
-     let node: NodeState = graphContext.nodes[id].data.nodeState
-     let handle: string = node.outputs? node.outputs[0]: ""
+     console.log(graphContext.nodes)
+    //  let node: NodeState = graphContext.nodes[id-1].data.nodeState
+    //  let handle: string = node.outputs? node.outputs[0]: ""
     
     //return  nestedDict['2']['2out[0]']
-    return nestedDict[id][handle]
+    // return nestedDict[id][handle]
+     let n =  graphContext.nodes.find(n => n.id === idString)?.data.nodeState.data.audio
+     
+     return n
+    
 }

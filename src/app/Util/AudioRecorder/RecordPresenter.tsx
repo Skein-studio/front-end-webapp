@@ -20,9 +20,11 @@ const RecordPresenter: React.FC = () => {
             URL.revokeObjectURL(node.data.audio);
           }
           // const fileUrl = URL.createObjectURL(e.data);
-          const fileUrl = await postSoundBLOB(e.data)
+    console.log(e.data)
 
+          const fileUrl = await postSoundBLOB(e.data)
           node.data.audio = fileUrl;
+
         } else {
           console.error("No nodecontext found", this);
         }

@@ -4,6 +4,7 @@
 which is used to store the individual state of 
 each node in the graph. */
 
+
 let nodeID = 0;
 
 export enum NodeType {
@@ -19,16 +20,22 @@ type Coordinate = {
   y: number;
 };
 
+export type  Output = {
+  ID: string;
+  name: string;
+};
+
 export class NodeState {
   position: Coordinate;
   id: number;
   inputs: string[] | undefined; // later for deciding which output is what, - these are just strings representing the name of each in/output
-  outputs: string[] | undefined;
+  outputs: Output[] | undefined;
   sounds: {[id: string] : string};  
   type: NodeType;
   data: any = {};
   dirty: boolean = false; // not sure if this should be initialized to true or false
   selected: boolean;
+ 
 
   constructor(x: number, y: number, type: NodeType, id?: number) {
     this.position = {
@@ -49,13 +56,16 @@ export class NodeState {
     }
     this.inputs = [...this.inputs, this.id + "in[" + this.inputs.length + "]"];
   }
-  addSourceHandle() {
+  addSourceHandle(handleName: string) {
     if (!this.outputs) {
       this.outputs = [];
     }
+   
     this.outputs = [
-      ...this.outputs,
-      this.id + "out[" + this.outputs.length + "]",
+      ...this.outputs,  {
+        ID: this.id + "out[" + this.outputs.length + "]",
+        name: handleName
+      }
     ];
   }
 
@@ -90,8 +100,17 @@ export class NodeState {
         numOutputs = 1;
         break;
     }
-    for (let i = 0; i < numOutputs; i++) {
-      this.addSourceHandle();
+    if (this.type === NodeType.Split){
+        this.addSourceHandle("drums");
+        this.addSourceHandle("piano");
+        this.addSourceHandle("vocal");
+        this.addSourceHandle("guitar");
+        this.addSourceHandle("other");
+        this.addSourceHandle("bass");
+    }else{
+      for (let i = 0; i < numOutputs; i++) {
+        this.addSourceHandle("");
+      }
     }
   }
 

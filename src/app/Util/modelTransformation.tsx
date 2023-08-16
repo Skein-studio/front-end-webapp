@@ -1,7 +1,16 @@
-import { useGraph } from "../Node/GraphContext";
+import { Graph as deniGraph } from "../Node/GraphContext";
 import { Edge as flowEdge, Node as flowNode } from "reactflow";
-import { NodeState, NodeTypeToString } from "../Node/NodeState";
+import { NodeState, NodeTypeToString, Output as stateOutput } from "../Node/NodeState";
 // Create a dummy data generator function for each type
+
+export enum handleType {
+  drums,
+  piano,
+  vocal,
+  guitar,
+  other,
+  bass
+}
 
 const createDummyEdge = (): Edge => ({
     ID: "dummyEdgeID",
@@ -51,35 +60,51 @@ export const dummyData: Root = createDummyRoot();
 
 
 
-export const transformtoTypescriptTypes = (): Root => {
-    let graphContext =  useGraph()
+export const transformtoTypescriptTypes = (graphContext: deniGraph): Root => {
     const transformNodeInputs = (input: string): Input =>{
         return   {
             Name: input,
         } as Input
     }
-    const transformNodeOutputs = (output: string): Output =>{
-        return   {
-            Name: output,
+    const transformNodeOutputs = (output: stateOutput): Output =>{
+      // console.log(edge)
+      // let n = (nodes.find(node => node.id == edge.source)?.data as any).nodeState as NodeState
+      // console.log(n)
+      // if (n.type == NodeType.Split){
+      //   console.log(connection.sourceHandle.split("[", 2)[1].split("]",2)[0])
+      //   switch(connection.sourceHandle.split("[", 2)[1].split("]",2)[0]){
+      //     case handleType.bass:
+      //     case handleType.drums:
+      //     case handleType.guitar:
+      //     case handleType.other:
+      //     case handleType.piano:
+      //     case handleType.vocal:
+      //   }
+      // }
+      //hör output till en split? ändra namn på handle till drums, bass...: eller låt va
+      output.ID
+      return {
+            Name: output.name,
             Src: ""
         } as Output
     }
 
     const transformNode = (node: flowNode): Node => {
         let data = node.data.nodeState as NodeState
+        console.log(node)
         let typeData: SourceType | SignalType | MergeType | SplitType;
         switch (NodeTypeToString(data.type)){
             case "signal":{
               data.data = {
-                Prompt: "promptasdf",
-                Seed: "seed1230",
+                Prompt: "classical piano",
+                Seed: "1234",
               }
               break
             }
           
             case "source":{
               data.data = {
-                URL: "www.sound.com",
+                URL: data.data.audio,
               }  
               break
             }
@@ -93,7 +118,7 @@ export const transformtoTypescriptTypes = (): Root => {
 
         return {
             Type: NodeTypeToString(data.type),
-            Dirty: data.dirty,
+            Dirty: true, //TODO: handle this correctly, derive from node state
             Data: data.data,
             Inputs: data.inputs?.map(transformNodeInputs),
             Outputs: data.outputs?.map(transformNodeOutputs),
@@ -103,7 +128,7 @@ export const transformtoTypescriptTypes = (): Root => {
 
 
     const transformEdge = (edge: flowEdge): Edge => {
-        let head = {
+      let head = {
             NodeID: edge.target,
             InputName: edge.targetHandle
         }  
@@ -148,6 +173,7 @@ export interface Root {
     Nodes: Node[];
     [k: string]: unknown;
   }
+  
   export interface Edge {
     ID: string;
     Input: {

@@ -22,9 +22,8 @@ const ImportAudio: React.FC = () => {
         // const fileUrl = URL.createObjectURL(e.target.files[0]);
         
         const fileUrl = await postSoundBLOB(e.target.files[0])
-
         node.data.audio = fileUrl;
-        console.log(node.data.audio);
+        console.log(node);
 
       } else {
         console.error("No nodecontext found");
