@@ -56,7 +56,7 @@ export async function getSoundFromNodeID(
 
     //console.log(graphContext)
     let idString = `${id}`
-    //let endpoint = "http://localhost:5001/compute/poll"
+    // let endpoint = "http://localhost:5001/compute/poll"
     let outputs: outputs
     let nestedDict: nodesDict = {}
     let retries = 0;
@@ -95,7 +95,8 @@ export async function getSoundFromNodeID(
     }
    
      graphContext.nodes.forEach((node: Node)=>{
-         node.data.nodeState.dirty = false
+        //TODO uncomment when dirty propagation is completed
+        //  node.data.nodeState.dirty = false
          node.data.nodeState.data.audio = outputs[idString]
      })
      
@@ -104,5 +105,5 @@ export async function getSoundFromNodeID(
      let handle: string = node.outputs? node.outputs[0]: ""
     
     //return  nestedDict['2']['2out[0]']
-    return nestedDict[id as number][handle]
+    return nestedDict[id][handle]
 }

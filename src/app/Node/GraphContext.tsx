@@ -13,7 +13,7 @@
 
 import { createContext, useContext } from "react";
 import { NodeState, NodeTypeToString, NodeType } from "./NodeState";
-import { Edge, Node } from "reactflow";
+import { Edge, Node} from "reactflow";
 
 export type Graph = {
   nodes: Node[];
@@ -70,6 +70,16 @@ export function setNode(context: Graph, node: Node) {
   // This function is used to update the node in the graph
   for (let i = 0; i < context.nodes.length; i++) {
     if (context.nodes[i].id == node.id) {
+      if (node.type){
+        switch (node.data.nodeState.data.type) {
+          case NodeType.Source:
+          case NodeType.Signal:
+          case NodeType.Merge:
+            node.data
+          case NodeType.Split:
+          default:
+        } 
+      }
       context.nodes[i] = node;
       context.reloadComponent();
       return;

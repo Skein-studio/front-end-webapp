@@ -36,7 +36,7 @@ const useAudio = (source?: string) => {
     setIsComputing(true);
     try {
       //TODO get audioURL with while loop until node with nodeID is found in computed nodes
-      // await SendGraphForCompute()
+      await SendGraphForCompute()
       let audioUrl: string
     
       if (node && node.id) {
