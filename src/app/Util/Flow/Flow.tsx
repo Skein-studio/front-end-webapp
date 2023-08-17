@@ -41,6 +41,7 @@ It is the central file of the app. */
 import { NODE_WIDTH } from "./NodeStyles";
 import useWindowDimensions from "../windowDimensions";
 import { Input, Edge as edgeModel, handleType } from "../modelTransformation";
+import { connect } from "http2";
 
 const NODE_HEIGHT = 50;
 
@@ -210,8 +211,9 @@ const Canvas: React.FC = () => {
     if (n.type == NodeType.Split){
       outputName = handleType[parseInt(connection.sourceHandle!.split("[", 2)[1].split("]", 2)[0])];
     }
+    console.log(connection)
     return {
-      ID: `reactflow__edge-${connection.source}${connection.sourceHandle}-${connection.target}${connection.targetHandle}`,
+      ID: `reactflow__edge-${connection.source}${connection.sourceHandle}-${connection.target}${connection.target}out[0]`,
       Output: {
         NodeID: connection.source!,
         OutputName: outputName,
@@ -224,7 +226,7 @@ const Canvas: React.FC = () => {
   };
   const onConnect = useCallback(
   (connection: any) => {  
-      console.log(connection.targetHandle)
+      console.log(connection)
       
       // Get the source and target nodes
       const sourceNode = nodes.find((node) => node.id === connection.source);
@@ -385,6 +387,8 @@ const Canvas: React.FC = () => {
         );
 
         if (!handleConnectedEdge) {
+          console.log(lastNode)
+          console.log(connectStartNode)
           let newConnection: Connection = {
             source: connectStartNode.id,
             target: lastNode.id,
