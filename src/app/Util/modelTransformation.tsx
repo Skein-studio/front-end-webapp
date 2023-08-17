@@ -6,7 +6,7 @@ import { NodeState, NodeType, NodeTypeToString, Output as stateOutput, Input as 
 export enum handleType {
   "drums",
   "piano",
-  "vocal",
+  "vocals",
   "guitar",
   "other",
   "bass"
@@ -58,11 +58,61 @@ const createDummyRoot = (): Root => ({
 });
 export const dummyData: Root = createDummyRoot();
 
+function getChildNodeIds(graph: Graph, nodeId: string): string[] {
+  const childNodeIds: string[] = [];
+
+  // Iterate through the graph's edges to find child nodes for the given node
+  for (const edge of graph.Edges) {
+    if (edge.Input.NodeID === nodeId) {
+      childNodeIds.push(edge.Output.NodeID);
+    }
+  }
+
+  return childNodeIds;
+}
+
+function gatherDirtyIds(graph: Graph, nodeId: string, visited: Set<string> = new Set()): string[] {
+  const idsToMarkDirty: string[] = [];
+
+  // If already visited, skip to prevent cycles
+  if (visited.has(nodeId)) {
+    return idsToMarkDirty;
+  }
+
+  visited.add(nodeId);
+
+  const currentNode = graph.Nodes.find(node => node.ID === nodeId);
+
+  if (currentNode && currentNode.Dirty) {
+    // Get child node IDs for the current node
+    const childNodeIds = getChildNodeIds(graph, nodeId);
+
+    for (const childId of childNodeIds) {
+      idsToMarkDirty.push(childId);
+      idsToMarkDirty.push(...gatherDirtyIds(graph, childId, visited));
+    }
+  }
+
+  return idsToMarkDirty;
+}
+
+export function gatherAllDirtyIds(graph: Graph): string[] {
+  const allDirtyIds: Set<string> = new Set();
+
+  for (const node of graph.Nodes) {
+    if (node.Dirty) {
+      const dirtyIds = gatherDirtyIds(graph, node.ID);
+      for (const id of dirtyIds) {
+        allDirtyIds.add(id);
+      }
+    }
+  }
+
+  return Array.from(allDirtyIds);
+}
 
 
-export const transformtoTypescriptTypes = (graphContext: deniGraph): Root => {
-  console.log(graphContext)
-    
+export const transformtoTypescriptTypes = (graphContext: deniGraph): Root => {    
     const transformNode = (node: flowNode): Node => {
       let nodeState = node.data.nodeState as NodeState
 
