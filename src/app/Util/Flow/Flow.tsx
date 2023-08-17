@@ -40,7 +40,7 @@ view and handle the logic for the flowchart.
 It is the central file of the app. */
 import { NODE_WIDTH } from "./NodeStyles";
 import useWindowDimensions from "../windowDimensions";
-import { Edge as edgeModel, handleType } from "../modelTransformation";
+import { Input, Edge as edgeModel, handleType } from "../modelTransformation";
 
 const NODE_HEIGHT = 50;
 
@@ -200,12 +200,13 @@ const Canvas: React.FC = () => {
         Math.abs(node.position.y - y) < NODE_HEIGHT
     );
   }
+
   const connectionToEdge = (connection: Connection): edgeModel => {
     let n = (nodes.find(node => node.id == connection.source)?.data as any).nodeState as NodeState
     console.log(n)
     let outputName: string = "standard-output"
     let inputName: string = "standard-input"
-  
+    
     if (n.type == NodeType.Split){
       outputName = handleType[parseInt(connection.sourceHandle!.split("[", 2)[1].split("]", 2)[0])];
     }
@@ -219,12 +220,11 @@ const Canvas: React.FC = () => {
         NodeID: connection.target!,
         InputName: inputName,
       },
-    };
+    } as edgeModel;
   };
   const onConnect = useCallback(
-    
   (connection: any) => {  
-      console.log(connection)
+      console.log(connection.targetHandle)
       
       // Get the source and target nodes
       const sourceNode = nodes.find((node) => node.id === connection.source);
@@ -385,12 +385,11 @@ const Canvas: React.FC = () => {
         );
 
         if (!handleConnectedEdge) {
-          
           let newConnection: Connection = {
             source: connectStartNode.id,
             target: lastNode.id,
             sourceHandle: connectStartHandleId!,
-            targetHandle: (lastNode.data as any).nodeState.inputs[0],
+            targetHandle: ((lastNode.data ).nodeState.inputs[0] as Input).Name,
           };
           const newEdge = {
             id: `reactflow__edge-${newConnection.source}${newConnection.sourceHandle}-${newConnection.target}${newConnection.targetHandle}`,
