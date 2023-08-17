@@ -1,6 +1,6 @@
 import { Graph as deniGraph } from "../Node/GraphContext";
 import { Edge as flowEdge, Node as flowNode } from "reactflow";
-import { NodeState, NodeTypeToString, Output as stateOutput } from "../Node/NodeState";
+import { NodeState, NodeType, NodeTypeToString, Output as stateOutput, Input as stateInput } from "../Node/NodeState";
 // Create a dummy data generator function for each type
 
 export enum handleType {
@@ -61,41 +61,42 @@ export const dummyData: Root = createDummyRoot();
 
 
 export const transformtoTypescriptTypes = (graphContext: deniGraph): Root => {
-    const transformNodeInputs = (input: string): Input =>{
-        return   {
-            Name: input,
-        } as Input
-    }
-    const transformNodeOutputs = (output: stateOutput): Output =>{
-      // console.log(edge)
-      // let n = (nodes.find(node => node.id == edge.source)?.data as any).nodeState as NodeState
-      // console.log(n)
-      // if (n.type == NodeType.Split){
-      //   console.log(connection.sourceHandle.split("[", 2)[1].split("]",2)[0])
-      //   switch(connection.sourceHandle.split("[", 2)[1].split("]",2)[0]){
-      //     case handleType.bass:
-      //     case handleType.drums:
-      //     case handleType.guitar:
-      //     case handleType.other:
-      //     case handleType.piano:
-      //     case handleType.vocal:
-      //   }
-      // }
-      //hör output till en split? ändra namn på handle till drums, bass...: eller låt va
-      output.ID
-      return {
+  console.log(graphContext)
+    
+    const transformNode = (node: flowNode): Node => {
+      let nodeState = node.data.nodeState as NodeState
+
+      const transformNodeInputs = (input: stateInput): Input =>{
+        let inpu: Input
+        
+        if (nodeState.type == NodeType.Merge){
+          inpu = {Name: input.data.Name}
+        }
+        inpu = {
+              Name: "standard-input",
+        };
+        return inpu
+      }
+      const transformNodeOutputs = (output: stateOutput): Output =>{
+        let out: Output
+        if (nodeState.type == NodeType.Split){
+          out = {
             Name: output.name,
             Src: ""
-        } as Output
-    }
-
-    const transformNode = (node: flowNode): Node => {
-        let data = node.data.nodeState as NodeState
+        }
+        }else{
+         out = {
+              Name: "standard-output",
+              Src: ""
+          }
+        }
+          return out
+      }  
         console.log(node)
-        let typeData: SourceType | SignalType | MergeType | SplitType;
-        switch (NodeTypeToString(data.type)){
+
+        switch (NodeTypeToString(nodeState.type)){
             case "signal":{
-              data.data = {
+              nodeState.data = {
                 Prompt: "classical piano",
                 Seed: "1234",
               }
@@ -103,8 +104,8 @@ export const transformtoTypescriptTypes = (graphContext: deniGraph): Root => {
             }
           
             case "source":{
-              data.data = {
-                URL: data.data.audio,
+              nodeState.data = {
+                URL: nodeState.data.audio,
               }  
               break
             }
@@ -112,18 +113,19 @@ export const transformtoTypescriptTypes = (graphContext: deniGraph): Root => {
             // case "split":{}
 
             default:{
-              data.data = {}
+              nodeState.data = {}
             }
-          }
-
-        return {
-            Type: NodeTypeToString(data.type),
+        }
+        console.log(node)
+        let n = {
+            Type: NodeTypeToString(nodeState.type),
             Dirty: true, //TODO: handle this correctly, derive from node state
-            Data: data.data,
-            Inputs: data.inputs?.map(transformNodeInputs),
-            Outputs: data.outputs?.map(transformNodeOutputs),
-            ID: `${data.id}`
+            Data: nodeState.data,
+            Inputs: nodeState.inputs?.map(transformNodeInputs),
+            Outputs: nodeState.outputs?.map(transformNodeOutputs),
+            ID: `${nodeState.id}`
         } as Node;
+        return n
     };
 
 

@@ -4,7 +4,7 @@
 which is used to store the individual state of 
 each node in the graph. */
 
-
+import {Node as nodeModel, Input as InputModel} from "../Util/modelTransformation"
 let nodeID = 0;
 
 export enum NodeType {
@@ -20,15 +20,20 @@ type Coordinate = {
   y: number;
 };
 
-export type  Output = {
+export type Output = {
   ID: string;
   name: string;
+};
+
+export type Input = {
+  ID: string;
+  data: InputModel;
 };
 
 export class NodeState {
   position: Coordinate;
   id: number;
-  inputs: string[] | undefined; // later for deciding which output is what, - these are just strings representing the name of each in/output
+  inputs: Input[] | undefined; // later for deciding which output is what, - these are just strings representing the name of each in/output
   outputs: Output[] | undefined;
   sounds: {[id: string] : string};  
   type: NodeType;
@@ -50,12 +55,23 @@ export class NodeState {
     this.setOutputs();
   }
 
-  addTargetHandle() {
+    addTargetHandle() {
     if (!this.inputs) {
       this.inputs = [];
     }
-    this.inputs = [...this.inputs, this.id + "in[" + this.inputs.length + "]"];
+    this.inputs = [...this.inputs, {
+        ID: this.id + "in[" + this.inputs.length + "]",
+        data: {Name: this.id + "in[" + this.inputs.length + "]"},
+      }
+    ];
+    
   }
+  // addTargetHandle() {
+  //   if (!this.inputs) {
+  //     this.inputs = [];
+  //   }
+  //   this.inputs = [...this.inputs, this.id + "in[" + this.inputs.length + "]"];
+  // }
   addSourceHandle(handleName: string) {
     if (!this.outputs) {
       this.outputs = [];
