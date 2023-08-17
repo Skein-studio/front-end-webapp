@@ -4,12 +4,12 @@ import { NodeState, NodeTypeToString, Output as stateOutput } from "../Node/Node
 // Create a dummy data generator function for each type
 
 export enum handleType {
-  drums,
-  piano,
-  vocal,
-  guitar,
-  other,
-  bass
+  "drums",
+  "piano",
+  "vocal",
+  "guitar",
+  "other",
+  "bass"
 }
 
 const createDummyEdge = (): Edge => ({
@@ -128,20 +128,7 @@ export const transformtoTypescriptTypes = (graphContext: deniGraph): Root => {
 
 
     const transformEdge = (edge: flowEdge): Edge => {
-      let head = {
-            NodeID: edge.target,
-            InputName: edge.targetHandle
-        }  
-        let tail = {
-            NodeID: edge.source,
-            OutputName: edge.sourceHandle
-        }   
-
-        return {
-            ID: edge.id,
-            Input: head,
-            Output: tail
-        } as Edge;
+      return edge.data as Edge
     };
     
     // Construct the final transformed structure

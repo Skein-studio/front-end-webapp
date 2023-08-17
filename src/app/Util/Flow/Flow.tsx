@@ -14,7 +14,6 @@ import {
   OnSelectionChangeParams,
   Connection,
 } from "reactflow";
-
 import SourcePresenter from "../../Node/Source/SourcePresenter";
 import UnspecifiedPresenter from "../../Node/Unspecified/UnspecifiedPresenter";
 import SignalPresenter from "@/app/Node/Signal/SignalPresenter";
@@ -41,7 +40,7 @@ view and handle the logic for the flowchart.
 It is the central file of the app. */
 import { NODE_WIDTH } from "./NodeStyles";
 import useWindowDimensions from "../windowDimensions";
-import { handleType } from "../modelTransformation";
+import { Edge as edgeModel, handleType } from "../modelTransformation";
 
 const NODE_HEIGHT = 50;
 
@@ -201,9 +200,30 @@ const Canvas: React.FC = () => {
         Math.abs(node.position.y - y) < NODE_HEIGHT
     );
   }
-
+  const connectionToEdge = (connection: Connection): edgeModel => {
+    let n = (nodes.find(node => node.id == connection.source)?.data as any).nodeState as NodeState
+    console.log(n)
+    let outputName: string = "standard-output"
+    let inputName: string = "standard-input"
+  
+    if (n.type == NodeType.Split){
+      outputName = handleType[parseInt(connection.sourceHandle!.split("[", 2)[1].split("]", 2)[0])];
+    }
+    return {
+      ID: `reactflow__edge-${connection.source}${connection.sourceHandle}-${connection.target}${connection.targetHandle}`,
+      Output: {
+        NodeID: connection.source!,
+        OutputName: outputName,
+      },
+      Input: {
+        NodeID: connection.target!,
+        InputName: inputName,
+      },
+    };
+  };
   const onConnect = useCallback(
-    (connection: any) => {
+    
+  (connection: any) => {  
       console.log(connection)
       
       // Get the source and target nodes
@@ -249,27 +269,24 @@ const Canvas: React.FC = () => {
       }
 
       // If both nodes exist and they have different ids, create a connection
-      if (sourceNode && targetNode && sourceNode.id !== targetNode.id) {
-        let edge = connection as Connection
-        
+      if (sourceNode && targetNode && sourceNode.id !== targetNode.id) {        
         setEdges((eds) => {
-          // console.log(edge)
-          // let n = (nodes.find(node => node.id == edge.source)?.data as any).nodeState as NodeState
-          // console.log(n)
-          // if (n.type == NodeType.Split){
-          //   console.log(connection.sourceHandle.split("[", 2)[1].split("]",2)[0])
-          //   switch(connection.sourceHandle.split("[", 2)[1].split("]",2)[0]){
-          //     case handleType.bass:
-          //     case handleType.drums:
-          //     case handleType.guitar:
-          //     case handleType.other:
-          //     case handleType.piano:
-          //     case handleType.vocal:
-          //   }
-          // }
-          // console.log(connection.sourceHandle.split("[", 2)[1].split("]",2)[0])
+          console.log(sourceNode)
+          console.log(targetNode)
+        
+            const newEdge = {
+            id: `reactflow__edge-${connection.source}${connection.sourceHandle}-${connection.target}${connection.targetHandle}`,
+            source: connection.source,
+            target: connection.target,
+            sourceHandle: connection.sourceHandle,
+            targetHandle: connection.targetHandle,
+            data: connectionToEdge(connection)
+          };
+          console.log(eds)
           eds.map(e => e.data)
-          const newEdges = addEdge(connection, eds); // add the edge to the list of edges, in the local state
+          const newEdges = addEdge(newEdge, eds);
+          console.log(newEdges)
+           // add the edge to the list of edges, in the local state
           setGraphEdges(graph, newEdges); // add the edge to the list of edges, in the graph
           return newEdges;
         }); // add the edge to the list of edges, in the graph
@@ -348,6 +365,7 @@ const Canvas: React.FC = () => {
     ) {
       newNode = addNewNode(x, y, NodeType.Signal);
     } else {
+      console.log("pasta")
       console.log("This is too close to an already existing node");
     }
 
@@ -367,14 +385,25 @@ const Canvas: React.FC = () => {
         );
 
         if (!handleConnectedEdge) {
+          
           let newConnection: Connection = {
             source: connectStartNode.id,
             target: lastNode.id,
             sourceHandle: connectStartHandleId!,
             targetHandle: (lastNode.data as any).nodeState.inputs[0],
           };
+          const newEdge = {
+            id: `reactflow__edge-${newConnection.source}${newConnection.sourceHandle}-${newConnection.target}${newConnection.targetHandle}`,
+            source: newConnection.source,
+            target: newConnection.target,
+            sourceHandle: newConnection.sourceHandle,
+            targetHandle: newConnection.targetHandle,
+            data: connectionToEdge(newConnection)
+          };
+        
+
           setEdges((eds) => {
-            const newEdges = addEdge(newConnection, eds);
+            const newEdges = addEdge(newEdge, eds);
             setGraphEdges(graph, newEdges);
             return newEdges;
           });
