@@ -54,7 +54,9 @@ export class NodeState {
     this.setInputs();
     this.setOutputs();
   }
-
+    setPrompt(p: string){
+      this.data = p
+    }
     addTargetHandle() {
     if (!this.inputs) {
       this.inputs = [];

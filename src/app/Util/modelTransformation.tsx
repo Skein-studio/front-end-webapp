@@ -112,7 +112,8 @@ export function gatherAllDirtyIds(graph: Graph): string[] {
 }
 
 
-export const transformtoTypescriptTypes = (graphContext: deniGraph): Root => {    
+export const transformtoTypescriptTypes = (graphContext: deniGraph): Root => {  
+  if(!graphContext){return {} as Root}
     const transformNode = (node: flowNode): Node => {
       let nodeState = node.data.nodeState as NodeState
 
@@ -147,7 +148,7 @@ export const transformtoTypescriptTypes = (graphContext: deniGraph): Root => {
         switch (NodeTypeToString(nodeState.type)){
             case "signal":{
               nodeState.data = {
-                Prompt: "classical piano",
+                Prompt: nodeState.data,
                 Seed: "1234",
               }
               break
@@ -182,7 +183,7 @@ export const transformtoTypescriptTypes = (graphContext: deniGraph): Root => {
     const transformEdge = (edge: flowEdge): Edge => {
       return edge.data as Edge
     };
-    
+    debugger;
     // Construct the final transformed structure
     return {
       Sketch: {
