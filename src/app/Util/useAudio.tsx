@@ -22,13 +22,16 @@ const standardAudioUrl =
 const useAudio = (source?: string) => {
   // source is the url of the audio file to be played, later delete the question mark and make it required
   const [isComputing, setIsComputing] = useState<boolean>(false);
-  const [audioComputed, setAudioComputed] = useState<boolean|undefined>(useContext(NodeContext)?.dirty);
-  const [graph, setGraph] = useState<Graph>(useContext(GraphContext))
-  const [node, setNode] = useState<NodeState | undefined>(useContext(NodeContext))
+  const [audioComputed, setAudioComputed] = useState<boolean|undefined>(useContext(NodeContext)!?.dirty);
+  // const [graph, setGraph] = useState<Graph>(useContext(GraphContext))
+  // const [node, setNode] = useState<NodeState | undefined>(useContext(NodeContext))
   const [audio, setAudio] = useState<HTMLAudioElement | null>(null);
   const [currentTime, setCurrentTime] = useState<number>(0);
   const [duration, setDuration] = useState<number>(0);
   const [isPlaying, setIsPlaying] = useState<boolean>(false);
+
+  const node = useContext(NodeContext);
+  let graph = useContext(GraphContext);
 
   // compute progress as a percentage based on currentTime and duration
   const progress = duration > 0 ? (currentTime / duration) * 100 : 0;
@@ -36,17 +39,18 @@ const useAudio = (source?: string) => {
   const fetchAudio = async () => {
     setIsComputing(true);
     try {
-      //TODO get audioURL with while loop until node with nodeID is found in computed nodes
+    //   //TODO get audioURL with while loop until node with nodeID is found in computed nodes
       await SendGraphForCompute(transformtoTypescriptTypes(graph))
       let audioUrl: string
     
       if (node && node.id) {      
-      audioUrl = await getSoundFromNodeID(node.id, graph);
-      
+        graph =  await getSoundFromNodeID(node.id, graph);
+        console.log(graph.nodes.find(n=>{return n.id ==`${node.id}`}))
+        audioUrl = graph.nodes.find(n =>{return n.id == `${node.id}`})?.data.nodeState.data.audio
     } else {
         audioUrl = standardAudioUrl;
     }      // const audioUrl = standardAudioUrl
-      const audio = new Audio(audioUrl);
+      const audio = new Audio(audioUrl!);
 
       audio.onloadedmetadata = () => {
         setDuration(audio.duration);
@@ -71,6 +75,7 @@ const useAudio = (source?: string) => {
       return;
     }
     if (!audioComputed) {
+      console.log(audioComputed)
       fetchAudio();
     }
     if (audio && audioComputed) {

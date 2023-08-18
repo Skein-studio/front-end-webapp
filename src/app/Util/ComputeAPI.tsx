@@ -42,13 +42,15 @@ type outputs = {
 }
 const sleep = (ms:number) => new Promise(r => setTimeout(r, ms));
 
+
+
 export async function getSoundFromNodeID(
     id: number, 
     graphContext: Graph,
     endpoint: string = "http://localhost:5001/compute/get_computed_nodes",
     maxRetries: number = 100,
     retryDelay: number = 2000
-): Promise<string> {
+): Promise<Graph> {
 
     //console.log(graphContext)
     let idString = `${id}`
@@ -95,10 +97,9 @@ export async function getSoundFromNodeID(
 
     graphContext.nodes.forEach((node: Node)=>{
         //TODO uncomment when dirty propagation is completed
-        //  node.data.nodeState.dirty = false
-        console.log("1",node)
-        
-        
+        node.data.nodeState.dirty = false
+        console.log("1",node)      
+          
         node.data.nodeState.data.audio = Object.values(nestedDict[idString])[0]
         console.log("2", node)
 
@@ -110,8 +111,7 @@ export async function getSoundFromNodeID(
     
     //return  nestedDict['2']['2out[0]']
     // return nestedDict[id][handle]
-     let n =  graphContext.nodes.find(n => n.id === idString)?.data.nodeState.data.audio
-     
-     return n
+    let n =  graphContext.nodes.find(n => n.id === idString)?.data.nodeState.data.audio
+    return graphContext
     
 }

@@ -40,7 +40,7 @@ export class NodeState {
   data: any = {};
   dirty: boolean = false; // not sure if this should be initialized to true or false
   selected: boolean;
- 
+  prompt: string = ""
 
   constructor(x: number, y: number, type: NodeType, id?: number) {
     this.position = {
@@ -55,7 +55,7 @@ export class NodeState {
     this.setOutputs();
   }
     setPrompt(p: string){
-      this.data = p
+      this.prompt = p
     }
     addTargetHandle() {
     if (!this.inputs) {

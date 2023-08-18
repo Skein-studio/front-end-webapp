@@ -183,7 +183,6 @@ export const transformtoTypescriptTypes = (graphContext: deniGraph): Root => {
     const transformEdge = (edge: flowEdge): Edge => {
       return edge.data as Edge
     };
-    debugger;
     // Construct the final transformed structure
     return {
       Sketch: {
