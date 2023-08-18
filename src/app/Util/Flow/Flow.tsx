@@ -14,7 +14,6 @@ import {
   OnSelectionChangeParams,
   Connection,
 } from "reactflow";
-
 import SourcePresenter from "../../Node/Source/SourcePresenter";
 import UnspecifiedPresenter from "../../Node/Unspecified/UnspecifiedPresenter";
 import SignalPresenter from "@/app/Node/Signal/SignalPresenter";
@@ -41,6 +40,8 @@ view and handle the logic for the flowchart.
 It is the central file of the app. */
 import { NODE_WIDTH } from "./NodeStyles";
 import useWindowDimensions from "../windowDimensions";
+import { Input, Edge as edgeModel, handleType } from "../modelTransformation";
+import { connect } from "http2";
 
 const NODE_HEIGHT = 50;
 
@@ -201,11 +202,34 @@ const Canvas: React.FC = () => {
     );
   }
 
+  const connectionToEdge = (connection: Connection): edgeModel => {
+    let n = (nodes.find(node => node.id == connection.source)?.data as any).nodeState as NodeState
+    let outputName: string = "standard-output"
+    let inputName: string = "standard-input"
+    
+    if (n.type == NodeType.Split){
+      outputName = handleType[parseInt(connection.sourceHandle!.split("[", 2)[1].split("]", 2)[0])];
+    }
+    return {
+      ID: `reactflow__edge-${connection.source}${connection.sourceHandle}-${connection.target}${connection.target}out[0]`,
+      Output: {
+        NodeID: connection.source!,
+        OutputName: outputName,
+      },
+      Input: {
+        NodeID: connection.target!,
+        InputName: inputName,
+      },
+    } as edgeModel;
+  };
   const onConnect = useCallback(
-    (connection: any) => {
+  (connection: any) => {  
+      
       // Get the source and target nodes
       const sourceNode = nodes.find((node) => node.id === connection.source);
       const targetNode = nodes.find((node) => node.id === connection.target);
+      
+          
 
       if (
         connectionExists(
@@ -236,17 +260,28 @@ const Canvas: React.FC = () => {
         );
       }
 
-      if (handleConnectedEdge) {
-        console.log(
-          `Cannot connect more than one node to the same handle: ${connection.sourceHandle} or ${connection.targetHandle}`
-        );
-        return;
-      }
+      // if (handleConnectedEdge) {
+      //   console.log(
+      //     `Cannot connect more than one node to the same handle: ${connection.sourceHandle} or ${connection.targetHandle}`
+      //   );
+      //   return;
+      // }
 
-      // If both nodes exist and they have different types, create a connection
-      if (sourceNode && targetNode && sourceNode.type !== targetNode.type) {
+      // If both nodes exist and they have different ids, create a connection
+      if (sourceNode && targetNode && sourceNode.id !== targetNode.id) {        
         setEdges((eds) => {
-          const newEdges = addEdge(connection, eds); // add the edge to the list of edges, in the local state
+        
+            const newEdge = {
+            id: `reactflow__edge-${connection.source}${connection.sourceHandle}-${connection.target}${connection.targetHandle}`,
+            source: connection.source,
+            target: connection.target,
+            sourceHandle: connection.sourceHandle,
+            targetHandle: connection.targetHandle,
+            data: connectionToEdge(connection)
+          };
+          eds.map(e => e.data)
+          const newEdges = addEdge(newEdge, eds);
+           // add the edge to the list of edges, in the local state
           setGraphEdges(graph, newEdges); // add the edge to the list of edges, in the graph
           return newEdges;
         }); // add the edge to the list of edges, in the graph
@@ -279,21 +314,17 @@ const Canvas: React.FC = () => {
     let clientX = 0,
       clientY = 0;
 
-    const handleConnectedEdge = edges.find(
-      (edge) => edge.sourceHandle === connectStartHandleId
-    );
+    // const handleConnectedEdge = edges.find(
+    //   (edge) => edge.sourceHandle === connectStartHandleId
+    // );
 
-    if (handleConnectedEdge) {
-      console.log(
-        `Cannot create new node. Handle: ${connectStartHandleId} is already connected to another node.`
-      );
-      return;
-    }
+    // if (handleConnectedEdge) {
+    //   console.log(
+    //     `Cannot create new node. Handle: ${connectStartHandleId} is already connected to another node.`
+    //   );
+    //   return;
+    // }
 
-    if (connectStartNode?.type == "signal") {
-      console.log("you can't create a signal from a signal");
-      return;
-    }
 
     if (connectStartHandleId?.includes("in")) {
       console.log("you can't create a signal from an input");
@@ -334,35 +365,46 @@ const Canvas: React.FC = () => {
 
       if (
         lastNode &&
-        lastNode.type !== "unspecified" &&
-        lastNode.type !== connectStartNode.type
+        lastNode.type !== "unspecified"
+        // lastNode.type !== connectStartNode.type
       ) {
-        const handleConnectedEdge = edges.find(
-          (edge) =>
-            edge.sourceHandle === connectStartHandleId ||
-            edge.targetHandle === connectStartHandleId
-        );
+        // const handleConnectedEdge = edges.find(
+        //   (edge) =>
+        //     edge.sourceHandle === connectStartHandleId ||
+        //     edge.targetHandle === connectStartHandleId
+        // );
 
-        if (!handleConnectedEdge) {
+        // if (!handleConnectedEdge) {
           let newConnection: Connection = {
             source: connectStartNode.id,
             target: lastNode.id,
             sourceHandle: connectStartHandleId!,
-            targetHandle: (lastNode.data as any).nodeState.inputs[0],
+            targetHandle: ((lastNode.data ).nodeState.inputs[0] as Input).Name,
           };
+          const newEdge = {
+            id: `reactflow__edge-${newConnection.source}${newConnection.sourceHandle}-${newConnection.target}${newConnection.targetHandle}`,
+            source: newConnection.source,
+            target: newConnection.target,
+            sourceHandle: newConnection.sourceHandle,
+            targetHandle: newConnection.targetHandle,
+            data: connectionToEdge(newConnection)
+          };
+        
+
           setEdges((eds) => {
-            const newEdges = addEdge(newConnection, eds);
+            const newEdges = addEdge(newEdge, eds);
             setGraphEdges(graph, newEdges);
             return newEdges;
           });
-        } else {
-          console.log(
-            `Cannot create new connection. Handle: ${connectStartHandleId} is already connected to another node.`
-          );
-        }
-      } else if (lastNode && lastNode.type === connectStartNode.type) {
-        console.log("Cannot connect nodes of the same type: ", lastNode.type);
-      }
+        // } else {
+        //   console.log(
+        //     `Cannot create new connection. Handle: ${connectStartHandleId} is already connected to another node.`
+        //   );
+        // }
+      } 
+      // else if (lastNode && lastNode.type === connectStartNode.type) {
+      //   console.log("Cannot connect nodes of the same type: ", lastNode.type);
+      // }
 
       setConnectStartNode(undefined); // reset the start node
       setConnectStartHandleId(""); // reset the handle id

@@ -4,6 +4,7 @@
 which is used to store the individual state of 
 each node in the graph. */
 
+import {Node as nodeModel, Input as InputModel} from "../Util/modelTransformation"
 let nodeID = 0;
 
 export enum NodeType {
@@ -19,15 +20,26 @@ type Coordinate = {
   y: number;
 };
 
+export type Output = {
+  ID: string;
+  name: string;
+};
+
+export type Input = {
+  ID: string;
+  data: InputModel;
+};
+
 export class NodeState {
   position: Coordinate;
   id: number;
-  inputs: string[] | undefined; // later for deciding which output is what, - these are just strings representing the name of each in/output
-  outputs: string[] | undefined;
+  inputs: Input[] | undefined; // later for deciding which output is what, - these are just strings representing the name of each in/output
+  outputs: Output[] | undefined;
   type: NodeType;
   data: any = {};
   dirty: boolean = false; // not sure if this should be initialized to true or false
   selected: boolean;
+  prompt: string = ""
 
   constructor(x: number, y: number, type: NodeType, id?: number) {
     this.position = {
@@ -40,20 +52,36 @@ export class NodeState {
     this.setInputs();
     this.setOutputs();
   }
-
-  addTargetHandle() {
+    setPrompt(p: string){
+      this.prompt = p
+    }
+    addTargetHandle() {
     if (!this.inputs) {
       this.inputs = [];
     }
-    this.inputs = [...this.inputs, this.id + "in[" + this.inputs.length + "]"];
+    this.inputs = [...this.inputs, {
+        ID: this.id + "in[" + this.inputs.length + "]",
+        data: {Name: this.id + "in[" + this.inputs.length + "]"},
+      }
+    ];
+    
   }
-  addSourceHandle() {
+  // addTargetHandle() {
+  //   if (!this.inputs) {
+  //     this.inputs = [];
+  //   }
+  //   this.inputs = [...this.inputs, this.id + "in[" + this.inputs.length + "]"];
+  // }
+  addSourceHandle(handleName: string) {
     if (!this.outputs) {
       this.outputs = [];
     }
+   
     this.outputs = [
-      ...this.outputs,
-      this.id + "out[" + this.outputs.length + "]",
+      ...this.outputs,  {
+        ID: this.id + "out[" + this.outputs.length + "]",
+        name: handleName
+      }
     ];
   }
 
@@ -88,8 +116,17 @@ export class NodeState {
         numOutputs = 1;
         break;
     }
-    for (let i = 0; i < numOutputs; i++) {
-      this.addSourceHandle();
+    if (this.type === NodeType.Split){
+        this.addSourceHandle("drums");
+        this.addSourceHandle("piano");
+        this.addSourceHandle("vocal");
+        this.addSourceHandle("guitar");
+        this.addSourceHandle("other");
+        this.addSourceHandle("bass");
+    }else{
+      for (let i = 0; i < numOutputs; i++) {
+        this.addSourceHandle("");
+      }
     }
   }
 
@@ -138,6 +175,7 @@ import React from "react";
 export const NodeContext = React.createContext<NodeState | undefined>(
   undefined
 );
+
 
 export function NodeTypeToString(nodeType: NodeType): string {
   switch (nodeType) {

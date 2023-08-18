@@ -3,6 +3,7 @@ import React, { useState, useEffect, useRef, useContext } from "react";
 import RecordView from "./RecordView";
 import { NodeContext } from "@/app/Node/NodeState";
 import { useGraph } from "@/app/Node/GraphContext";
+import { postSoundBLOB } from "../ComputeAPI";
 
 const RecordPresenter: React.FC = () => {
   const [isRecording, setIsRecording] = useState<boolean>(false);
@@ -13,16 +14,21 @@ const RecordPresenter: React.FC = () => {
   useEffect(() => {
     navigator.mediaDevices.getUserMedia({ audio: true }).then((stream) => {
       mediaRecorder.current = new MediaRecorder(stream);
-      mediaRecorder.current.ondataavailable = (e) => {
+      mediaRecorder.current.ondataavailable = async (e) => {
         if (node) {
           if (node.data.audio) {
             URL.revokeObjectURL(node.data.audio);
           }
-          const fileUrl = URL.createObjectURL(e.data);
+          // const fileUrl = URL.createObjectURL(e.data);
+    console.log(e.data)
+
+          const fileUrl = await postSoundBLOB(e.data)
           node.data.audio = fileUrl;
+
         } else {
           console.error("No nodecontext found", this);
         }
+
         graph.reloadComponent();
       };
     });

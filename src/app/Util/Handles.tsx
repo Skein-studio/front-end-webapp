@@ -33,7 +33,7 @@ export function GenerateHandles(node: NodeState | undefined) {
             <StyledHandle
               handleType="source"
               position={Position.Bottom}
-              id={node!.outputs[i]}
+              id={node!.outputs[i].ID}
             />
           </HandleSpacing>
         );
@@ -51,7 +51,7 @@ export function GenerateHandles(node: NodeState | undefined) {
             <StyledHandle
               handleType="target"
               position={Position.Top}
-              id={node!.inputs[i]}
+              id={node!.inputs[i].ID}
             />
           </HandleSpacing>
         );

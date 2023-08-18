@@ -12,7 +12,7 @@ export type AudioPlayerProps = {
     progress: number;
     duration: number;
     isComputing: boolean;
-    audioComputed: boolean;
+    audioComputed: boolean|undefined;
   };
   smallplayer?: boolean;
 };

@@ -1,5 +1,9 @@
 // useAudio.tsx
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
+import { NodeContext, NodeState } from "../Node/NodeState";
+import { SendGraphForCompute, getSoundFromNodeID } from "./ComputeAPI";
+import { Graph, GraphContext, useGraph } from "../Node/GraphContext";
+import { transformtoTypescriptTypes } from "./modelTransformation";
 
 /* The purpose of this hook is to provide a way to play audio in the application.
 The way to use it is to call the useAudio hook in the component that needs to play audio.
@@ -14,15 +18,20 @@ The useAudio hook returns an object with the following properties:
 
 const standardAudioUrl =
   "https://www2.cs.uic.edu/~i101/SoundFiles/CantinaBand3.wav";
-
+  
 const useAudio = (source?: string) => {
   // source is the url of the audio file to be played, later delete the question mark and make it required
   const [isComputing, setIsComputing] = useState<boolean>(false);
-  const [audioComputed, setAudioComputed] = useState<boolean>(false);
+  const [audioComputed, setAudioComputed] = useState<boolean|undefined>(useContext(NodeContext)!?.dirty);
+  // const [graph, setGraph] = useState<Graph>(useContext(GraphContext))
+  // const [node, setNode] = useState<NodeState | undefined>(useContext(NodeContext))
   const [audio, setAudio] = useState<HTMLAudioElement | null>(null);
   const [currentTime, setCurrentTime] = useState<number>(0);
   const [duration, setDuration] = useState<number>(0);
   const [isPlaying, setIsPlaying] = useState<boolean>(false);
+
+  const node = useContext(NodeContext);
+  let graph = useContext(GraphContext);
 
   // compute progress as a percentage based on currentTime and duration
   const progress = duration > 0 ? (currentTime / duration) * 100 : 0;
@@ -30,10 +39,18 @@ const useAudio = (source?: string) => {
   const fetchAudio = async () => {
     setIsComputing(true);
     try {
-      await new Promise((resolve) => setTimeout(resolve, 500));
-
-      const audioUrl = source ? source : standardAudioUrl; //If no source is provided, use this default source
-      const audio = new Audio(audioUrl);
+    //   //TODO get audioURL with while loop until node with nodeID is found in computed nodes
+      await SendGraphForCompute(transformtoTypescriptTypes(graph))
+      let audioUrl: string
+    
+      if (node && node.id) {      
+        graph =  await getSoundFromNodeID(node.id, graph);
+        console.log(graph.nodes.find(n=>{return n.id ==`${node.id}`}))
+        audioUrl = graph.nodes.find(n =>{return n.id == `${node.id}`})?.data.nodeState.data.audio
+    } else {
+        audioUrl = standardAudioUrl;
+    }      // const audioUrl = standardAudioUrl
+      const audio = new Audio(audioUrl!);
 
       audio.onloadedmetadata = () => {
         setDuration(audio.duration);
@@ -47,7 +64,7 @@ const useAudio = (source?: string) => {
         setIsPlaying(false);
       };
     } catch (error) {
-      console.error("Something went wrong while fetching audio.");
+      console.error(error);
       setIsComputing(false);
     }
   };
@@ -58,7 +75,8 @@ const useAudio = (source?: string) => {
       return;
     }
     if (!audioComputed) {
-      await fetchAudio();
+      console.log(audioComputed)
+      fetchAudio();
     }
     if (audio && audioComputed) {
       if (audio.paused) {
@@ -70,6 +88,7 @@ const useAudio = (source?: string) => {
       }
     }
   };
+
 
   useEffect(() => {
     // This effect is called when the audio is playing and updates the currentTime state

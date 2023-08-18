@@ -4,21 +4,15 @@ import StarImg from "../Signal/stars.svg";
 import { useState } from "react";
 
 interface Props {
-  currentTime: number;
-  duration: number;
-  audioComputed: boolean;
-  onPlayPause: () => void;
-  playing: boolean;
-  isComputing: boolean;
+  setPrompt(value: string): void;
+  prompt: string;
 }
 
 export default function OpenSignalView(props: Props) {
-  const [selectedInstrument, setSelectedInstrument] = useState("Solo Guitar");
-
   const handleInstrumentChange = (
-    event: React.ChangeEvent<HTMLSelectElement>
+    event: React.ChangeEvent<HTMLInputElement>
   ) => {
-    setSelectedInstrument(event.target.value);
+    props.setPrompt(event.target.value);
   };
 
   return (
@@ -28,13 +22,13 @@ export default function OpenSignalView(props: Props) {
           <img src={StarImg} alt="Star" />
           <p>Style Edit</p>
         </FieldTitle>
-        <Dropdown>
-          <select value={selectedInstrument} onChange={handleInstrumentChange}>
-            <option>Solo Guitar</option>
-            <option>Solo Drums</option>
-            {/* Add more options as needed */}
-          </select>
-        </Dropdown>
+        <div>
+          <input 
+            type="text" 
+            value={props.prompt} 
+            onChange={handleInstrumentChange}
+          />
+        </div>
       </Container>
     </Container>
   );

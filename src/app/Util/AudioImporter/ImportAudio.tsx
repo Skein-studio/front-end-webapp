@@ -5,6 +5,7 @@ import { useGraph } from "@/app/Node/GraphContext";
 import useAudio from "@/app/Util/useAudio";
 import AudioPlayer from "../AudioPlayer/AudioPlayer";
 import { Container } from "../BaseStyles";
+import { postSoundBLOB } from "../ComputeAPI";
 
 const ImportAudio: React.FC = () => {
   const node = useContext(NodeContext); // Use NodeContext to get NodeState instance
@@ -15,12 +16,15 @@ const ImportAudio: React.FC = () => {
 
   useEffect(() => {}, [audioState]);
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files.length > 0) {
       if (node) {
-        const fileUrl = URL.createObjectURL(e.target.files[0]);
+        // const fileUrl = URL.createObjectURL(e.target.files[0]);
+        
+        const fileUrl = await postSoundBLOB(e.target.files[0])
         node.data.audio = fileUrl;
-        console.log(node.data.audio);
+        console.log(node);
+
       } else {
         console.error("No nodecontext found");
       }
