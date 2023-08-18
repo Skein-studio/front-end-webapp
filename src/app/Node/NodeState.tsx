@@ -35,7 +35,6 @@ export class NodeState {
   id: number;
   inputs: Input[] | undefined; // later for deciding which output is what, - these are just strings representing the name of each in/output
   outputs: Output[] | undefined;
-  sounds: {[id: string] : string};  
   type: NodeType;
   data: any = {};
   dirty: boolean = false; // not sure if this should be initialized to true or false
@@ -50,7 +49,6 @@ export class NodeState {
     this.id = id ?? this.generateID();
     this.type = type;
     this.selected = false;
-    this.sounds = {};
     this.setInputs();
     this.setOutputs();
   }
