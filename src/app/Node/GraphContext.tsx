@@ -128,7 +128,7 @@ export function connectionExists(
 
   for (const edge of context.edges) {
     // Check if a connection already exists between the two nodes
-    // if (edge.source == sourceId && edge.target == targetId) {
+    // if (edge.source == sourceId && edge.target == targetId) { // TODO: This should be ignored when the target & source handles are split / merge nodes, otherwise this check should exist
     //   exists = true;
     //   break;
     // }
@@ -137,22 +137,21 @@ export function connectionExists(
       exists = true;
       break;
     }
-    // if (edge.sourceHandle == sourceHandle) {
-    //   // Check if the sourceHandle is already connected to another node
-    //   exists = true;
-    //   break;
-    // }
-    // if (edge.sourceHandle == targetHandle) {
-    //   // Check if the sourceHandle is already connected to another node
-    //   exists = true;
-    //   break;
-    // }
-    // if (edge.targetHandle == sourceHandle) {
-    //   // Check if the targetHandle is already connected to another node
-    //   exists = true;
-    //   break;
-    // }
-  }
 
+    // TODO: You should not be able to connect a node to a source handle of another node which is already connected to it
+    /*
+     if (edge.sourceHandle == targetHandle) {
+    //   // Check if the sourceHandle is already connected to another node
+       exists = true;
+       break;
+    }
+    if (edge.targetHandle == sourceHandle) {
+    //   // Check if the targetHandle is already connected to another node
+       exists = true;
+       break;
+    }
+    */
+  }
+  
   return exists;
 }
