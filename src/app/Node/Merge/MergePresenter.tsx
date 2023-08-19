@@ -10,8 +10,6 @@
 import React, {
   useState,
   useEffect,
-  useRef,
-  ReactNode,
   useContext,
 } from "react";
 import MergeView from "./MergeView";
@@ -38,8 +36,8 @@ const MergePresenter: React.FC = () => {
 
   return (
     <MergeView
-      numberOfSourceHandles={node?.outputs?.length || 0}
-      numberOfTargetHandles={node?.inputs?.length || 0}
+      numberOfSourceHandles={node?.model.Outputs?.length || 0}
+      numberOfTargetHandles={node?.model.Inputs?.length || 0}
       addTargetHandle={addTargetHandle}
     />
   );

@@ -23,6 +23,7 @@ type Coordinate = {
 };
 
 export class NodeState {
+
   position: Coordinate;
   model: NodeModel;
   selected: boolean;
@@ -65,6 +66,12 @@ export class NodeState {
 
   setPrompt(p: string) {
     this.prompt = p;
+  }
+
+  addTargetHandle() {
+    this.model.Inputs.push({
+      Name: this.model.ID + "in[" + this.model.Inputs.length + "]",
+    });
   }
 
   setInputs(type: NodeType, ID:string) : Input[]{
