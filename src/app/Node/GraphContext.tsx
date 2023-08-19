@@ -109,13 +109,13 @@ export function useGraph() {
   // This function is used to get the graph from the GraphContext
   return useContext(GraphContext);
 }
-
+/*
 export function setGraphEdges(context: Graph, edges: Edge[]) {
   // This function is used to update the edges in the graph
   context.edges = edges;
   context.reloadComponent();
 }
-
+*/
 export function connectionExists(
   context: Graph,
   sourceId: string,

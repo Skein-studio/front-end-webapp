@@ -6,12 +6,13 @@ import useAudio from "@/app/Util/useAudio";
 import AudioPlayer from "../AudioPlayer/AudioPlayer";
 import { Container } from "../BaseStyles";
 import { postSoundBLOB } from "../ComputeAPI";
+import { SignalType, SourceType } from "../modelTransformation";
 
 const ImportAudio: React.FC = () => {
   const node = useContext(NodeContext); // Use NodeContext to get NodeState instance
-  const audioData = node?.data.audio;
+  const nodeData = node?.model.Data as SourceType ?? node?.model.Data as SignalType;
+  const audioData = nodeData.URL as string;
   const audioState = useAudio(audioData);
-
   const graph = useGraph();
 
   useEffect(() => {}, [audioState]);
@@ -22,7 +23,7 @@ const ImportAudio: React.FC = () => {
         // const fileUrl = URL.createObjectURL(e.target.files[0]);
         
         const fileUrl = await postSoundBLOB(e.target.files[0])
-        node.data.audio = fileUrl;
+        nodeData.URL = fileUrl;
         console.log(node);
 
       } else {
@@ -35,8 +36,8 @@ const ImportAudio: React.FC = () => {
   useEffect(() => {
     return () => {
       // Revoke the URL when the component unmounts, if there is one
-      if (node?.data.audio) {
-        URL.revokeObjectURL(node.data.audio);
+      if (nodeData.URL) {
+        URL.revokeObjectURL(nodeData.URL);
       }
     };
   }, []);

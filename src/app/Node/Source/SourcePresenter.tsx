@@ -1,24 +1,11 @@
 import React, { useState, useContext, useEffect } from "react";
 import SourceView from "./SourceView";
 import { NodeContext } from "../NodeState";
+import { SourceType } from "@/app/Util/modelTransformation";
 
 const SourcePresenter: React.FC = () => {
   const node = useContext(NodeContext); // Use NodeContext to get NodeState instance
-  const [base, setBase] = useState<string>(loadBase);
-
-  function loadAudio() {
-    if (node) {
-      return node.data.audio;
-    }
-    return null;
-  }
-  function loadBase() {
-    //type of source (Record, Import, Generate) is set in nodeState.data.base
-    if (node) {
-      return node.data.base;
-    }
-    return "";
-  }
+  const [base, setBase] = useState<string>((node?.model.Data as SourceType).base ?? "");
 
   //useEffect to load audioData etc from backend upon component load?
 

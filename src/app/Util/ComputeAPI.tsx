@@ -100,7 +100,7 @@ export async function getSoundFromNodeID(
         node.data.nodeState.dirty = false
         console.log("1",node)      
           
-        node.data.nodeState.data.audio = Object.values(nestedDict[idString])[0]
+        node.data.nodeState.model.Data.URL = Object.values(nestedDict[idString])[0]
         console.log("2", node)
 
      })
@@ -111,7 +111,7 @@ export async function getSoundFromNodeID(
     
     //return  nestedDict['2']['2out[0]']
     // return nestedDict[id][handle]
-    let n =  graphContext.nodes.find(n => n.id === idString)?.data.nodeState.data.audio
+    let n =  graphContext.nodes.find(n => n.id === idString)?.data.nodeState.model.Data.URL
     return graphContext
     
 }

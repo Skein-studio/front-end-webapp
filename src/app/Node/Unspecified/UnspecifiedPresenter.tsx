@@ -14,19 +14,13 @@ import { useGraph, setNode } from "../GraphContext";
 
 const UnspecifiedPresenter: React.FC = () => {
   const node = useContext(NodeContext); // Use NodeContext to get NodeState instance
-  const {
-    nodes,
-    edges,
-    reloadComponent,
-    setSelectedNode: setOpenNode,
-  } = useGraph();
+  const graph = useGraph();
 
   function changeType(type: NodeType) {
     // Create a new node object with updated type
     if (!node) {
       return;
     }
-
     const nodeState = new NodeState(
       node.position.x,
       node.position.y,
@@ -43,9 +37,10 @@ const UnspecifiedPresenter: React.FC = () => {
     };
 
     setNode(
-      { nodes, edges, reloadComponent, setSelectedNode: setOpenNode },
+      graph,
       updatedNode
     );
+    
   }
 
   return <UnspecifiedView setNode={changeType} />;

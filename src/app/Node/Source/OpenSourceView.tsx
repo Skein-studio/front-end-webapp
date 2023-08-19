@@ -5,6 +5,7 @@ import { Button, Container } from "@/app/Util/BaseStyles";
 import { useContext } from "react";
 import { useGraph } from "../GraphContext";
 import { NodeContext } from "../NodeState";
+import { SourceType } from "@/app/Util/modelTransformation";
 
 function BaseComponent(base: string) {
   const graph = useGraph();
@@ -12,7 +13,7 @@ function BaseComponent(base: string) {
 
   function handleBaseChange(text: string) {
     if (node) {
-      node.data.base = text;
+      (node.model.Data as SourceType).base = text;
       graph.reloadComponent();
     }
   }
@@ -44,7 +45,7 @@ export default function OpenSourceView() {
 
   return (
     <Container flexdir="column">
-      {BaseComponent(node?.data.base ?? "Select a base")}
+      {BaseComponent((node?.model.Data as SourceType).base ?? "Select a base")}
     </Container>
   );
 }

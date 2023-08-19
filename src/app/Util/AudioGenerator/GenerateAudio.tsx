@@ -6,12 +6,14 @@ import { NodeContext } from "@/app/Node/NodeState";
 import { useGraph } from "@/app/Node/GraphContext";
 import useAudio from "@/app/Util/useAudio";
 import AudioPlayer from "../AudioPlayer/AudioPlayer";
+import { SourceType } from "../modelTransformation";
 
 
 
 const GenerateAudio: React.FC = () => {
   const node = useContext(NodeContext); // Use NodeContext to get NodeState instance
-  const audioData = node?.data.audio;
+  const nodeData = node?.model.Data as SourceType;
+  const audioData = nodeData.URL;
   const graph = useGraph();
   const audioState = useAudio(audioData);
 
@@ -20,7 +22,7 @@ const GenerateAudio: React.FC = () => {
     // This is where you would call your backend service to generate the audio
     // For now, we'll use a dummy audio file  
     if (node) {
-      node.data.audio = "/dummy.mp3";
+      nodeData.URL = "/dummy.mp3";
     } else {
       console.error("No nodecontext found", this);
     }

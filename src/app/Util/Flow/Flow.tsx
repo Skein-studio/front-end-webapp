@@ -22,7 +22,7 @@ import MergePresenter from "@/app/Node/Merge/MergePresenter";
 
 import { NodeType, NodeContext, NodeState } from "../../Node/NodeState";
 import {
-  setGraphEdges,
+  /*setGraphEdges,*/
   createNewNode,
   Graph,
   GraphContext,
@@ -207,7 +207,7 @@ const Canvas: React.FC = () => {
     let outputName: string = "standard-output"
     let inputName: string = "standard-input"
     
-    if (n.type == NodeType.Split){
+    if (n.model.Type == "split"){
       outputName = handleType[parseInt(connection.sourceHandle!.split("[", 2)[1].split("]", 2)[0])];
     }
     return {
@@ -282,7 +282,7 @@ const Canvas: React.FC = () => {
           eds.map(e => e.data)
           const newEdges = addEdge(newEdge, eds);
            // add the edge to the list of edges, in the local state
-          setGraphEdges(graph, newEdges); // add the edge to the list of edges, in the graph
+          //setGraphEdges(graph, newEdges); // add the edge to the list of edges, in the graph
           return newEdges;
         }); // add the edge to the list of edges, in the graph
       } else {
@@ -379,7 +379,7 @@ const Canvas: React.FC = () => {
             source: connectStartNode.id,
             target: lastNode.id,
             sourceHandle: connectStartHandleId!,
-            targetHandle: ((lastNode.data ).nodeState.inputs[0] as Input).Name,
+            targetHandle: ((lastNode.data ).nodeState.model.Inputs[0] as Input).Name,
           };
           const newEdge = {
             id: `reactflow__edge-${newConnection.source}${newConnection.sourceHandle}-${newConnection.target}${newConnection.targetHandle}`,
@@ -393,9 +393,10 @@ const Canvas: React.FC = () => {
 
           setEdges((eds) => {
             const newEdges = addEdge(newEdge, eds);
-            setGraphEdges(graph, newEdges);
+            //setGraphEdges(graph, newEdges);
             return newEdges;
           });
+          
         // } else {
         //   console.log(
         //     `Cannot create new connection. Handle: ${connectStartHandleId} is already connected to another node.`

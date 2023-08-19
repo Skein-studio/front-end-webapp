@@ -22,7 +22,7 @@ const standardAudioUrl =
 const useAudio = (source?: string) => {
   // source is the url of the audio file to be played, later delete the question mark and make it required
   const [isComputing, setIsComputing] = useState<boolean>(false);
-  const [audioComputed, setAudioComputed] = useState<boolean|undefined>(useContext(NodeContext)!?.dirty);
+  const [audioComputed, setAudioComputed] = useState<boolean|undefined>(useContext(NodeContext)!?.model.Dirty);
   // const [graph, setGraph] = useState<Graph>(useContext(GraphContext))
   // const [node, setNode] = useState<NodeState | undefined>(useContext(NodeContext))
   const [audio, setAudio] = useState<HTMLAudioElement | null>(null);
@@ -46,7 +46,7 @@ const useAudio = (source?: string) => {
       if (node && node.id) {      
         graph =  await getSoundFromNodeID(node.id, graph);
         console.log(graph.nodes.find(n=>{return n.id ==`${node.id}`}))
-        audioUrl = graph.nodes.find(n =>{return n.id == `${node.id}`})?.data.nodeState.data.audio
+        audioUrl = graph.nodes.find(n =>{return n.id == `${node.id}`})?.data.nodeState.model.Data.URL as string
     } else {
         audioUrl = standardAudioUrl;
     }      // const audioUrl = standardAudioUrl

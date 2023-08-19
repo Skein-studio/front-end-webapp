@@ -1,6 +1,6 @@
 import { Graph as deniGraph } from "../Node/GraphContext";
 import { Edge as flowEdge, Node as flowNode } from "reactflow";
-import { NodeState, NodeType, NodeTypeToString, Output as stateOutput, Input as stateInput } from "../Node/NodeState";
+import { NodeState, NodeType, NodeTypeToString} from "../Node/NodeState";
 // Create a dummy data generator function for each type
 
 export enum handleType {
@@ -117,22 +117,22 @@ export const transformtoTypescriptTypes = (graphContext: deniGraph): Root => {
     const transformNode = (node: flowNode): Node => {
       let nodeState = node.data.nodeState as NodeState
 
-      const transformNodeInputs = (input: stateInput): Input =>{
+      const transformNodeInputs = (input: Input): Input =>{
         let inpu: Input
         
         if (nodeState.type == NodeType.Merge){
-          inpu = {Name: input.data.Name}
+          inpu = {Name: input.Name}
         }
         inpu = {
               Name: "standard-input",
         };
         return inpu
       }
-      const transformNodeOutputs = (output: stateOutput): Output =>{
+      const transformNodeOutputs = (output: Output): Output =>{
         let out: Output
         if (nodeState.type == NodeType.Split){
           out = {
-            Name: output.name,
+            Name: output.Name,
             Src: ""
         }
         }else{
@@ -147,16 +147,17 @@ export const transformtoTypescriptTypes = (graphContext: deniGraph): Root => {
 
         switch (NodeTypeToString(nodeState.type)){
             case "signal":{
-              nodeState.data = {
-                Prompt: nodeState.data,
-                Seed: "1234",
+              nodeState.model.Data = {
+                Prompt: (nodeState.model.Data as SignalType).Prompt,
+                Seed: (nodeState.model.Data as SignalType).Seed,
               }
               break
             }
           
             case "source":{
-              nodeState.data = {
-                URL: nodeState.data.audio,
+              nodeState.model.Data = {
+                URL: (nodeState.model.Data as SourceType).URL,
+                base: (nodeState.model.Data as SourceType).base,
               }  
               break
             }
@@ -164,16 +165,16 @@ export const transformtoTypescriptTypes = (graphContext: deniGraph): Root => {
             // case "split":{}
 
             default:{
-              nodeState.data = {}
+              nodeState.model.Data = {}
             }
         }
         console.log(node)
         let n = {
             Type: NodeTypeToString(nodeState.type),
             Dirty: true, //TODO: handle this correctly, derive from node state
-            Data: nodeState.data,
-            Inputs: nodeState.inputs?.map(transformNodeInputs),
-            Outputs: nodeState.outputs?.map(transformNodeOutputs),
+            Data: nodeState.model.Data,
+            Inputs: nodeState.model.Inputs.map(transformNodeInputs),
+            Outputs: nodeState.model.Outputs.map(transformNodeOutputs),
             ID: `${nodeState.id}`
         } as Node;
         return n
@@ -230,7 +231,7 @@ export interface Root {
   export interface Node {
     ID: string;
     Dirty: boolean;
-    Data: SourceType | SignalType | MergeType | SplitType;
+    Data: SourceType | SignalType | MergeType | SplitType | UnspecifiedType;
     Type: string
     //type is either the strings SourceType or SignalType or MergeType or SplitType
     Inputs: Input[];
@@ -239,6 +240,7 @@ export interface Root {
   }
   export interface SourceType {
     URL: string;
+    base:string; // whether the source is a record, import or generate type
     [k: string]: unknown;
   }
   export interface SignalType {
@@ -248,6 +250,7 @@ export interface Root {
   }
   export interface MergeType {}
   export interface SplitType {}
+  export interface UnspecifiedType {}
 
   export interface Input {
     Name: string;
