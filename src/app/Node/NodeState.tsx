@@ -4,7 +4,6 @@
 which is used to store the individual state of 
 each node in the graph. */
 
-import { type } from "os";
 import { Node as NodeModel, SourceType, SignalType, MergeType, SplitType, Input as InputModel, UnspecifiedType, Output, Input } from "../Util/modelTransformation";
 
 let nodeID = 0;
@@ -65,7 +64,7 @@ export class NodeState {
   }
 
   setPrompt(p: string) {
-    this.prompt = p;
+    this.(Data as SignalType).Prompt = p;
   }
 
   addTargetHandle() {
