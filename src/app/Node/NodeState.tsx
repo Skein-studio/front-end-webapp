@@ -65,7 +65,7 @@ export class NodeState {
 
   setPrompt(p: string) {
     this.prompt = p; // TODO: remove this and set all dependencies to use the below:
-    this.(Data as SignalType).Prompt = p;
+    (this.model.Data as SignalType).Prompt = p;
   }
 
   addTargetHandle() {
