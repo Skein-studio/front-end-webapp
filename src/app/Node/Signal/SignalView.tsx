@@ -1,5 +1,3 @@
-//SignalView.tsx
-
 import React, { useContext } from "react";
 import { Container } from "@/app/Util/BaseStyles";
 import { NodeIcon, NodeSmall, NodeTitle } from "@/app/Util/Flow/NodeStyles";
@@ -8,16 +6,26 @@ import { useGraph } from "../GraphContext";
 import SignalImg from "./signal.svg";
 import AudioPlayer from "@/app/Util/AudioPlayback/AudioPlayer";
 import { GenerateHandles, GetWidthExtension } from "@/app/Util/Handles";
+import { AudioState } from "@/app/Util/AudioPlayback/useAudio";
+
 interface Props {
-  audioState: any;
+  audioState: AudioState;
+  playAudio: () => void;
+  fetched: boolean;
 }
+
 function SignalView(props: Props) {
   const graph = useGraph();
-  const node = useContext(NodeContext); // Use NodeContext to get NodeState instance
+  const node = useContext(NodeContext);
 
   function selectNode() {
     graph.selectNode(node);
   }
+
+  const modifiedAudioState: AudioState = {
+    ...props.audioState,
+    onPlayPause: props.playAudio, // Use the playAudio function from props
+  };
 
   return (
     <NodeSmall
@@ -32,9 +40,9 @@ function SignalView(props: Props) {
       <NodeTitle>signal</NodeTitle>
       <Container flexdir="row">
         <AudioPlayer
-          audioState={props.audioState}
+          audioState={modifiedAudioState}
           isComputing={false}
-          audioComputed={true}
+          audioComputed={props.fetched} // Use the fetched prop
           error=""
           smallplayer={true}
         />

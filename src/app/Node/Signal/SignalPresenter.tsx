@@ -11,13 +11,26 @@ import { useEdges } from "reactflow";
 
 export default function SignalPresenter() {
   const graph = useGraph();
-  const node = useContext(NodeContext); // Use NodeContext to get NodeState instance
+  const node = useContext(NodeContext);
   const [audioUrl, setAudioUrl] = useState<string>("");
+  const [fetched, setFetched] = useState<boolean>(false);
   const audioState = useAudio(audioUrl);
 
+  // useEffect to reset fetched state when node.model.Dirty changes
   useEffect(() => {
-    fetchAudio();
-  }, [audioUrl]);
+    if (node!.model.Dirty) {
+      setFetched(false);
+    }
+  }, [node!.model.Dirty]);
+
+  //  play button's callback include the fetchAudio function
+  const playAudio = () => {
+    if(fetched){
+      audioState.onPlayPause();
+    } else{
+      fetchAudio();
+    }
+  };
 
   const fetchAudio = async () => {
     try {
@@ -40,10 +53,12 @@ export default function SignalPresenter() {
         console.log("node not found when fetching audio(signalpresenter)");
       }
       setAudioUrl(url);
+      setFetched(true); // Set fetched to true once the audio URL is obtained
     } catch (e) {
       console.log(e);
     }
+        
   };
 
-  return <SignalView audioState={audioState} />;
+  return <SignalView audioState={audioState} playAudio={playAudio} fetched={fetched} />;
 }

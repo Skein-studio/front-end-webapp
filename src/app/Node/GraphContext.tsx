@@ -77,7 +77,8 @@ export function setNode(context: Graph, node: Node) {
   }
 }
 
-export function createNewNode(x: number, y: number, nodeType: NodeType) { // This function is used to create a new node in the graph
+export function createNewNode(x: number, y: number, nodeType: NodeType) {
+  // This function is used to create a new node in the graph
   let newNodeState = new NodeState(x, y, nodeType);
 
   const newNode: Node = {

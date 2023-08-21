@@ -4,6 +4,7 @@ import styled from "styled-components";
 import PlayImg from "./play.svg";
 import PauseImg from "./pause.svg";
 import { AudioState } from "./useAudio";
+import { useEffect } from "react";
 
 export type AudioPlayerProps = {
   audioState: AudioState;
@@ -14,6 +15,7 @@ export type AudioPlayerProps = {
 };
 
 export default function AudioPlayer(props: AudioPlayerProps) {
+
   return (
     <Container flexdir="row">
       <ProgressBarContainer smallplayer={props.smallplayer}>
