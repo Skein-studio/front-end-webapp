@@ -7,13 +7,12 @@ import { SendGraphForCompute } from "@/app/Util/ComputeAPI";
 import { transformtoTypescriptTypes } from "@/app/Util/modelTransformation";
 import { getSoundFromNodeID } from "@/app/Util/ComputeAPI";
 import { useGraph } from "../GraphContext";
-import { useEdges } from "reactflow";
 
 export default function SignalPresenter() {
   const graph = useGraph();
   const node = useContext(NodeContext);
   const [audioUrl, setAudioUrl] = useState<string>("");
-  const [fetched, setFetched] = useState<boolean>(false); // TODO: This should be dependent on the node's dirty property
+  const [fetched, setFetched] = useState<boolean>(false); // TODO: When the dirty functionality is implemented, this should actually start out as true and be set to false in the useEffect below
   const audioState = useAudio(audioUrl);
 
   // useEffect to reset fetched state when node.model.Dirty changes

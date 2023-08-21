@@ -18,6 +18,8 @@ function SignalView(props: Props) {
   const graph = useGraph();
   const node = useContext(NodeContext);
 
+  console.log(props.fetched)
+
   function selectNode() {
     graph.selectNode(node);
   }
