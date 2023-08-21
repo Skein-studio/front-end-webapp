@@ -22,15 +22,15 @@ const useAudio = (source: string) => {
     if (isPlaying && duration > 0) {
       const newProgress = (audioRef.current.currentTime / duration) * 100;
       setProgress(newProgress);
-  
+
       if (newProgress >= 100) {
         setProgress(0); // Reset progress to 0%
         audioRef.current.currentTime = 0; // Reset audio time to the beginning
       }
-  
+
       requestAnimationFrame(updateProgress);
     }
-  };  
+  };
 
   // Updating the source directly if it changes
   useEffect(() => {
@@ -53,15 +53,15 @@ const useAudio = (source: string) => {
       setIsPlaying(false);
     };
 
-    audio.addEventListener('loadeddata', handleLoadedData);
-    audio.addEventListener('timeupdate', handleTimeUpdate);
-    audio.addEventListener('ended', handleEnded);
+    audio.addEventListener("loadeddata", handleLoadedData);
+    audio.addEventListener("timeupdate", handleTimeUpdate);
+    audio.addEventListener("ended", handleEnded);
 
     return () => {
       // Cleanup
-      audio.removeEventListener('loadeddata', handleLoadedData);
-      audio.removeEventListener('timeupdate', handleTimeUpdate);
-      audio.removeEventListener('ended', handleEnded);
+      audio.removeEventListener("loadeddata", handleLoadedData);
+      audio.removeEventListener("timeupdate", handleTimeUpdate);
+      audio.removeEventListener("ended", handleEnded);
     };
   }, []); // Dependencies array is empty, so this will run once on mount and cleanup on unmount
 

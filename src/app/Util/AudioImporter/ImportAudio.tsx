@@ -10,7 +10,8 @@ import { SignalType, SourceType } from "../modelTransformation";
 
 const ImportAudio: React.FC = () => {
   const node = useContext(NodeContext); // Use NodeContext to get NodeState instance
-  const nodeData = node?.model.Data as SourceType ?? node?.model.Data as SignalType;
+  const nodeData =
+    (node?.model.Data as SourceType) ?? (node?.model.Data as SignalType);
   const audioData = nodeData.URL as string;
   const audioState = useAudio(audioData);
   const graph = useGraph();
@@ -21,11 +22,10 @@ const ImportAudio: React.FC = () => {
     if (e.target.files && e.target.files.length > 0) {
       if (node) {
         // const fileUrl = URL.createObjectURL(e.target.files[0]);
-        
-        const fileUrl = await postSoundBLOB(e.target.files[0])
+
+        const fileUrl = await postSoundBLOB(e.target.files[0]);
         nodeData.URL = fileUrl;
         console.log(node);
-
       } else {
         console.error("No nodecontext found");
       }
@@ -45,7 +45,14 @@ const ImportAudio: React.FC = () => {
   return (
     <Container>
       <input type="file" accept="audio/*" onChange={handleChange} />
-      {audioData && <AudioPlayer audioState={audioState} isComputing={false} audioComputed={true} error="" />}
+      {audioData && (
+        <AudioPlayer
+          audioState={audioState}
+          isComputing={false}
+          audioComputed={true}
+          error=""
+        />
+      )}
     </Container>
   );
 };

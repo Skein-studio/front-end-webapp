@@ -4,7 +4,17 @@
 which is used to store the individual state of 
 each node in the graph. */
 
-import { Node as NodeModel, SourceType, SignalType, MergeType, SplitType, Input as InputModel, UnspecifiedType, Output, Input } from "../Util/modelTransformation";
+import {
+  Node as NodeModel,
+  SourceType,
+  SignalType,
+  MergeType,
+  SplitType,
+  Input as InputModel,
+  UnspecifiedType,
+  Output,
+  Input,
+} from "../Util/modelTransformation";
 
 let nodeID = 0;
 
@@ -22,12 +32,11 @@ type Coordinate = {
 };
 
 export class NodeState {
-
   position: Coordinate;
   model: NodeModel;
   selected: boolean;
-  prompt: string = ""
-  id:number;
+  prompt: string = "";
+  id: number;
   type: NodeType;
 
   constructor(x: number, y: number, type: NodeType, id?: number) {
@@ -36,7 +45,7 @@ export class NodeState {
       y: y,
     };
     this.type = type;
-    id ? this.id = id : this.id = this.generateID();
+    id ? (this.id = id) : (this.id = this.generateID());
     this.model = {
       ID: this.id.toString(),
       Dirty: false,
@@ -48,7 +57,9 @@ export class NodeState {
     this.selected = false;
   }
 
-  initializeData(type: NodeType): SourceType | SignalType | MergeType | SplitType | UnspecifiedType {
+  initializeData(
+    type: NodeType
+  ): SourceType | SignalType | MergeType | SplitType | UnspecifiedType {
     switch (type) {
       case NodeType.Source:
         return { URL: "", base: "" };
@@ -73,16 +84,15 @@ export class NodeState {
     });
   }
 
-  setInputs(type: NodeType, ID:string) : Input[]{
-
+  setInputs(type: NodeType, ID: string): Input[] {
     let newInputs: Input[] = [];
 
     const add = () => {
       newInputs.push({
         Name: ID + "in[" + newInputs.length + "]",
       });
-    }
-    
+    };
+
     let numInputs = 0;
     switch (type) {
       case NodeType.Source:
@@ -99,10 +109,9 @@ export class NodeState {
       add();
     }
     return newInputs;
-  
   }
 
-  setOutputs(type: NodeType, ID: string) : Output[]{
+  setOutputs(type: NodeType, ID: string): Output[] {
     let numOutputs = 0;
     let newOutputs: Output[] = [];
 
@@ -177,7 +186,6 @@ import React from "react";
 export const NodeContext = React.createContext<NodeState | undefined>(
   undefined
 );
-
 
 export function NodeTypeToString(nodeType: NodeType): string {
   switch (nodeType) {

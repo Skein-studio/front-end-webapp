@@ -8,8 +8,6 @@ import useAudio from "@/app/Util/AudioPlayback/useAudio";
 import AudioPlayer from "../AudioPlayback/AudioPlayer";
 import { SourceType } from "../modelTransformation";
 
-
-
 const GenerateAudio: React.FC = () => {
   const node = useContext(NodeContext); // Use NodeContext to get NodeState instance
   const nodeData = node?.model.Data as SourceType;
@@ -18,9 +16,8 @@ const GenerateAudio: React.FC = () => {
   const audioState = useAudio(audioData);
 
   const handleClick = async () => {
-    
     // This is where you would call your backend service to generate the audio
-    // For now, we'll use a dummy audio file  
+    // For now, we'll use a dummy audio file
     if (node) {
       nodeData.URL = "/dummy.mp3";
     } else {
@@ -32,7 +29,14 @@ const GenerateAudio: React.FC = () => {
   return (
     <Container>
       <Button onClick={handleClick}>Generate</Button>
-      {audioData && <AudioPlayer audioState={audioState} isComputing={false} audioComputed={true} error="" />}
+      {audioData && (
+        <AudioPlayer
+          audioState={audioState}
+          isComputing={false}
+          audioComputed={true}
+          error=""
+        />
+      )}
     </Container>
   );
 };

@@ -5,7 +5,9 @@ import { SourceType } from "@/app/Util/modelTransformation";
 
 const SourcePresenter: React.FC = () => {
   const node = useContext(NodeContext); // Use NodeContext to get NodeState instance
-  const [base, setBase] = useState<string>((node?.model.Data as SourceType).base ?? "");
+  const [base, setBase] = useState<string>(
+    (node?.model.Data as SourceType).base ?? ""
+  );
 
   //useEffect to load audioData etc from backend upon component load?
 

@@ -2,11 +2,7 @@
 
 import React, { useContext } from "react";
 import { Container } from "@/app/Util/BaseStyles";
-import {
-  NodeIcon,
-  NodeSmall,
-  NodeTitle,
-} from "@/app/Util/Flow/NodeStyles";
+import { NodeIcon, NodeSmall, NodeTitle } from "@/app/Util/Flow/NodeStyles";
 import { NodeContext } from "../NodeState";
 import { useGraph } from "../GraphContext";
 import SignalImg from "./signal.svg";
@@ -35,7 +31,13 @@ function SignalView(props: Props) {
       <NodeIcon src={SignalImg}></NodeIcon>
       <NodeTitle>signal</NodeTitle>
       <Container flexdir="row">
-        <AudioPlayer  audioState={props.audioState} isComputing={false} audioComputed={true} error="" smallplayer={true} />
+        <AudioPlayer
+          audioState={props.audioState}
+          isComputing={false}
+          audioComputed={true}
+          error=""
+          smallplayer={true}
+        />
       </Container>
       {/*<GenerateHandles handleType="source" numberOfHandles={numberOfSourceHandles}/> away for now */}
     </NodeSmall>

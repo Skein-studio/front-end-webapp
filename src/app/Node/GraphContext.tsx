@@ -13,7 +13,7 @@
 
 import { createContext, useContext } from "react";
 import { NodeState, NodeTypeToString, NodeType } from "./NodeState";
-import { Edge, Node} from "reactflow";
+import { Edge, Node } from "reactflow";
 
 export type Graph = {
   nodes: Node[];
@@ -77,11 +77,7 @@ export function setNode(context: Graph, node: Node) {
   }
 }
 
-export function createNewNode( // This function is used to create a new node in the graph
-  x: number,
-  y: number,
-  nodeType: NodeType,
-) {
+export function createNewNode(x: number, y: number, nodeType: NodeType) { // This function is used to create a new node in the graph
   let newNodeState = new NodeState(x, y, nodeType);
 
   const newNode: Node = {
@@ -151,6 +147,6 @@ export function connectionExists(
     }
     */
   }
-  
+
   return exists;
 }

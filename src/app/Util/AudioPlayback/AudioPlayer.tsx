@@ -8,17 +8,15 @@ import { AudioState } from "./useAudio";
 export type AudioPlayerProps = {
   audioState: AudioState;
   isComputing: boolean;
-  audioComputed: boolean|undefined;
+  audioComputed: boolean | undefined;
   error: string;
   smallplayer?: boolean;
 };
 
 export default function AudioPlayer(props: AudioPlayerProps) {
-
   return (
     <Container flexdir="row">
       <ProgressBarContainer smallplayer={props.smallplayer}>
-        
         {props.error != "" ? (
           <ProgressBarText>{props.error}</ProgressBarText>
         ) : !props.audioComputed && !props.isComputing ? (
@@ -28,14 +26,12 @@ export default function AudioPlayer(props: AudioPlayerProps) {
         ) : (
           <></>
         )}
-        {
-          props.audioState.playing ? (
-            <PlayButton img={PauseImg} callback={props.audioState.onPlayPause} />
-          ) : (
-            <PlayButton img={PlayImg} callback={props.audioState.onPlayPause} />
-          )
-        }
-        
+        {props.audioState.playing ? (
+          <PlayButton img={PauseImg} callback={props.audioState.onPlayPause} />
+        ) : (
+          <PlayButton img={PlayImg} callback={props.audioState.onPlayPause} />
+        )}
+
         <ProgressBar progress={props.audioState.progress} />
       </ProgressBarContainer>
     </Container>

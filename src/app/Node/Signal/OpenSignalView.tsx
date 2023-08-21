@@ -23,9 +23,9 @@ export default function OpenSignalView(props: Props) {
           <p>Style Edit</p>
         </FieldTitle>
         <div>
-          <input 
-            type="text" 
-            value={props.prompt} 
+          <input
+            type="text"
+            value={props.prompt}
             onChange={handleInstrumentChange}
           />
         </div>
