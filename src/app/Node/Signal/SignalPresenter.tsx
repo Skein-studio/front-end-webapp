@@ -18,8 +18,8 @@ export default function SignalPresenter() {
 
   useEffect(() => {
     fetchAudio();
-  }
-  , []);
+  }, [audioUrl]);
+
 
   const fetchAudio = async () => {
     try {

@@ -1,5 +1,6 @@
-//useAudio.tsx
-import { useState, useEffect, useRef, useReducer } from "react";
+// useAudio.tsx
+import { NodeContext } from "@/app/Node/NodeState";
+import { useState, useEffect, useRef, useContext } from "react";
 
 export type AudioState = {
   src: string;
@@ -12,22 +13,40 @@ export type AudioState = {
 const useAudio = (source: string) => {
   const [isPlaying, setIsPlaying] = useState(false);
   const [duration, setDuration] = useState(0);
-  const currentTimeRef = useRef(0); // Use ref instead of state for currentTime
-  const audioRef = useRef(new Audio(source));
-  const [, forceUpdate] = useReducer(x => x + 1, 0); // Function to force a re-render
+  const [progress, setProgress] = useState(0);
+  const audioRef = useRef(new Audio());
+  const nodeId = useContext(NodeContext)!.id;
 
+  // Function to update progress using requestAnimationFrame
+  const updateProgress = () => {
+    if (isPlaying && duration > 0) {
+      const newProgress = (audioRef.current.currentTime / duration) * 100;
+      setProgress(newProgress);
+  
+      if (newProgress >= 100) {
+        setProgress(0); // Reset progress to 0%
+        audioRef.current.currentTime = 0; // Reset audio time to the beginning
+      }
+  
+      requestAnimationFrame(updateProgress);
+    }
+  };  
+
+  // Updating the source directly if it changes
+  useEffect(() => {
+    audioRef.current.src = source;
+  }, [source]);
+
+  // Handling audio events
   useEffect(() => {
     const audio = audioRef.current;
-
-    audio.src = source; // Update the audio source
 
     const handleLoadedData = () => {
       setDuration(audio.duration);
     };
 
     const handleTimeUpdate = () => {
-      currentTimeRef.current = audio.currentTime;
-      forceUpdate(); // Manually trigger a re-render
+      updateProgress(); // Call updateProgress when time updates
     };
 
     const handleEnded = () => {
@@ -40,15 +59,17 @@ const useAudio = (source: string) => {
 
     return () => {
       // Cleanup
-      audio.pause();
-      audio.currentTime = 0;
-      setIsPlaying(false);
-      currentTimeRef.current = 0;
       audio.removeEventListener('loadeddata', handleLoadedData);
       audio.removeEventListener('timeupdate', handleTimeUpdate);
       audio.removeEventListener('ended', handleEnded);
     };
-  }, [source]);
+  }, []); // Dependencies array is empty, so this will run once on mount and cleanup on unmount
+
+  useEffect(() => {
+    if (isPlaying) {
+      updateProgress();
+    }
+  }, [isPlaying]);
 
   const handlePlayPause = () => {
     const audio = audioRef.current;
@@ -66,9 +87,8 @@ const useAudio = (source: string) => {
     src: source,
     playing: isPlaying,
     onPlayPause: handlePlayPause,
-    currentTime: currentTimeRef.current, // Use ref value
     duration,
-    progress: duration > 0 ? (currentTimeRef.current / duration) * 100 : 0,
+    progress,
   };
 };
 

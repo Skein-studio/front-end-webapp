@@ -414,7 +414,7 @@ const Canvas: React.FC = () => {
 
   const addNewNode = (x: number, y: number, nodeType: NodeType) => {
     // this is called when the user adds a new node
-    const newNode = createNewNode(x, y, nodeType, graph); // create a new node in the graph
+    const newNode = createNewNode(x, y, nodeType); // create a new node
     const newNodes = [...nodes, newNode];
     setNodes(newNodes);
     console.log("nodes updated: ", newNodes);

@@ -15,7 +15,7 @@ import { useGraph, setNode } from "../GraphContext";
 const UnspecifiedPresenter: React.FC = () => {
   const node = useContext(NodeContext); // Use NodeContext to get NodeState instance
   const graph = useGraph();
-
+ 
   function changeType(type: NodeType) {
     // Create a new node object with updated type
     if (!node) {
@@ -40,7 +40,6 @@ const UnspecifiedPresenter: React.FC = () => {
       graph,
       updatedNode
     );
-    
   }
 
   return <UnspecifiedView setNode={changeType} />;

@@ -81,7 +81,6 @@ export function createNewNode( // This function is used to create a new node in 
   x: number,
   y: number,
   nodeType: NodeType,
-  context: Graph
 ) {
   let newNodeState = new NodeState(x, y, nodeType);
 
