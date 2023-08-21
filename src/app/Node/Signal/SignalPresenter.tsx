@@ -13,7 +13,7 @@ export default function SignalPresenter() {
   const graph = useGraph();
   const node = useContext(NodeContext);
   const [audioUrl, setAudioUrl] = useState<string>("");
-  const [fetched, setFetched] = useState<boolean>(false);
+  const [fetched, setFetched] = useState<boolean>(false); // TODO: This should be dependent on the node's dirty property
   const audioState = useAudio(audioUrl);
 
   // useEffect to reset fetched state when node.model.Dirty changes
