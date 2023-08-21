@@ -4,8 +4,8 @@ import React, { useContext, useState } from "react";
 import { Button, Container } from "../BaseStyles";
 import { NodeContext } from "@/app/Node/NodeState";
 import { useGraph } from "@/app/Node/GraphContext";
-import useAudio from "@/app/Util/useAudio";
-import AudioPlayer from "../AudioPlayer/AudioPlayer";
+import useAudio from "@/app/Util/AudioPlayback/useAudio";
+import AudioPlayer from "../AudioPlayback/AudioPlayer";
 import { SourceType } from "../modelTransformation";
 
 
@@ -32,7 +32,7 @@ const GenerateAudio: React.FC = () => {
   return (
     <Container>
       <Button onClick={handleClick}>Generate</Button>
-      {audioData && <AudioPlayer audioState={audioState} />}
+      {audioData && <AudioPlayer audioState={audioState} isComputing={false} audioComputed={true} error="" />}
     </Container>
   );
 };

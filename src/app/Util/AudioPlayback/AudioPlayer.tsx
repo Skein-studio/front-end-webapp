@@ -3,38 +3,40 @@ import { Container } from "../BaseStyles";
 import styled from "styled-components";
 import PlayImg from "./play.svg";
 import PauseImg from "./pause.svg";
+import { AudioState } from "./useAudio";
 
 export type AudioPlayerProps = {
-  audioState: {
-    src: string;
-    playing: boolean;
-    onPlayPause: () => void;
-    progress: number;
-    duration: number;
-    isComputing: boolean;
-    audioComputed: boolean|undefined;
-  };
+  audioState: AudioState;
+  isComputing: boolean;
+  audioComputed: boolean|undefined;
+  error: string;
   smallplayer?: boolean;
 };
 
-export default function AudioPlayer({
-  audioState,
-  smallplayer,
-}: AudioPlayerProps) {
+export default function AudioPlayer(props: AudioPlayerProps) {
+
   return (
     <Container flexdir="row">
-      <ProgressBarContainer smallplayer={smallplayer}>
-        {!audioState.audioComputed && !audioState.isComputing && (
+      <ProgressBarContainer smallplayer={props.smallplayer}>
+        
+        {props.error != "" ? (
+          <ProgressBarText>{props.error}</ProgressBarText>
+        ) : !props.audioComputed && !props.isComputing ? (
           <ProgressBarText>compute for 3 tokens</ProgressBarText>
-        )}
-        {audioState.isComputing ? (
+        ) : props.isComputing ? (
           <ProgressBarText>"computing..."</ProgressBarText>
-        ) : audioState.playing ? (
-          <PlayButton img={PauseImg} callback={audioState.onPlayPause} />
         ) : (
-          <PlayButton img={PlayImg} callback={audioState.onPlayPause} />
+          <></>
         )}
-        <ProgressBar progress={audioState.progress} />
+        {
+          props.audioState.playing ? (
+            <PlayButton img={PauseImg} callback={props.audioState.onPlayPause} />
+          ) : (
+            <PlayButton img={PlayImg} callback={props.audioState.onPlayPause} />
+          )
+        }
+        
+        <ProgressBar progress={props.audioState.progress} />
       </ProgressBarContainer>
     </Container>
   );

@@ -50,7 +50,7 @@ export async function getSoundFromNodeID(
     endpoint: string = "http://localhost:5001/compute/get_computed_nodes",
     maxRetries: number = 100,
     retryDelay: number = 2000
-): Promise<Graph> {
+) {
 
     //console.log(graphContext)
     let idString = `${id}`
@@ -105,13 +105,5 @@ export async function getSoundFromNodeID(
 
      })
      //set current nodeID sound output handle name to correct url
-     console.log(graphContext.nodes)
-    //  let node: NodeState = graphContext.nodes[id-1].data.nodeState
-    //  let handle: string = node.outputs? node.outputs[0]: ""
-    
-    //return  nestedDict['2']['2out[0]']
-    // return nestedDict[id][handle]
-    let n =  graphContext.nodes.find(n => n.id === idString)?.data.nodeState.model.Data.URL
-    return graphContext
-    
+     //console.log(graphContext.nodes)
 }

@@ -2,8 +2,8 @@
 import React, { use, useContext, useEffect, useState } from "react";
 import { NodeContext } from "@/app/Node/NodeState";
 import { useGraph } from "@/app/Node/GraphContext";
-import useAudio from "@/app/Util/useAudio";
-import AudioPlayer from "../AudioPlayer/AudioPlayer";
+import useAudio from "@/app/Util/AudioPlayback/useAudio";
+import AudioPlayer from "../AudioPlayback/AudioPlayer";
 import { Container } from "../BaseStyles";
 import { postSoundBLOB } from "../ComputeAPI";
 import { SignalType, SourceType } from "../modelTransformation";
@@ -45,7 +45,7 @@ const ImportAudio: React.FC = () => {
   return (
     <Container>
       <input type="file" accept="audio/*" onChange={handleChange} />
-      {audioData && <AudioPlayer audioState={audioState} />}
+      {audioData && <AudioPlayer audioState={audioState} isComputing={false} audioComputed={true} error="" />}
     </Container>
   );
 };

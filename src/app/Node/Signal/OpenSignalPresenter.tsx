@@ -1,5 +1,5 @@
 // SignalDetailPresenter.tsx
-import useAudio from "@/app/Util/useAudio";
+import useAudio from "@/app/Util/AudioPlayback/useAudio";
 import OpenSignalView from "./OpenSignalView";
 import { SignalType, transformtoTypescriptTypes } from "@/app/Util/modelTransformation";
 import { useContext, useEffect } from "react";
@@ -9,6 +9,7 @@ import { useGraph } from "../GraphContext";
   function OpenSignalPresenter(){
   // const audioState = useAudio();
   const node = useContext(NodeContext);
+  const nodeData = node?.model.Data as SignalType;
   const graph = useGraph();
 
   function reload() {
@@ -23,7 +24,7 @@ import { useGraph } from "../GraphContext";
   };
   return (
     <OpenSignalView
-      prompt={(useContext(NodeContext)?.model.Data as SignalType).prompt as string}
+      prompt={nodeData.prompt as string}
       setPrompt={handlePromptChange}
     />
   );

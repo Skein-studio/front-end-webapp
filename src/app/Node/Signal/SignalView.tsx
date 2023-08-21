@@ -6,14 +6,11 @@ import {
   NodeIcon,
   NodeSmall,
   NodeTitle,
-  StyledHandle,
 } from "@/app/Util/Flow/NodeStyles";
 import { NodeContext } from "../NodeState";
 import { useGraph } from "../GraphContext";
 import SignalImg from "./signal.svg";
-import { styled } from "styled-components";
-import { Handle, Position } from "reactflow";
-import AudioPlayer from "@/app/Util/AudioPlayer/AudioPlayer";
+import AudioPlayer from "@/app/Util/AudioPlayback/AudioPlayer";
 import { GenerateHandles, GetWidthExtension } from "@/app/Util/Handles";
 interface Props {
   audioState: any;
@@ -38,7 +35,7 @@ function SignalView(props: Props) {
       <NodeIcon src={SignalImg}></NodeIcon>
       <NodeTitle>signal</NodeTitle>
       <Container flexdir="row">
-        <AudioPlayer audioState={props.audioState} smallplayer={true} />
+        <AudioPlayer  audioState={props.audioState} isComputing={false} audioComputed={true} error="" smallplayer={true} />
       </Container>
       {/*<GenerateHandles handleType="source" numberOfHandles={numberOfSourceHandles}/> away for now */}
     </NodeSmall>
