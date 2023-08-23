@@ -12,12 +12,13 @@ import { NodeContext } from "../NodeState";
 
 function SplitPresenter() {
   const node = useContext(NodeContext);
+  const nodeModel = node!.model;
   useEffect(() => {}, [node]);
 
   return (
     <SplitView
-      numberOfSourceHandles={node?.outputs?.length || 0}
-      numberOfTargetHandles={node?.inputs?.length || 0}
+      numberOfSourceHandles={nodeModel.Outputs?.length || 0}
+      numberOfTargetHandles={nodeModel.Inputs?.length || 0}
     />
   );
 }
