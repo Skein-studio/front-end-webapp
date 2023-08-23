@@ -19,11 +19,9 @@ const GenerateAudio: React.FC = () => {
   const handleClick = async () => {
     // This is where you would call your backend service to generate the audio
     // For now, we'll use a dummy audio file
-    if (node) {
-      nodeData.URL = "/dummy.mp3";
-    } else {
-      console.error("No nodecontext found", this);
-    }
+    nodeData.Dirty = true;
+    nodeData.URL = "/dummy.mp3";
+    
     graph.reloadComponent();
   };
 

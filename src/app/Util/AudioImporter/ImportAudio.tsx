@@ -20,15 +20,11 @@ const ImportAudio: React.FC = () => {
 
   const handleChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files.length > 0) {
-      if (node) {
-        // const fileUrl = URL.createObjectURL(e.target.files[0]);
-
-        const fileUrl = await postSoundBLOB(e.target.files[0]);
-        nodeData.URL = fileUrl;
-        console.log(node);
-      } else {
-        console.error("No nodecontext found");
-      }
+      const fileUrl = await postSoundBLOB(e.target.files[0]);
+      nodeData.URL = fileUrl;
+      nodeData.Dirty = true;
+      console.log(fileUrl);
+      
       graph.reloadComponent();
     }
   };

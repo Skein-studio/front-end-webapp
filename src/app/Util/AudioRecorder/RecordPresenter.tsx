@@ -27,6 +27,7 @@ const RecordPresenter: React.FC = () => {
 
           const fileUrl = await postSoundBLOB(e.data);
           nodeData.URL = fileUrl;
+          nodeData.Dirty = true;
         } else {
           console.error("No nodecontext found", this);
         }
