@@ -33,6 +33,7 @@ function MergeView({
     graph.selectNode(node);
   }
   function renderButton() {
+    return <></>
     if (node!.model.Inputs!.length < 10) {
       // If the number of inputs is less than 10, then the button is enabled
       return <AddButton onClick={addTargetHandle}>+</AddButton>;

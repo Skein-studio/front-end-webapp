@@ -47,8 +47,6 @@ import {
   handleType,
   transformtoTypescriptTypes,
 } from "../modelTransformation";
-import { ReloadableComponent } from "@/app/Node/reloadableComponent";
-
 
 const NODE_HEIGHT = 50;
 
