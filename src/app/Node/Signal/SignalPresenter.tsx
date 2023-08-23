@@ -56,6 +56,7 @@ export default function SignalPresenter() {
       } else {
         url = "";
         console.log("node not found when fetching audio(signalpresenter)");
+        return;
       }
       setAudioUrl(url);
       setFetched(true); // Set fetched to true once the audio URL is obtained
