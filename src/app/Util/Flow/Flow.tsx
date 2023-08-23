@@ -288,8 +288,7 @@ const Canvas: React.FC = () => {
           };
           eds.map((e) => e.data);
           const newEdges = addEdge(newEdge, eds);
-          // add the edge to the list of edges, in the local state
-          (sourceNode.data as any).nodeState.model.Dirty = true;
+
           (targetNode.data as any).nodeState.model.Dirty = true;
 
           return newEdges;
