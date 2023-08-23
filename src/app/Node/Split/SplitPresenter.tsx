@@ -5,9 +5,8 @@ import SplitView from "./SplitView";
 import { NodeContext } from "../NodeState";
 
 function SplitPresenter() {
-  const node = useContext(NodeContext);
-  const nodeModel = node!.model;
-  useEffect(() => {}, [node]);
+  const { nodeState, forceReload } = useContext(NodeContext);
+  const nodeModel = nodeState!.model;
 
   return (
     <SplitView

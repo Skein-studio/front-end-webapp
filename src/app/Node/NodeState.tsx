@@ -180,11 +180,36 @@ export class NodeState {
   }
 }
 
-import React from "react";
+import React, { useState } from "react";
 
-export const NodeContext = React.createContext<NodeState | undefined>(
-  undefined
-);
+export const NodeContext = React.createContext<{
+  nodeState: NodeState | undefined;
+  forceReload: () => void;
+}>({
+  nodeState: undefined,
+  forceReload: () => {},
+});
+
+type NodeProviderProps = {
+  children: React.ReactNode;
+  initialNodeState?: NodeState; // Add this line to define a new prop for the initial node state
+};
+
+export const NodeProvider: React.FC<NodeProviderProps> = ({ children, initialNodeState }) => {
+  const [reloadTrigger, setReloadTrigger] = useState(0);
+  const [nodeState, setNodeState] = useState<NodeState | undefined>(initialNodeState);
+
+  const forceReload = () => {
+    setReloadTrigger((prev) => prev + 1);
+  };
+
+  return (
+    <NodeContext.Provider value={{ nodeState, forceReload }}>
+      {children}
+    </NodeContext.Provider>
+  );
+};
+
 
 export function NodeTypeToString(nodeType: NodeType): string {
   switch (nodeType) {

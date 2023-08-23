@@ -9,7 +9,8 @@ import { SourceType } from "@/app/Util/modelTransformation";
 
 function BaseComponent(base: string) {
   const graph = useGraph();
-  const node = useContext(NodeContext);
+  const { nodeState, forceReload } = useContext(NodeContext);
+  const node = nodeState;
   const [reload, setReload] = useState<boolean>(false);
 
   function handleBaseChange(text: string) {
@@ -44,11 +45,11 @@ function BaseComponent(base: string) {
 }
 
 export default function OpenSourceView() {
-  const node = useContext(NodeContext); // Use NodeContext to get NodeState instance
+  const { nodeState, forceReload } = useContext(NodeContext);
 
   return (
     <Container flexdir="column">
-      {BaseComponent((node?.model.Data as SourceType).base ?? "Select a base")}
+      {BaseComponent((nodeState?.model.Data as SourceType).base ?? "Select a base")}
     </Container>
   );
 }

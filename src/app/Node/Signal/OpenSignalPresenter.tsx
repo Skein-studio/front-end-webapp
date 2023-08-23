@@ -11,7 +11,8 @@ import { useGraph } from "../GraphContext";
 
 function OpenSignalPresenter() {
   // const audioState = useAudio();
-  const node = useContext(NodeContext);
+  const { nodeState, forceReload } = useContext(NodeContext);
+  const node = nodeState;
   const nodeData = node?.model.Data as SignalType;
   const graph = useGraph();
 

@@ -19,7 +19,8 @@ const PreviewText = styled.p`
 `;
 
 const SmallView = () => {
-  const node = useContext(NodeContext); // Use NodeContext to get NodeState instance
+  const { nodeState, forceReload } = useContext(NodeContext);
+  const node = nodeState;
 
   return (
     <>
@@ -35,7 +36,8 @@ type SourceProps = {
 
 const SourceView: React.FC<SourceProps> = ({ base }) => {
   const graph = useGraph();
-  const node = useContext(NodeContext); // Use NodeContext to get NodeState instance
+  const { nodeState, forceReload } = useContext(NodeContext);
+  const node = nodeState;
 
   function selectNode() {
     graph.selectNode(node);

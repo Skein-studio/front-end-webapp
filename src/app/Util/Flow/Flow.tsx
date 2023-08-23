@@ -55,27 +55,27 @@ const proOptions = { hideAttribution: true };
 const nodeTypes = {
   // this is where we define the node types
   source: (nodeData: any) => (
-    <NodeContext.Provider value={nodeData.data.nodeState}>
+    <NodeContext.Provider value={{nodeState:nodeData.data.nodeState, forceReload:()=>{}}}>
       <SourcePresenter />
     </NodeContext.Provider>
   ),
   unspecified: (nodeData: any) => (
-    <NodeContext.Provider value={nodeData.data.nodeState}>
+    <NodeContext.Provider value={{nodeState:nodeData.data.nodeState, forceReload:()=>{}}}>
       <UnspecifiedPresenter />
     </NodeContext.Provider>
   ),
   split: (nodeData: any) => (
-    <NodeContext.Provider value={nodeData.data.nodeState}>
+    <NodeContext.Provider value={{nodeState:nodeData.data.nodeState, forceReload:()=>{}}}>
       <SplitPresenter />
     </NodeContext.Provider>
   ),
   merge: (nodeData: any) => (
-    <NodeContext.Provider value={nodeData.data.nodeState}>
+    <NodeContext.Provider value={{nodeState:nodeData.data.nodeState, forceReload:()=>{}}}>
       <MergePresenter />
     </NodeContext.Provider>
   ),
   signal: (nodeData: any) => (
-    <NodeContext.Provider value={nodeData.data.nodeState}>
+    <NodeContext.Provider value={{nodeState:nodeData.data.nodeState, forceReload:()=>{}}}>
       <SignalPresenter />
     </NodeContext.Provider>
   ),
@@ -295,7 +295,7 @@ const Canvas: React.FC = () => {
           return newEdges;
         }); // add the edge to the list of edges, in the graph
       } 
-      reloadComponent();
+      reloadComponent(); // TODO: This should be replaced, instead of reloading the whole graph, just reload the node that was changed
     },
     [setEdges, nodes]
   );

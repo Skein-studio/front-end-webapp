@@ -9,7 +9,8 @@ import { postSoundBLOB } from "../ComputeAPI";
 import { SignalType, SourceType } from "../modelTransformation";
 
 const ImportAudio: React.FC = () => {
-  const node = useContext(NodeContext); // Use NodeContext to get NodeState instance
+  const { nodeState, forceReload } = useContext(NodeContext);
+  const node = nodeState;
   const nodeData =
     (node?.model.Data as SourceType) ?? (node?.model.Data as SignalType);
   const audioData = nodeData.URL as string;
@@ -24,8 +25,8 @@ const ImportAudio: React.FC = () => {
       nodeData.URL = fileUrl;
       nodeData.Dirty = true;
       console.log(fileUrl);
-
-      graph.reloadComponent();
+      graph.reloadComponent(); // TODO: This should be replaced , and the node should be updated via forceReload, not just here in the OpenView but in the small view too (SourcePresenter.tsx, SignalPresenter.tsx, etc.)
+      forceReload();
     }
   };
 

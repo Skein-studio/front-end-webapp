@@ -27,7 +27,8 @@ function MergeView({
   addTargetHandle,
 }: SplitViewProps) {
   const graph = useGraph();
-  const node = useContext(NodeContext); // Use NodeContext to get NodeState instance
+  const { nodeState, forceReload } = useContext(NodeContext);
+  const node = nodeState;
 
   function selectNode() {
     graph.selectNode(node);

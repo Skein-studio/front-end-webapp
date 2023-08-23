@@ -6,7 +6,8 @@ import { NodeContext } from "../NodeState";
 import { useGraph } from "../GraphContext";
 
 const MergePresenter: React.FC = () => {
-  const node = useContext(NodeContext);
+  const { nodeState, forceReload } = useContext(NodeContext);
+  const node = nodeState;
   const graph = useGraph();
   const [reload, setReload] = useState<boolean>(false);
 

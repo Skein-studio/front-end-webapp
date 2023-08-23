@@ -8,7 +8,8 @@ import useAudio from "../AudioPlayback/useAudio";
 
 const RecordPresenter: React.FC = () => {
   const [isRecording, setIsRecording] = useState<boolean>(false);
-  const node = useContext(NodeContext); // Use NodeContext to get NodeState instance
+  const { nodeState, forceReload } = useContext(NodeContext);
+  const node = nodeState;
   const graph = useGraph();
   const nodeData = node?.model.Data as SourceType;
   const mediaRecorder = useRef<MediaRecorder | null>(null);
@@ -32,7 +33,8 @@ const RecordPresenter: React.FC = () => {
           console.error("No nodecontext found", this);
         }
 
-        graph.reloadComponent();
+        graph.reloadComponent();// TODO: This should be replaced , and the node should be updated via forceReload, not just here in the OpenView but in the small view too (SourcePresenter.tsx, SignalPresenter.tsx, etc.)
+        forceReload();
       };
     });
 

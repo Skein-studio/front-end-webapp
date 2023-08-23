@@ -1,4 +1,5 @@
 //OpenNodePresenter.tsx
+import { useState } from "react";
 import { NodeContext, NodeState } from "../NodeState";
 import OpenNodeView from "./OpenNodeView";
 
@@ -8,9 +9,16 @@ interface Props {
 }
 
 export default function OpenNodePresenter(props: Props) {
+  const [reload, setReload] = useState<boolean>(false);
+
+  function forceReload() {
+    setReload(!reload);
+  }
+  
+
   return (
-    <NodeContext.Provider value={props.state}>
-      <OpenNodeView nodeState={props.state} closeWindow={props.closeWindow} />
-    </NodeContext.Provider>
+    <NodeContext.Provider value={{ nodeState: props.state, forceReload }}>
+    <OpenNodeView nodeState={props.state} closeWindow={props.closeWindow} />
+  </NodeContext.Provider>
   );
 }

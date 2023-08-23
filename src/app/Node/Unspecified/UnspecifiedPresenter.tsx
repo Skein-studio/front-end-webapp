@@ -9,7 +9,8 @@ import { useGraph, setNode } from "../GraphContext";
 
 
 function UnspecifiedPresenter () {
-  const node = useContext(NodeContext); // Use NodeContext to get NodeState instance
+  const { nodeState, forceReload } = useContext(NodeContext);
+  const node = nodeState;
   const graph = useGraph();
 
   function changeType(type: NodeType) {
