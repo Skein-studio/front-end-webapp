@@ -2,7 +2,7 @@ import GenerateAudio from "@/app/Util/AudioGenerator/GenerateAudio";
 import ImportAudio from "@/app/Util/AudioImporter/ImportAudio";
 import RecordPresenter from "@/app/Util/AudioRecorder/RecordPresenter";
 import { Button, Container } from "@/app/Util/BaseStyles";
-import { useContext } from "react";
+import { useContext, useState } from "react";
 import { useGraph } from "../GraphContext";
 import { NodeContext } from "../NodeState";
 import { SourceType } from "@/app/Util/modelTransformation";
@@ -10,12 +10,13 @@ import { SourceType } from "@/app/Util/modelTransformation";
 function BaseComponent(base: string) {
   const graph = useGraph();
   const node = useContext(NodeContext);
+  const [reload, setReload] = useState<boolean>(false);
 
   function handleBaseChange(text: string) {
     if (node) {
       (node.model.Data as SourceType).base = text;
-      graph.reloadComponent();
     }
+    setReload(!reload);
   }
 
   function BaseOptionsView() {

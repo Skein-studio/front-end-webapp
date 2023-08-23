@@ -15,10 +15,7 @@ import { useGraph } from "../GraphContext";
 const MergePresenter: React.FC = () => {
   const node = useContext(NodeContext);
   const graph = useGraph();
-
-  function reload() {
-    graph?.reloadComponent();
-  }
+  const [reload, setReload] = useState<boolean>(false);
 
   useEffect(() => {}, [node]);
 
@@ -27,7 +24,7 @@ const MergePresenter: React.FC = () => {
       return;
     }
     node.addTargetHandle();
-    reload();
+    setReload(!reload);
   };
 
   return (

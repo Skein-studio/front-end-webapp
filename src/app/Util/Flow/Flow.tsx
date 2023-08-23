@@ -106,6 +106,7 @@ const Canvas: React.FC = () => {
       so that it can be used to force a refresh from inside the context, like when setting or updating using the
       functions inside GraphContext.tsx (setNodes() etc).
       This way, we don't need to double click on any button to make it refresh
+      TODO: Remove this, but to do that, must find alternative for graph.reloadComponent() in OpenSignalPresenter & RecordPresenter & ImportAudio & GenerateAudio
     */
   };
 
@@ -145,8 +146,8 @@ const Canvas: React.FC = () => {
     This is the graph object that is passed to the GraphContext.Provider
     */
   const graph: Graph = useMemo(
-    () => ({ nodes, edges, reloadComponent, selectNode, selectedNode }),
-    [nodes, edges, reloadComponent, selectNode, selectedNode]
+    () => ({ nodes, edges, reloadComponent, selectNode, selectedNode, setNodes, setEdges }),
+    [nodes, edges, reloadComponent, selectNode, selectedNode, setNodes, setEdges]
   );
 
   useEffect(() => { // this is called when the graph changes, so we can set the dirty nodes

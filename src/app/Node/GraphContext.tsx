@@ -21,32 +21,31 @@ export type Graph = {
   reloadComponent: () => void;
   selectNode: (nodeState: NodeState | undefined) => void;
   selectedNode: NodeState | undefined;
+  setNodes: (nodes: Node[]) => void; // Add this line
+  setEdges: (edges: Edge[]) => void; // Add this line
 };
 
 export function deleteNodes(context: Graph, nodes: Node[]) {
-  // This function is used to delete the nodes in the graph
-  for (const node of nodes) {
-    for (let i = 0; i < context.nodes.length; i++) {
-      if (context.nodes[i].id == node.id) {
-        context.nodes.splice(i, 1); //remove the node from the array
-        break;
-      }
-    }
-  }
-  context.reloadComponent();
+  const newNodes = context.nodes.filter(node => !nodes.find(n => n.id === node.id));
+  context.setNodes(newNodes);
 }
 
 export function deleteEdges(context: Graph, edges: Edge[]) {
-  // This function is used to delete the edges in the graph
+  // set each node affected by the change to dirty
   for (const edge of edges) {
-    for (let i = 0; i < context.edges.length; i++) {
-      if (context.edges[i].id == edge.id) {
-        context.edges.splice(i, 1); //remove the edge from the array
-        break;
-      }
+    const sourceNode = getNode(context, parseInt(edge.source));
+    const targetNode = getNode(context, parseInt(edge.target));
+    if (sourceNode) {
+      sourceNode.data.nodeState.model.Dirty = true;
+    }
+    if (targetNode) {
+      targetNode.data.nodeState.model.Dirty = true;
     }
   }
-  context.reloadComponent();
+
+
+  const newEdges = context.edges.filter(edge => !edges.find(e => e.id === edge.id));
+  context.setEdges(newEdges); // Assuming setEdges is defined in Graph type
 }
 
 export function setDirtyNodes(context: Graph, dirtyIds: string[]) {
@@ -76,15 +75,14 @@ export function getNode(context: Graph, id: number) {
   }
 }
 
-export function setNode(context: Graph, node: Node) {
-  // This function is used to update the node in the graph
-  for (let i = 0; i < context.nodes.length; i++) {
-    if (context.nodes[i].id == node.id) {
-      context.nodes[i] = node;
-      context.reloadComponent();
-      return;
+export function setNode(context: Graph, node: Node, setNodes: Function) {
+  const newNodes = context.nodes.map(n => {
+    if (n.id === node.id) {
+      return node;
     }
-  }
+    return n;
+  });
+  setNodes(newNodes);
 }
 
 export function createNewNode(x: number, y: number, nodeType: NodeType) {
@@ -103,13 +101,15 @@ export function createNewNode(x: number, y: number, nodeType: NodeType) {
 }
 
 export const GraphContext = createContext<Graph>({
-  // This is the GraphContext, which is used to store the state of the graph, which can then be accessed by any component that needs it.
   nodes: [],
   edges: [],
   reloadComponent: () => {},
   selectNode: (nodeState: NodeState | undefined) => {},
   selectedNode: undefined,
+  setNodes: () => {}, 
+  setEdges: () => {}, 
 });
+
 
 export function useGraph() {
   // This function is used to get the graph from the GraphContext

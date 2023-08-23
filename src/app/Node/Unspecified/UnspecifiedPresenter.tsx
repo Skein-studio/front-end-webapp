@@ -36,7 +36,7 @@ const UnspecifiedPresenter: React.FC = () => {
       position: node.position,
     };
 
-    setNode(graph, updatedNode);
+    setNode(graph, updatedNode, graph.setNodes);
   }
 
   return <UnspecifiedView setNode={changeType} />;

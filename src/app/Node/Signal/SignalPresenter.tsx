@@ -18,7 +18,7 @@ export default function SignalPresenter() {
 
   // useEffect to reset fetched state when node.model.Dirty changes
   useEffect(() => {
-    if (node!.model.Dirty) {
+    if (node!.model.Dirty || audioUrl == "") {
       setFetched(false);
     } else
       setFetched(true);
@@ -30,7 +30,7 @@ export default function SignalPresenter() {
 
   //  play button's callback include the fetchAudio function
   const playAudio = () => {
-    if(fetched){
+    if(fetched && audioUrl != ""){
       audioState.onPlayPause();
     } else{
       fetchAudio();

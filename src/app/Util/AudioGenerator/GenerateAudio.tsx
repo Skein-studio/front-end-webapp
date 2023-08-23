@@ -3,7 +3,7 @@
 import React, { useContext, useState } from "react";
 import { Button, Container } from "../BaseStyles";
 import { NodeContext } from "@/app/Node/NodeState";
-import { useGraph } from "@/app/Node/GraphContext";
+import { setNode, useGraph, getNode } from "@/app/Node/GraphContext";
 import useAudio from "@/app/Util/AudioPlayback/useAudio";
 import AudioPlayer from "../AudioPlayback/AudioPlayer";
 import { SourceType } from "../modelTransformation";
@@ -14,6 +14,7 @@ const GenerateAudio: React.FC = () => {
   const audioData = nodeData.URL;
   const graph = useGraph();
   const audioState = useAudio(audioData);
+  const [reload, setReload] = useState<boolean>(false);
 
   const handleClick = async () => {
     // This is where you would call your backend service to generate the audio
