@@ -49,6 +49,16 @@ export function deleteEdges(context: Graph, edges: Edge[]) {
   context.reloadComponent();
 }
 
+export function setDirtyNodes(context: Graph, dirtyIds: string[]) {
+  // This function is used to set the dirty property of the nodes in the graph
+  for (const node of context.nodes) {
+    if (dirtyIds.includes(node.id)) {
+      node.data.nodeState.model.Dirty = true;
+    }
+  }
+  //console.log("nodes set to dirty", context.nodes);
+}
+
 export function deselectNode(context: Graph) {
   // This function is used to deselect the node in the graph
   if (context.selectedNode) {

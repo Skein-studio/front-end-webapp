@@ -31,6 +31,7 @@ import {
   deleteEdges,
   getNode,
   connectionExists,
+  setDirtyNodes,
 } from "../../Node/GraphContext";
 import OpenNodePresenter from "@/app/Node/OpenNode/OpenNodePresenter";
 import FlowView from "./FlowView";
@@ -40,7 +41,7 @@ view and handle the logic for the flowchart.
 It is the central file of the app. */
 import { NODE_WIDTH } from "./NodeStyles";
 import useWindowDimensions from "../windowDimensions";
-import { Input, Edge as edgeModel, handleType } from "../modelTransformation";
+import { Input, Edge as edgeModel, gatherAllDirtyIds, handleType, transformtoTypescriptTypes } from "../modelTransformation";
 import { connect } from "http2";
 
 const NODE_HEIGHT = 50;
@@ -148,6 +149,14 @@ const Canvas: React.FC = () => {
     [nodes, edges, reloadComponent, selectNode, selectedNode]
   );
 
+  useEffect(() => { // this is called when the graph changes, so we can set the dirty nodes
+    const root = transformtoTypescriptTypes(graph);
+    const allDirtyIds = gatherAllDirtyIds(root.Sketch.Graph); // Get all the dirty IDs
+    setDirtyNodes(graph, allDirtyIds);
+    console.log("allDirtyIds: ", allDirtyIds);
+  }, [/*nodes,*/ edges]);
+  
+
   useEffect(() => {
     console.log("edges changed", edges);
   }, [edges]);
@@ -245,6 +254,7 @@ const Canvas: React.FC = () => {
         reloadComponent();
         return;
       }
+
       // Check if this source handle is already connected to another node
       let handleConnectedEdge = edges.find(
         (edge) =>
@@ -282,7 +292,9 @@ const Canvas: React.FC = () => {
           eds.map((e) => e.data);
           const newEdges = addEdge(newEdge, eds);
           // add the edge to the list of edges, in the local state
-          //setGraphEdges(graph, newEdges); // add the edge to the list of edges, in the graph
+          (sourceNode.data as any).nodeState.model.Dirty = true;
+          (targetNode.data as any).nodeState.model.Dirty = true;
+
           return newEdges;
         }); // add the edge to the list of edges, in the graph
       } else {
@@ -293,6 +305,8 @@ const Canvas: React.FC = () => {
       }
     },
     [setEdges, nodes]
+
+    
   );
 
   function onConnectStart(

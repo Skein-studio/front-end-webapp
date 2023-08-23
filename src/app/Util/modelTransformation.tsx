@@ -1,3 +1,5 @@
+
+//modelTransformation.tsx
 import { Graph as deniGraph } from "../Node/GraphContext";
 import { Edge as flowEdge, Node as flowNode } from "reactflow";
 import { NodeState, NodeType, NodeTypeToString } from "../Node/NodeState";
@@ -70,7 +72,6 @@ function getChildNodeIds(graph: Graph, nodeId: string): string[] {
 
   return childNodeIds;
 }
-
 function gatherDirtyIds(
   graph: Graph,
   nodeId: string,
@@ -87,18 +88,23 @@ function gatherDirtyIds(
 
   const currentNode = graph.Nodes.find((node) => node.ID === nodeId);
 
-  if (currentNode && currentNode.Dirty) {
+  if (currentNode) {
+    // Add current nodeId if it's dirty
+    if (currentNode.Dirty) {
+      idsToMarkDirty.push(nodeId);
+    }
+
     // Get child node IDs for the current node
     const childNodeIds = getChildNodeIds(graph, nodeId);
 
     for (const childId of childNodeIds) {
-      idsToMarkDirty.push(childId);
       idsToMarkDirty.push(...gatherDirtyIds(graph, childId, visited));
     }
   }
 
   return idsToMarkDirty;
 }
+
 
 export function gatherAllDirtyIds(graph: Graph): string[] {
   const allDirtyIds: Set<string> = new Set();
@@ -148,7 +154,6 @@ export const transformtoTypescriptTypes = (graphContext: deniGraph): Root => {
       }
       return out;
     };
-    console.log(node);
 
     switch (NodeTypeToString(nodeState.type)) {
       case "signal": {
@@ -173,10 +178,10 @@ export const transformtoTypescriptTypes = (graphContext: deniGraph): Root => {
         nodeState.model.Data = {};
       }
     }
-    console.log(node);
+
     let n = {
       Type: NodeTypeToString(nodeState.type),
-      Dirty: true, //TODO: handle this correctly, derive from node state
+      Dirty: nodeState.model.Dirty, 
       Data: nodeState.model.Data,
       Inputs: nodeState.model.Inputs.map(transformNodeInputs),
       Outputs: nodeState.model.Outputs.map(transformNodeOutputs),

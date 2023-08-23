@@ -48,7 +48,7 @@ export class NodeState {
     id ? (this.id = id) : (this.id = this.generateID());
     this.model = {
       ID: this.id.toString(),
-      Dirty: false,
+      Dirty: true,
       Type: NodeTypeToString(type),
       Inputs: this.setInputs(type, this.id.toString()),
       Outputs: this.setOutputs(type, this.id.toString()),

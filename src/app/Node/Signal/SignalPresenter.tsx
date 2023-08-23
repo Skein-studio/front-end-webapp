@@ -4,23 +4,29 @@ import SignalView from "./SignalView";
 import { useContext, useEffect, useState } from "react";
 import { NodeContext } from "../NodeState";
 import { SendGraphForCompute } from "@/app/Util/ComputeAPI";
-import { transformtoTypescriptTypes } from "@/app/Util/modelTransformation";
+import { SignalType, transformtoTypescriptTypes } from "@/app/Util/modelTransformation";
 import { getSoundFromNodeID } from "@/app/Util/ComputeAPI";
 import { useGraph } from "../GraphContext";
 
 export default function SignalPresenter() {
   const graph = useGraph();
   const node = useContext(NodeContext);
+  const nodeData = (node!.model.Data as SignalType);
   const [audioUrl, setAudioUrl] = useState<string>("");
-  const [fetched, setFetched] = useState<boolean>(false); // TODO: When the dirty functionality is implemented, this should actually start out as true and be set to false in the useEffect below
+  const [fetched, setFetched] = useState<boolean>(false); 
   const audioState = useAudio(audioUrl);
 
   // useEffect to reset fetched state when node.model.Dirty changes
   useEffect(() => {
     if (node!.model.Dirty) {
       setFetched(false);
-    }
-  }, [node!.model.Dirty]);
+    } else
+      setFetched(true);
+      /*
+      TODO: graph.reloadComponent(); this should be uncommented, but currently this resets the audioUrl, 
+      TODO: first we need to store audios in the graph so that they can be accessed without fetching them again when it is not dirty
+      */
+  }, []);
 
   //  play button's callback include the fetchAudio function
   const playAudio = () => {
@@ -33,7 +39,7 @@ export default function SignalPresenter() {
 
   const fetchAudio = async () => {
     try {
-      //   //TODO get audioURL with while loop until node with nodeID is found in computed nodes
+      //   //TODO get audioURL with while loop until node with nodeID is found in computed nodes ??
       await SendGraphForCompute(transformtoTypescriptTypes(graph));
       let url: string;
 

@@ -82,7 +82,7 @@ export async function getSoundFromNodeID(
         await sleep(retryDelay);
       }
     }
-    console.log(nestedDict);
+    //console.log(nestedDict);
   }
 
   if (retries == maxRetries) {
@@ -90,13 +90,9 @@ export async function getSoundFromNodeID(
   }
 
   graphContext.nodes.forEach((node: Node) => {
-    //TODO uncomment when dirty propagation is completed
-    node.data.nodeState.dirty = false;
-    console.log("1", node);
-
-    node.data.nodeState.model.Data.URL = Object.values(nestedDict[idString])[0];
-    console.log("2", node);
+    node.data.nodeState.model.Dirty = false;
+    node.data.nodeState.model.Data.URL = Object.values(nestedDict[idString])[0]; // ?
   });
-  //set current nodeID sound output handle name to correct url
-  //console.log(graphContext.nodes)
+  console.log("set all nodes to NOT dirty");
+
 }
