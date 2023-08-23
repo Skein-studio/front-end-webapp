@@ -4,7 +4,18 @@
 which is used to store the individual state of 
 each node in the graph. */
 
-import {Node as nodeModel, Input as InputModel} from "../Util/modelTransformation"
+import {
+  Node as NodeModel,
+  SourceType,
+  SignalType,
+  MergeType,
+  SplitType,
+  Input as InputModel,
+  UnspecifiedType,
+  Output,
+  Input,
+} from "../Util/modelTransformation";
+
 let nodeID = 0;
 
 export enum NodeType {
@@ -20,75 +31,69 @@ type Coordinate = {
   y: number;
 };
 
-export type Output = {
-  ID: string;
-  name: string;
-};
-
-export type Input = {
-  ID: string;
-  data: InputModel;
-};
-
 export class NodeState {
   position: Coordinate;
-  id: number;
-  inputs: Input[] | undefined; // later for deciding which output is what, - these are just strings representing the name of each in/output
-  outputs: Output[] | undefined;
-  type: NodeType;
-  data: any = {};
-  dirty: boolean = false; // not sure if this should be initialized to true or false
+  model: NodeModel;
   selected: boolean;
-  prompt: string = ""
+  id: number;
+  type: NodeType;
 
   constructor(x: number, y: number, type: NodeType, id?: number) {
     this.position = {
       x: x,
       y: y,
     };
-    this.id = id ?? this.generateID();
     this.type = type;
+    id ? (this.id = id) : (this.id = this.generateID());
+    this.model = {
+      ID: this.id.toString(),
+      Dirty: true,
+      Type: NodeTypeToString(type),
+      Inputs: this.setInputs(type, this.id.toString()),
+      Outputs: this.setOutputs(type, this.id.toString()),
+      Data: this.initializeData(type),
+    };
     this.selected = false;
-    this.setInputs();
-    this.setOutputs();
-  }
-    setPrompt(p: string){
-      this.prompt = p
-    }
-    addTargetHandle() {
-    if (!this.inputs) {
-      this.inputs = [];
-    }
-    this.inputs = [...this.inputs, {
-        ID: this.id + "in[" + this.inputs.length + "]",
-        data: {Name: this.id + "in[" + this.inputs.length + "]"},
-      }
-    ];
-    
-  }
-  // addTargetHandle() {
-  //   if (!this.inputs) {
-  //     this.inputs = [];
-  //   }
-  //   this.inputs = [...this.inputs, this.id + "in[" + this.inputs.length + "]"];
-  // }
-  addSourceHandle(handleName: string) {
-    if (!this.outputs) {
-      this.outputs = [];
-    }
-   
-    this.outputs = [
-      ...this.outputs,  {
-        ID: this.id + "out[" + this.outputs.length + "]",
-        name: handleName
-      }
-    ];
   }
 
-  setInputs() {
+  initializeData(
+    type: NodeType
+  ): SourceType | SignalType | MergeType | SplitType | UnspecifiedType {
+    switch (type) {
+      case NodeType.Source:
+        return { URL: "", base: "" };
+      case NodeType.Signal:
+        return { Prompt: "Piano", Seed: "1234" };
+      case NodeType.Merge:
+        return {};
+      case NodeType.Split:
+        return {};
+      default:
+        return {};
+    }
+  }
+
+  setPrompt(p: string) {
+    (this.model.Data as SignalType).Prompt = p;
+  }
+
+  addTargetHandle() {
+    this.model.Inputs.push({
+      Name: this.model.ID + "in[" + this.model.Inputs.length + "]",
+    });
+  }
+
+  setInputs(type: NodeType, ID: string): Input[] {
+    let newInputs: Input[] = [];
+
+    const add = () => {
+      newInputs.push({
+        Name: ID + "in[" + newInputs.length + "]",
+      });
+    };
+
     let numInputs = 0;
-    // HandleIDs must be unique, so we add the node ID to the beginning of each handle ID
-    switch (this.type) {
+    switch (type) {
       case NodeType.Source:
         numInputs = 0;
         break;
@@ -100,15 +105,22 @@ export class NodeState {
         break;
     }
     for (let i = 0; i < numInputs; i++) {
-      this.addTargetHandle();
+      add();
     }
+    return newInputs;
   }
 
-  setOutputs() {
+  setOutputs(type: NodeType, ID: string): Output[] {
     let numOutputs = 0;
-    switch (
-      this.type // HandleIDs must be unique, so we add the node ID to the beginning of each handle ID
-    ) {
+    let newOutputs: Output[] = [];
+
+    const add = (name: string) => {
+      newOutputs.push({
+        Name: ID + "out[" + newOutputs.length + "]",
+        Src: name,
+      });
+    };
+    switch (type) {
       case NodeType.Split:
         numOutputs = 6;
         break;
@@ -116,34 +128,30 @@ export class NodeState {
         numOutputs = 1;
         break;
     }
-    if (this.type === NodeType.Split){
-        this.addSourceHandle("drums");
-        this.addSourceHandle("piano");
-        this.addSourceHandle("vocal");
-        this.addSourceHandle("guitar");
-        this.addSourceHandle("other");
-        this.addSourceHandle("bass");
-    }else{
+    if (type === NodeType.Split) {
+      add("drums");
+      add("piano");
+      add("vocal");
+      add("guitar");
+      add("other");
+      add("bass");
+    } else {
       for (let i = 0; i < numOutputs; i++) {
-        this.addSourceHandle("");
+        add("");
       }
     }
+
+    return newOutputs;
   }
 
   setNode(node: NodeState) {
     this.position = node.position;
-    this.id = node.id;
-    this.inputs = node.inputs;
-    this.outputs = node.outputs;
-    this.type = node.type;
-    this.data = node.data;
+    this.model = { ...node.model };
     this.selected = node.selected;
-    this.dirty = node.dirty;
   }
 
-  // Instance method
   toString(): string {
-    return `Node ${this.id}`;
+    return `Node ${this.model.ID}`;
   }
 
   generateID(): number {
@@ -151,11 +159,13 @@ export class NodeState {
   }
 
   getID(): number {
-    return this.id;
+    return parseInt(this.model.ID, 10);
   }
 
   setType(type: NodeType): void {
-    this.type = type;
+    this.model.Type = NodeTypeToString(type);
+    this.model.Data = this.initializeData(type);
+    this.model.Inputs = this.setInputs(type, this.model.ID);
   }
 
   setPosition(x: number, y: number) {
@@ -170,11 +180,35 @@ export class NodeState {
   }
 }
 
-import React from "react";
+import React, { useState } from "react";
 
-export const NodeContext = React.createContext<NodeState | undefined>(
-  undefined
-);
+export const NodeContext = React.createContext<{
+  nodeState: NodeState | undefined;
+  forceReload: () => void;
+}>({
+  nodeState: undefined,
+  forceReload: () => {},
+});
+
+type NodeProviderProps = {
+  children: React.ReactNode;
+  initialNodeState?: NodeState; // Add this line to define a new prop for the initial node state
+};
+
+export const NodeProvider: React.FC<NodeProviderProps> = ({ children, initialNodeState }) => {
+  const [reloadTrigger, setReloadTrigger] = useState(0);
+  const [nodeState, setNodeState] = useState<NodeState | undefined>(initialNodeState);
+
+  const forceReload = () => {
+    setReloadTrigger((prev) => prev + 1);
+  };
+
+  return (
+    <NodeContext.Provider value={{ nodeState, forceReload }}>
+      {children}
+    </NodeContext.Provider>
+  );
+};
 
 
 export function NodeTypeToString(nodeType: NodeType): string {

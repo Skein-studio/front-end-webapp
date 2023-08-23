@@ -27,13 +27,15 @@ function MergeView({
   addTargetHandle,
 }: SplitViewProps) {
   const graph = useGraph();
-  const node = useContext(NodeContext); // Use NodeContext to get NodeState instance
+  const { nodeState, forceReload } = useContext(NodeContext);
+  const node = nodeState;
 
   function selectNode() {
     graph.selectNode(node);
   }
   function renderButton() {
-    if (node!.inputs!.length < 10) {
+    return <></>
+    if (node!.model.Inputs!.length < 10) {
       // If the number of inputs is less than 10, then the button is enabled
       return <AddButton onClick={addTargetHandle}>+</AddButton>;
     } else {

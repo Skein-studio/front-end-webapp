@@ -14,8 +14,8 @@ function UnspecifiedView(props: Props) {
   function setNode(type: NodeType) {
     props.setNode(type);
   }
-
-  const node = useContext(NodeContext); // Use NodeContext to get NodeState instance
+  const { nodeState, forceReload } = useContext(NodeContext);
+  const node = nodeState;
 
   return (
     <Container>

@@ -26,14 +26,14 @@ export function GenerateHandles(node: NodeState | undefined) {
 
   function createOutputHandles() {
     const handles = [];
-    if (node!.outputs) {
-      for (let i = 0; i < node!.outputs.length; i++) {
+    if (node!.model.Outputs) {
+      for (let i = 0; i < node!.model.Outputs.length; i++) {
         handles.push(
           <HandleSpacing key={i} handletype="source" offset={i}>
             <StyledHandle
               handleType="source"
               position={Position.Bottom}
-              id={node!.outputs[i].ID}
+              id={node!.model.Outputs[i].Name}
             />
           </HandleSpacing>
         );
@@ -44,14 +44,14 @@ export function GenerateHandles(node: NodeState | undefined) {
 
   function createInputHandles() {
     const handles = [];
-    if (node!.inputs) {
-      for (let i = 0; i < node!.inputs.length; i++) {
+    if (node!.model.Inputs) {
+      for (let i = 0; i < node!.model.Inputs.length; i++) {
         handles.push(
           <HandleSpacing key={i} handletype="target" offset={i}>
             <StyledHandle
               handleType="target"
               position={Position.Top}
-              id={node!.inputs[i].ID}
+              id={node!.model.Inputs[i].Name}
             />
           </HandleSpacing>
         );
@@ -74,19 +74,19 @@ export function GetWidthExtension(node: NodeState | undefined) {
     return 0;
   }
   let length = 0;
-  if (!node.inputs) {
-    if (node.outputs) {
-      length = node.outputs.length;
+  if (!node.model.Inputs) {
+    if (node.model.Outputs) {
+      length = node.model.Outputs.length;
     }
-  } else if (!node.outputs) {
-    if (node.inputs) {
-      length = node.inputs.length;
+  } else if (!node.model.Outputs) {
+    if (node.model.Inputs) {
+      length = node.model.Inputs.length;
     }
   } else {
     length =
-      node.inputs.length > node.outputs.length
-        ? node.inputs.length
-        : node.outputs.length;
+      node.model.Inputs.length > node.model.Outputs.length
+        ? node.model.Inputs.length
+        : node.model.Outputs.length;
   }
   if (length > 5) {
     return (length - 5) * 50; // 50 is the width of a handle and 5 is the number of handles that fit in the default width

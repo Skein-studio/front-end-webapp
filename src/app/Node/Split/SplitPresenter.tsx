@@ -1,23 +1,17 @@
 //SplitPresenter.tsx
-/*
-    Split should have:
-        1. 1 target handle
-        2. 6 source handles
-            - drums, bass, piano, vocals, guitar, voice, other
 
-*/
 import React, { useState, useEffect, useContext } from "react";
 import SplitView from "./SplitView";
 import { NodeContext } from "../NodeState";
 
 function SplitPresenter() {
-  const node = useContext(NodeContext);
-  useEffect(() => {}, [node]);
+  const { nodeState, forceReload } = useContext(NodeContext);
+  const nodeModel = nodeState!.model;
 
   return (
     <SplitView
-      numberOfSourceHandles={node?.outputs?.length || 0}
-      numberOfTargetHandles={node?.inputs?.length || 0}
+      numberOfSourceHandles={nodeModel.Outputs?.length || 0}
+      numberOfTargetHandles={nodeModel.Inputs?.length || 0}
     />
   );
 }

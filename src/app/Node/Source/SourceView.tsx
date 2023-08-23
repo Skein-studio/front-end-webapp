@@ -1,19 +1,14 @@
 //SourceView.tsx
 
 import { Container, BlankSpace } from "@/app/Util/BaseStyles";
-import { Handle, Position } from "reactflow";
-import {
-  NodeSmall,
-  NodeTitle,
-  NodeIcon,
-  StyledHandle,
-} from "@/app/Util/Flow/NodeStyles";
+import { NodeSmall, NodeTitle, NodeIcon } from "@/app/Util/Flow/NodeStyles";
 import { useGraph } from "../GraphContext";
 import { NodeContext } from "../NodeState";
-import { useContext } from "react";
+import { useContext, useEffect } from "react";
 import { styled } from "styled-components";
 import SourceImg from "./source.svg";
 import { GenerateHandles } from "@/app/Util/Handles";
+import { SourceType } from "@/app/Util/modelTransformation";
 
 const PreviewText = styled.p`
   color: white;
@@ -24,11 +19,12 @@ const PreviewText = styled.p`
 `;
 
 const SmallView = () => {
-  const node = useContext(NodeContext); // Use NodeContext to get NodeState instance
+  const { nodeState, forceReload } = useContext(NodeContext);
+  const node = nodeState;
 
   return (
     <>
-      <PreviewText>{node?.data.audio && node.data.audio}</PreviewText>
+      <PreviewText>{(node?.model.Data as SourceType).URL}</PreviewText>
       {/*audioData && <audio src={audioData} controls /> this is removed since we currently decided not to have a play button in the source file*/}
     </>
   );
@@ -40,7 +36,8 @@ type SourceProps = {
 
 const SourceView: React.FC<SourceProps> = ({ base }) => {
   const graph = useGraph();
-  const node = useContext(NodeContext); // Use NodeContext to get NodeState instance
+  const { nodeState, forceReload } = useContext(NodeContext);
+  const node = nodeState;
 
   function selectNode() {
     graph.selectNode(node);
@@ -67,12 +64,3 @@ const SourceView: React.FC<SourceProps> = ({ base }) => {
 };
 
 export default SourceView;
-
-//temp
-const SelectButton = styled.button`
-  font-family: verdana;
-  border-radius: 10px;
-  position: absolute;
-  right: 5px;
-  top: 5px;
-`;

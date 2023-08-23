@@ -1,6 +1,7 @@
+//modelTransformation.tsx
 import { Graph as deniGraph } from "../Node/GraphContext";
 import { Edge as flowEdge, Node as flowNode } from "reactflow";
-import { NodeState, NodeType, NodeTypeToString, Output as stateOutput, Input as stateInput } from "../Node/NodeState";
+import { NodeState, NodeType, NodeTypeToString } from "../Node/NodeState";
 // Create a dummy data generator function for each type
 
 export enum handleType {
@@ -9,52 +10,52 @@ export enum handleType {
   "vocals",
   "guitar",
   "other",
-  "bass"
+  "bass",
 }
 
 const createDummyEdge = (): Edge => ({
-    ID: "dummyEdgeID",
-    Input: {
-        NodeID: "dummyInputNodeID",
-        InputName: "dummyInputName"
-    },
-    Output: {
-        NodeID: "dummyOutputNodeID",
-        OutputName: "dummyOutputName"
-    }
+  ID: "dummyEdgeID",
+  Input: {
+    NodeID: "dummyInputNodeID",
+    InputName: "dummyInputName",
+  },
+  Output: {
+    NodeID: "dummyOutputNodeID",
+    OutputName: "dummyOutputName",
+  },
 });
 
 const createDummyInput = (): Input => ({
-    Name: "dummyInputName"
+  Name: "dummyInputName",
 });
 
 const createDummyOutput = (): Output => ({
-    Name: "dummyOutputName",
-    Src: "dummySrc"
+  Name: "dummyOutputName",
+  Src: "dummySrc",
 });
 
 const createDummyNode = (): Node => ({
-    ID: "dummyNodeID",
-    Dirty: false,
-    Type: "SourceType", // this can be changed as needed: SourceType, SignalType, MergeType, SplitType
-    Data: {
-        URL: "dummyURL"
-    },
-    Inputs: [createDummyInput()],
-    Outputs: [createDummyOutput()]
+  ID: "dummyNodeID",
+  Dirty: false,
+  Type: "SourceType", // this can be changed as needed: SourceType, SignalType, MergeType, SplitType
+  Data: {
+    URL: "dummyURL",
+  },
+  Inputs: [createDummyInput()],
+  Outputs: [createDummyOutput()],
 });
 
 const createDummyGraph = (): Graph => ({
-    Edges: [createDummyEdge()],
-    Nodes: [createDummyNode()]
+  Edges: [createDummyEdge()],
+  Nodes: [createDummyNode()],
 });
 
 const createDummyRoot = (): Root => ({
-    Sketch: {
-        ID: "dummySketchID",
-        Name: "dummySketchName",
-        Graph: createDummyGraph()
-    }
+  Sketch: {
+    ID: "dummySketchID",
+    Name: "dummySketchName",
+    Graph: createDummyGraph(),
+  },
 });
 export const dummyData: Root = createDummyRoot();
 
@@ -70,8 +71,11 @@ function getChildNodeIds(graph: Graph, nodeId: string): string[] {
 
   return childNodeIds;
 }
-
-function gatherDirtyIds(graph: Graph, nodeId: string, visited: Set<string> = new Set()): string[] {
+function gatherDirtyIds(
+  graph: Graph,
+  nodeId: string,
+  visited: Set<string> = new Set()
+): string[] {
   const idsToMarkDirty: string[] = [];
 
   // If already visited, skip to prevent cycles
@@ -81,14 +85,18 @@ function gatherDirtyIds(graph: Graph, nodeId: string, visited: Set<string> = new
 
   visited.add(nodeId);
 
-  const currentNode = graph.Nodes.find(node => node.ID === nodeId);
+  const currentNode = graph.Nodes.find((node) => node.ID === nodeId);
 
-  if (currentNode && currentNode.Dirty) {
+  if (currentNode) {
+    // Add current nodeId if it's dirty
+    if (currentNode.Dirty) {
+      idsToMarkDirty.push(nodeId);
+    }
+
     // Get child node IDs for the current node
     const childNodeIds = getChildNodeIds(graph, nodeId);
 
     for (const childId of childNodeIds) {
-      idsToMarkDirty.push(childId);
       idsToMarkDirty.push(...gatherDirtyIds(graph, childId, visited));
     }
   }
@@ -111,150 +119,150 @@ export function gatherAllDirtyIds(graph: Graph): string[] {
   return Array.from(allDirtyIds);
 }
 
+export const transformtoTypescriptTypes = (graphContext: deniGraph): Root => {
+  if (!graphContext) {
+    return {} as Root;
+  }
+  const transformNode = (node: flowNode): Node => {
+    let nodeState = node.data.nodeState as NodeState;
 
-export const transformtoTypescriptTypes = (graphContext: deniGraph): Root => {  
-  if(!graphContext){return {} as Root}
-    const transformNode = (node: flowNode): Node => {
-      let nodeState = node.data.nodeState as NodeState
+    const transformNodeInputs = (input: Input): Input => {
+      let inpu: Input;
 
-      const transformNodeInputs = (input: stateInput): Input =>{
-        let inpu: Input
-        
-        if (nodeState.type == NodeType.Merge){
-          inpu = {Name: input.data.Name}
-        }
-        inpu = {
-              Name: "standard-input",
-        };
-        return inpu
+      if (nodeState.type == NodeType.Merge) {
+        inpu = { Name: input.Name };
       }
-      const transformNodeOutputs = (output: stateOutput): Output =>{
-        let out: Output
-        if (nodeState.type == NodeType.Split){
-          out = {
-            Name: output.name,
-            Src: ""
-        }
-        }else{
-         out = {
-              Name: "standard-output",
-              Src: ""
-          }
-        }
-          return out
-      }  
-        console.log(node)
-
-        switch (NodeTypeToString(nodeState.type)){
-            case "signal":{
-              nodeState.data = {
-                Prompt: nodeState.data,
-                Seed: "1234",
-              }
-              break
-            }
-          
-            case "source":{
-              nodeState.data = {
-                URL: nodeState.data.audio,
-              }  
-              break
-            }
-            // case "merge":{}
-            // case "split":{}
-
-            default:{
-              nodeState.data = {}
-            }
-        }
-        console.log(node)
-        let n = {
-            Type: NodeTypeToString(nodeState.type),
-            Dirty: true, //TODO: handle this correctly, derive from node state
-            Data: nodeState.data,
-            Inputs: nodeState.inputs?.map(transformNodeInputs),
-            Outputs: nodeState.outputs?.map(transformNodeOutputs),
-            ID: `${nodeState.id}`
-        } as Node;
-        return n
+      inpu = {
+        Name: "standard-input",
+      };
+      return inpu;
+    };
+    const transformNodeOutputs = (output: Output): Output => {
+      let out: Output;
+      if (nodeState.type == NodeType.Split) {
+        out = {
+          Name: output.Name,
+          Src: "",
+        };
+      } else {
+        out = {
+          Name: "standard-output",
+          Src: "",
+        };
+      }
+      return out;
     };
 
+    switch (NodeTypeToString(nodeState.type)) {
+      case "signal": {
+        nodeState.model.Data = {
+          Prompt: (nodeState.model.Data as SignalType).Prompt,
+          Seed: (nodeState.model.Data as SignalType).Seed,
+        };
+        break;
+      }
 
-    const transformEdge = (edge: flowEdge): Edge => {
-      return edge.data as Edge
-    };
-    // Construct the final transformed structure
-    return {
-      Sketch: {
-        ID: "1", // Placeholder ID. Replace or derive from actual data as needed.
-        Name: "spaghetti", // Placeholder Name. Replace or derive from actual data as needed.
-        Graph: {
-          Edges: graphContext.edges.map(transformEdge), // Transform all edges
-          Nodes: graphContext.nodes.map(transformNode), // Transform all nodes
-        },
+      case "source": {
+        nodeState.model.Data = {
+          URL: (nodeState.model.Data as SourceType).URL,
+          base: (nodeState.model.Data as SourceType).base,
+        };
+        break;
+      }
+      // case "merge":{}
+      // case "split":{}
+
+      default: {
+        nodeState.model.Data = {};
+      }
+    }
+
+    let n = {
+      Type: NodeTypeToString(nodeState.type),
+      Dirty: nodeState.model.Dirty,
+      Data: nodeState.model.Data,
+      Inputs: nodeState.model.Inputs.map(transformNodeInputs),
+      Outputs: nodeState.model.Outputs.map(transformNodeOutputs),
+      ID: `${nodeState.id}`,
+    } as Node;
+    return n;
+  };
+
+  const transformEdge = (edge: flowEdge): Edge => {
+    return edge.data as Edge;
+  };
+  // Construct the final transformed structure
+  return {
+    Sketch: {
+      ID: "1", // Placeholder ID. Replace or derive from actual data as needed.
+      Name: "spaghetti", // Placeholder Name. Replace or derive from actual data as needed.
+      Graph: {
+        Edges: graphContext.edges.map(transformEdge), // Transform all edges
+        Nodes: graphContext.nodes.map(transformNode), // Transform all nodes
       },
-    };
+    },
+  };
 };
-  
-  
 
 export interface Root {
-    Sketch: {
-      ID: string;
-      Name: string;
-      Graph: Graph;
-      [k: string]: unknown;
-    };
-    [k: string]: unknown;
-  }
-  export interface Graph {
-    Edges: Edge[];
-    Nodes: Node[];
-    [k: string]: unknown;
-  }
-  
-  export interface Edge {
+  Sketch: {
     ID: string;
-    Input: {
-      NodeID: string;
-      InputName: string;
-      [k: string]: unknown;
-    };
-    Output: {
-      NodeID: string;
-      OutputName: string;
-      [k: string]: unknown;
-    };
+    Name: string;
+    Graph: Graph;
     [k: string]: unknown;
-  }
-  export interface Node {
-    ID: string;
-    Dirty: boolean;
-    Data: SourceType | SignalType | MergeType | SplitType;
-    Type: string
-    //type is either the strings SourceType or SignalType or MergeType or SplitType
-    Inputs: Input[];
-    Outputs: Output[];
-    [k: string]: unknown;
-  }
-  export interface SourceType {
-    URL: string;
-    [k: string]: unknown;
-  }
-  export interface SignalType {
-    Prompt: string;
-    Seed: string;
-    [k: string]: unknown;
-  }
-  export interface MergeType {}
-  export interface SplitType {}
+  };
+  [k: string]: unknown;
+}
+export interface Graph {
+  Edges: Edge[];
+  Nodes: Node[];
+  [k: string]: unknown;
+}
 
-  export interface Input {
-    Name: string;
+export interface Edge {
+  ID: string;
+  Input: {
+    NodeID: string;
+    InputName: string;
     [k: string]: unknown;
-  }
-  export interface Output {
-    Name: string;
-    Src: string;
+  };
+  Output: {
+    NodeID: string;
+    OutputName: string;
     [k: string]: unknown;
-  }
+  };
+  [k: string]: unknown;
+}
+export interface Node {
+  ID: string;
+  Dirty: boolean;
+  Data: SourceType | SignalType | MergeType | SplitType | UnspecifiedType;
+  Type: string;
+  //type is either the strings SourceType or SignalType or MergeType or SplitType
+  Inputs: Input[];
+  Outputs: Output[];
+  [k: string]: unknown;
+}
+export interface SourceType {
+  URL: string;
+  base: string; // whether the source is a record, import or generate type
+  [k: string]: unknown;
+}
+export interface SignalType {
+  Prompt: string;
+  Seed: string;
+  [k: string]: unknown;
+}
+export interface MergeType {}
+export interface SplitType {}
+export interface UnspecifiedType {}
+
+export interface Input {
+  Name: string;
+  [k: string]: unknown;
+}
+export interface Output {
+  Name: string;
+  Src: string;
+  [k: string]: unknown;
+}

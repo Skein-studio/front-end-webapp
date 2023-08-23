@@ -22,7 +22,6 @@ import MergePresenter from "@/app/Node/Merge/MergePresenter";
 
 import { NodeType, NodeContext, NodeState } from "../../Node/NodeState";
 import {
-  setGraphEdges,
   createNewNode,
   Graph,
   GraphContext,
@@ -31,6 +30,7 @@ import {
   deleteEdges,
   getNode,
   connectionExists,
+  setDirtyNodes,
 } from "../../Node/GraphContext";
 import OpenNodePresenter from "@/app/Node/OpenNode/OpenNodePresenter";
 import FlowView from "./FlowView";
@@ -40,8 +40,13 @@ view and handle the logic for the flowchart.
 It is the central file of the app. */
 import { NODE_WIDTH } from "./NodeStyles";
 import useWindowDimensions from "../windowDimensions";
-import { Input, Edge as edgeModel, handleType } from "../modelTransformation";
-import { connect } from "http2";
+import {
+  Input,
+  Edge as edgeModel,
+  gatherAllDirtyIds,
+  handleType,
+  transformtoTypescriptTypes,
+} from "../modelTransformation";
 
 const NODE_HEIGHT = 50;
 
@@ -50,27 +55,27 @@ const proOptions = { hideAttribution: true };
 const nodeTypes = {
   // this is where we define the node types
   source: (nodeData: any) => (
-    <NodeContext.Provider value={nodeData.data.nodeState}>
+    <NodeContext.Provider value={{nodeState:nodeData.data.nodeState, forceReload:()=>{}}}>
       <SourcePresenter />
     </NodeContext.Provider>
   ),
   unspecified: (nodeData: any) => (
-    <NodeContext.Provider value={nodeData.data.nodeState}>
+    <NodeContext.Provider value={{nodeState:nodeData.data.nodeState, forceReload:()=>{}}}>
       <UnspecifiedPresenter />
     </NodeContext.Provider>
   ),
   split: (nodeData: any) => (
-    <NodeContext.Provider value={nodeData.data.nodeState}>
+    <NodeContext.Provider value={{nodeState:nodeData.data.nodeState, forceReload:()=>{}}}>
       <SplitPresenter />
     </NodeContext.Provider>
   ),
   merge: (nodeData: any) => (
-    <NodeContext.Provider value={nodeData.data.nodeState}>
+    <NodeContext.Provider value={{nodeState:nodeData.data.nodeState, forceReload:()=>{}}}>
       <MergePresenter />
     </NodeContext.Provider>
   ),
   signal: (nodeData: any) => (
-    <NodeContext.Provider value={nodeData.data.nodeState}>
+    <NodeContext.Provider value={{nodeState:nodeData.data.nodeState, forceReload:()=>{}}}>
       <SignalPresenter />
     </NodeContext.Provider>
   ),
@@ -105,6 +110,7 @@ const Canvas: React.FC = () => {
       so that it can be used to force a refresh from inside the context, like when setting or updating using the
       functions inside GraphContext.tsx (setNodes() etc).
       This way, we don't need to double click on any button to make it refresh
+      TODO: Remove this, but to do that, must find alternative for graph.reloadComponent() in OpenSignalPresenter & RecordPresenter & ImportAudio & GenerateAudio
     */
   };
 
@@ -144,9 +150,33 @@ const Canvas: React.FC = () => {
     This is the graph object that is passed to the GraphContext.Provider
     */
   const graph: Graph = useMemo(
-    () => ({ nodes, edges, reloadComponent, selectNode, selectedNode }),
-    [nodes, edges, reloadComponent, selectNode, selectedNode]
+    () => ({
+      nodes,
+      edges,
+      reloadComponent,
+      selectNode,
+      selectedNode,
+      setNodes,
+      setEdges,
+    }),
+    [
+      nodes,
+      edges,
+      reloadComponent,
+      selectNode,
+      selectedNode,
+      setNodes,
+      setEdges,
+    ]
   );
+
+  useEffect(() => {
+    // this is called when the graph changes, so we can set the dirty nodes
+    const root = transformtoTypescriptTypes(graph);
+    const allDirtyIds = gatherAllDirtyIds(root.Sketch.Graph); // Get all the dirty IDs
+    setDirtyNodes(graph, allDirtyIds);
+    console.log("allDirtyIds: ", allDirtyIds);
+  }, [/*nodes,*/ edges]);
 
   useEffect(() => {
     console.log("edges changed", edges);
@@ -203,12 +233,16 @@ const Canvas: React.FC = () => {
   }
 
   const connectionToEdge = (connection: Connection): edgeModel => {
-    let n = (nodes.find(node => node.id == connection.source)?.data as any).nodeState as NodeState
-    let outputName: string = "standard-output"
-    let inputName: string = "standard-input"
-    
-    if (n.type == NodeType.Split){
-      outputName = handleType[parseInt(connection.sourceHandle!.split("[", 2)[1].split("]", 2)[0])];
+    let n = (nodes.find((node) => node.id == connection.source)?.data as any)
+      .nodeState as NodeState;
+    let outputName: string = "standard-output";
+    let inputName: string = "standard-input";
+
+    if (n.model.Type == "split") {
+      outputName =
+        handleType[
+          parseInt(connection.sourceHandle!.split("[", 2)[1].split("]", 2)[0])
+        ];
     }
     return {
       ID: `reactflow__edge-${connection.source}${connection.sourceHandle}-${connection.target}${connection.target}out[0]`,
@@ -223,13 +257,10 @@ const Canvas: React.FC = () => {
     } as edgeModel;
   };
   const onConnect = useCallback(
-  (connection: any) => {  
-      
+    (connection: any) => {
       // Get the source and target nodes
       const sourceNode = nodes.find((node) => node.id === connection.source);
       const targetNode = nodes.find((node) => node.id === connection.target);
-      
-          
 
       if (
         connectionExists(
@@ -241,56 +272,29 @@ const Canvas: React.FC = () => {
         )
       ) {
         console.log("Connection already exists", connection, edges);
-        reloadComponent();
         return;
       }
-      // Check if this source handle is already connected to another node
-      let handleConnectedEdge = edges.find(
-        (edge) =>
-          edge.sourceHandle === connection.sourceHandle ||
-          edge.targetHandle === connection.sourceHandle
-      );
-
-      // If not, check if this target handle is already connected to another node
-      if (!handleConnectedEdge) {
-        handleConnectedEdge = edges.find(
-          (edge) =>
-            edge.sourceHandle === connection.targetHandle ||
-            edge.targetHandle === connection.targetHandle
-        );
-      }
-
-      // if (handleConnectedEdge) {
-      //   console.log(
-      //     `Cannot connect more than one node to the same handle: ${connection.sourceHandle} or ${connection.targetHandle}`
-      //   );
-      //   return;
-      // }
 
       // If both nodes exist and they have different ids, create a connection
-      if (sourceNode && targetNode && sourceNode.id !== targetNode.id) {        
+      if (sourceNode && targetNode) {
         setEdges((eds) => {
-        
-            const newEdge = {
+          const newEdge = {
             id: `reactflow__edge-${connection.source}${connection.sourceHandle}-${connection.target}${connection.targetHandle}`,
             source: connection.source,
             target: connection.target,
             sourceHandle: connection.sourceHandle,
             targetHandle: connection.targetHandle,
-            data: connectionToEdge(connection)
+            data: connectionToEdge(connection),
           };
-          eds.map(e => e.data)
+          eds.map((e) => e.data);
           const newEdges = addEdge(newEdge, eds);
-           // add the edge to the list of edges, in the local state
-          setGraphEdges(graph, newEdges); // add the edge to the list of edges, in the graph
+
+          (targetNode.data as any).nodeState.model.Dirty = true;
+
           return newEdges;
         }); // add the edge to the list of edges, in the graph
-      } else {
-        // Log a warning if a connection was prevented
-        console.log(
-          `Cannot connect nodes of the same type: ${sourceNode?.type}`
-        );
-      }
+      } 
+      reloadComponent(); // TODO: This should be replaced, instead of reloading the whole graph, just reload the node that was changed
     },
     [setEdges, nodes]
   );
@@ -324,7 +328,6 @@ const Canvas: React.FC = () => {
     //   );
     //   return;
     // }
-
 
     if (connectStartHandleId?.includes("in")) {
       console.log("you can't create a signal from an input");
@@ -375,33 +378,33 @@ const Canvas: React.FC = () => {
         // );
 
         // if (!handleConnectedEdge) {
-          let newConnection: Connection = {
-            source: connectStartNode.id,
-            target: lastNode.id,
-            sourceHandle: connectStartHandleId!,
-            targetHandle: ((lastNode.data ).nodeState.inputs[0] as Input).Name,
-          };
-          const newEdge = {
-            id: `reactflow__edge-${newConnection.source}${newConnection.sourceHandle}-${newConnection.target}${newConnection.targetHandle}`,
-            source: newConnection.source,
-            target: newConnection.target,
-            sourceHandle: newConnection.sourceHandle,
-            targetHandle: newConnection.targetHandle,
-            data: connectionToEdge(newConnection)
-          };
-        
+        let newConnection: Connection = {
+          source: connectStartNode.id,
+          target: lastNode.id,
+          sourceHandle: connectStartHandleId!,
+          targetHandle: (lastNode.data.nodeState.model.Inputs[0] as Input).Name,
+        };
+        const newEdge = {
+          id: `reactflow__edge-${newConnection.source}${newConnection.sourceHandle}-${newConnection.target}${newConnection.targetHandle}`,
+          source: newConnection.source,
+          target: newConnection.target,
+          sourceHandle: newConnection.sourceHandle,
+          targetHandle: newConnection.targetHandle,
+          data: connectionToEdge(newConnection),
+        };
 
-          setEdges((eds) => {
-            const newEdges = addEdge(newEdge, eds);
-            setGraphEdges(graph, newEdges);
-            return newEdges;
-          });
+        setEdges((eds) => {
+          const newEdges = addEdge(newEdge, eds);
+          //setGraphEdges(graph, newEdges);
+          return newEdges;
+        });
+
         // } else {
         //   console.log(
         //     `Cannot create new connection. Handle: ${connectStartHandleId} is already connected to another node.`
         //   );
         // }
-      } 
+      }
       // else if (lastNode && lastNode.type === connectStartNode.type) {
       //   console.log("Cannot connect nodes of the same type: ", lastNode.type);
       // }
@@ -413,7 +416,7 @@ const Canvas: React.FC = () => {
 
   const addNewNode = (x: number, y: number, nodeType: NodeType) => {
     // this is called when the user adds a new node
-    const newNode = createNewNode(x, y, nodeType, graph); // create a new node in the graph
+    const newNode = createNewNode(x, y, nodeType); // create a new node
     const newNodes = [...nodes, newNode];
     setNodes(newNodes);
     console.log("nodes updated: ", newNodes);
@@ -442,7 +445,7 @@ const Canvas: React.FC = () => {
     // this is called when the user clicks on a the "open" button in the node view
     if (selectedNode) {
       return (
-        <OpenNodePresenter state={selectedNode} closeWindow={stopSelect} />
+        <OpenNodePresenter state={selectedNode} closeWindow={stopSelect}/>
       );
     } else {
       return null;

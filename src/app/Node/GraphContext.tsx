@@ -13,7 +13,7 @@
 
 import { createContext, useContext } from "react";
 import { NodeState, NodeTypeToString, NodeType } from "./NodeState";
-import { Edge, Node} from "reactflow";
+import { Edge, Node } from "reactflow";
 
 export type Graph = {
   nodes: Node[];
@@ -21,32 +21,45 @@ export type Graph = {
   reloadComponent: () => void;
   selectNode: (nodeState: NodeState | undefined) => void;
   selectedNode: NodeState | undefined;
+  setNodes: (nodes: Node[]) => void; // Add this line
+  setEdges: (edges: Edge[]) => void; // Add this line
 };
 
 export function deleteNodes(context: Graph, nodes: Node[]) {
-  // This function is used to delete the nodes in the graph
-  for (const node of nodes) {
-    for (let i = 0; i < context.nodes.length; i++) {
-      if (context.nodes[i].id == node.id) {
-        context.nodes.splice(i, 1); //remove the node from the array
-        break;
-      }
-    }
-  }
-  context.reloadComponent();
+  const newNodes = context.nodes.filter(
+    (node) => !nodes.find((n) => n.id === node.id)
+  );
+  context.setNodes(newNodes);
 }
 
 export function deleteEdges(context: Graph, edges: Edge[]) {
-  // This function is used to delete the edges in the graph
+  // set each node affected by the change to dirty
   for (const edge of edges) {
-    for (let i = 0; i < context.edges.length; i++) {
-      if (context.edges[i].id == edge.id) {
-        context.edges.splice(i, 1); //remove the edge from the array
-        break;
-      }
+    const sourceNode = getNode(context, parseInt(edge.source));
+    const targetNode = getNode(context, parseInt(edge.target));
+    /*
+    if (sourceNode) {
+      sourceNode.data.nodeState.model.Dirty = true;
+    }*/
+    if (targetNode) {
+      targetNode.data.nodeState.model.Dirty = true;
     }
   }
-  context.reloadComponent();
+
+  const newEdges = context.edges.filter(
+    (edge) => !edges.find((e) => e.id === edge.id)
+  );
+  context.setEdges(newEdges); // Assuming setEdges is defined in Graph type
+}
+
+export function setDirtyNodes(context: Graph, dirtyIds: string[]) {
+  // This function is used to set the dirty property of the nodes in the graph
+  for (const node of context.nodes) {
+    if (dirtyIds.includes(node.id)) {
+      node.data.nodeState.model.Dirty = true;
+    }
+  }
+  //console.log("nodes set to dirty", context.nodes);
 }
 
 export function deselectNode(context: Graph) {
@@ -66,23 +79,18 @@ export function getNode(context: Graph, id: number) {
   }
 }
 
-export function setNode(context: Graph, node: Node) {
-  // This function is used to update the node in the graph
-  for (let i = 0; i < context.nodes.length; i++) {
-    if (context.nodes[i].id == node.id) {
-      context.nodes[i] = node;
-      context.reloadComponent();
-      return;
+export function setNode(context: Graph, node: Node, setNodes: Function) {
+  const newNodes = context.nodes.map((n) => {
+    if (n.id === node.id) {
+      return node;
     }
-  }
+    return n;
+  });
+  setNodes(newNodes);
 }
 
-export function createNewNode( // This function is used to create a new node in the graph
-  x: number,
-  y: number,
-  nodeType: NodeType,
-  context: Graph
-) {
+export function createNewNode(x: number, y: number, nodeType: NodeType) {
+  // This function is used to create a new node in the graph
   let newNodeState = new NodeState(x, y, nodeType);
 
   const newNode: Node = {
@@ -97,12 +105,13 @@ export function createNewNode( // This function is used to create a new node in 
 }
 
 export const GraphContext = createContext<Graph>({
-  // This is the GraphContext, which is used to store the state of the graph, which can then be accessed by any component that needs it.
   nodes: [],
   edges: [],
   reloadComponent: () => {},
   selectNode: (nodeState: NodeState | undefined) => {},
   selectedNode: undefined,
+  setNodes: () => {},
+  setEdges: () => {},
 });
 
 export function useGraph() {
@@ -110,10 +119,35 @@ export function useGraph() {
   return useContext(GraphContext);
 }
 
-export function setGraphEdges(context: Graph, edges: Edge[]) {
-  // This function is used to update the edges in the graph
-  context.edges = edges;
-  context.reloadComponent();
+function hasCycle(context: Graph, sourceId: string, targetId: string) {
+  // Use a set to keep track of visited nodes
+  const visited = new Set<string>();
+
+  // Recursive function to perform Depth First Search (DFS)
+  const visit = (nodeId: string) => {
+    if (visited.has(nodeId)) {
+      return false; // Already visited this node, no cycle found
+    }
+
+    visited.add(nodeId);
+
+    // Check connections from the current node
+    for (const edge of context.edges) {
+      if (edge.source === nodeId) {
+        if (edge.target === sourceId) {
+          return true; // Cycle found
+        }
+
+        if (visit(edge.target)) {
+          return true; // Cycle found in deeper level
+        }
+      }
+    }
+
+    return false; // No cycle found
+  };
+
+  return visit(targetId); // Start DFS from the target node
 }
 
 export function connectionExists(
@@ -124,34 +158,25 @@ export function connectionExists(
   targetHandle: string
 ) {
   // This function is used to check if a connection already exists between two nodes
+
+  if(sourceId === targetId) {
+    // You should not be able to connect a node to itself
+    return true;
+  }
+
+  if (hasCycle(context, sourceId, targetId)) {
+    // You should not be able to make loops in the graph
+    return true;
+  }
   let exists = false;
 
   for (const edge of context.edges) {
-    // Check if a connection already exists between the two nodes
-    // if (edge.source == sourceId && edge.target == targetId) { // TODO: This should be ignored when the target & source handles are split / merge nodes, otherwise this check should exist
-    //   exists = true;
-    //   break;
-    // }
     if (edge.targetHandle == targetHandle) {
       // Check if the targetHandle is already connected to another node
       exists = true;
       break;
     }
-
-    // TODO: You should not be able to connect a node to a source handle of another node which is already connected to it
-    /*
-     if (edge.sourceHandle == targetHandle) {
-    //   // Check if the sourceHandle is already connected to another node
-       exists = true;
-       break;
-    }
-    if (edge.targetHandle == sourceHandle) {
-    //   // Check if the targetHandle is already connected to another node
-       exists = true;
-       break;
-    }
-    */
   }
-  
+
   return exists;
 }

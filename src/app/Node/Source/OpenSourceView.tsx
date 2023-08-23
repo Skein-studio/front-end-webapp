@@ -2,19 +2,22 @@ import GenerateAudio from "@/app/Util/AudioGenerator/GenerateAudio";
 import ImportAudio from "@/app/Util/AudioImporter/ImportAudio";
 import RecordPresenter from "@/app/Util/AudioRecorder/RecordPresenter";
 import { Button, Container } from "@/app/Util/BaseStyles";
-import { useContext } from "react";
+import { useContext, useState } from "react";
 import { useGraph } from "../GraphContext";
 import { NodeContext } from "../NodeState";
+import { SourceType } from "@/app/Util/modelTransformation";
 
 function BaseComponent(base: string) {
   const graph = useGraph();
-  const node = useContext(NodeContext);
+  const { nodeState, forceReload } = useContext(NodeContext);
+  const node = nodeState;
+  const [reload, setReload] = useState<boolean>(false);
 
   function handleBaseChange(text: string) {
     if (node) {
-      node.data.base = text;
-      graph.reloadComponent();
+      (node.model.Data as SourceType).base = text;
     }
+    setReload(!reload);
   }
 
   function BaseOptionsView() {
@@ -22,7 +25,9 @@ function BaseComponent(base: string) {
       <Container flexdir="row">
         <Button onClick={() => handleBaseChange("record")}>record</Button>
         <Button onClick={() => handleBaseChange("import")}>import</Button>
-        <Button onClick={() => handleBaseChange("generate")}>generate</Button>
+        <Button onClick={() => handleBaseChange("generate")} disabled={true}>
+          generate
+        </Button>
       </Container>
     );
   }
@@ -40,11 +45,11 @@ function BaseComponent(base: string) {
 }
 
 export default function OpenSourceView() {
-  const node = useContext(NodeContext); // Use NodeContext to get NodeState instance
+  const { nodeState, forceReload } = useContext(NodeContext);
 
   return (
     <Container flexdir="column">
-      {BaseComponent(node?.data.base ?? "Select a base")}
+      {BaseComponent((nodeState?.model.Data as SourceType).base ?? "Select a base")}
     </Container>
   );
 }

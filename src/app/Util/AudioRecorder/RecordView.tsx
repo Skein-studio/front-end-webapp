@@ -1,32 +1,37 @@
-// RecordView.tsx
-import React, { useEffect } from "react";
+import React from "react";
 import { Button, Container } from "../BaseStyles";
-import AudioPlayer from "../AudioPlayer/AudioPlayer";
-import useAudio from "@/app/Util/useAudio";
+import AudioPlayer from "../AudioPlayback/AudioPlayer";
+import { AudioState } from "../AudioPlayback/useAudio";
 
 type Props = {
   isRecording: boolean;
   onStart: () => void;
   onStop: () => void;
   audioData: string | undefined;
+  audioState: AudioState;
 };
 
 function RecordView({
   isRecording,
   onStart,
   onStop,
-  audioData,
+  audioState,
 }: Props): JSX.Element {
-  const audioState = useAudio(audioData);
-
-  useEffect(() => {}, [audioState]);
+  // Removed the useAudio hook call as it is already called in the parent component
 
   return (
     <Container>
       <Button onClick={isRecording ? onStop : onStart}>
         {isRecording ? "Stop Recording" : "Start Recording"}
       </Button>
-      {audioData && <AudioPlayer audioState={audioState} />}
+      {audioState.src && (
+        <AudioPlayer
+          audioState={audioState}
+          isComputing={false}
+          audioComputed={true}
+          error=""
+        />
+      )}
     </Container>
   );
 }
