@@ -115,13 +115,38 @@ export function useGraph() {
   // This function is used to get the graph from the GraphContext
   return useContext(GraphContext);
 }
-/*
-export function setGraphEdges(context: Graph, edges: Edge[]) {
-  // This function is used to update the edges in the graph
-  context.edges = edges;
-  context.reloadComponent();
+
+function hasCycle(context: Graph, sourceId: string, targetId: string) {
+  // Use a set to keep track of visited nodes
+  const visited = new Set<string>();
+
+  // Recursive function to perform Depth First Search (DFS)
+  const visit = (nodeId: string) => {
+    if (visited.has(nodeId)) {
+      return false; // Already visited this node, no cycle found
+    }
+
+    visited.add(nodeId);
+    
+    // Check connections from the current node
+    for (const edge of context.edges) {
+      if (edge.source === nodeId) {
+        if (edge.target === sourceId) {
+          return true; // Cycle found
+        }
+
+        if (visit(edge.target)) {
+          return true; // Cycle found in deeper level
+        }
+      }
+    }
+
+    return false; // No cycle found
+  };
+
+  return visit(targetId); // Start DFS from the target node
 }
-*/
+
 export function connectionExists(
   context: Graph,
   sourceId: string,
@@ -130,33 +155,23 @@ export function connectionExists(
   targetHandle: string
 ) {
   // This function is used to check if a connection already exists between two nodes
+
+  if (hasCycle(context, sourceId, targetId)) {
+    // You should not be able to make loops in the graph
+    return true;
+  }
   let exists = false;
 
   for (const edge of context.edges) {
-    // Check if a connection already exists between the two nodes
-    // if (edge.source == sourceId && edge.target == targetId) { // TODO: This should be ignored when the target & source handles are split / merge nodes, otherwise this check should exist
-    //   exists = true;
-    //   break;
-    // }
+
     if (edge.targetHandle == targetHandle) {
       // Check if the targetHandle is already connected to another node
       exists = true;
       break;
     }
 
-    // TODO: You should not be able to connect a node to a source handle of another node which is already connected to it
-    /*
-     if (edge.sourceHandle == targetHandle) {
-    //   // Check if the sourceHandle is already connected to another node
-       exists = true;
-       break;
-    }
-    if (edge.targetHandle == sourceHandle) {
-    //   // Check if the targetHandle is already connected to another node
-       exists = true;
-       break;
-    }
-    */
+
+
   }
 
   return exists;
