@@ -47,6 +47,7 @@ import {
   handleType,
   transformtoTypescriptTypes,
 } from "../modelTransformation";
+import { ReloadableComponent } from "@/app/Node/reloadableComponent";
 
 
 const NODE_HEIGHT = 50;
@@ -273,35 +274,11 @@ const Canvas: React.FC = () => {
         )
       ) {
         console.log("Connection already exists", connection, edges);
-        reloadComponent();
         return;
       }
 
-      // Check if this source handle is already connected to another node
-      let handleConnectedEdge = edges.find(
-        (edge) =>
-          edge.sourceHandle === connection.sourceHandle ||
-          edge.targetHandle === connection.sourceHandle
-      );
-
-      // If not, check if this target handle is already connected to another node
-      if (!handleConnectedEdge) {
-        handleConnectedEdge = edges.find(
-          (edge) =>
-            edge.sourceHandle === connection.targetHandle ||
-            edge.targetHandle === connection.targetHandle
-        );
-      }
-
-      // if (handleConnectedEdge) {
-      //   console.log(
-      //     `Cannot connect more than one node to the same handle: ${connection.sourceHandle} or ${connection.targetHandle}`
-      //   );
-      //   return;
-      // }
-
       // If both nodes exist and they have different ids, create a connection
-      if (sourceNode && targetNode && sourceNode.id !== targetNode.id) {
+      if (sourceNode && targetNode) {
         setEdges((eds) => {
           const newEdge = {
             id: `reactflow__edge-${connection.source}${connection.sourceHandle}-${connection.target}${connection.targetHandle}`,
@@ -319,12 +296,8 @@ const Canvas: React.FC = () => {
 
           return newEdges;
         }); // add the edge to the list of edges, in the graph
-      } else {
-        // Log a warning if a connection was prevented
-        console.log(
-          `Cannot connect nodes of the same type: ${sourceNode?.type}`
-        );
-      }
+      } 
+      reloadComponent();
     },
     [setEdges, nodes]
   );
@@ -475,7 +448,7 @@ const Canvas: React.FC = () => {
     // this is called when the user clicks on a the "open" button in the node view
     if (selectedNode) {
       return (
-        <OpenNodePresenter state={selectedNode} closeWindow={stopSelect} />
+        <OpenNodePresenter state={selectedNode} closeWindow={stopSelect}/>
       );
     } else {
       return null;

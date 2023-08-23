@@ -158,6 +158,11 @@ export function connectionExists(
 ) {
   // This function is used to check if a connection already exists between two nodes
 
+  if(sourceId === targetId) {
+    // You should not be able to connect a node to itself
+    return true;
+  }
+
   if (hasCycle(context, sourceId, targetId)) {
     // You should not be able to make loops in the graph
     return true;
