@@ -7,12 +7,8 @@ import { NodeType } from "../NodeState";
 import { NodeTypeToString } from "../NodeState";
 import { useGraph, setNode } from "../GraphContext";
 
-/*
-  We don't know if we will use tis class or not, but the purpose is 
-  to have an unspecified node which you can choose the type of
-*/
 
-const UnspecifiedPresenter: React.FC = () => {
+function UnspecifiedPresenter () {
   const node = useContext(NodeContext); // Use NodeContext to get NodeState instance
   const graph = useGraph();
 

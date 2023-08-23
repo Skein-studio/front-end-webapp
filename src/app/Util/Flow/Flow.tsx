@@ -22,7 +22,6 @@ import MergePresenter from "@/app/Node/Merge/MergePresenter";
 
 import { NodeType, NodeContext, NodeState } from "../../Node/NodeState";
 import {
-  /*setGraphEdges,*/
   createNewNode,
   Graph,
   GraphContext,
@@ -48,7 +47,7 @@ import {
   handleType,
   transformtoTypescriptTypes,
 } from "../modelTransformation";
-import { connect } from "http2";
+
 
 const NODE_HEIGHT = 50;
 
