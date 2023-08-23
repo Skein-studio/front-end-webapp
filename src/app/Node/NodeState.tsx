@@ -35,7 +35,6 @@ export class NodeState {
   position: Coordinate;
   model: NodeModel;
   selected: boolean;
-  prompt: string = "";
   id: number;
   type: NodeType;
 
