@@ -37,9 +37,10 @@ export function deleteEdges(context: Graph, edges: Edge[]) {
   for (const edge of edges) {
     const sourceNode = getNode(context, parseInt(edge.source));
     const targetNode = getNode(context, parseInt(edge.target));
+    /*
     if (sourceNode) {
       sourceNode.data.nodeState.model.Dirty = true;
-    }
+    }*/
     if (targetNode) {
       targetNode.data.nodeState.model.Dirty = true;
     }

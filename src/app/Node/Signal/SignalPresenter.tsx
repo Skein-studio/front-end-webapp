@@ -28,7 +28,7 @@ export default function SignalPresenter() {
       TODO: graph.reloadComponent(); this should be uncommented, but currently this resets the audioUrl, 
       TODO: first we need to store audios in the graph so that they can be accessed without fetching them again when it is not dirty
       */
-  }, []);
+  }, [node!.model.Dirty]);
 
   //  play button's callback include the fetchAudio function
   const playAudio = () => {
