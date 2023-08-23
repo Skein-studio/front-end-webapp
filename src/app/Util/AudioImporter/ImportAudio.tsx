@@ -24,7 +24,7 @@ const ImportAudio: React.FC = () => {
       nodeData.URL = fileUrl;
       nodeData.Dirty = true;
       console.log(fileUrl);
-      
+
       graph.reloadComponent();
     }
   };

@@ -15,7 +15,6 @@ export type AudioPlayerProps = {
 };
 
 export default function AudioPlayer(props: AudioPlayerProps) {
-
   return (
     <Container flexdir="row">
       <ProgressBarContainer smallplayer={props.smallplayer}>

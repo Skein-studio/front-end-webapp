@@ -94,5 +94,4 @@ export async function getSoundFromNodeID(
     node.data.nodeState.model.Data.URL = Object.values(nestedDict[idString])[0]; // ?
   });
   console.log("set all nodes to NOT dirty");
-
 }

@@ -21,7 +21,7 @@ const GenerateAudio: React.FC = () => {
     // For now, we'll use a dummy audio file
     nodeData.Dirty = true;
     nodeData.URL = "/dummy.mp3";
-    
+
     graph.reloadComponent();
   };
 

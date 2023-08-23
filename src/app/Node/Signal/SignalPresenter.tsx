@@ -4,25 +4,27 @@ import SignalView from "./SignalView";
 import { useContext, useEffect, useState } from "react";
 import { NodeContext } from "../NodeState";
 import { SendGraphForCompute } from "@/app/Util/ComputeAPI";
-import { SignalType, transformtoTypescriptTypes } from "@/app/Util/modelTransformation";
+import {
+  SignalType,
+  transformtoTypescriptTypes,
+} from "@/app/Util/modelTransformation";
 import { getSoundFromNodeID } from "@/app/Util/ComputeAPI";
 import { useGraph } from "../GraphContext";
 
 export default function SignalPresenter() {
   const graph = useGraph();
   const node = useContext(NodeContext);
-  const nodeData = (node!.model.Data as SignalType);
+  const nodeData = node!.model.Data as SignalType;
   const [audioUrl, setAudioUrl] = useState<string>("");
-  const [fetched, setFetched] = useState<boolean>(false); 
+  const [fetched, setFetched] = useState<boolean>(false);
   const audioState = useAudio(audioUrl);
 
   // useEffect to reset fetched state when node.model.Dirty changes
   useEffect(() => {
     if (node!.model.Dirty || audioUrl == "") {
       setFetched(false);
-    } else
-      setFetched(true);
-      /*
+    } else setFetched(true);
+    /*
       TODO: graph.reloadComponent(); this should be uncommented, but currently this resets the audioUrl, 
       TODO: first we need to store audios in the graph so that they can be accessed without fetching them again when it is not dirty
       */
@@ -30,9 +32,9 @@ export default function SignalPresenter() {
 
   //  play button's callback include the fetchAudio function
   const playAudio = () => {
-    if(fetched && audioUrl != ""){
+    if (fetched && audioUrl != "") {
       audioState.onPlayPause();
-    } else{
+    } else {
       fetchAudio();
     }
   };
@@ -63,8 +65,13 @@ export default function SignalPresenter() {
     } catch (e) {
       console.log(e);
     }
-        
   };
 
-  return <SignalView audioState={audioState} playAudio={playAudio} fetched={fetched} />;
+  return (
+    <SignalView
+      audioState={audioState}
+      playAudio={playAudio}
+      fetched={fetched}
+    />
+  );
 }

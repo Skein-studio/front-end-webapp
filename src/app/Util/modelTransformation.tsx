@@ -1,4 +1,3 @@
-
 //modelTransformation.tsx
 import { Graph as deniGraph } from "../Node/GraphContext";
 import { Edge as flowEdge, Node as flowNode } from "reactflow";
@@ -105,7 +104,6 @@ function gatherDirtyIds(
   return idsToMarkDirty;
 }
 
-
 export function gatherAllDirtyIds(graph: Graph): string[] {
   const allDirtyIds: Set<string> = new Set();
 
@@ -181,7 +179,7 @@ export const transformtoTypescriptTypes = (graphContext: deniGraph): Root => {
 
     let n = {
       Type: NodeTypeToString(nodeState.type),
-      Dirty: nodeState.model.Dirty, 
+      Dirty: nodeState.model.Dirty,
       Data: nodeState.model.Data,
       Inputs: nodeState.model.Inputs.map(transformNodeInputs),
       Outputs: nodeState.model.Outputs.map(transformNodeOutputs),

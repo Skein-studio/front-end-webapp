@@ -41,7 +41,13 @@ view and handle the logic for the flowchart.
 It is the central file of the app. */
 import { NODE_WIDTH } from "./NodeStyles";
 import useWindowDimensions from "../windowDimensions";
-import { Input, Edge as edgeModel, gatherAllDirtyIds, handleType, transformtoTypescriptTypes } from "../modelTransformation";
+import {
+  Input,
+  Edge as edgeModel,
+  gatherAllDirtyIds,
+  handleType,
+  transformtoTypescriptTypes,
+} from "../modelTransformation";
 import { connect } from "http2";
 
 const NODE_HEIGHT = 50;
@@ -146,17 +152,33 @@ const Canvas: React.FC = () => {
     This is the graph object that is passed to the GraphContext.Provider
     */
   const graph: Graph = useMemo(
-    () => ({ nodes, edges, reloadComponent, selectNode, selectedNode, setNodes, setEdges }),
-    [nodes, edges, reloadComponent, selectNode, selectedNode, setNodes, setEdges]
+    () => ({
+      nodes,
+      edges,
+      reloadComponent,
+      selectNode,
+      selectedNode,
+      setNodes,
+      setEdges,
+    }),
+    [
+      nodes,
+      edges,
+      reloadComponent,
+      selectNode,
+      selectedNode,
+      setNodes,
+      setEdges,
+    ]
   );
 
-  useEffect(() => { // this is called when the graph changes, so we can set the dirty nodes
+  useEffect(() => {
+    // this is called when the graph changes, so we can set the dirty nodes
     const root = transformtoTypescriptTypes(graph);
     const allDirtyIds = gatherAllDirtyIds(root.Sketch.Graph); // Get all the dirty IDs
     setDirtyNodes(graph, allDirtyIds);
     console.log("allDirtyIds: ", allDirtyIds);
   }, [/*nodes,*/ edges]);
-  
 
   useEffect(() => {
     console.log("edges changed", edges);
@@ -306,8 +328,6 @@ const Canvas: React.FC = () => {
       }
     },
     [setEdges, nodes]
-
-    
   );
 
   function onConnectStart(

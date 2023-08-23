@@ -26,7 +26,9 @@ export type Graph = {
 };
 
 export function deleteNodes(context: Graph, nodes: Node[]) {
-  const newNodes = context.nodes.filter(node => !nodes.find(n => n.id === node.id));
+  const newNodes = context.nodes.filter(
+    (node) => !nodes.find((n) => n.id === node.id)
+  );
   context.setNodes(newNodes);
 }
 
@@ -43,8 +45,9 @@ export function deleteEdges(context: Graph, edges: Edge[]) {
     }
   }
 
-
-  const newEdges = context.edges.filter(edge => !edges.find(e => e.id === edge.id));
+  const newEdges = context.edges.filter(
+    (edge) => !edges.find((e) => e.id === edge.id)
+  );
   context.setEdges(newEdges); // Assuming setEdges is defined in Graph type
 }
 
@@ -76,7 +79,7 @@ export function getNode(context: Graph, id: number) {
 }
 
 export function setNode(context: Graph, node: Node, setNodes: Function) {
-  const newNodes = context.nodes.map(n => {
+  const newNodes = context.nodes.map((n) => {
     if (n.id === node.id) {
       return node;
     }
@@ -106,10 +109,9 @@ export const GraphContext = createContext<Graph>({
   reloadComponent: () => {},
   selectNode: (nodeState: NodeState | undefined) => {},
   selectedNode: undefined,
-  setNodes: () => {}, 
-  setEdges: () => {}, 
+  setNodes: () => {},
+  setEdges: () => {},
 });
-
 
 export function useGraph() {
   // This function is used to get the graph from the GraphContext
@@ -127,7 +129,7 @@ function hasCycle(context: Graph, sourceId: string, targetId: string) {
     }
 
     visited.add(nodeId);
-    
+
     // Check connections from the current node
     for (const edge of context.edges) {
       if (edge.source === nodeId) {
@@ -163,15 +165,11 @@ export function connectionExists(
   let exists = false;
 
   for (const edge of context.edges) {
-
     if (edge.targetHandle == targetHandle) {
       // Check if the targetHandle is already connected to another node
       exists = true;
       break;
     }
-
-
-
   }
 
   return exists;

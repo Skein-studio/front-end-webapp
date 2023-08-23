@@ -43,7 +43,8 @@ const Button = styled.button<ButtonProps>`
   height: fit-content; // Set a specific height
   background-color: ${({ bgColor, disabled }) =>
     disabled ? "#B0B0B0" : bgColor ? bgColor : "#404040"};
-  color: ${({ color, disabled }) => (disabled ? "grey" : color ? color : purple)};
+  color: ${({ color, disabled }) =>
+    disabled ? "grey" : color ? color : purple};
   border: none;
   border-radius: 10px;
   box-shadow: 0px 1px 0px ${purple};
@@ -58,7 +59,8 @@ const Button = styled.button<ButtonProps>`
       disabled ? "#B0B0B0" : hoverBgColor ? hoverBgColor : "#757575"};
     color: ${({ hoverColor, disabled }) =>
       disabled ? "#A0A0A0" : hoverColor ? hoverColor : "#404040"};
-    box-shadow: ${({ disabled }) => (disabled ? "0px 1px 0px #A0A0A0" : "0px 0px 0px " + purple)};
+    box-shadow: ${({ disabled }) =>
+      disabled ? "0px 1px 0px #A0A0A0" : "0px 0px 0px " + purple};
   }
 
   &:focus {
@@ -67,8 +69,7 @@ const Button = styled.button<ButtonProps>`
 `;
 
 // Usage
-<Button disabled={true}>My Button</Button>
-
+<Button disabled={true}>My Button</Button>;
 
 const GraphNameInput = styled.input`
   z-index: 1; /* Add a higher z-index value */
