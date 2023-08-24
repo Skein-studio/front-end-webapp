@@ -16,8 +16,8 @@ export type Graph = {
   reloadComponent: () => void;
   selectNode: (nodeState: NodeState | undefined) => void;
   selectedNode: NodeState | undefined;
-  setNodes: (nodes: Node[]) => void; // Add this line
-  setEdges: (edges: Edge[]) => void; // Add this line
+  setNodes: (nodes: Node[]) => void;
+  setEdges: (edges: Edge[]) => void;
 };
 
 export function deleteNodes(context: Graph, nodes: Node[]) {
@@ -32,10 +32,7 @@ export function deleteEdges(context: Graph, edges: Edge[]) {
   for (const edge of edges) {
     const sourceNode = getNode(context, parseInt(edge.source));
     const targetNode = getNode(context, parseInt(edge.target));
-    /*
-    if (sourceNode) {
-      sourceNode.data.nodeState.model.Dirty = true;
-    }*/
+
     if (targetNode) {
       targetNode.data.nodeState.model.Dirty = true;
     }
@@ -54,7 +51,6 @@ export function setDirtyNodes(context: Graph, dirtyIds: string[]) {
       node.data.nodeState.model.Dirty = true;
     }
   }
-  //console.log("nodes set to dirty", context.nodes);
 }
 
 export function deselectNode(context: Graph) {
@@ -154,7 +150,7 @@ export function connectionExists(
 ) {
   // This function is used to check if a connection already exists between two nodes
 
-  if(sourceId === targetId) {
+  if (sourceId === targetId) {
     // You should not be able to connect a node to itself
     return true;
   }

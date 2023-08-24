@@ -23,7 +23,6 @@ const RecordPresenter: React.FC = () => {
           if (nodeData.URL) {
             URL.revokeObjectURL(nodeData.URL);
           }
-          // const fileUrl = URL.createObjectURL(e.data);
           console.log(e.data);
 
           const fileUrl = await postSoundBLOB(e.data);
@@ -33,8 +32,8 @@ const RecordPresenter: React.FC = () => {
           console.error("No nodecontext found", this);
         }
 
-        graph.reloadComponent();// TODO: This should be replaced , and the node should be updated via forceReload, not just here in the OpenView but in the small view too (SourcePresenter.tsx, SignalPresenter.tsx, etc.)
-        forceReload();
+        graph.reloadComponent(); // TODO: This should be replaced , and the node should be updated via forceReload, not just here in the OpenView but in the small view too (SourcePresenter.tsx, SignalPresenter.tsx, etc.)
+        forceReload(); //Only this should be needed, but it's not working currently since it doesn't update the node in the small view
       };
     });
 

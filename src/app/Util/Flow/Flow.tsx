@@ -55,27 +55,37 @@ const proOptions = { hideAttribution: true };
 const nodeTypes = {
   // this is where we define the node types
   source: (nodeData: any) => (
-    <NodeContext.Provider value={{nodeState:nodeData.data.nodeState, forceReload:()=>{}}}>
+    <NodeContext.Provider
+      value={{ nodeState: nodeData.data.nodeState, forceReload: () => {} }}
+    >
       <SourcePresenter />
     </NodeContext.Provider>
   ),
   unspecified: (nodeData: any) => (
-    <NodeContext.Provider value={{nodeState:nodeData.data.nodeState, forceReload:()=>{}}}>
+    <NodeContext.Provider
+      value={{ nodeState: nodeData.data.nodeState, forceReload: () => {} }}
+    >
       <UnspecifiedPresenter />
     </NodeContext.Provider>
   ),
   split: (nodeData: any) => (
-    <NodeContext.Provider value={{nodeState:nodeData.data.nodeState, forceReload:()=>{}}}>
+    <NodeContext.Provider
+      value={{ nodeState: nodeData.data.nodeState, forceReload: () => {} }}
+    >
       <SplitPresenter />
     </NodeContext.Provider>
   ),
   merge: (nodeData: any) => (
-    <NodeContext.Provider value={{nodeState:nodeData.data.nodeState, forceReload:()=>{}}}>
+    <NodeContext.Provider
+      value={{ nodeState: nodeData.data.nodeState, forceReload: () => {} }}
+    >
       <MergePresenter />
     </NodeContext.Provider>
   ),
   signal: (nodeData: any) => (
-    <NodeContext.Provider value={{nodeState:nodeData.data.nodeState, forceReload:()=>{}}}>
+    <NodeContext.Provider
+      value={{ nodeState: nodeData.data.nodeState, forceReload: () => {} }}
+    >
       <SignalPresenter />
     </NodeContext.Provider>
   ),
@@ -293,7 +303,7 @@ const Canvas: React.FC = () => {
 
           return newEdges;
         }); // add the edge to the list of edges, in the graph
-      } 
+      }
       reloadComponent(); // TODO: This should be replaced, instead of reloading the whole graph, just reload the node that was changed
     },
     [setEdges, nodes]
@@ -355,11 +365,7 @@ const Canvas: React.FC = () => {
     if (connectStartNode && newNode) {
       const lastNode = newNode; // the node that was just added
 
-      if (
-        lastNode &&
-        lastNode.type !== "unspecified"
-      ) {
-
+      if (lastNode && lastNode.type !== "unspecified") {
         let newConnection: Connection = {
           source: connectStartNode.id,
           target: lastNode.id,
@@ -416,7 +422,7 @@ const Canvas: React.FC = () => {
     // this is called when the user clicks on a the "open" button in the node view
     if (selectedNode) {
       return (
-        <OpenNodePresenter state={selectedNode} closeWindow={stopSelect}/>
+        <OpenNodePresenter state={selectedNode} closeWindow={stopSelect} />
       );
     } else {
       return null;
@@ -428,7 +434,7 @@ const Canvas: React.FC = () => {
     if (!getNode(graph, 1)) {
       // if the source node doesn't exist
       addNewNode(
-        (window.width / 2 - viewport.x) / viewport.zoom - NODE_WIDTH/2,
+        (window.width / 2 - viewport.x) / viewport.zoom - NODE_WIDTH / 2,
         (window.height / 2 - viewport.y) / viewport.zoom - NODE_HEIGHT,
         NodeType.Source
       );
@@ -438,8 +444,8 @@ const Canvas: React.FC = () => {
   function addButtonHandler() {
     // this is called when the user clicks on the "add" button
 
-    let x = (window.width / 2 - viewport.x) / viewport.zoom - NODE_WIDTH/2; // half the width of the node, so it's centered, relative to the viewport, not the window
-    let y = (window.height / 2 - viewport.y) / viewport.zoom - NODE_HEIGHT; // half the height of the node, so it's centered, relative to the viewport, not the window
+    let x = (window.width / 2 - viewport.x) / viewport.zoom - NODE_WIDTH / 2; // half the width of the node, so it's centered, relative to the viewport, not the window
+    let y = (window.height / 2 - viewport.y) / viewport.zoom - NODE_HEIGHT; // centered, relative to the viewport, not the window
     addNewNode(x, y, NodeType.Unspecified);
   }
 

@@ -25,14 +25,17 @@ const MergePresenter: React.FC = () => {
       });
 
       // If all target handles are connected, add a new one
-      if (numberOfTargetHandles > 0 && connectedHandles >= numberOfTargetHandles) {
+      if (
+        numberOfTargetHandles > 0 &&
+        connectedHandles >= numberOfTargetHandles
+      ) {
         addTargetHandle();
       }
     }
   }, [node, graph.edges]);
 
   const addTargetHandle = () => {
-    if(node!.model.Inputs!.length >= 10) {
+    if (node!.model.Inputs!.length >= 10) {
       return;
     }
     node!.addTargetHandle();

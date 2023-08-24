@@ -9,7 +9,6 @@ interface Props {
 }
 
 export default function OpenSignalView(props: Props) {
-
   const handleInstrumentChange = (
     event: React.ChangeEvent<HTMLInputElement>
   ) => {
@@ -23,12 +22,12 @@ export default function OpenSignalView(props: Props) {
           <img src={StarImg} alt="Star" />
           <p>Style Edit</p>
         </FieldTitle>
-          <StyledInput
-            type="text"
-            value={props.prompt}
-            onChange={handleInstrumentChange}
-            defaultValue={props.prompt}
-          />
+        <StyledInput
+          type="text"
+          value={props.prompt}
+          onChange={handleInstrumentChange}
+          defaultValue={props.prompt}
+        />
       </Container>
     </Container>
   );

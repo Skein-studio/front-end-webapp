@@ -25,7 +25,6 @@ const SmallView = () => {
   return (
     <>
       <PreviewText>{(node?.model.Data as SourceType).URL}</PreviewText>
-      {/*audioData && <audio src={audioData} controls /> this is removed since we currently decided not to have a play button in the source file*/}
     </>
   );
 };

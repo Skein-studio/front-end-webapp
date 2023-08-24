@@ -3,7 +3,6 @@
 import { BlankSpace, Button, Container } from "@/app/Util/BaseStyles";
 import { NodeSmall, NodeTitle } from "@/app/Util/Flow/NodeStyles";
 import { NodeContext, NodeType } from "../NodeState";
-import { Handle, Position } from "reactflow";
 import { useContext } from "react";
 
 interface Props {

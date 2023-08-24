@@ -195,9 +195,14 @@ type NodeProviderProps = {
   initialNodeState?: NodeState; // Add this line to define a new prop for the initial node state
 };
 
-export const NodeProvider: React.FC<NodeProviderProps> = ({ children, initialNodeState }) => {
+export const NodeProvider: React.FC<NodeProviderProps> = ({
+  children,
+  initialNodeState,
+}) => {
   const [reloadTrigger, setReloadTrigger] = useState(0);
-  const [nodeState, setNodeState] = useState<NodeState | undefined>(initialNodeState);
+  const [nodeState, setNodeState] = useState<NodeState | undefined>(
+    initialNodeState
+  );
 
   const forceReload = () => {
     setReloadTrigger((prev) => prev + 1);
@@ -209,7 +214,6 @@ export const NodeProvider: React.FC<NodeProviderProps> = ({ children, initialNod
     </NodeContext.Provider>
   );
 };
-
 
 export function NodeTypeToString(nodeType: NodeType): string {
   switch (nodeType) {

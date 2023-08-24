@@ -26,7 +26,7 @@ const ImportAudio: React.FC = () => {
       nodeData.Dirty = true;
       console.log(fileUrl);
       forceReload();
-      graph.reloadComponent();// TODO: This should be replaced , and the node should be updated via forceReload, not just here in the OpenView but in the small view too (SourcePresenter.tsx, SignalPresenter.tsx, etc.)
+      graph.reloadComponent(); // TODO: This should be replaced , and the node should be updated via forceReload, not just here in the OpenView but in the small view too (SourcePresenter.tsx, SignalPresenter.tsx, etc.)
     }
   };
 

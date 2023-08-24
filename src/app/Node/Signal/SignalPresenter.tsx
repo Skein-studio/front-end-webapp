@@ -39,6 +39,7 @@ export default function SignalPresenter() {
   };
 
   const fetchAudio = async () => {
+    setFetched(false);
     try {
       //   //TODO get audioURL with while loop until node with nodeID is found in computed nodes ??
       await SendGraphForCompute(transformtoTypescriptTypes(graph));
@@ -53,7 +54,7 @@ export default function SignalPresenter() {
       url = graph.nodes.find((n) => {
         return n.id == `${node!.id}`;
       })?.data.nodeState.model.Data.URL as string;
-      
+
       setAudioUrl(url);
       setFetched(true); // Set fetched to true once the audio URL is obtained
     } catch (e) {

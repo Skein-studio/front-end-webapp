@@ -49,7 +49,9 @@ export default function OpenSourceView() {
 
   return (
     <Container flexdir="column">
-      {BaseComponent((nodeState?.model.Data as SourceType).base ?? "Select a base")}
+      {BaseComponent(
+        (nodeState?.model.Data as SourceType).base ?? "Select a base"
+      )}
     </Container>
   );
 }
