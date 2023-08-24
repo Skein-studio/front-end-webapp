@@ -15,7 +15,7 @@ export default function SignalPresenter() {
   const graph = useGraph();
   const { nodeState, forceReload } = useContext(NodeContext);
   const node = nodeState;
-  const [audioUrl, setAudioUrl] = useState<string>(getAudioFromInput());
+  const [audioUrl, setAudioUrl] = useState<string>(useContext(NodeContext).nodeState.model.Outputs[0].Src);
   const [fetched, setFetched] = useState<boolean>(false);
   const audioState = useAudio(audioUrl);
 
