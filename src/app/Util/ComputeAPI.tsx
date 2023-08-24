@@ -5,7 +5,7 @@ import { Root, transformtoTypescriptTypes } from "./modelTransformation";
 import { useContext } from "react";
 
 export async function SendGraphForCompute(graph: Root) {
-  console.log(graph);
+  console.log("Sending graph for compute: ", graph);
   let endpoint = "http://localhost:5001/compute";
 
   await fetch(endpoint, {

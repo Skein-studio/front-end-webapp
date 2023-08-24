@@ -127,20 +127,38 @@ export const transformtoTypescriptTypes = (graphContext: deniGraph): Root => {
     let nodeState = node.data.nodeState as NodeState;
 
     const transformNodeInputs = (input: Input): Input => {
-      let inpu: Input = {
-        Name: "standard-input",
+      let inpu: Input;
+
+      if (nodeState.type == NodeType.Merge) {
+        inpu = { 
+          ID: input.ID,
+          Name: input.Name 
+        };
+      }
+      inpu = {
         ID: input.ID,
+        Name: "standard-input",
       };
       return inpu;
     };
     const transformNodeOutputs = (output: Output): Output => {
-      let out: Output = {
-        ID: output.ID,
-        Name: "standard-output",
-        Src: "",
-      };
+      let out: Output;
+      if (nodeState.type == NodeType.Split) {
+        out = {
+          ID: output.ID,
+          Name: output.Name,
+          Src: "",
+        };
+      } else {
+        out = {
+          ID: output.ID,
+          Name: "standard-output",
+          Src: "",
+        };
+      }
       return out;
     };
+    
 
     switch (NodeTypeToString(nodeState.type)) {
       case "signal": {
