@@ -109,6 +109,7 @@ const Canvas: React.FC = () => {
   const window = useWindowDimensions();
 
   const reloadComponent = () => {
+    console.warn("Forced reload of entire graph (reloadComponent())")
     if (flowKey == 0) {
       setFlowKey((prevKey) => prevKey + 1);
     } else {
