@@ -305,7 +305,7 @@ const Canvas: React.FC = () => {
           return newEdges;
         }); // add the edge to the list of edges, in the graph
       }
-      reloadComponent(); // TODO: This should be replaced, instead of reloading the whole graph, just reload the node that was changed
+      
     },
     [setEdges, nodes]
   );

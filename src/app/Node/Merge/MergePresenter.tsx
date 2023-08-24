@@ -9,7 +9,6 @@ const MergePresenter: React.FC = () => {
   const { nodeState, forceReload } = useContext(NodeContext);
   const node = nodeState;
   const graph = useGraph();
-  const [reload, setReload] = useState<boolean>(false);
 
   useEffect(() => {
     // Check if all target handles are connected
@@ -39,7 +38,8 @@ const MergePresenter: React.FC = () => {
       return;
     }
     node!.addTargetHandle();
-    setReload(!reload);
+    forceReload();
+    graph.reloadComponent(); // TODO: This should be replaced, instead of reloading the whole graph, just reload the node that was changed
   };
 
   return (
