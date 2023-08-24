@@ -30,8 +30,8 @@ export function deleteNodes(context: Graph, nodes: Node[]) {
 export function deleteEdges(context: Graph, edges: Edge[]) {
   // set each node affected by the change to dirty
   for (const edge of edges) {
-    const sourceNode = getNode(context, parseInt(edge.source));
-    const targetNode = getNode(context, parseInt(edge.target));
+    const sourceNode = getNode(context, edge.source);
+    const targetNode = getNode(context,edge.target);
 
     if (targetNode) {
       targetNode.data.nodeState.model.Dirty = true;
@@ -61,10 +61,10 @@ export function deselectNode(context: Graph) {
   context.selectedNode = undefined;
 }
 
-export function getNode(context: Graph, id: number) {
+export function getNode(context: Graph, id: string) {
   // This function is used to get the node from the graph
   for (const element of context.nodes) {
-    if (element.id == id.toString()) {
+    if (element.id == id) {
       return element;
     }
   }

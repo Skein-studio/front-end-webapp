@@ -14,8 +14,9 @@ import {
   Output,
   Input,
 } from "../Util/modelTransformation";
+import { v4 as uuidv4 } from 'uuid';
 
-let nodeID = -2; // This is used to generate unique IDs for each node, IDK why it has to start at -2 to make the first Node have ID 0
+let nodeID = 0; // This is used to generate unique IDs for each node, IDK why it has to start at -2 to make the first Node have ID 0
 
 export enum NodeType {
   Source,
@@ -34,16 +35,16 @@ export class NodeState {
   position: Coordinate;
   model: NodeModel;
   selected: boolean;
-  id: number;
+  id: string;
   type: NodeType;
 
-  constructor(x: number, y: number, type: NodeType, id?: number) {
+  constructor(x: number, y: number, type: NodeType, id?: string) {
     this.position = {
       x: x,
       y: y,
     };
     this.type = type;
-    id ? (this.id = id) : (this.id = this.generateID());
+    id ? (this.id = id) : (this.id = uuidv4());
     this.model = {
       ID: this.id.toString(),
       Dirty: true,
@@ -158,8 +159,8 @@ export class NodeState {
     return nodeID++;
   }
 
-  getID(): number {
-    return parseInt(this.model.ID, 10);
+  getID(): string {
+    return this.id;
   }
 
   setType(type: NodeType): void {

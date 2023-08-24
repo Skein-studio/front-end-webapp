@@ -42,7 +42,7 @@ type outputs = {
 const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
 
 export async function getSoundFromNodeID(
-  id: number,
+  id: string,
   graphContext: Graph,
   endpoint: string = "http://localhost:5001/compute/get_computed_nodes",
   maxRetries: number = 100,
@@ -61,7 +61,7 @@ export async function getSoundFromNodeID(
       if (!response.ok) {
         throw new Error("{$response.status}");
       }
-      
+
       console.log(response);
       nestedDict = await response.json();
 

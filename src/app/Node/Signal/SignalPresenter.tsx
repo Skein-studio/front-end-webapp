@@ -6,8 +6,6 @@ import { NodeContext } from "../NodeState";
 import { SendGraphForCompute } from "@/app/Util/ComputeAPI";
 import {
   Output,
-  SignalType,
-  SourceType,
   transformtoTypescriptTypes,
 } from "@/app/Util/modelTransformation";
 import { getSoundFromNodeID } from "@/app/Util/ComputeAPI";
@@ -22,7 +20,7 @@ export default function SignalPresenter() {
   const audioState = useAudio(audioUrl);
 
   function getAudioFromInput() {
-    // This function is used to get the audio from the node.Data.Inputs[0]
+    // This function is used to get the audio URL from the parent node
     let thisEdge = graph.edges.find((edge) => {
       return edge.target == node.model.ID;
     });
@@ -36,7 +34,7 @@ export default function SignalPresenter() {
     let sourceNode = thisEdge.source;
     let sourceNodeModel = graph.nodes.find((node) => {
       return node.id == sourceNode;
-    })?.data.nodeState.model as SourceType;
+    })?.data.nodeState.model;
 
     let outputArray = sourceNodeModel.Outputs as Output[];
 

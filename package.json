@@ -26,10 +26,12 @@
     "reactflow": "^11.7.4",
     "styled-components": "^6.0.1",
     "typescript": "5.1.6",
-    "url-loader": "^4.1.1"
+    "url-loader": "^4.1.1",
+    "uuid": "^9.0.0"
   },
   "devDependencies": {
     "@svgr/webpack": "^8.0.1",
+    "@types/uuid": "^9.0.2",
     "babel-plugin-styled-components": "^2.1.4"
   }
 }

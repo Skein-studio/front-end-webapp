@@ -38,7 +38,7 @@ import FlowView from "./FlowView";
 /* This component's purpose is to create the flowchart 
 view and handle the logic for the flowchart. 
 It is the central file of the app. */
-import { NODE_WIDTH } from "./NodeStyles";
+import { NODE_WIDTH, NODE_HEIGHT } from "./NodeStyles";
 import useWindowDimensions from "../windowDimensions";
 import {
   Input,
@@ -48,7 +48,6 @@ import {
   transformtoTypescriptTypes,
 } from "../modelTransformation";
 
-const NODE_HEIGHT = 50;
 
 const proOptions = { hideAttribution: true };
 
@@ -91,20 +90,27 @@ const nodeTypes = {
   ),
 };
 
+const START_ZOOM = 0.75;
+
+/*
+Center:
+ x: ((window.width * 0.95) / 2 - viewport.x) / viewport.zoom - NODE_WIDTH / 2;
+ y: ((window.height * 0.95) / 2 - viewport.y) / viewport.zoom - NODE_HEIGHT;
+
+*/
+
+let init = false;
+
 const Canvas: React.FC = () => {
   const reactFlowInstance = useReactFlow();
   const window = useWindowDimensions();
   const [viewport, setViewport] = useState<Viewport>({
     x: 0,
     y: 0,
-    zoom: 0.75,
+    zoom: START_ZOOM,
   }); // find a way to save the viewport and pass it to reactflow component
-  const [nodes, setNodes, onNodesChange] = useNodesState<Node>([
-    createNewNode( ((window.width * 0.95) / 2 - viewport.x) / viewport.zoom -
-    NODE_WIDTH / 2,
-  ((window.height * 0.95) / 2 - viewport.y) / viewport.zoom - NODE_HEIGHT,
-  NodeType.Source)
-  ]);
+
+  const [nodes, setNodes, onNodesChange] = useNodesState<Node>([]);
   const [edges, setEdges, onEdgesChange] = useEdgesState<Edge>([]);
   const [flowKey, setFlowKey] = useState(0);
 
@@ -113,7 +119,6 @@ const Canvas: React.FC = () => {
   const [openSelectedNode, setOpenSelectedNode] = useState<boolean>(false);
   const [connectStartNode, setConnectStartNode] = useState<Node>();
   const [connectStartHandleId, setConnectStartHandleId] = useState<string>();
-
 
   const reloadComponent = () => {
     console.warn("Forced reload of entire graph (reloadComponent())");
@@ -194,11 +199,8 @@ const Canvas: React.FC = () => {
     const allDirtyIds = gatherAllDirtyIds(root.Sketch.Graph); // Get all the dirty IDs
     setDirtyNodes(graph, allDirtyIds);
     console.log("allDirtyIds: ", allDirtyIds);
-  }, [/*nodes,*/ edges]);
-
-  useEffect(() => {
     console.log("edges changed", edges);
-  }, [edges]);
+  }, [/*nodes,*/ edges]);
 
   function stopSelect() {
     // this is called when the user clicks on the canvas
@@ -206,7 +208,6 @@ const Canvas: React.FC = () => {
     setSelectedNode(undefined);
     setOpenSelectedNode(false);
   }
-
   function onSelectionChange(params: OnSelectionChangeParams) {
     // this is called when an edge selection is changed
     if (params.edges.length == 0) {
@@ -438,6 +439,9 @@ const Canvas: React.FC = () => {
 
   useMemo(() => {
     console.log("Graph loaded: ", graph)
+    if(nodes.length == 0) {
+      addNewNode(((window.width * 0.95) / 2 - viewport.x) / viewport.zoom - NODE_WIDTH / 2, ((window.height * 0.95) / 2 - viewport.y) / viewport.zoom - NODE_HEIGHT, NodeType.Source);
+    }
   }, []);
 
   function addButtonHandler() {
