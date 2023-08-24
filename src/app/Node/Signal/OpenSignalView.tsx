@@ -26,7 +26,6 @@ export default function OpenSignalView(props: Props) {
           type="text"
           value={props.prompt}
           onChange={handleInstrumentChange}
-          defaultValue={props.prompt}
         />
       </Container>
     </Container>
