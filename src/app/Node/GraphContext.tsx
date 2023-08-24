@@ -6,11 +6,6 @@
   which can then be accessed by any component that needs it.
 */
 
-/*
- Possible TODOs:
- - Set NodeState's dirty property to true when a node is changed
-*/
-
 import { createContext, useContext } from "react";
 import { NodeState, NodeTypeToString, NodeType } from "./NodeState";
 import { Edge, Node } from "reactflow";

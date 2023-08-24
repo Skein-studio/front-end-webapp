@@ -25,8 +25,7 @@ export default function SignalPresenter() {
       setFetched(false);
     } else setFetched(true);
     /*
-      TODO: graph.reloadComponent(); this should be uncommented, but currently this resets the audioUrl, 
-      TODO: first we need to store audios in the graph so that they can be accessed without fetching them again when it is not dirty
+      TODO: Store audios in the graph so that they can be accessed without fetching them again when it is not dirty (standard value of audioUrl)
       */
   }, [node!.model.Dirty]);
 
@@ -45,21 +44,16 @@ export default function SignalPresenter() {
       await SendGraphForCompute(transformtoTypescriptTypes(graph));
       let url: string;
 
-      if (node && node.id) {
-        await getSoundFromNodeID(node.id, graph);
-        console.log(
-          graph.nodes.find((n) => {
-            return n.id == `${node.id}`;
-          })
-        );
-        url = graph.nodes.find((n) => {
-          return n.id == `${node.id}`;
-        })?.data.nodeState.model.Data.URL as string;
-      } else {
-        url = "";
-        console.log("node not found when fetching audio(signalpresenter)");
-        return;
-      }
+      await getSoundFromNodeID(node!.id, graph);
+      console.log(
+        graph.nodes.find((n) => {
+          return n.id == `${node!.id}`;
+        })
+      );
+      url = graph.nodes.find((n) => {
+        return n.id == `${node!.id}`;
+      })?.data.nodeState.model.Data.URL as string;
+      
       setAudioUrl(url);
       setFetched(true); // Set fetched to true once the audio URL is obtained
     } catch (e) {
