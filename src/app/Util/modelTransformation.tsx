@@ -119,24 +119,64 @@ export function gatherAllDirtyIds(graph: Graph): string[] {
 
   return Array.from(allDirtyIds);
 }
-
 export const transformtoTypescriptTypes = (graphContext: deniGraph): Root => {
   if (!graphContext) {
     return {} as Root;
   }
   const transformNode = (node: flowNode): Node => {
-    const nodeState = node.data.nodeState as NodeState;
+    let nodeState = node.data.nodeState as NodeState;
+
+    const transformNodeInputs = (input: Input): Input => {
+      let inpu: Input = {
+        Name: "standard-input",
+        ID: input.ID,
+      };
+      return inpu;
+    };
+    const transformNodeOutputs = (output: Output): Output => {
+      let out: Output = {
+          ID: output.ID,
+          Name: "standard-output",
+          Src: "",
+        };
+      return out;
+      };
+
+    switch (NodeTypeToString(nodeState.type)) {
+      case "signal": {
+        nodeState.model.Data = {
+          Prompt: (nodeState.model.Data as SignalType).Prompt,
+          Seed: (nodeState.model.Data as SignalType).Seed,
+        };
+        break;
+      }
+
+      case "source": {
+        nodeState.model.Data = {
+          URL: (nodeState.model.Data as SourceType).URL,
+          base: (nodeState.model.Data as SourceType).base,
+        };
+        break;
+      }
+      // case "merge":{}
+      // case "split":{}
+
+      default: {
+        nodeState.model.Data = {};
+      }
+    }
 
     let n = {
       Type: NodeTypeToString(nodeState.type),
       Dirty: nodeState.model.Dirty,
       Data: nodeState.model.Data,
-      Inputs: nodeState.model.Inputs,
-      Outputs: nodeState.model.Outputs,
+      Inputs: nodeState.model.Inputs.map(transformNodeInputs),
+      Outputs: nodeState.model.Outputs.map(transformNodeOutputs),
       ID: `${nodeState.id}`,
     } as Node;
     return n;
   };
+
 
   const transformEdge = (edge: flowEdge): Edge => {
     return edge.data as Edge;

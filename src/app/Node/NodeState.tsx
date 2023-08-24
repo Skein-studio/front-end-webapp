@@ -183,16 +183,16 @@ export class NodeState {
 import React, { useState } from "react";
 
 export const NodeContext = React.createContext<{
-  nodeState: NodeState | undefined;
+  nodeState: NodeState;
   forceReload: () => void;
 }>({
-  nodeState: undefined,
+  nodeState: new NodeState(0, 0, NodeType.Unspecified),
   forceReload: () => {},
 });
 
 type NodeProviderProps = {
   children: React.ReactNode;
-  initialNodeState?: NodeState; // Add this line to define a new prop for the initial node state
+  initialNodeState: NodeState; // Add this line to define a new prop for the initial node state
 };
 
 export const NodeProvider: React.FC<NodeProviderProps> = ({
@@ -200,7 +200,7 @@ export const NodeProvider: React.FC<NodeProviderProps> = ({
   initialNodeState,
 }) => {
   const [reloadTrigger, setReloadTrigger] = useState(0);
-  const [nodeState, setNodeState] = useState<NodeState | undefined>(
+  const [nodeState, setNodeState] = useState<NodeState>(
     initialNodeState
   );
 
