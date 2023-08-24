@@ -371,7 +371,7 @@ const Canvas: React.FC = () => {
           source: connectStartNode.id,
           target: lastNode.id,
           sourceHandle: connectStartHandleId!,
-          targetHandle: (lastNode.data.nodeState.model.Inputs[0] as Input).Name,
+          targetHandle: (lastNode.data.nodeState.model.Inputs[0] as Input).ID,
         };
         const newEdge = {
           id: `reactflow__edge-${newConnection.source}${newConnection.sourceHandle}-${newConnection.target}${newConnection.targetHandle}`,

@@ -10,7 +10,6 @@ import {
   SignalType,
   MergeType,
   SplitType,
-  Input as InputModel,
   UnspecifiedType,
   Output,
   Input,
@@ -79,7 +78,7 @@ export class NodeState {
 
   addTargetHandle() {
     this.model.Inputs.push({
-      Name: this.model.ID + "in[" + this.model.Inputs.length + "]",
+      ID: this.model.ID + "in[" + this.model.Inputs.length + "]",
     });
   }
 
@@ -88,7 +87,7 @@ export class NodeState {
 
     const add = () => {
       newInputs.push({
-        Name: ID + "in[" + newInputs.length + "]",
+        ID: ID + "in[" + newInputs.length + "]",
       });
     };
 
@@ -116,8 +115,9 @@ export class NodeState {
 
     const add = (name: string) => {
       newOutputs.push({
-        Name: ID + "out[" + newOutputs.length + "]",
-        Src: name,
+        ID: ID + "out[" + newOutputs.length + "]",
+        Name: name,
+        Src: "",
       });
     };
     switch (type) {

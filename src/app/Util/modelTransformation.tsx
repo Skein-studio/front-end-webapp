@@ -26,10 +26,11 @@ const createDummyEdge = (): Edge => ({
 });
 
 const createDummyInput = (): Input => ({
-  Name: "dummyInputName",
+  ID: "dummyInputName",
 });
 
 const createDummyOutput = (): Output => ({
+  ID: "dummyOutputID",
   Name: "dummyOutputName",
   Src: "dummySrc",
 });
@@ -124,65 +125,14 @@ export const transformtoTypescriptTypes = (graphContext: deniGraph): Root => {
     return {} as Root;
   }
   const transformNode = (node: flowNode): Node => {
-    let nodeState = node.data.nodeState as NodeState;
-
-    const transformNodeInputs = (input: Input): Input => {
-      let inpu: Input;
-
-      if (nodeState.type == NodeType.Merge) {
-        inpu = { Name: input.Name };
-      }
-      inpu = {
-        Name: "standard-input",
-      };
-      return inpu;
-    };
-    const transformNodeOutputs = (output: Output): Output => {
-      let out: Output;
-      if (nodeState.type == NodeType.Split) {
-        out = {
-          Name: output.Name,
-          Src: "",
-        };
-      } else {
-        out = {
-          Name: "standard-output",
-          Src: "",
-        };
-      }
-      return out;
-    };
-
-    switch (NodeTypeToString(nodeState.type)) {
-      case "signal": {
-        nodeState.model.Data = {
-          Prompt: (nodeState.model.Data as SignalType).Prompt,
-          Seed: (nodeState.model.Data as SignalType).Seed,
-        };
-        break;
-      }
-
-      case "source": {
-        nodeState.model.Data = {
-          URL: (nodeState.model.Data as SourceType).URL,
-          base: (nodeState.model.Data as SourceType).base,
-        };
-        break;
-      }
-      // case "merge":{}
-      // case "split":{}
-
-      default: {
-        nodeState.model.Data = {};
-      }
-    }
+    const nodeState = node.data.nodeState as NodeState;
 
     let n = {
       Type: NodeTypeToString(nodeState.type),
       Dirty: nodeState.model.Dirty,
       Data: nodeState.model.Data,
-      Inputs: nodeState.model.Inputs.map(transformNodeInputs),
-      Outputs: nodeState.model.Outputs.map(transformNodeOutputs),
+      Inputs: nodeState.model.Inputs,
+      Outputs: nodeState.model.Outputs,
       ID: `${nodeState.id}`,
     } as Node;
     return n;
@@ -258,10 +208,11 @@ export interface SplitType {}
 export interface UnspecifiedType {}
 
 export interface Input {
-  Name: string;
+  ID: string;
   [k: string]: unknown;
 }
 export interface Output {
+  ID: string;
   Name: string;
   Src: string;
   [k: string]: unknown;
