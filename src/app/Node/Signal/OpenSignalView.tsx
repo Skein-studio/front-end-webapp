@@ -1,7 +1,7 @@
 import { Container } from "@/app/Util/BaseStyles";
 import styled from "styled-components";
 import StarImg from "../Signal/stars.svg";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 interface Props {
   setPrompt(value: string): void;
@@ -9,12 +9,12 @@ interface Props {
 }
 
 export default function OpenSignalView(props: Props) {
+
   const handleInstrumentChange = (
     event: React.ChangeEvent<HTMLInputElement>
   ) => {
     props.setPrompt(event.target.value);
   };
-  console.log(props.prompt);
 
   return (
     <Container>
@@ -23,14 +23,12 @@ export default function OpenSignalView(props: Props) {
           <img src={StarImg} alt="Star" />
           <p>Style Edit</p>
         </FieldTitle>
-        <div>
-          <input
+          <StyledInput
             type="text"
             value={props.prompt}
             onChange={handleInstrumentChange}
             defaultValue={props.prompt}
           />
-        </div>
       </Container>
     </Container>
   );
@@ -50,6 +48,17 @@ const FieldTitle = styled.div`
     height: 16px;
     margin-right: 4px;
   }
+`;
+
+const StyledInput = styled.input`
+  width: 100%;
+  font-family: verdana;
+  margin: 0;
+  font-size: 12px;
+  padding: 10px;
+  border: none;
+  border-radius: 10px;
+  background-color: lightgrey; // Adjust as needed
 `;
 
 const Dropdown = styled.div`
