@@ -9,13 +9,15 @@ import {
   transformtoTypescriptTypes,
 } from "@/app/Util/modelTransformation";
 import { getSoundFromNodeID } from "@/app/Util/ComputeAPI";
-import { useGraph } from "../GraphContext";
+import { GraphContext, setNode, useGraph } from "../GraphContext";
 
 export default function SignalPresenter() {
+  const {nodes, setNodes} = useContext(GraphContext);
   const graph = useGraph();
   const { nodeState, forceReload } = useContext(NodeContext);
   const node = nodeState;
-  const [audioUrl, setAudioUrl] = useState<string>(useContext(NodeContext).nodeState.model.Outputs[0].Src);
+  const [audioUrl, setAudioUrl] = useState<string>(nodeState.model.Outputs[0].Src);
+  console.log("NODESTATE!! ",nodeState)
   const [fetched, setFetched] = useState<boolean>(false);
   const audioState = useAudio(audioUrl);
 
@@ -81,7 +83,11 @@ export default function SignalPresenter() {
       await SendGraphForCompute(transformtoTypescriptTypes(graph));
       let url: string;
 
-      await getSoundFromNodeID(node.id, graph);
+      //THIS DOES NOT WORK?? PLS HELP
+      //(Src ska alltså uppdateras i)
+      graph.setNodes([... (await getSoundFromNodeID(node.id, graph))])
+      
+      graph.reloadComponent()
       console.log(
         graph.nodes.find((n) => {
           return n.id == `${node.id}`;

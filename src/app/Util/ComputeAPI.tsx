@@ -46,7 +46,7 @@ const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
 
 export async function getSoundFromNodeID(
   id: string,
-  graphContext: Graph,
+  graph: Graph,
   endpoint: string = "http://localhost:5001/compute/get_computed_nodes",
   maxRetries: number = 100,
   retryDelay: number = 2000
@@ -87,7 +87,7 @@ export async function getSoundFromNodeID(
   if (retries == maxRetries) {
     throw new Error("Max amount of fetch retries. Cancelling...");
   }
-  graphContext.nodes.forEach((node: Node) => {
+  graph.nodes.forEach((node: Node) => {
     node.data.nodeState.model.Dirty = false;
     const nodeId = node.data.nodeState.model.ID;
 
@@ -105,8 +105,5 @@ export async function getSoundFromNodeID(
     }
   })
   
-  debugger;
-    // node.data.nodeState.model.Data.URL = Object.values(nestedDict[idString])[0]; // ?
-  
-  console.log("set all nodes to NOT dirty");
+  return graph.nodes
 }

@@ -133,7 +133,7 @@ export class NodeState {
     if (type === NodeType.Split) {
       add("drums");
       add("piano");
-      add("vocal");
+      add("vocals");
       add("guitar");
       add("other");
       add("bass");
