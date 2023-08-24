@@ -15,7 +15,7 @@ import {
   Input,
 } from "../Util/modelTransformation";
 
-let nodeID = 0;
+let nodeID = -2; // This is used to generate unique IDs for each node, IDK why it has to start at -2 to make the first Node have ID 0
 
 export enum NodeType {
   Source,

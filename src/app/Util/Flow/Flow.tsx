@@ -93,20 +93,27 @@ const nodeTypes = {
 
 const Canvas: React.FC = () => {
   const reactFlowInstance = useReactFlow();
-  const [nodes, setNodes, onNodesChange] = useNodesState<Node>([]);
-  const [edges, setEdges, onEdgesChange] = useEdgesState<Edge>([]);
-  const [flowKey, setFlowKey] = useState(0);
+  const window = useWindowDimensions();
   const [viewport, setViewport] = useState<Viewport>({
     x: 0,
     y: 0,
     zoom: 0.75,
   }); // find a way to save the viewport and pass it to reactflow component
+  const [nodes, setNodes, onNodesChange] = useNodesState<Node>([
+    createNewNode( ((window.width * 0.95) / 2 - viewport.x) / viewport.zoom -
+    NODE_WIDTH / 2,
+  ((window.height * 0.95) / 2 - viewport.y) / viewport.zoom - NODE_HEIGHT,
+  NodeType.Source)
+  ]);
+  const [edges, setEdges, onEdgesChange] = useEdgesState<Edge>([]);
+  const [flowKey, setFlowKey] = useState(0);
+
   const [selectedNode, setSelectedNode] = useState<NodeState>(); // do not use this directly, use selectNode() instead
   const [selectedEdge, setSelectedEdge] = useState<Edge>();
   const [openSelectedNode, setOpenSelectedNode] = useState<boolean>(false);
   const [connectStartNode, setConnectStartNode] = useState<Node>();
   const [connectStartHandleId, setConnectStartHandleId] = useState<string>();
-  const window = useWindowDimensions();
+
 
   const reloadComponent = () => {
     console.warn("Forced reload of entire graph (reloadComponent())");
@@ -430,16 +437,7 @@ const Canvas: React.FC = () => {
   }
 
   useMemo(() => {
-    // this is called when the component is first rendered, so we can add a source node
-    if (!getNode(graph, 1)) {
-      // if the source node doesn't exist
-      addNewNode(
-        ((window.width * 0.95) / 2 - viewport.x) / viewport.zoom -
-          NODE_WIDTH / 2,
-        ((window.height * 0.95) / 2 - viewport.y) / viewport.zoom - NODE_HEIGHT,
-        NodeType.Source
-      );
-    }
+    console.log("Graph loaded: ", graph)
   }, []);
 
   function addButtonHandler() {
