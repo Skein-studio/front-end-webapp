@@ -24,40 +24,36 @@ export default function SignalPresenter() {
   function getAudioFromInput() {
     // This function is used to get the audio from the node.Data.Inputs[0]
     let thisEdge = graph.edges.find((edge) => {
-      return edge.target == node!.model.ID;
-    } );
+      return edge.target == node.model.ID;
+    });
 
-    if(thisEdge == undefined) {
+    if (thisEdge == undefined) {
       return "";
     }
 
     let sourceNode = thisEdge.source;
     let sourceNodeModel = graph.nodes.find((node) => {
       return node.id == sourceNode;
-    }
-    )?.data.nodeState.model as SourceType;
+    })?.data.nodeState.model as SourceType;
 
     let audioSrc = (sourceNodeModel.Outputs as Output[])[0].Name;
 
- 
-    if(audioSrc == undefined) {
+    if (audioSrc == undefined) {
       return "";
     }
-    
+
     return audioSrc as string;
   }
 
   // useEffect to reset fetched state when node.model.Dirty changes
   useEffect(() => {
-    if (node!.model.Dirty || audioUrl == "") {
+    if (node.model.Dirty || audioUrl == "") {
       setFetched(false);
     } else setFetched(true);
     /*
       TODO: Store audios in the graph so that they can be accessed without fetching them again when it is not dirty (standard value of audioUrl)
       */
-
-
-  }, [node!.model.Dirty]);
+  }, [node.model.Dirty]);
 
   //  play button's callback include the fetchAudio function
   const playAudio = () => {
@@ -75,14 +71,14 @@ export default function SignalPresenter() {
       await SendGraphForCompute(transformtoTypescriptTypes(graph));
       let url: string;
 
-      await getSoundFromNodeID(node!.id, graph);
+      await getSoundFromNodeID(node.id, graph);
       console.log(
         graph.nodes.find((n) => {
-          return n.id == `${node!.id}`;
+          return n.id == `${node.id}`;
         })
       );
       url = graph.nodes.find((n) => {
-        return n.id == `${node!.id}`;
+        return n.id == `${node.id}`;
       })?.data.nodeState.model.Data.URL as string;
 
       setAudioUrl(url);

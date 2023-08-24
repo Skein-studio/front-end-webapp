@@ -19,44 +19,37 @@ const HandleSpacing = styled.div<HandleProps>`
       : NODE_WIDTH / 6 + "px"};
 `;
 
-export function GenerateHandles(node: NodeState | undefined) {
-  if (!node) {
-    return null;
-  }
-
+export function GenerateHandles(node: NodeState) {
   function createOutputHandles() {
     const handles = [];
-    if (node!.model.Outputs) {
-      for (let i = 0; i < node!.model.Outputs.length; i++) {
-        handles.push(
-          <HandleSpacing key={i} handletype="source" offset={i}>
-            <StyledHandle
-              handleType="source"
-              position={Position.Bottom}
-              id={node!.model.Outputs[i].ID}
-            />
-          </HandleSpacing>
-        );
-      }
+    for (let i = 0; i < node.model.Outputs.length; i++) {
+      handles.push(
+        <HandleSpacing key={i} handletype="source" offset={i}>
+          <StyledHandle
+            handleType="source"
+            position={Position.Bottom}
+            id={node.model.Outputs[i].ID}
+          />
+        </HandleSpacing>
+      );
     }
     return handles;
   }
 
   function createInputHandles() {
     const handles = [];
-    if (node!.model.Inputs) {
-      for (let i = 0; i < node!.model.Inputs.length; i++) {
-        handles.push(
-          <HandleSpacing key={i} handletype="target" offset={i}>
-            <StyledHandle
-              handleType="target"
-              position={Position.Top}
-              id={node!.model.Inputs[i].ID}
-            />
-          </HandleSpacing>
-        );
-      }
+    for (let i = 0; i < node.model.Inputs.length; i++) {
+      handles.push(
+        <HandleSpacing key={i} handletype="target" offset={i}>
+          <StyledHandle
+            handleType="target"
+            position={Position.Top}
+            id={node.model.Inputs[i].ID}
+          />
+        </HandleSpacing>
+      );
     }
+
     return handles;
   }
 

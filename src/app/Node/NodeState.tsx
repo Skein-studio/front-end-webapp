@@ -62,7 +62,7 @@ export class NodeState {
       case NodeType.Source:
         return { URL: "", base: "" };
       case NodeType.Signal:
-        return { Prompt: "Piano", Seed: "1234" };
+        return { Prompt: "", Seed: "1234" };
       case NodeType.Merge:
         return {};
       case NodeType.Split:
@@ -200,9 +200,7 @@ export const NodeProvider: React.FC<NodeProviderProps> = ({
   initialNodeState,
 }) => {
   const [reloadTrigger, setReloadTrigger] = useState(0);
-  const [nodeState, setNodeState] = useState<NodeState>(
-    initialNodeState
-  );
+  const [nodeState, setNodeState] = useState<NodeState>(initialNodeState);
 
   const forceReload = () => {
     setReloadTrigger((prev) => prev + 1);

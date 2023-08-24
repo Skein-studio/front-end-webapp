@@ -12,7 +12,7 @@ const ImportAudio: React.FC = () => {
   const { nodeState, forceReload } = useContext(NodeContext);
   const node = nodeState;
   const nodeData =
-    (node?.model.Data as SourceType) ?? (node?.model.Data as SignalType);
+    (node.model.Data as SourceType) ?? (node.model.Data as SignalType);
   const audioData = nodeData.URL as string;
   const audioState = useAudio(audioData);
   const graph = useGraph();

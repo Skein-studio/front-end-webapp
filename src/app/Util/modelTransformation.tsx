@@ -135,12 +135,12 @@ export const transformtoTypescriptTypes = (graphContext: deniGraph): Root => {
     };
     const transformNodeOutputs = (output: Output): Output => {
       let out: Output = {
-          ID: output.ID,
-          Name: "standard-output",
-          Src: "",
-        };
-      return out;
+        ID: output.ID,
+        Name: "standard-output",
+        Src: "",
       };
+      return out;
+    };
 
     switch (NodeTypeToString(nodeState.type)) {
       case "signal": {
@@ -176,7 +176,6 @@ export const transformtoTypescriptTypes = (graphContext: deniGraph): Root => {
     } as Node;
     return n;
   };
-
 
   const transformEdge = (edge: flowEdge): Edge => {
     return edge.data as Edge;

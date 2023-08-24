@@ -28,7 +28,7 @@ function SplitView({
   return (
     <NodeSmall
       widthextension={GetWidthExtension(node)}
-      selected={node?.selected ?? false}
+      selected={node.selected ?? false}
       onClick={selectNode}
     >
       {GenerateHandles(node)}

@@ -31,7 +31,7 @@ function SignalView(props: Props) {
   return (
     <NodeSmall
       widthextension={GetWidthExtension(node)}
-      selected={node?.selected ?? false}
+      selected={node.selected ?? false}
       onClick={selectNode}
     >
       {/*<GenerateHandles handleType="target" numberOfHandles={numberOfTargetHandles}/> away for now*/}

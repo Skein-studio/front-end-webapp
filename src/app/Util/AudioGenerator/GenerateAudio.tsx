@@ -11,7 +11,7 @@ import { SourceType } from "../modelTransformation";
 const GenerateAudio: React.FC = () => {
   const { nodeState, forceReload } = useContext(NodeContext);
   const node = nodeState;
-  const nodeData = node?.model.Data as SourceType;
+  const nodeData = node.model.Data as SourceType;
   const audioData = nodeData.URL;
   const graph = useGraph();
   const audioState = useAudio(audioData);

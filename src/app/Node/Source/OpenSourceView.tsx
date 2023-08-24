@@ -14,9 +14,7 @@ function BaseComponent(base: string) {
   const [reload, setReload] = useState<boolean>(false);
 
   function handleBaseChange(text: string) {
-    if (node) {
-      (node.model.Data as SourceType).base = text;
-    }
+    (node.model.Data as SourceType).base = text;
     setReload(!reload);
   }
 
