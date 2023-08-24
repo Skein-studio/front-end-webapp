@@ -4,8 +4,6 @@ sorted by decreasing importance.
 
 #### Bigger Picture Stuff
 
-- Refactor current frontend code into the updated model.
-
 #### Front End Stuff
 
 ##### To-Do:
