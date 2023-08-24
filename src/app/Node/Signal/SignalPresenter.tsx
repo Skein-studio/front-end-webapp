@@ -31,12 +31,24 @@ export default function SignalPresenter() {
       return "";
     }
 
+    let handleID = thisEdge.sourceHandle;
+
     let sourceNode = thisEdge.source;
     let sourceNodeModel = graph.nodes.find((node) => {
       return node.id == sourceNode;
     })?.data.nodeState.model as SourceType;
 
-    let audioSrc = (sourceNodeModel.Outputs as Output[])[0].Src;
+    let outputArray = sourceNodeModel.Outputs as Output[];
+
+    let output = outputArray.find((output:any) => {
+      return output.ID == handleID;
+    });
+
+    if(output == undefined){
+      return "";
+    }
+    
+    let audioSrc = output.Src;
 
     if (audioSrc == undefined) {
       return "";
