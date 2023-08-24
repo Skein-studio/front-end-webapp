@@ -36,7 +36,7 @@ export default function SignalPresenter() {
       return node.id == sourceNode;
     })?.data.nodeState.model as SourceType;
 
-    let audioSrc = (sourceNodeModel.Outputs as Output[])[0].Name;
+    let audioSrc = (sourceNodeModel.Outputs as Output[])[0].Src;
 
     if (audioSrc == undefined) {
       return "";

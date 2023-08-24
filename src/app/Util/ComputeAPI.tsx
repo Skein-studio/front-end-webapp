@@ -61,11 +61,9 @@ export async function getSoundFromNodeID(
       if (!response.ok) {
         throw new Error("{$response.status}");
       }
+      
       console.log(response);
-
       nestedDict = await response.json();
-      //nestedDict['2'] = {}
-      //nestedDict['2']['2out[0]'] = "https://www2.cs.uic.edu/~i101/SoundFiles/gettysburg10.wav";
 
       if (nestedDict[idString]) {
         outputs = nestedDict[idString];
