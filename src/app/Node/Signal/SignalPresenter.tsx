@@ -17,11 +17,9 @@ export default function SignalPresenter() {
   const graph = useGraph();
   const { nodeState, forceReload } = useContext(NodeContext);
   const node = nodeState;
-  const [audioUrl, setAudioUrl] = useState<string>(/*getAudioFromInput() get the audio using this*/ "");
+  const [audioUrl, setAudioUrl] = useState<string>(getAudioFromInput());
   const [fetched, setFetched] = useState<boolean>(false);
   const audioState = useAudio(audioUrl);
-
-  console.log(node)
 
   function getAudioFromInput() {
     // This function is used to get the audio from the node.Data.Inputs[0]
@@ -38,8 +36,6 @@ export default function SignalPresenter() {
       return node.id == sourceNode;
     }
     )?.data.nodeState.model as SourceType;
-
-    console.log("YOAH", sourceNodeModel);
 
     let audioSrc = (sourceNodeModel.Outputs as Output[])[0].Name;
 
