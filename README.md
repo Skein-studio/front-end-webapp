@@ -22,8 +22,6 @@ sorted by decreasing importance.
 
 ###### Signal Node
 
-- Signals that are computed gets "uncomputed" a new node is created.
-
 ###### Merge Node
 
 ###### Split Node
