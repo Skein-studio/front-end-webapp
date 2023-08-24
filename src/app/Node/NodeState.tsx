@@ -124,6 +124,7 @@ export class NodeState {
     switch (type) {
       case NodeType.Split:
         numOutputs = 6;
+
         break;
       default:
         numOutputs = 1;
@@ -138,7 +139,7 @@ export class NodeState {
       add("bass");
     } else {
       for (let i = 0; i < numOutputs; i++) {
-        add("");
+        add("standard-output");
       }
     }
 
