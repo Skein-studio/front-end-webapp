@@ -14,6 +14,7 @@ export default function OpenSignalView(props: Props) {
   ) => {
     props.setPrompt(event.target.value);
   };
+  console.log(props.prompt);
 
   return (
     <Container>
@@ -27,6 +28,7 @@ export default function OpenSignalView(props: Props) {
             type="text"
             value={props.prompt}
             onChange={handleInstrumentChange}
+            defaultValue={props.prompt}
           />
         </div>
       </Container>

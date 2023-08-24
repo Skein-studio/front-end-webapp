@@ -28,7 +28,7 @@ function OpenSignalPresenter() {
   };
   return (
     <OpenSignalView
-      prompt={nodeData.prompt as string}
+      prompt={nodeData.Prompt as string}
       setPrompt={handlePromptChange}
     />
   );
