@@ -346,7 +346,7 @@ const Canvas: React.FC = () => {
     let { x, y } = reactFlowInstance.project({ x: clientX, y: clientY });
 
     // Subtract viewport's position from the projected coordinates and adjust for the zoom level
-    x = (x - viewport.x) / viewport.zoom - NODE_WIDTH / 2;
+    x = (x - viewport.x) / viewport.zoom - NODE_WIDTH / 5;
     y = (y - viewport.y) / viewport.zoom - NODE_HEIGHT / 2;
     // Only add a new node if there isn't one at this position already
     let newNode = null;
