@@ -110,7 +110,7 @@ const Canvas: React.FC = () => {
       so that it can be used to force a refresh from inside the context, like when setting or updating using the
       functions inside GraphContext.tsx (setNodes() etc).
       This way, we don't need to double click on any button to make it refresh
-      TODO: Remove this, but to do that, must find alternative for graph.reloadComponent() in OpenSignalPresenter & RecordPresenter & ImportAudio & GenerateAudio
+      TODO: Remove this, but to do that, must find alternative for graph.reloadComponent() in RecordPresenter & ImportAudio & GenerateAudio
     */
   };
 
@@ -318,17 +318,6 @@ const Canvas: React.FC = () => {
     let clientX = 0,
       clientY = 0;
 
-    // const handleConnectedEdge = edges.find(
-    //   (edge) => edge.sourceHandle === connectStartHandleId
-    // );
-
-    // if (handleConnectedEdge) {
-    //   console.log(
-    //     `Cannot create new node. Handle: ${connectStartHandleId} is already connected to another node.`
-    //   );
-    //   return;
-    // }
-
     if (connectStartHandleId?.includes("in")) {
       console.log("you can't create a signal from an input");
       return;
@@ -369,15 +358,8 @@ const Canvas: React.FC = () => {
       if (
         lastNode &&
         lastNode.type !== "unspecified"
-        // lastNode.type !== connectStartNode.type
       ) {
-        // const handleConnectedEdge = edges.find(
-        //   (edge) =>
-        //     edge.sourceHandle === connectStartHandleId ||
-        //     edge.targetHandle === connectStartHandleId
-        // );
 
-        // if (!handleConnectedEdge) {
         let newConnection: Connection = {
           source: connectStartNode.id,
           target: lastNode.id,
@@ -395,20 +377,9 @@ const Canvas: React.FC = () => {
 
         setEdges((eds) => {
           const newEdges = addEdge(newEdge, eds);
-          //setGraphEdges(graph, newEdges);
           return newEdges;
         });
-
-        // } else {
-        //   console.log(
-        //     `Cannot create new connection. Handle: ${connectStartHandleId} is already connected to another node.`
-        //   );
-        // }
       }
-      // else if (lastNode && lastNode.type === connectStartNode.type) {
-      //   console.log("Cannot connect nodes of the same type: ", lastNode.type);
-      // }
-
       setConnectStartNode(undefined); // reset the start node
       setConnectStartHandleId(""); // reset the handle id
     }
@@ -457,8 +428,8 @@ const Canvas: React.FC = () => {
     if (!getNode(graph, 1)) {
       // if the source node doesn't exist
       addNewNode(
-        window.width / 2,
-        window.height / 2 - NODE_HEIGHT,
+        (window.width / 2 - viewport.x) / viewport.zoom - NODE_WIDTH/2,
+        (window.height / 2 - viewport.y) / viewport.zoom - NODE_HEIGHT / 2,
         NodeType.Source
       );
     }
@@ -467,7 +438,7 @@ const Canvas: React.FC = () => {
   function addButtonHandler() {
     // this is called when the user clicks on the "add" button
 
-    let x = (window.width / 2 - viewport.x) / viewport.zoom - NODE_WIDTH / 2; // half the width of the node, so it's centered, relative to the viewport, not the window
+    let x = (window.width / 2 - viewport.x) / viewport.zoom - NODE_WIDTH/2; // half the width of the node, so it's centered, relative to the viewport, not the window
     let y = (window.height / 2 - viewport.y) / viewport.zoom - NODE_HEIGHT / 2; // half the height of the node, so it's centered, relative to the viewport, not the window
     addNewNode(x, y, NodeType.Unspecified);
   }
