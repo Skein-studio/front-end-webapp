@@ -1,7 +1,7 @@
 import { Node } from "reactflow";
 import { Graph, useGraph } from "../Node/GraphContext";
 import { NodeContext, NodeState } from "../Node/NodeState";
-import { Root, transformtoTypescriptTypes } from "./modelTransformation";
+import { Root, transformtoTypescriptTypes, Output as modelOutput} from "./modelTransformation";
 import { useContext } from "react";
 
 export async function SendGraphForCompute(graph: Root) {
@@ -37,8 +37,11 @@ type nodesDict = {
   [nodeID: string]: outputs;
 };
 type outputs = {
-  [handleID: string]: string;
+  [outputName: string]: string;
 };
+
+
+
 const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
 
 export async function getSoundFromNodeID(
@@ -51,7 +54,6 @@ export async function getSoundFromNodeID(
   //console.log(graphContext)
   let idString = `${id}`;
   // let endpoint = "http://localhost:5001/compute/poll"
-  let outputs: outputs;
   let nestedDict: nodesDict = {};
   let retries = 0;
 
@@ -64,11 +66,10 @@ export async function getSoundFromNodeID(
 
       console.log(response);
       nestedDict = await response.json();
-
       if (nestedDict[idString]) {
-        outputs = nestedDict[idString];
         break;
       }
+
       retries++;
       if (retries < maxRetries) {
         await sleep(retryDelay);
@@ -86,10 +87,26 @@ export async function getSoundFromNodeID(
   if (retries == maxRetries) {
     throw new Error("Max amount of fetch retries. Cancelling...");
   }
-
   graphContext.nodes.forEach((node: Node) => {
     node.data.nodeState.model.Dirty = false;
-    node.data.nodeState.model.Data.URL = Object.values(nestedDict[idString])[0]; // ?
-  });
+    const nodeId = node.data.nodeState.model.ID;
+
+    // Check if the nodeID exists in the JSON data
+    if (nestedDict[nodeId]) {
+      // Traverse each output of the node
+      node.data.nodeState.model.Outputs.forEach((output: modelOutput) => {
+        const outputName = output.Name;
+ 
+        // Check if the outputName exists in the JSON data for the current node
+        if (nestedDict[nodeId][outputName]) {
+          output.Src = nestedDict[nodeId][outputName];
+        }
+      });
+    }
+  })
+  
+  debugger;
+    // node.data.nodeState.model.Data.URL = Object.values(nestedDict[idString])[0]; // ?
+  
   console.log("set all nodes to NOT dirty");
 }
