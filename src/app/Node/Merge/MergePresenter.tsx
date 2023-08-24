@@ -1,6 +1,6 @@
 //MergePresenter.tsx
 
-import React, { useState, useEffect, useContext } from "react";
+import React, { useEffect, useContext } from "react";
 import MergeView from "./MergeView";
 import { NodeContext } from "../NodeState";
 import { useGraph } from "../GraphContext";
