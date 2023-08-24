@@ -435,8 +435,8 @@ const Canvas: React.FC = () => {
     if (!getNode(graph, 1)) {
       // if the source node doesn't exist
       addNewNode(
-        (window.width / 2 - viewport.x) / viewport.zoom - NODE_WIDTH / 2,
-        (window.height / 2 - viewport.y) / viewport.zoom - NODE_HEIGHT,
+        (window.width * 0.95 / 2 - viewport.x) / viewport.zoom - NODE_WIDTH / 2,
+        (window.height * 0.95 / 2 - viewport.y) / viewport.zoom - NODE_HEIGHT,
         NodeType.Source
       );
     }
@@ -445,8 +445,8 @@ const Canvas: React.FC = () => {
   function addButtonHandler() {
     // this is called when the user clicks on the "add" button
 
-    let x = (window.width / 2 - viewport.x) / viewport.zoom - NODE_WIDTH / 2; // half the width of the node, so it's centered, relative to the viewport, not the window
-    let y = (window.height / 2 - viewport.y) / viewport.zoom - NODE_HEIGHT; // centered, relative to the viewport, not the window
+    let x = (window.width * 0.95 / 2 - viewport.x) / viewport.zoom - NODE_WIDTH / 2; // half the width of the node, so it's centered, relative to the viewport, not the window
+    let y = (window.height * 0.95 / 2 - viewport.y) / viewport.zoom - NODE_HEIGHT; // centered, relative to the viewport, not the window
     addNewNode(x, y, NodeType.Unspecified);
   }
 
