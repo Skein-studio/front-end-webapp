@@ -21,7 +21,7 @@ export default function SignalPresenter() {
 
   // useEffect to reset fetched state when node.model.Dirty changes
   useEffect(() => {
-    if (node.model.Dirty || audioUrl == "") {
+    if (node.model.Dirty) {
       setFetched(false);
     } else setFetched(true);
     /*
