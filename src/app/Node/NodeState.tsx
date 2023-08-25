@@ -80,17 +80,12 @@ export class NodeState {
   addTargetHandle() {
     this.model.Inputs.push({
       ID: this.model.ID + "in[" + this.model.Inputs.length + "]",
+      Name: "input" + this.model.Inputs.length,
     });
   }
 
   setInputs(type: NodeType, ID: string): Input[] {
     let newInputs: Input[] = [];
-
-    const add = () => {
-      newInputs.push({
-        ID: ID + "in[" + newInputs.length + "]",
-      });
-    };
 
     let numInputs = 0;
     switch (type) {
@@ -105,7 +100,7 @@ export class NodeState {
         break;
     }
     for (let i = 0; i < numInputs; i++) {
-      add();
+      this.addTargetHandle();
     }
     return newInputs;
   }
