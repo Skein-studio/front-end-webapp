@@ -3,8 +3,8 @@ import { Container } from "../BaseStyles";
 import styled from "styled-components";
 import PlayImg from "./play.svg";
 import PauseImg from "./pause.svg";
+import DirtyImg from "./dirty.svg";
 import { AudioState } from "./useAudio";
-import { useEffect } from "react";
 
 export type AudioPlayerProps = {
   audioState: AudioState;
@@ -30,7 +30,9 @@ export default function AudioPlayer(props: AudioPlayerProps) {
         {props.audioState.playing ? (
           <PlayButton img={PauseImg} callback={props.audioState.onPlayPause} />
         ) : (
-          <PlayButton img={PlayImg} callback={props.audioState.onPlayPause} />
+          props.audioComputed ? 
+          <PlayButton img={PlayImg} callback={props.audioState.onPlayPause} /> :
+          <PlayButton img={DirtyImg} callback={props.audioState.onPlayPause} />
         )}
 
         <ProgressBar progress={props.audioState.progress} />
@@ -63,7 +65,13 @@ const StyledPlayButton = styled.button`
   align-items: center;
   justify-content: center;
   background-color: lightgrey;
+
+  img { // Targeting the img element inside StyledPlayButton
+    width: 32px;
+    height: 32px;
+  }
 `;
+
 interface ProgressBarContainerProps {
   smallplayer?: boolean;
 }
