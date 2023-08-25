@@ -85,7 +85,7 @@ export default function SignalPresenter() {
 
       //THIS DOES NOT WORK?? PLS HELP
       //(Src ska alltså uppdateras i)
-      graph.setNodes([... (await getSoundFromNodeID(node.id, graph))])
+      await getSoundFromNodeID(node.id, graph);
       
       graph.reloadComponent()
       console.log(

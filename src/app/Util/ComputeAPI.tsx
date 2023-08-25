@@ -104,6 +104,6 @@ export async function getSoundFromNodeID(
       });
     }
   })
+  console.log("Done", graph)
   
-  return graph.nodes
 }
