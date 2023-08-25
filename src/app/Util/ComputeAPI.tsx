@@ -1,8 +1,6 @@
 import { Node } from "reactflow";
-import { Graph, useGraph } from "../Node/GraphContext";
-import { NodeContext, NodeState } from "../Node/NodeState";
-import { Root, transformtoTypescriptTypes, Output as modelOutput} from "./modelTransformation";
-import { useContext } from "react";
+import { Graph } from "../Node/GraphContext";
+import { Root, Output as modelOutput} from "./modelTransformation";
 
 export async function SendGraphForCompute(graph: Root) {
   console.log("Sending graph for compute: ", graph);

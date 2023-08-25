@@ -11,7 +11,6 @@ export type AudioState = {
 };
 
 const useAudio = (source: string) => {
-  console.log(source)
   const [isPlaying, setIsPlaying] = useState(false);
   const [duration, setDuration] = useState(0);
   const [progress, setProgress] = useState(0);

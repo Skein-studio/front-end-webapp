@@ -92,15 +92,6 @@ const nodeTypes = {
 
 const START_ZOOM = 0.75;
 
-/*
-Center:
- x: ((window.width * 0.95) / 2 - viewport.x) / viewport.zoom - NODE_WIDTH / 2;
- y: ((window.height * 0.95) / 2 - viewport.y) / viewport.zoom - NODE_HEIGHT;
-
-*/
-
-let init = false;
-
 const Canvas: React.FC = () => {
   const reactFlowInstance = useReactFlow();
   const window = useWindowDimensions();
@@ -113,7 +104,6 @@ const Canvas: React.FC = () => {
   const [nodes, setNodes, onNodesChange] = useNodesState<Node>([]);
   const [edges, setEdges, onEdgesChange] = useEdgesState<Edge>([]);
   const [flowKey, setFlowKey] = useState(0);
-
   const [selectedNode, setSelectedNode] = useState<NodeState>(); // do not use this directly, use selectNode() instead
   const [selectedEdge, setSelectedEdge] = useState<Edge>();
   const [openSelectedNode, setOpenSelectedNode] = useState<boolean>(false);

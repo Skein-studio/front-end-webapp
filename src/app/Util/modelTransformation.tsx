@@ -1,7 +1,7 @@
 //modelTransformation.tsx
 import { Graph as deniGraph } from "../Node/GraphContext";
 import { Edge as flowEdge, Node as flowNode } from "reactflow";
-import { NodeState, NodeType, NodeTypeToString } from "../Node/NodeState";
+import { NodeState, NodeTypeToString } from "../Node/NodeState";
 // Create a dummy data generator function for each type
 
 export enum handleType {

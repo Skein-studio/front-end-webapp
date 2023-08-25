@@ -16,44 +16,8 @@ export default function SignalPresenter() {
   const node = nodeState;
   const [audioUrl, setAudioUrl] = useState<string>(nodeState.model.Outputs[0].Src);
   const [fetched, setFetched] = useState<boolean>(false);
+  const [fetching , setFetching] = useState<boolean>(false);
   const audioState = useAudio(audioUrl);
-/*
-  function getAudioFromInput() {
-    // This function is used to get the audio URL from the parent node
-    let thisEdge = graph.edges.find((edge) => {
-      return edge.target == node.model.ID;
-    });
-
-    if (thisEdge == undefined) {
-      return "";
-    }
-
-    let handleID = thisEdge.sourceHandle;
-
-    let sourceNode = thisEdge.source;
-    let sourceNodeModel = graph.nodes.find((node) => {
-      return node.id == sourceNode;
-    })?.data.nodeState.model;
-
-    let outputArray = sourceNodeModel.Outputs as Output[];
-
-    let output = outputArray.find((output:any) => {
-      return output.ID == handleID;
-    });
-
-    if(output == undefined){
-      return "";
-    }
-    
-    let audioSrc = output.Src;
-
-    if (audioSrc == undefined) {
-      return "";
-    }
-
-    return audioSrc as string;
-  }
-  */
 
   // useEffect to reset fetched state when node.model.Dirty changes
   useEffect(() => {
@@ -76,14 +40,13 @@ export default function SignalPresenter() {
 
   const fetchAudio = async () => {
     setFetched(false);
+    setFetching(true);// Set fetching to true when the audio is being fetched, so that the spinner is shown
+
     try {
-      //   //TODO get audioURL with while loop until node with nodeID is found in computed nodes ??
       await SendGraphForCompute(transformtoTypescriptTypes(graph));
       console.log(transformtoTypescriptTypes(graph))
       let url: string;
 
-      //THIS DOES NOT WORK?? PLS HELP
-      //(Src ska alltså uppdateras i)
       await getSoundFromNodeID(node.id, graph);
       
       graph.reloadComponent()
@@ -95,7 +58,7 @@ export default function SignalPresenter() {
       url = graph.nodes.find((n) => {
         return n.id == `${node.id}`;
       })?.data.nodeState.model.Data.URL as string;
-
+      setFetching(false);
       setAudioUrl(url);
       setFetched(true); // Set fetched to true once the audio URL is obtained
     } catch (e) {
@@ -108,6 +71,7 @@ export default function SignalPresenter() {
       audioState={audioState}
       playAudio={playAudio}
       fetched={fetched}
+      fetching={fetching}
     />
   );
 }
