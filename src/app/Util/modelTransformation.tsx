@@ -142,21 +142,11 @@ export const transformtoTypescriptTypes = (graphContext: deniGraph): Root => {
       return inpu;
     };
     const transformNodeOutputs = (output: Output): Output => {
-      let out: Output;
-      if (nodeState.type == NodeType.Split) {
-        out = {
+      return {
           ID: output.ID,
           Name: output.Name,
-          Src: "",
-        };
-      } else {
-        out = {
-          ID: output.ID,
-          Name: "standard-output",
-          Src: "",
-        };
-      }
-      return out;
+          Src: output.Src,
+        };    
     };
     
 

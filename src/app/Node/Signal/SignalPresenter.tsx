@@ -81,6 +81,7 @@ export default function SignalPresenter() {
     try {
       //   //TODO get audioURL with while loop until node with nodeID is found in computed nodes ??
       await SendGraphForCompute(transformtoTypescriptTypes(graph));
+      console.log(transformtoTypescriptTypes(graph))
       let url: string;
 
       //THIS DOES NOT WORK?? PLS HELP
