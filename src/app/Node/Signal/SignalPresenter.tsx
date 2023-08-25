@@ -12,15 +12,13 @@ import { getSoundFromNodeID } from "@/app/Util/ComputeAPI";
 import { GraphContext, setNode, useGraph } from "../GraphContext";
 
 export default function SignalPresenter() {
-  const {nodes, setNodes} = useContext(GraphContext);
   const graph = useGraph();
   const { nodeState, forceReload } = useContext(NodeContext);
   const node = nodeState;
   const [audioUrl, setAudioUrl] = useState<string>(nodeState.model.Outputs[0].Src);
-  console.log("NODESTATE!! ",nodeState)
   const [fetched, setFetched] = useState<boolean>(false);
   const audioState = useAudio(audioUrl);
-
+/*
   function getAudioFromInput() {
     // This function is used to get the audio URL from the parent node
     let thisEdge = graph.edges.find((edge) => {
@@ -56,6 +54,7 @@ export default function SignalPresenter() {
 
     return audioSrc as string;
   }
+  */
 
   // useEffect to reset fetched state when node.model.Dirty changes
   useEffect(() => {
