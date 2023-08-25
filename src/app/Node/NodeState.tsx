@@ -87,6 +87,13 @@ export class NodeState {
   setInputs(type: NodeType, ID: string): Input[] {
     let newInputs: Input[] = [];
 
+    const add = () => {
+      newInputs.push({
+        ID: ID + "in[" + newInputs.length + "]",
+        Name: "input" + newInputs.length,
+      });
+    };
+
     let numInputs = 0;
     switch (type) {
       case NodeType.Source:
@@ -100,7 +107,7 @@ export class NodeState {
         break;
     }
     for (let i = 0; i < numInputs; i++) {
-      this.addTargetHandle();
+      add();
     }
     return newInputs;
   }
