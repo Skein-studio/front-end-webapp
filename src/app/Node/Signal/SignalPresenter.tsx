@@ -5,11 +5,10 @@ import { useContext, useEffect, useState } from "react";
 import { NodeContext } from "../NodeState";
 import { SendGraphForCompute } from "@/app/Util/ComputeAPI";
 import {
-  Output,
   transformtoTypescriptTypes,
 } from "@/app/Util/modelTransformation";
 import { getSoundFromNodeID } from "@/app/Util/ComputeAPI";
-import { GraphContext, setNode, useGraph } from "../GraphContext";
+import { useGraph } from "../GraphContext";
 
 export default function SignalPresenter() {
   const graph = useGraph();
