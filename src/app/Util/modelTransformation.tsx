@@ -129,16 +129,11 @@ export const transformtoTypescriptTypes = (graphContext: deniGraph): Root => {
     const transformNodeInputs = (input: Input): Input => {
       let inpu: Input;
 
-      if (nodeState.type == NodeType.Merge) {
-        inpu = { 
-          ID: input.ID,
-          Name: input.Name 
-        };
-      }
-      inpu = {
-        ID: input.ID,
-        Name: "standard-input",
-      };
+    inpu = { 
+      ID: input.ID,
+      Name: input.Name 
+    };
+      
       return inpu;
     };
     const transformNodeOutputs = (output: Output): Output => {
