@@ -26,7 +26,8 @@ const createDummyEdge = (): Edge => ({
 });
 
 const createDummyInput = (): Input => ({
-  ID: "dummyInputName",
+  ID: "dummyInputID",
+  Name: "dummyInputName"
 });
 
 const createDummyOutput = (): Output => ({
@@ -126,15 +127,10 @@ export const transformtoTypescriptTypes = (graphContext: deniGraph): Root => {
   const transformNode = (node: flowNode): Node => {
     let nodeState = node.data.nodeState as NodeState;
 
-    const transformNodeInputs = (input: Input): Input => {
-      let inpu: Input;
-
-    inpu = { 
-      ID: input.ID,
-      Name: input.Name 
-    };
-      
-      return inpu;
+    const transformNodeInputs = (input: Input): any => {   
+      return { 
+        Name: input.Name 
+      };;
     };
     const transformNodeOutputs = (output: Output): Output => {
       return {
@@ -251,6 +247,7 @@ export interface UnspecifiedType {}
 
 export interface Input {
   ID: string;
+  Name: string
   [k: string]: unknown;
 }
 export interface Output {
