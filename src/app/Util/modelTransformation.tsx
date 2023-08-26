@@ -68,7 +68,6 @@ function getChildNodeIds(graph: Graph, nodeId: string): string[] {
   for (const edge of graph.Edges) {
     if (edge.Output.NodeID === nodeId) {
       childNodeIds.push(edge.Input.NodeID);
-      console.log("pushed ", edge.Input.NodeID, " which should be the child of " , nodeId);
     }
   }
 
