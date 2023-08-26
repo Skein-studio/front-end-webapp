@@ -32,7 +32,6 @@ export function deleteEdges(context: Graph, edges: Edge[]) {
   for (const edge of edges) {
     const sourceNode = getNode(context, edge.source);
     const targetNode = getNode(context,edge.target);
-
     if (targetNode) {
       targetNode.data.nodeState.model.Dirty = true;
     }
@@ -42,6 +41,7 @@ export function deleteEdges(context: Graph, edges: Edge[]) {
     (edge) => !edges.find((e) => e.id === edge.id)
   );
   context.setEdges(newEdges); // Assuming setEdges is defined in Graph type
+  context.reloadComponent();
 }
 
 export function setDirtyNodes(context: Graph, dirtyIds: string[]) {
