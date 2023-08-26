@@ -66,8 +66,9 @@ function getChildNodeIds(graph: Graph, nodeId: string): string[] {
 
   // Iterate through the graph's edges to find child nodes for the given node
   for (const edge of graph.Edges) {
-    if (edge.Input.NodeID === nodeId) {
-      childNodeIds.push(edge.Output.NodeID);
+    if (edge.Output.NodeID === nodeId) {
+      childNodeIds.push(edge.Input.NodeID);
+      console.log("pushed ", edge.Input.NodeID, " which should be the child of " , nodeId);
     }
   }
 
@@ -76,7 +77,8 @@ function getChildNodeIds(graph: Graph, nodeId: string): string[] {
 function gatherDirtyIds(
   graph: Graph,
   nodeId: string,
-  visited: Set<string> = new Set()
+  visited: Set<string> = new Set(),
+  isParentDirty: boolean = false
 ): string[] {
   const idsToMarkDirty: string[] = [];
 
@@ -90,16 +92,17 @@ function gatherDirtyIds(
   const currentNode = graph.Nodes.find((node) => node.ID === nodeId);
 
   if (currentNode) {
-    // Add current nodeId if it's dirty
-    if (currentNode.Dirty) {
+    // Add current nodeId if it's dirty or if parent is dirty
+    if (currentNode.Dirty || isParentDirty) {
       idsToMarkDirty.push(nodeId);
+      isParentDirty = true;  // For subsequent child nodes
     }
 
     // Get child node IDs for the current node
     const childNodeIds = getChildNodeIds(graph, nodeId);
 
     for (const childId of childNodeIds) {
-      idsToMarkDirty.push(...gatherDirtyIds(graph, childId, visited));
+      idsToMarkDirty.push(...gatherDirtyIds(graph, childId, visited, isParentDirty));
     }
   }
 

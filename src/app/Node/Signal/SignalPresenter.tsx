@@ -3,11 +3,10 @@ import useAudio from "@/app/Util/AudioPlayback/useAudio";
 import SignalView from "./SignalView";
 import { useContext, useEffect, useState } from "react";
 import { NodeContext } from "../NodeState";
-import { SendGraphForCompute } from "@/app/Util/ComputeAPI";
+import { SendGraphForCompute,getSoundFromNodeID } from "@/app/Util/ComputeAPI";
 import {
   transformtoTypescriptTypes,
 } from "@/app/Util/modelTransformation";
-import { getSoundFromNodeID } from "@/app/Util/ComputeAPI";
 import { useGraph } from "../GraphContext";
 
 export default function SignalPresenter() {
@@ -23,15 +22,18 @@ export default function SignalPresenter() {
   useEffect(() => {
     if (node.model.Dirty) {
       setFetched(false);
-    } else setFetched(true);
+      setFetching(false);
+    } else {
+      setFetched(true);
+    }
     /*
       TODO: Store audios in the graph so that they can be accessed without fetching them again when it is not dirty (standard value of audioUrl)
-      */
+    */
   }, [node.model.Dirty]);
 
   //  play button's callback include the fetchAudio function
   const playAudio = () => {
-    if (fetched && audioUrl != "") {
+    if (fetched) {
       audioState.onPlayPause();
     } else {
       fetchAudio();
@@ -39,7 +41,6 @@ export default function SignalPresenter() {
   };
 
   const fetchAudio = async () => {
-    setFetched(false);
     setFetching(true);// Set fetching to true when the audio is being fetched, so that the spinner is shown
 
     try {

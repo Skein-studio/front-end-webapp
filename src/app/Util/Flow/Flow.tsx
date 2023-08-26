@@ -190,7 +190,7 @@ const Canvas: React.FC = () => {
     setDirtyNodes(graph, allDirtyIds);
     console.log("allDirtyIds: ", allDirtyIds);
     console.log("edges changed", edges);
-  }, [/*nodes,*/ edges]);
+  }, [nodes, edges]);
 
   function stopSelect() {
     // this is called when the user clicks on the canvas

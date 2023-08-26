@@ -16,7 +16,7 @@ function OpenSignalPresenter() {
   const handlePromptChange = (prompt: string) => {
     node.setPrompt(prompt);
     node.model.Dirty = true;
-    forceReload();
+    //forceReload();
     graph.reloadComponent();
   };
   return (
