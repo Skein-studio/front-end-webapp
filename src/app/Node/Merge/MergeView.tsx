@@ -34,8 +34,9 @@ function MergeView({
     graph.selectNode(node);
   }
   function renderButton() {
-    return <></>
-    if (node!.model.Inputs!.length < 10) {
+    // A button in the corner to add more inputs, but right now it is disabled
+    return <></>;
+    if (node.model.Inputs!.length < 10) {
       // If the number of inputs is less than 10, then the button is enabled
       return <AddButton onClick={addTargetHandle}>+</AddButton>;
     } else {
@@ -46,7 +47,7 @@ function MergeView({
   return (
     <NodeSmall
       widthextension={GetWidthExtension(node)}
-      selected={node?.selected ?? false}
+      selected={node.selected ?? false}
       onClick={selectNode}
     >
       {GenerateHandles(node)}

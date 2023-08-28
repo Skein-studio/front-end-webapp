@@ -3,7 +3,6 @@
 import { BlankSpace, Button, Container } from "@/app/Util/BaseStyles";
 import { NodeSmall, NodeTitle } from "@/app/Util/Flow/NodeStyles";
 import { NodeContext, NodeType } from "../NodeState";
-import { Handle, Position } from "reactflow";
 import { useContext } from "react";
 
 interface Props {
@@ -19,7 +18,7 @@ function UnspecifiedView(props: Props) {
 
   return (
     <Container>
-      <NodeSmall widthextension={0} selected={node?.selected ?? false}>
+      <NodeSmall widthextension={0} selected={node.selected ?? false}>
         <NodeTitle>New Node</NodeTitle>
         <BlankSpace width={1} height={10}></BlankSpace>
         <Container flexdir="row">

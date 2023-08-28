@@ -24,8 +24,7 @@ const SmallView = () => {
 
   return (
     <>
-      <PreviewText>{(node?.model.Data as SourceType).URL}</PreviewText>
-      {/*audioData && <audio src={audioData} controls /> this is removed since we currently decided not to have a play button in the source file*/}
+      <PreviewText>{(node.model.Data as SourceType).URL}</PreviewText>
     </>
   );
 };
@@ -47,7 +46,7 @@ const SourceView: React.FC<SourceProps> = ({ base }) => {
     //can extend width by multiplying a value times the number of outputs - 10 or something in that manner
     <NodeSmall
       widthextension={0}
-      selected={node?.selected ?? false}
+      selected={node.selected ?? false}
       onClick={selectNode}
     >
       <BlankSpace height={5} width={5}></BlankSpace>

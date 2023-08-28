@@ -12,7 +12,7 @@ const ImportAudio: React.FC = () => {
   const { nodeState, forceReload } = useContext(NodeContext);
   const node = nodeState;
   const nodeData =
-    (node?.model.Data as SourceType) ?? (node?.model.Data as SignalType);
+    (node.model.Data as SourceType) ?? (node.model.Data as SignalType);
   const audioData = nodeData.URL as string;
   const audioState = useAudio(audioData);
   const graph = useGraph();
@@ -26,7 +26,7 @@ const ImportAudio: React.FC = () => {
       nodeData.Dirty = true;
       console.log(fileUrl);
       forceReload();
-      graph.reloadComponent();// TODO: This should be replaced , and the node should be updated via forceReload, not just here in the OpenView but in the small view too (SourcePresenter.tsx, SignalPresenter.tsx, etc.)
+      graph.reloadComponent(); // TODO: This should be replaced , and the node should be updated via forceReload, not just here in the OpenView but in the small view too (SourcePresenter.tsx, SignalPresenter.tsx, etc.)
     }
   };
 

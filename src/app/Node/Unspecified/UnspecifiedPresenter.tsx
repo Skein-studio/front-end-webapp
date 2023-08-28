@@ -7,8 +7,7 @@ import { NodeType } from "../NodeState";
 import { NodeTypeToString } from "../NodeState";
 import { useGraph, setNode } from "../GraphContext";
 
-
-function UnspecifiedPresenter () {
+function UnspecifiedPresenter() {
   const { nodeState, forceReload } = useContext(NodeContext);
   const node = nodeState;
   const graph = useGraph();
@@ -37,6 +36,6 @@ function UnspecifiedPresenter () {
   }
 
   return <UnspecifiedView setNode={changeType} />;
-};
+}
 
 export default UnspecifiedPresenter;

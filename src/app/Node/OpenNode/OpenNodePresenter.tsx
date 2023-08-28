@@ -14,11 +14,10 @@ export default function OpenNodePresenter(props: Props) {
   function forceReload() {
     setReload(!reload);
   }
-  
 
   return (
     <NodeContext.Provider value={{ nodeState: props.state, forceReload }}>
-    <OpenNodeView nodeState={props.state} closeWindow={props.closeWindow} />
-  </NodeContext.Provider>
+      <OpenNodeView nodeState={props.state} closeWindow={props.closeWindow} />
+    </NodeContext.Provider>
   );
 }

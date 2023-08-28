@@ -38,7 +38,7 @@ import FlowView from "./FlowView";
 /* This component's purpose is to create the flowchart 
 view and handle the logic for the flowchart. 
 It is the central file of the app. */
-import { NODE_WIDTH } from "./NodeStyles";
+import { NODE_WIDTH, NODE_HEIGHT } from "./NodeStyles";
 import useWindowDimensions from "../windowDimensions";
 import {
   Input,
@@ -48,57 +48,70 @@ import {
   transformtoTypescriptTypes,
 } from "../modelTransformation";
 
-const NODE_HEIGHT = 50;
 
 const proOptions = { hideAttribution: true };
 
 const nodeTypes = {
   // this is where we define the node types
   source: (nodeData: any) => (
-    <NodeContext.Provider value={{nodeState:nodeData.data.nodeState, forceReload:()=>{}}}>
+    <NodeContext.Provider
+      value={{ nodeState: nodeData.data.nodeState, forceReload: () => {} }}
+    >
       <SourcePresenter />
     </NodeContext.Provider>
   ),
   unspecified: (nodeData: any) => (
-    <NodeContext.Provider value={{nodeState:nodeData.data.nodeState, forceReload:()=>{}}}>
+    <NodeContext.Provider
+      value={{ nodeState: nodeData.data.nodeState, forceReload: () => {} }}
+    >
       <UnspecifiedPresenter />
     </NodeContext.Provider>
   ),
   split: (nodeData: any) => (
-    <NodeContext.Provider value={{nodeState:nodeData.data.nodeState, forceReload:()=>{}}}>
+    <NodeContext.Provider
+      value={{ nodeState: nodeData.data.nodeState, forceReload: () => {} }}
+    >
       <SplitPresenter />
     </NodeContext.Provider>
   ),
   merge: (nodeData: any) => (
-    <NodeContext.Provider value={{nodeState:nodeData.data.nodeState, forceReload:()=>{}}}>
+    <NodeContext.Provider
+      value={{ nodeState: nodeData.data.nodeState, forceReload: () => {} }}
+    >
       <MergePresenter />
     </NodeContext.Provider>
   ),
   signal: (nodeData: any) => (
-    <NodeContext.Provider value={{nodeState:nodeData.data.nodeState, forceReload:()=>{}}}>
+    <NodeContext.Provider
+      value={{ nodeState: nodeData.data.nodeState, forceReload: () => {} }}
+    >
       <SignalPresenter />
     </NodeContext.Provider>
   ),
 };
 
+const START_ZOOM = 0.75;
+
 const Canvas: React.FC = () => {
   const reactFlowInstance = useReactFlow();
-  const [nodes, setNodes, onNodesChange] = useNodesState<Node>([]);
-  const [edges, setEdges, onEdgesChange] = useEdgesState<Edge>([]);
-  const [flowKey, setFlowKey] = useState(0);
+  const window = useWindowDimensions();
   const [viewport, setViewport] = useState<Viewport>({
     x: 0,
     y: 0,
-    zoom: 0.75,
+    zoom: START_ZOOM,
   }); // find a way to save the viewport and pass it to reactflow component
+
+  const [nodes, setNodes, onNodesChange] = useNodesState<Node>([]);
+  const [edges, setEdges, onEdgesChange] = useEdgesState<Edge>([]);
+  const [flowKey, setFlowKey] = useState(0);
   const [selectedNode, setSelectedNode] = useState<NodeState>(); // do not use this directly, use selectNode() instead
   const [selectedEdge, setSelectedEdge] = useState<Edge>();
   const [openSelectedNode, setOpenSelectedNode] = useState<boolean>(false);
   const [connectStartNode, setConnectStartNode] = useState<Node>();
   const [connectStartHandleId, setConnectStartHandleId] = useState<string>();
-  const window = useWindowDimensions();
 
   const reloadComponent = () => {
+    console.warn("Forced reload of entire graph (reloadComponent())");
     if (flowKey == 0) {
       setFlowKey((prevKey) => prevKey + 1);
     } else {
@@ -110,7 +123,7 @@ const Canvas: React.FC = () => {
       so that it can be used to force a refresh from inside the context, like when setting or updating using the
       functions inside GraphContext.tsx (setNodes() etc).
       This way, we don't need to double click on any button to make it refresh
-      TODO: Remove this, but to do that, must find alternative for graph.reloadComponent() in OpenSignalPresenter & RecordPresenter & ImportAudio & GenerateAudio
+      TODO: Remove this, but to do that, must find alternative for graph.reloadComponent() in RecordPresenter & ImportAudio & GenerateAudio
     */
   };
 
@@ -175,12 +188,7 @@ const Canvas: React.FC = () => {
     const root = transformtoTypescriptTypes(graph);
     const allDirtyIds = gatherAllDirtyIds(root.Sketch.Graph); // Get all the dirty IDs
     setDirtyNodes(graph, allDirtyIds);
-    console.log("allDirtyIds: ", allDirtyIds);
-  }, [/*nodes,*/ edges]);
-
-  useEffect(() => {
-    console.log("edges changed", edges);
-  }, [edges]);
+  }, [nodes, edges]);
 
   function stopSelect() {
     // this is called when the user clicks on the canvas
@@ -188,7 +196,6 @@ const Canvas: React.FC = () => {
     setSelectedNode(undefined);
     setOpenSelectedNode(false);
   }
-
   function onSelectionChange(params: OnSelectionChangeParams) {
     // this is called when an edge selection is changed
     if (params.edges.length == 0) {
@@ -293,8 +300,7 @@ const Canvas: React.FC = () => {
 
           return newEdges;
         }); // add the edge to the list of edges, in the graph
-      } 
-      reloadComponent(); // TODO: This should be replaced, instead of reloading the whole graph, just reload the node that was changed
+      }
     },
     [setEdges, nodes]
   );
@@ -318,17 +324,6 @@ const Canvas: React.FC = () => {
     let clientX = 0,
       clientY = 0;
 
-    // const handleConnectedEdge = edges.find(
-    //   (edge) => edge.sourceHandle === connectStartHandleId
-    // );
-
-    // if (handleConnectedEdge) {
-    //   console.log(
-    //     `Cannot create new node. Handle: ${connectStartHandleId} is already connected to another node.`
-    //   );
-    //   return;
-    // }
-
     if (connectStartHandleId?.includes("in")) {
       console.log("you can't create a signal from an input");
       return;
@@ -346,7 +341,7 @@ const Canvas: React.FC = () => {
     let { x, y } = reactFlowInstance.project({ x: clientX, y: clientY });
 
     // Subtract viewport's position from the projected coordinates and adjust for the zoom level
-    x = (x - viewport.x) / viewport.zoom - NODE_WIDTH / 2;
+    x = (x - viewport.x) / viewport.zoom - NODE_WIDTH / 4;
     y = (y - viewport.y) / viewport.zoom - NODE_HEIGHT / 2;
     // Only add a new node if there isn't one at this position already
     let newNode = null;
@@ -366,23 +361,12 @@ const Canvas: React.FC = () => {
     if (connectStartNode && newNode) {
       const lastNode = newNode; // the node that was just added
 
-      if (
-        lastNode &&
-        lastNode.type !== "unspecified"
-        // lastNode.type !== connectStartNode.type
-      ) {
-        // const handleConnectedEdge = edges.find(
-        //   (edge) =>
-        //     edge.sourceHandle === connectStartHandleId ||
-        //     edge.targetHandle === connectStartHandleId
-        // );
-
-        // if (!handleConnectedEdge) {
+      if (lastNode && lastNode.type !== "unspecified") {
         let newConnection: Connection = {
           source: connectStartNode.id,
           target: lastNode.id,
           sourceHandle: connectStartHandleId!,
-          targetHandle: (lastNode.data.nodeState.model.Inputs[0] as Input).Name,
+          targetHandle: (lastNode.data.nodeState.model.Inputs[0] as Input).ID,
         };
         const newEdge = {
           id: `reactflow__edge-${newConnection.source}${newConnection.sourceHandle}-${newConnection.target}${newConnection.targetHandle}`,
@@ -395,20 +379,9 @@ const Canvas: React.FC = () => {
 
         setEdges((eds) => {
           const newEdges = addEdge(newEdge, eds);
-          //setGraphEdges(graph, newEdges);
           return newEdges;
         });
-
-        // } else {
-        //   console.log(
-        //     `Cannot create new connection. Handle: ${connectStartHandleId} is already connected to another node.`
-        //   );
-        // }
       }
-      // else if (lastNode && lastNode.type === connectStartNode.type) {
-      //   console.log("Cannot connect nodes of the same type: ", lastNode.type);
-      // }
-
       setConnectStartNode(undefined); // reset the start node
       setConnectStartHandleId(""); // reset the handle id
     }
@@ -445,7 +418,7 @@ const Canvas: React.FC = () => {
     // this is called when the user clicks on a the "open" button in the node view
     if (selectedNode) {
       return (
-        <OpenNodePresenter state={selectedNode} closeWindow={stopSelect}/>
+        <OpenNodePresenter state={selectedNode} closeWindow={stopSelect} />
       );
     } else {
       return null;
@@ -453,22 +426,19 @@ const Canvas: React.FC = () => {
   }
 
   useMemo(() => {
-    // this is called when the component is first rendered, so we can add a source node
-    if (!getNode(graph, 1)) {
-      // if the source node doesn't exist
-      addNewNode(
-        window.width / 2,
-        window.height / 2 - NODE_HEIGHT,
-        NodeType.Source
-      );
+    console.log("Graph loaded: ", graph)
+    if(nodes.length == 0) {
+      addNewNode(((window.width * 0.95) / 2 - viewport.x) / viewport.zoom - NODE_WIDTH / 2, ((window.height * 0.95) / 2 - viewport.y) / viewport.zoom - NODE_HEIGHT, NodeType.Source);
     }
   }, []);
 
   function addButtonHandler() {
     // this is called when the user clicks on the "add" button
 
-    let x = (window.width / 2 - viewport.x) / viewport.zoom - NODE_WIDTH / 2; // half the width of the node, so it's centered, relative to the viewport, not the window
-    let y = (window.height / 2 - viewport.y) / viewport.zoom - NODE_HEIGHT / 2; // half the height of the node, so it's centered, relative to the viewport, not the window
+    let x =
+      ((window.width * 0.95) / 2 - viewport.x) / viewport.zoom - NODE_WIDTH / 2; // half the width of the node, so it's centered, relative to the viewport, not the window
+    let y =
+      ((window.height * 0.95) / 2 - viewport.y) / viewport.zoom - NODE_HEIGHT; // centered, relative to the viewport, not the window
     addNewNode(x, y, NodeType.Unspecified);
   }
 

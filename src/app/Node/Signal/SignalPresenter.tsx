@@ -3,36 +3,37 @@ import useAudio from "@/app/Util/AudioPlayback/useAudio";
 import SignalView from "./SignalView";
 import { useContext, useEffect, useState } from "react";
 import { NodeContext } from "../NodeState";
-import { SendGraphForCompute } from "@/app/Util/ComputeAPI";
+import { SendGraphForCompute,getSoundFromNodeID } from "@/app/Util/ComputeAPI";
 import {
-  SignalType,
   transformtoTypescriptTypes,
 } from "@/app/Util/modelTransformation";
-import { getSoundFromNodeID } from "@/app/Util/ComputeAPI";
 import { useGraph } from "../GraphContext";
 
 export default function SignalPresenter() {
   const graph = useGraph();
   const { nodeState, forceReload } = useContext(NodeContext);
   const node = nodeState;
-  const [audioUrl, setAudioUrl] = useState<string>("");
+  const [audioUrl, setAudioUrl] = useState<string>(nodeState.model.Outputs[0].Src);
   const [fetched, setFetched] = useState<boolean>(false);
+  const [fetching , setFetching] = useState<boolean>(false);
   const audioState = useAudio(audioUrl);
 
   // useEffect to reset fetched state when node.model.Dirty changes
   useEffect(() => {
-    if (node!.model.Dirty || audioUrl == "") {
+    if (node.model.Dirty) {
       setFetched(false);
-    } else setFetched(true);
+      setFetching(false);
+    } else {
+      setFetched(true);
+    }
     /*
-      TODO: graph.reloadComponent(); this should be uncommented, but currently this resets the audioUrl, 
-      TODO: first we need to store audios in the graph so that they can be accessed without fetching them again when it is not dirty
-      */
-  }, [node!.model.Dirty]);
+      TODO: Store audios in the graph so that they can be accessed without fetching them again when it is not dirty (standard value of audioUrl)
+    */
+  }, [node.model.Dirty]);
 
   //  play button's callback include the fetchAudio function
   const playAudio = () => {
-    if (fetched && audioUrl != "") {
+    if (fetched) {
       audioState.onPlayPause();
     } else {
       fetchAudio();
@@ -40,26 +41,25 @@ export default function SignalPresenter() {
   };
 
   const fetchAudio = async () => {
+    setFetching(true);// Set fetching to true when the audio is being fetched, so that the spinner is shown
+
     try {
-      //   //TODO get audioURL with while loop until node with nodeID is found in computed nodes ??
       await SendGraphForCompute(transformtoTypescriptTypes(graph));
+      console.log(transformtoTypescriptTypes(graph))
       let url: string;
 
-      if (node && node.id) {
-        await getSoundFromNodeID(node.id, graph);
-        console.log(
-          graph.nodes.find((n) => {
-            return n.id == `${node.id}`;
-          })
-        );
-        url = graph.nodes.find((n) => {
+      await getSoundFromNodeID(node.id, graph);
+      
+      graph.reloadComponent()
+      console.log(
+        graph.nodes.find((n) => {
           return n.id == `${node.id}`;
-        })?.data.nodeState.model.Data.URL as string;
-      } else {
-        url = "";
-        console.log("node not found when fetching audio(signalpresenter)");
-        return;
-      }
+        })
+      );
+      url = graph.nodes.find((n) => {
+        return n.id == `${node.id}`;
+      })?.data.nodeState.model.Data.URL as string;
+      setFetching(false);
       setAudioUrl(url);
       setFetched(true); // Set fetched to true once the audio URL is obtained
     } catch (e) {
@@ -72,6 +72,7 @@ export default function SignalPresenter() {
       audioState={audioState}
       playAudio={playAudio}
       fetched={fetched}
+      fetching={fetching}
     />
   );
 }

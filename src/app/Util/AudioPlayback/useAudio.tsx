@@ -15,7 +15,6 @@ const useAudio = (source: string) => {
   const [duration, setDuration] = useState(0);
   const [progress, setProgress] = useState(0);
   const audioRef = useRef(new Audio());
-  const nodeId = useContext(NodeContext)!.id;
 
   // Function to update progress using requestAnimationFrame
   const updateProgress = () => {

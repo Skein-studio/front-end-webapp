@@ -10,13 +10,13 @@ import {
   SignalType,
   MergeType,
   SplitType,
-  Input as InputModel,
   UnspecifiedType,
   Output,
   Input,
 } from "../Util/modelTransformation";
+import { v4 as uuidv4 } from 'uuid';
 
-let nodeID = 0;
+let nodeID = 0; // This is used to generate unique IDs for each node, IDK why it has to start at -2 to make the first Node have ID 0
 
 export enum NodeType {
   Source,
@@ -35,16 +35,16 @@ export class NodeState {
   position: Coordinate;
   model: NodeModel;
   selected: boolean;
-  id: number;
+  id: string;
   type: NodeType;
 
-  constructor(x: number, y: number, type: NodeType, id?: number) {
+  constructor(x: number, y: number, type: NodeType, id?: string) {
     this.position = {
       x: x,
       y: y,
     };
     this.type = type;
-    id ? (this.id = id) : (this.id = this.generateID());
+    id ? (this.id = id) : (this.id = uuidv4());
     this.model = {
       ID: this.id.toString(),
       Dirty: true,
@@ -63,7 +63,7 @@ export class NodeState {
       case NodeType.Source:
         return { URL: "", base: "" };
       case NodeType.Signal:
-        return { Prompt: "Piano", Seed: "1234" };
+        return { Prompt: "", Seed: "1234" };
       case NodeType.Merge:
         return {};
       case NodeType.Split:
@@ -79,7 +79,8 @@ export class NodeState {
 
   addTargetHandle() {
     this.model.Inputs.push({
-      Name: this.model.ID + "in[" + this.model.Inputs.length + "]",
+      ID: this.model.ID + "in[" + this.model.Inputs.length + "]",
+      Name: "input" + this.model.Inputs.length,
     });
   }
 
@@ -88,7 +89,8 @@ export class NodeState {
 
     const add = () => {
       newInputs.push({
-        Name: ID + "in[" + newInputs.length + "]",
+        ID: ID + "in[" + newInputs.length + "]",
+        Name: "input" + newInputs.length,
       });
     };
 
@@ -116,13 +118,15 @@ export class NodeState {
 
     const add = (name: string) => {
       newOutputs.push({
-        Name: ID + "out[" + newOutputs.length + "]",
-        Src: name,
+        ID: ID + "out[" + newOutputs.length + "]",
+        Name: name,
+        Src: "",
       });
     };
     switch (type) {
       case NodeType.Split:
         numOutputs = 6;
+
         break;
       default:
         numOutputs = 1;
@@ -131,13 +135,13 @@ export class NodeState {
     if (type === NodeType.Split) {
       add("drums");
       add("piano");
-      add("vocal");
+      add("vocals");
       add("guitar");
       add("other");
       add("bass");
     } else {
       for (let i = 0; i < numOutputs; i++) {
-        add("");
+        add("standard-output");
       }
     }
 
@@ -158,8 +162,8 @@ export class NodeState {
     return nodeID++;
   }
 
-  getID(): number {
-    return parseInt(this.model.ID, 10);
+  getID(): string {
+    return this.id;
   }
 
   setType(type: NodeType): void {
@@ -183,21 +187,24 @@ export class NodeState {
 import React, { useState } from "react";
 
 export const NodeContext = React.createContext<{
-  nodeState: NodeState | undefined;
+  nodeState: NodeState;
   forceReload: () => void;
 }>({
-  nodeState: undefined,
+  nodeState: new NodeState(0, 0, NodeType.Unspecified),
   forceReload: () => {},
 });
 
 type NodeProviderProps = {
   children: React.ReactNode;
-  initialNodeState?: NodeState; // Add this line to define a new prop for the initial node state
+  initialNodeState: NodeState; // Add this line to define a new prop for the initial node state
 };
 
-export const NodeProvider: React.FC<NodeProviderProps> = ({ children, initialNodeState }) => {
+export const NodeProvider: React.FC<NodeProviderProps> = ({
+  children,
+  initialNodeState,
+}) => {
   const [reloadTrigger, setReloadTrigger] = useState(0);
-  const [nodeState, setNodeState] = useState<NodeState | undefined>(initialNodeState);
+  const [nodeState, setNodeState] = useState<NodeState>(initialNodeState);
 
   const forceReload = () => {
     setReloadTrigger((prev) => prev + 1);
@@ -209,7 +216,6 @@ export const NodeProvider: React.FC<NodeProviderProps> = ({ children, initialNod
     </NodeContext.Provider>
   );
 };
-
 
 export function NodeTypeToString(nodeType: NodeType): string {
   switch (nodeType) {

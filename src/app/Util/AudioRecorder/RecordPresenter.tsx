@@ -11,7 +11,7 @@ const RecordPresenter: React.FC = () => {
   const { nodeState, forceReload } = useContext(NodeContext);
   const node = nodeState;
   const graph = useGraph();
-  const nodeData = node?.model.Data as SourceType;
+  const nodeData = node.model.Data as SourceType;
   const mediaRecorder = useRef<MediaRecorder | null>(null);
   const audio = useAudio(nodeData.URL || ""); // Use the useAudio hook with the URL from nodeData
 
@@ -19,22 +19,16 @@ const RecordPresenter: React.FC = () => {
     navigator.mediaDevices.getUserMedia({ audio: true }).then((stream) => {
       mediaRecorder.current = new MediaRecorder(stream);
       mediaRecorder.current.ondataavailable = async (e) => {
-        if (node) {
-          if (nodeData.URL) {
-            URL.revokeObjectURL(nodeData.URL);
-          }
-          // const fileUrl = URL.createObjectURL(e.data);
-          console.log(e.data);
-
-          const fileUrl = await postSoundBLOB(e.data);
-          nodeData.URL = fileUrl;
-          nodeData.Dirty = true;
-        } else {
-          console.error("No nodecontext found", this);
+        if (nodeData.URL) {
+          URL.revokeObjectURL(nodeData.URL);
         }
+        console.log(e.data);
+        const fileUrl = await postSoundBLOB(e.data);
+        nodeData.URL = fileUrl;
+        nodeData.Dirty = true;
 
-        graph.reloadComponent();// TODO: This should be replaced , and the node should be updated via forceReload, not just here in the OpenView but in the small view too (SourcePresenter.tsx, SignalPresenter.tsx, etc.)
-        forceReload();
+        graph.reloadComponent(); // TODO: This should be replaced , and the node should be updated via forceReload, not just here in the OpenView but in the small view too (SourcePresenter.tsx, SignalPresenter.tsx, etc.)
+        forceReload(); //Only this should be needed, but it's not working currently since it doesn't update the node in the small view
       };
     });
 

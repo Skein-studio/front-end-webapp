@@ -6,11 +6,6 @@
   which can then be accessed by any component that needs it.
 */
 
-/*
- Possible TODOs:
- - Set NodeState's dirty property to true when a node is changed
-*/
-
 import { createContext, useContext } from "react";
 import { NodeState, NodeTypeToString, NodeType } from "./NodeState";
 import { Edge, Node } from "reactflow";
@@ -21,8 +16,8 @@ export type Graph = {
   reloadComponent: () => void;
   selectNode: (nodeState: NodeState | undefined) => void;
   selectedNode: NodeState | undefined;
-  setNodes: (nodes: Node[]) => void; // Add this line
-  setEdges: (edges: Edge[]) => void; // Add this line
+  setNodes: (nodes: Node[]) => void;
+  setEdges: (edges: Edge[]) => void;
 };
 
 export function deleteNodes(context: Graph, nodes: Node[]) {
@@ -35,12 +30,8 @@ export function deleteNodes(context: Graph, nodes: Node[]) {
 export function deleteEdges(context: Graph, edges: Edge[]) {
   // set each node affected by the change to dirty
   for (const edge of edges) {
-    const sourceNode = getNode(context, parseInt(edge.source));
-    const targetNode = getNode(context, parseInt(edge.target));
-    /*
-    if (sourceNode) {
-      sourceNode.data.nodeState.model.Dirty = true;
-    }*/
+    const sourceNode = getNode(context, edge.source);
+    const targetNode = getNode(context,edge.target);
     if (targetNode) {
       targetNode.data.nodeState.model.Dirty = true;
     }
@@ -50,6 +41,7 @@ export function deleteEdges(context: Graph, edges: Edge[]) {
     (edge) => !edges.find((e) => e.id === edge.id)
   );
   context.setEdges(newEdges); // Assuming setEdges is defined in Graph type
+  context.reloadComponent();
 }
 
 export function setDirtyNodes(context: Graph, dirtyIds: string[]) {
@@ -59,7 +51,6 @@ export function setDirtyNodes(context: Graph, dirtyIds: string[]) {
       node.data.nodeState.model.Dirty = true;
     }
   }
-  //console.log("nodes set to dirty", context.nodes);
 }
 
 export function deselectNode(context: Graph) {
@@ -70,10 +61,10 @@ export function deselectNode(context: Graph) {
   context.selectedNode = undefined;
 }
 
-export function getNode(context: Graph, id: number) {
+export function getNode(context: Graph, id: string) {
   // This function is used to get the node from the graph
   for (const element of context.nodes) {
-    if (element.id == id.toString()) {
+    if (element.id == id) {
       return element;
     }
   }
@@ -159,7 +150,7 @@ export function connectionExists(
 ) {
   // This function is used to check if a connection already exists between two nodes
 
-  if(sourceId === targetId) {
+  if (sourceId === targetId) {
     // You should not be able to connect a node to itself
     return true;
   }

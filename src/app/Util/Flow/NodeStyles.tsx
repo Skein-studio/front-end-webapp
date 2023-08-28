@@ -4,6 +4,7 @@ import { Handle, Position, HandleType } from "reactflow";
 const purple = "#b892d4";
 const spookwhite = "#d9d9d9";
 const NODE_WIDTH = 300;
+const NODE_HEIGHT = 50;
 
 interface HandleProps {
   handleType: HandleType;
@@ -133,4 +134,5 @@ export {
   RowContainer,
   StyledHandle,
   NODE_WIDTH,
+  NODE_HEIGHT,
 };

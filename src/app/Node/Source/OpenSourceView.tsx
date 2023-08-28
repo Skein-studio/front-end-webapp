@@ -14,9 +14,7 @@ function BaseComponent(base: string) {
   const [reload, setReload] = useState<boolean>(false);
 
   function handleBaseChange(text: string) {
-    if (node) {
-      (node.model.Data as SourceType).base = text;
-    }
+    (node.model.Data as SourceType).base = text;
     setReload(!reload);
   }
 
@@ -49,7 +47,9 @@ export default function OpenSourceView() {
 
   return (
     <Container flexdir="column">
-      {BaseComponent((nodeState?.model.Data as SourceType).base ?? "Select a base")}
+      {BaseComponent(
+        (nodeState?.model.Data as SourceType).base ?? "Select a base"
+      )}
     </Container>
   );
 }

@@ -1,7 +1,7 @@
 //modelTransformation.tsx
 import { Graph as deniGraph } from "../Node/GraphContext";
 import { Edge as flowEdge, Node as flowNode } from "reactflow";
-import { NodeState, NodeType, NodeTypeToString } from "../Node/NodeState";
+import { NodeState, NodeTypeToString } from "../Node/NodeState";
 // Create a dummy data generator function for each type
 
 export enum handleType {
@@ -26,10 +26,12 @@ const createDummyEdge = (): Edge => ({
 });
 
 const createDummyInput = (): Input => ({
-  Name: "dummyInputName",
+  ID: "dummyInputID",
+  Name: "dummyInputName"
 });
 
 const createDummyOutput = (): Output => ({
+  ID: "dummyOutputID",
   Name: "dummyOutputName",
   Src: "dummySrc",
 });
@@ -64,8 +66,8 @@ function getChildNodeIds(graph: Graph, nodeId: string): string[] {
 
   // Iterate through the graph's edges to find child nodes for the given node
   for (const edge of graph.Edges) {
-    if (edge.Input.NodeID === nodeId) {
-      childNodeIds.push(edge.Output.NodeID);
+    if (edge.Output.NodeID === nodeId) {
+      childNodeIds.push(edge.Input.NodeID);
     }
   }
 
@@ -74,7 +76,8 @@ function getChildNodeIds(graph: Graph, nodeId: string): string[] {
 function gatherDirtyIds(
   graph: Graph,
   nodeId: string,
-  visited: Set<string> = new Set()
+  visited: Set<string> = new Set(),
+  isParentDirty: boolean = false
 ): string[] {
   const idsToMarkDirty: string[] = [];
 
@@ -88,16 +91,17 @@ function gatherDirtyIds(
   const currentNode = graph.Nodes.find((node) => node.ID === nodeId);
 
   if (currentNode) {
-    // Add current nodeId if it's dirty
-    if (currentNode.Dirty) {
+    // Add current nodeId if it's dirty or if parent is dirty
+    if (currentNode.Dirty || isParentDirty) {
       idsToMarkDirty.push(nodeId);
+      isParentDirty = true;  // For subsequent child nodes
     }
 
     // Get child node IDs for the current node
     const childNodeIds = getChildNodeIds(graph, nodeId);
 
     for (const childId of childNodeIds) {
-      idsToMarkDirty.push(...gatherDirtyIds(graph, childId, visited));
+      idsToMarkDirty.push(...gatherDirtyIds(graph, childId, visited, isParentDirty));
     }
   }
 
@@ -118,7 +122,6 @@ export function gatherAllDirtyIds(graph: Graph): string[] {
 
   return Array.from(allDirtyIds);
 }
-
 export const transformtoTypescriptTypes = (graphContext: deniGraph): Root => {
   if (!graphContext) {
     return {} as Root;
@@ -126,32 +129,19 @@ export const transformtoTypescriptTypes = (graphContext: deniGraph): Root => {
   const transformNode = (node: flowNode): Node => {
     let nodeState = node.data.nodeState as NodeState;
 
-    const transformNodeInputs = (input: Input): Input => {
-      let inpu: Input;
-
-      if (nodeState.type == NodeType.Merge) {
-        inpu = { Name: input.Name };
-      }
-      inpu = {
-        Name: "standard-input",
-      };
-      return inpu;
+    const transformNodeInputs = (input: Input): any => {   
+      return { 
+        Name: input.Name 
+      };;
     };
     const transformNodeOutputs = (output: Output): Output => {
-      let out: Output;
-      if (nodeState.type == NodeType.Split) {
-        out = {
+      return {
+          ID: output.ID,
           Name: output.Name,
-          Src: "",
-        };
-      } else {
-        out = {
-          Name: "standard-output",
-          Src: "",
-        };
-      }
-      return out;
+          Src: output.Src,
+        };    
     };
+    
 
     switch (NodeTypeToString(nodeState.type)) {
       case "signal": {
@@ -258,10 +248,12 @@ export interface SplitType {}
 export interface UnspecifiedType {}
 
 export interface Input {
-  Name: string;
+  ID: string;
+  Name: string
   [k: string]: unknown;
 }
 export interface Output {
+  ID: string;
   Name: string;
   Src: string;
   [k: string]: unknown;
