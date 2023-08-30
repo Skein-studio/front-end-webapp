@@ -42,6 +42,7 @@ import { NODE_WIDTH, NODE_HEIGHT } from "./NodeStyles";
 import useWindowDimensions from "../windowDimensions";
 import {
   Input,
+  Output,
   Edge as edgeModel,
   gatherAllDirtyIds,
   handleType,
@@ -242,9 +243,13 @@ const Canvas: React.FC = () => {
   const connectionToEdge = (connection: Connection): edgeModel => {
     let n = (nodes.find((node) => node.id == connection.source)?.data as any)
       .nodeState as NodeState;
-    let outputName: string = "standard-output";
-    let inputName: string = "standard-input";
 
+    let inputsOfTargetNode: Input[] = graph.nodes.find((node) => node.id == connection.target)?.data.nodeState.model.Inputs; // get the inputs of the target node
+    let outputsOfSourceNode: Output[] = graph.nodes.find((node) => node.id == connection.source)?.data.nodeState.model.Outputs; // get the outputs of the source node
+
+    let inputName = inputsOfTargetNode.find((input:Input) => input.ID == connection.targetHandle)?.Name; // get the name of the input
+    let outputName = outputsOfSourceNode.find((output:Output) => output.ID == connection.sourceHandle)?.Name; // get the name of the output
+    
     if (n.model.Type == "split") {
       outputName =
         handleType[
