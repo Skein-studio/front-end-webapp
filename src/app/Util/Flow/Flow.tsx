@@ -240,11 +240,17 @@ const Canvas: React.FC = () => {
     );
   }
 
-  const connectionToEdge = (connection: Connection): edgeModel => {
+  const connectionToEdge = (connection: Connection, newTargetNode?: Node): edgeModel => {
+    let inputsOfTargetNode: Input[];
+  
+    if (newTargetNode) {
+      inputsOfTargetNode = newTargetNode.data.nodeState.model.Inputs;
+    } else {
+      inputsOfTargetNode = graph.nodes.find((node) => node.id == connection.target)?.data.nodeState.model.Inputs; 
+    }
     let n = (nodes.find((node) => node.id == connection.source)?.data as any)
       .nodeState as NodeState;
 
-    let inputsOfTargetNode: Input[] = graph.nodes.find((node) => node.id == connection.target)?.data.nodeState.model.Inputs; // get the inputs of the target node
     let outputsOfSourceNode: Output[] = graph.nodes.find((node) => node.id == connection.source)?.data.nodeState.model.Outputs; // get the outputs of the source node
 
     let inputName = inputsOfTargetNode.find((input:Input) => input.ID == connection.targetHandle)?.Name; // get the name of the input
@@ -379,9 +385,8 @@ const Canvas: React.FC = () => {
           target: newConnection.target,
           sourceHandle: newConnection.sourceHandle,
           targetHandle: newConnection.targetHandle,
-          data: connectionToEdge(newConnection),
+          data: connectionToEdge(newConnection, newNode),
         };
-
         setEdges((eds) => {
           const newEdges = addEdge(newEdge, eds);
           return newEdges;
