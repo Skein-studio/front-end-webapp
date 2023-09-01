@@ -274,6 +274,7 @@ const Canvas: React.FC = () => {
       },
     } as edgeModel;
   };
+  
   const onConnect = useCallback(
     (connection: any) => {
       // Get the source and target nodes

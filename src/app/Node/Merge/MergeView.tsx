@@ -59,7 +59,6 @@ function MergeView({
     </NodeSmall>
   );
 }
-
 const AddButton = styled.button`
   position: absolute;
   top: 5px;
