@@ -23,7 +23,7 @@ import { purple } from "./Flow/NodeStyles";
 
 const HandleName = styled.div` // This is the text that appears above the handle, temporary style // TODO: make this look better
   position: absolute;
-  top: -15px;
+  top: -20px;
   left: -15px;
   font-size: 12px;
   font-family: "verdana";
