@@ -49,20 +49,18 @@ const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
 export async function populateDependenciesByNodeID(
   id: string,
   graphContext: Graph,
-  endpoint: string = "http://localhost:5001/compute/get_computed_nodes",
   maxRetries: number = 100,
   retryDelay: number = 2000
 ) {
   //console.log(graphContext)
   let idString = `${id}`;
-  // let endpoint = "http://localhost:5001/compute/poll"
   let nestedDict: nodeOutputMapping = {};
   let retries = 0;
 
   while (retries < maxRetries) {
     try {
 
-      const response = await fetch(endpoint);
+      const response = await fetch(COMPUTED_NODES_ENDPOINT);
       if (!response.ok) {
         throw new Error("{$response.status}");
       }
