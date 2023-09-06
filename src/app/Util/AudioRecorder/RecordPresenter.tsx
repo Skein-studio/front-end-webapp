@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef, useContext } from "react";
 import RecordView from "./RecordView";
 import { NodeContext } from "@/app/Node/NodeState";
 import { useGraph } from "@/app/Node/GraphContext";
-import { postSoundBLOB } from "../ComputeAPI";
+import { uploadAudioBlob } from "../ComputeAPI";
 import { SourceType } from "../modelTransformation";
 import useAudio from "../AudioPlayback/useAudio";
 
@@ -23,7 +23,8 @@ const RecordPresenter: React.FC = () => {
           URL.revokeObjectURL(nodeData.URL);
         }
         console.log(e.data);
-        const fileUrl = await postSoundBLOB(e.data);
+        const fileUrl = await uploadAudioBlob(e.data);
+
         nodeData.URL = fileUrl;
         nodeData.Dirty = true;
 

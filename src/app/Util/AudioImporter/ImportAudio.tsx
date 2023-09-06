@@ -5,7 +5,7 @@ import { useGraph } from "@/app/Node/GraphContext";
 import useAudio from "@/app/Util/AudioPlayback/useAudio";
 import AudioPlayer from "../AudioPlayback/AudioPlayer";
 import { Container } from "../BaseStyles";
-import { postSoundBLOB } from "../ComputeAPI";
+import { uploadAudioBlob } from "../ComputeAPI";
 import { SignalType, SourceType } from "../modelTransformation";
 
 const ImportAudio: React.FC = () => {
@@ -21,7 +21,7 @@ const ImportAudio: React.FC = () => {
 
   const handleChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files.length > 0) {
-      const fileUrl = await postSoundBLOB(e.target.files[0]);
+      const fileUrl = await uploadAudioBlob(e.target.files[0]);
       nodeData.URL = fileUrl;
       nodeData.Dirty = true;
       console.log(fileUrl);

@@ -22,9 +22,9 @@ export default function OpenNodeView(props: Props) {
       case NodeType.Signal:
         return <OpenSignalPresenter />;
       case NodeType.Merge:
-        return <div>merge</div>;
+        return <div>Merge</div>;
       case NodeType.Split:
-        return <div>split</div>;
+        return <div>Split</div>;
       default:
         return <div>NodeType Error</div>;
     }

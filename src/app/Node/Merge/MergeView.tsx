@@ -53,7 +53,7 @@ function MergeView({
       {GenerateHandles(node)}
 
       <NodeIcon src={MergeImg}></NodeIcon>
-      <NodeTitle>merge</NodeTitle>
+      <NodeTitle>Merge</NodeTitle>
 
       <Container>{renderButton()}</Container>
     </NodeSmall>
