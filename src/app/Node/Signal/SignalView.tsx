@@ -4,10 +4,12 @@ import { NodeIcon, NodeSmall, NodeTitle } from "@/app/Util/Flow/NodeStyles";
 import { NodeContext } from "../NodeState";
 import { useGraph } from "../GraphContext";
 import SignalImg from "./signal.svg";
-import SpinnerImg from "./spinner.svg";
+
+import SpinnerImg from "./Ellipsis-4.3s-800px.svg"
 import AudioPlayer from "@/app/Util/AudioPlayback/AudioPlayer";
 import { GenerateHandles, GetWidthExtension } from "@/app/Util/Handles";
 import { AudioState } from "@/app/Util/AudioPlayback/useAudio";
+
 
 interface Props {
   audioState: AudioState;
@@ -41,8 +43,7 @@ function SignalView(props: Props) {
 
       <NodeIcon src={SignalImg}></NodeIcon>
       <NodeTitle>Signal</NodeTitle>
-      {props.fetching && <LoadingIcon src={SpinnerImg} />}
-      <Container flexdir="row">
+      {props.fetching? <LoadingIcon src={SpinnerImg} />:<Container flexdir="row">
         <AudioPlayer
           audioState={modifiedAudioState}
           isComputing={false}
@@ -51,6 +52,7 @@ function SignalView(props: Props) {
           smallplayer={true}
         />
       </Container>
+     }
       {/*<GenerateHandles handleType="source" numberOfHandles={numberOfSourceHandles}/> away for now */}
     </NodeSmall>
   );
@@ -61,9 +63,17 @@ export default SignalView;
 import styled from "styled-components";
 
 const LoadingIcon = styled.img`
-  width: 32px;
-  height: 32px;
+  width: 80px;
+  height: 80px;
   position: absolute;
-  right: 75px; // Adjust the position as needed
-  top: 15px; // Adjust the position as needed
+  right: 70px; // Adjust the position as needed
+  top: -10px; // Adjust the position as needed
 `;
+
+// const LoadingIcon = styled.img`
+//   width: 32px;
+//   height: 32px;
+//   position: absolute;
+//   right: 75px; // Adjust the position as needed
+//   top: 15px; // Adjust the position as needed
+// `;
