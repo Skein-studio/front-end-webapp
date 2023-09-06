@@ -21,10 +21,10 @@ function BaseComponent(base: string) {
   function BaseOptionsView() {
     return (
       <Container flexdir="row">
-        <Button onClick={() => handleBaseChange("Record")}>record</Button>
-        <Button onClick={() => handleBaseChange("Import")}>import</Button>
-        <Button onClick={() => handleBaseChange("Generate")} disabled={true}>
-          Generate
+        <Button onClick={() => handleBaseChange("record")}>record</Button>
+        <Button onClick={() => handleBaseChange("import")}>import</Button>
+        <Button onClick={() => handleBaseChange("generate")} disabled={true}>
+          generate
         </Button>
       </Container>
     );

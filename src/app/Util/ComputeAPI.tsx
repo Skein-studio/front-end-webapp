@@ -68,6 +68,8 @@ export async function populateDependenciesByNodeID(
        
       let newDict: nodeOutputMapping = await response.json();   
       newDict = getDifferences(nestedDict, newDict)
+      console.log("nestedDict: " + nestedDict)  
+      console.log("newDixt:" + newDict)  
 
       if(Object.keys(newDict).length > 0){
         updateGraph(graphContext,newDict)
@@ -94,7 +96,7 @@ export async function populateDependenciesByNodeID(
 
   if (retries == maxRetries) {
     throw new Error("Max amount of fetch retries. Cancelling...");
-  }  
+  }
 }
 
 function updateGraph(graph: Graph, diff: nodeOutputMapping){

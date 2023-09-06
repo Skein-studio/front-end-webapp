@@ -34,7 +34,7 @@ function SplitView({
       {GenerateHandles(node, true)}
 
       <NodeIcon src={SplitImg}></NodeIcon>
-      <NodeTitle>Split</NodeTitle>
+      <NodeTitle>split</NodeTitle>
     </NodeSmall>
   );
 }
