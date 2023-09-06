@@ -1,12 +1,16 @@
 import { Node } from "reactflow";
 import { Graph } from "../Node/GraphContext";
 import { Root, Output as modelOutput} from "./modelTransformation";
+import isEqual from 'lodash/isEqual';
+
+const COMPUTE_ENDPOINT = "http://localhost:5001/compute";
+const AUDIO_UPLOAD_ENDPOINT = "http://localhost:5001/audio/put";
+const COMPUTED_NODES_ENDPOINT = "http://localhost:5001/compute/get_computed_nodes";
 
 export async function SendGraphForCompute(graph: Root) {
   console.log("Sending graph for compute: ", graph);
-  let endpoint = "http://localhost:5001/compute";
 
-  await fetch(endpoint, {
+  await fetch(COMPUTE_ENDPOINT, {
     method: "POST", // or 'PUT'
     headers: {
       "Content-Type": "application/json",
@@ -15,12 +19,11 @@ export async function SendGraphForCompute(graph: Root) {
   });
 }
 
-export async function postSoundBLOB(blob: Blob): Promise<string> {
-  let endpoint = "http://localhost:5001/audio/put";
+export async function uploadAudioBlob(blob: Blob): Promise<string> {
   const formData = new FormData();
   formData.append("audiofile", blob);
 
-  return fetch(endpoint, {
+  return fetch(AUDIO_UPLOAD_ENDPOINT, {
     method: "POST",
     body: formData,
   })
@@ -31,10 +34,10 @@ export async function postSoundBLOB(blob: Blob): Promise<string> {
     .catch((error) => console.error("Error:", error));
 }
 
-type nodesDict = {
-  [nodeID: string]: outputs;
+type nodeOutputMapping = {
+  [nodeID: string]: OutputMapping;
 };
-type outputs = {
+type OutputMapping = {
   [outputName: string]: string;
 };
 
@@ -42,7 +45,8 @@ type outputs = {
 
 const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
 
-export async function getSoundFromNodeID(
+
+export async function populateDependenciesByNodeID(
   id: string,
   graphContext: Graph,
   endpoint: string = "http://localhost:5001/compute/get_computed_nodes",
@@ -52,18 +56,26 @@ export async function getSoundFromNodeID(
   //console.log(graphContext)
   let idString = `${id}`;
   // let endpoint = "http://localhost:5001/compute/poll"
-  let nestedDict: nodesDict = {};
+  let nestedDict: nodeOutputMapping = {};
   let retries = 0;
 
   while (retries < maxRetries) {
     try {
+
       const response = await fetch(endpoint);
       if (!response.ok) {
         throw new Error("{$response.status}");
       }
 
-      console.log(response);
-      nestedDict = await response.json();
+       
+      let newDict: nodeOutputMapping = await response.json();   
+      newDict = getDifferences(nestedDict, newDict)
+
+      if(Object.keys(newDict).length > 0){
+        updateGraph(graphContext,newDict)
+        nestedDict = { ...nestedDict, ...newDict}
+      }
+
       if (nestedDict[idString]) {
         break;
       }
@@ -72,6 +84,7 @@ export async function getSoundFromNodeID(
       if (retries < maxRetries) {
         await sleep(retryDelay);
       }
+
     } catch (error) {
       console.error(error);
       retries++;
@@ -79,27 +92,41 @@ export async function getSoundFromNodeID(
         await sleep(retryDelay);
       }
     }
-    //console.log(nestedDict);
   }
 
   if (retries == maxRetries) {
     throw new Error("Max amount of fetch retries. Cancelling...");
-  }
-  graphContext.nodes.forEach((node: Node) => {
-    node.data.nodeState.model.Dirty = false;
-    const nodeId = node.data.nodeState.model.ID;
+  }  
+}
 
-    // Check if the nodeID exists in the JSON data
-    if (nestedDict[nodeId]) {
+function updateGraph(graph: Graph, diff: nodeOutputMapping){
+  for(const nodeID in diff){
+      const node = graph.nodes.find(n => n.data.nodeState.model.ID === nodeID);
+      if (!node){
+        continue
+      }
+      node.data.nodeState.model.Dirty = false;
       // Traverse each output of the node
       node.data.nodeState.model.Outputs.forEach((output: modelOutput) => {
         const outputName = output.Name;
- 
+
         // Check if the outputName exists in the JSON data for the current node
-        if (nestedDict[nodeId][outputName]) {
-          output.Src = nestedDict[nodeId][outputName];
+        if (diff[nodeID][outputName]) {
+          output.Src = diff[nodeID][outputName];
         }
       });
+    }    
+}
+
+
+function getDifferences(oldDict: nodeOutputMapping, newDict: nodeOutputMapping): nodeOutputMapping {
+  const differences: nodeOutputMapping = {};
+
+  for (const nodeId in newDict) {
+    if (!oldDict[nodeId] || !isEqual(oldDict[nodeId], newDict[nodeId])) {
+      differences[nodeId] = newDict[nodeId];
     }
-  })
+  }
+
+  return differences;
 }
