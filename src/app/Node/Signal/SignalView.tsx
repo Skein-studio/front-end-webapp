@@ -42,7 +42,7 @@ function SignalView(props: Props) {
       {GenerateHandles(node)}
 
       <NodeIcon src={SignalImg}></NodeIcon>
-      <NodeTitle>Signal</NodeTitle>
+      <NodeTitle>signal</NodeTitle>
       {props.fetching? <LoadingIcon src={SpinnerImg} />:<Container flexdir="row">
         <AudioPlayer
           audioState={modifiedAudioState}
