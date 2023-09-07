@@ -189,7 +189,6 @@ const Canvas: React.FC = () => {
     const root = transformtoTypescriptTypes(graph);
     const allDirtyIds = gatherAllDirtyIds(root.Sketch.Graph); // Get all the dirty IDs
     setDirtyNodes(graph, allDirtyIds);
-    console.log("Dirty nodes: ", allDirtyIds);
   }, [nodes, edges]);
 
   function stopSelect() {
