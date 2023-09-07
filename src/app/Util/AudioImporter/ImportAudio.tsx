@@ -1,5 +1,5 @@
 //ImportAudio.tsx
-import React, { use, useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect } from "react";
 import { NodeContext } from "@/app/Node/NodeState";
 import { useGraph } from "@/app/Node/GraphContext";
 import useAudio from "@/app/Util/AudioPlayback/useAudio";
@@ -29,7 +29,7 @@ const ImportAudio: React.FC = () => {
       graph.reloadComponent(); // TODO: This should be replaced , and the node should be updated via forceReload, not just here in the OpenView but in the small view too (SourcePresenter.tsx, SignalPresenter.tsx, etc.)
     }
   };
-
+/*
   useEffect(() => {
     return () => {
       // Revoke the URL when the component unmounts, if there is one
@@ -38,7 +38,7 @@ const ImportAudio: React.FC = () => {
       }
     };
   }, []);
-
+*/
   return (
     <Container>
       <input type="file" accept="audio/*" onChange={handleChange} />
