@@ -14,7 +14,7 @@ function UnspecifiedView(props: Props) {
   const graph = useGraph();
   const { nodeState, forceReload } = useContext(NodeContext);
   const node = nodeState;
-  
+
   function setNode(type: NodeType) {
     props.setNode(type);
   }

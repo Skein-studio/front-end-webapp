@@ -4,8 +4,6 @@ sorted by decreasing importance.
 
 #### Bigger Picture Stuff
 
-- Refactor current frontend code into the updated model.
-
 #### Front End Stuff
 
 ##### To-Do:
@@ -23,8 +21,6 @@ sorted by decreasing importance.
 ###### Source Node
 
 ###### Signal Node
-
-- Signals that are computed gets "uncomputed" a new node is created.
 
 ###### Merge Node
 
