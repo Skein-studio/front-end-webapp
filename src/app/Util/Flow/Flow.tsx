@@ -143,6 +143,7 @@ const Canvas: React.FC = () => {
         console.log(`No node found with id: ${graph.selectedNode.id}`);
       }
     }
+    setSelectedNode(undefined);
   }
 
   function deleteSelectedEdge() {
