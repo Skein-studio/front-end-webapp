@@ -258,3 +258,124 @@ export interface Output {
   Src: string;
   [k: string]: unknown;
 }
+
+
+export function topologicalSortFromGraph(graph: Graph) {
+  const indegree: { [key: string]: number } = {};
+  const dirtyNodes: Set<string> = new Set();
+  const nodeDetails: { [key: string]: { Type: string; Data: any } } = {};
+
+  for (const edge of graph.Edges) {
+      const inputNode = edge.Input.NodeID;
+      const outputNode = edge.Output.NodeID;
+
+      if (!indegree[outputNode]) {
+          indegree[outputNode] = 0;
+      }
+      
+      indegree[outputNode]++;
+  }
+
+  for (const node of graph.Nodes) {
+      const nodeId = node.ID;
+      nodeDetails[nodeId] = {
+          Type: node.Type,
+          Data: node.Data
+      };
+
+      if (node.Dirty) {
+          dirtyNodes.add(nodeId);
+      }
+  }
+
+  const queue: string[] = Array.from(dirtyNodes).filter(node => !indegree[node] || indegree[node] === 0);
+  const result: { ID: string; Type: string; Data: any }[] = [];
+
+  while (queue.length > 0) {
+      const u = queue.shift()!;
+      result.push({
+          ID: u,
+          Type: nodeDetails[u].Type,
+          Data: nodeDetails[u].Data
+      });
+
+      for (const edge of graph.Edges) {
+          if (edge.Input.NodeID === u) {
+              const v = edge.Output.NodeID;
+              if (dirtyNodes.has(v)) {
+                  indegree[v]--;
+
+                  if (indegree[v] === 0) {
+                      queue.push(v);
+                  }
+              }
+          }
+      }
+  }
+
+  
+
+  return result.reduce<string[]>((acc, node) => {
+    if (node.Type === "signal") {
+      acc.push(node.ID);
+    }
+    return acc;
+  }, []);
+}
+
+
+
+export function topologicalSort(graphJson: Graph): string | string[] {
+    const graph: Map<string, string[]> = new Map();
+    const indegree: Map<string, number> = new Map();
+    const dirtyNodes: Set<string> = new Set();
+    const signalNodes: Set<string> = new Set();
+
+    // Extract node dependencies from the JSON graph
+    for (const edge of graphJson.Edges) {
+        const inputNode = edge.Input.NodeID;
+        const outputNode = edge.Output.NodeID;
+        const existingEdges = graph.get(inputNode) || [];
+        graph.set(inputNode, [...existingEdges, outputNode]);
+    }
+
+    // Extract nodes information and indegree
+    for (const node of graphJson.Nodes) {
+        const nodeId = node.ID;
+        if (node.Type === "signal") {
+            signalNodes.add(nodeId);
+        }
+
+        if (node.Dirty && signalNodes.has(nodeId)) {
+            dirtyNodes.add(nodeId);
+            const relatedNodes = graph.get(nodeId) || [];
+            for (const outputNode of relatedNodes) {
+                const currentIndegree = indegree.get(outputNode) || 0;
+                indegree.set(outputNode, currentIndegree + 1);
+            }
+        }
+    }
+
+    const queue: string[] = Array.from(dirtyNodes).filter(node => (indegree.get(node) || 0) === 0);
+    const result: string[] = [];
+
+    while (queue.length) {
+        const u = queue.shift()!;
+        result.push(u);
+        const children = graph.get(u) || [];
+        for (const v of children) {
+            if (dirtyNodes.has(v)) {
+                const currentIndegree = indegree.get(v) || 0;
+                indegree.set(v, currentIndegree - 1);
+                if (indegree.get(v) === 0) {
+                    queue.push(v);
+                }
+            }
+        }
+    }
+
+    if (result.length !== dirtyNodes.size) {
+        return []
+    }
+    return result;
+}

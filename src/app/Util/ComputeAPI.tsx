@@ -1,4 +1,3 @@
-import { Node } from "reactflow";
 import { Graph } from "../Node/GraphContext";
 import { Root, Output as modelOutput} from "./modelTransformation";
 import isEqual from 'lodash/isEqual';
@@ -104,6 +103,7 @@ function updateGraph(graph: Graph, diff: nodeOutputMapping){
         continue
       }
       node.data.nodeState.model.Dirty = false;
+      node.data.nodeState.loading = false
       // Traverse each output of the node
       node.data.nodeState.model.Outputs.forEach((output: modelOutput) => {
         const outputName = output.Name;
@@ -113,6 +113,7 @@ function updateGraph(graph: Graph, diff: nodeOutputMapping){
           output.Src = diff[nodeID][outputName];
         }
       });
+      graph.reloadComponent()
     }    
 }
 
