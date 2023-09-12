@@ -62,8 +62,6 @@ export default function SignalPresenter() {
       })
 
 
-      console.log(graph)
-      await delay(4000)
       await SendGraphForCompute(transformtoTypescriptTypes(graph));
 
       let url: string;
