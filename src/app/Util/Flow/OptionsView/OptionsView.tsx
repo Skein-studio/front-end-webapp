@@ -8,6 +8,7 @@ import redo from "./redo.svg";
 import trashcan from "./trashcan.svg";
 import undo from "./undo.svg";
 import enlarge from "./enlarge.svg";
+import edit from "./edit.svg";
 
 /* This component is the options view for the flow editor. 
 It contains the options buttons in the corner of the window */
@@ -22,7 +23,7 @@ interface Props {
 export default function OptionsView(props: Props) {
   return (
     <OptionsContainer>
-      <OptionsButton img={enlarge} callback={props.toggle} />
+      <OptionsButton img={edit} callback={props.toggle} />
       <OptionsButton
         img={trashcan}
         callback={() => {

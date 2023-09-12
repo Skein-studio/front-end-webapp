@@ -42,6 +42,7 @@ import { NODE_WIDTH, NODE_HEIGHT } from "./NodeStyles";
 import useWindowDimensions from "../windowDimensions";
 import {
   Input,
+  Output,
   Edge as edgeModel,
   gatherAllDirtyIds,
   handleType,
@@ -142,6 +143,7 @@ const Canvas: React.FC = () => {
         console.log(`No node found with id: ${graph.selectedNode.id}`);
       }
     }
+    setSelectedNode(undefined);
   }
 
   function deleteSelectedEdge() {
@@ -239,12 +241,22 @@ const Canvas: React.FC = () => {
     );
   }
 
-  const connectionToEdge = (connection: Connection): edgeModel => {
+  const connectionToEdge = (connection: Connection, newTargetNode?: Node): edgeModel => {
+    let inputsOfTargetNode: Input[];
+  
+    if (newTargetNode) {
+      inputsOfTargetNode = newTargetNode.data.nodeState.model.Inputs;
+    } else {
+      inputsOfTargetNode = graph.nodes.find((node) => node.id == connection.target)?.data.nodeState.model.Inputs; 
+    }
     let n = (nodes.find((node) => node.id == connection.source)?.data as any)
       .nodeState as NodeState;
-    let outputName: string = "standard-output";
-    let inputName: string = "standard-input";
 
+    let outputsOfSourceNode: Output[] = graph.nodes.find((node) => node.id == connection.source)?.data.nodeState.model.Outputs; // get the outputs of the source node
+
+    let inputName = inputsOfTargetNode.find((input:Input) => input.ID == connection.targetHandle)?.Name; // get the name of the input
+    let outputName = outputsOfSourceNode.find((output:Output) => output.ID == connection.sourceHandle)?.Name; // get the name of the output
+    
     if (n.model.Type == "split") {
       outputName =
         handleType[
@@ -263,6 +275,7 @@ const Canvas: React.FC = () => {
       },
     } as edgeModel;
   };
+  
   const onConnect = useCallback(
     (connection: any) => {
       // Get the source and target nodes
@@ -374,9 +387,8 @@ const Canvas: React.FC = () => {
           target: newConnection.target,
           sourceHandle: newConnection.sourceHandle,
           targetHandle: newConnection.targetHandle,
-          data: connectionToEdge(newConnection),
+          data: connectionToEdge(newConnection, newNode),
         };
-
         setEdges((eds) => {
           const newEdges = addEdge(newEdge, eds);
           return newEdges;

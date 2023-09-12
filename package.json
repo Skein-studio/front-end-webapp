@@ -16,6 +16,7 @@
     "eslint-config-next": "13.4.7",
     "file-loader": "^6.2.0",
     "install": "^0.13.0",
+    "lodash": "^4.17.21",
     "next": "13.4.7",
     "next-images": "^1.8.5",
     "next-react-svg": "^1.2.0",
@@ -31,6 +32,7 @@
   },
   "devDependencies": {
     "@svgr/webpack": "^8.0.1",
+    "@types/lodash": "^4.14.198",
     "@types/uuid": "^9.0.2",
     "babel-plugin-styled-components": "^2.1.4"
   }

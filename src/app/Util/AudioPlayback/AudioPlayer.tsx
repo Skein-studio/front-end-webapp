@@ -21,7 +21,9 @@ export default function AudioPlayer(props: AudioPlayerProps) {
         {props.error != "" ? (
           <ProgressBarText>{props.error}</ProgressBarText>
         ) : !props.audioComputed && !props.isComputing ? (
-          <ProgressBarText>compute for 3 tokens</ProgressBarText>
+          // <ProgressBarText>compute for 3 tokens</ProgressBarText>
+          <ProgressBarText>Compute to play</ProgressBarText>
+
         ) : props.isComputing ? (
           <ProgressBarText>"computing..."</ProgressBarText>
         ) : (

@@ -3,7 +3,7 @@ import useAudio from "@/app/Util/AudioPlayback/useAudio";
 import SignalView from "./SignalView";
 import { useContext, useEffect, useState } from "react";
 import { NodeContext } from "../NodeState";
-import { SendGraphForCompute,getSoundFromNodeID } from "@/app/Util/ComputeAPI";
+import { SendGraphForCompute,populateDependenciesByNodeID } from "@/app/Util/ComputeAPI";
 import {
   transformtoTypescriptTypes,
 } from "@/app/Util/modelTransformation";
@@ -16,7 +16,7 @@ export default function SignalPresenter() {
   const [audioUrl, setAudioUrl] = useState<string>(nodeState.model.Outputs[0].Src);
   const [fetched, setFetched] = useState<boolean>(false);
   const [fetching , setFetching] = useState<boolean>(false);
-  const audioState = useAudio(audioUrl);
+  const audioState = useAudio(audioUrl, true);
 
   // useEffect to reset fetched state when node.model.Dirty changes
   useEffect(() => {
@@ -48,8 +48,8 @@ export default function SignalPresenter() {
       console.log(transformtoTypescriptTypes(graph))
       let url: string;
 
-      await getSoundFromNodeID(node.id, graph);
-      
+      await populateDependenciesByNodeID(node.id, graph);
+  
       graph.reloadComponent()
       console.log(
         graph.nodes.find((n) => {

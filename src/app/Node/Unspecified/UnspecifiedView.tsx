@@ -4,21 +4,29 @@ import { BlankSpace, Button, Container } from "@/app/Util/BaseStyles";
 import { NodeSmall, NodeTitle } from "@/app/Util/Flow/NodeStyles";
 import { NodeContext, NodeType } from "../NodeState";
 import { useContext } from "react";
+import { useGraph } from "../GraphContext";
 
 interface Props {
   setNode: (type: NodeType) => void;
 }
 
 function UnspecifiedView(props: Props) {
-  function setNode(type: NodeType) {
-    props.setNode(type);
-  }
+  const graph = useGraph();
   const { nodeState, forceReload } = useContext(NodeContext);
   const node = nodeState;
 
+  function setNode(type: NodeType) {
+    props.setNode(type);
+  }
+
+  function selectNode() {
+    graph.selectNode(node);
+  }
+
   return (
     <Container>
-      <NodeSmall widthextension={0} selected={node.selected ?? false}>
+      <NodeSmall widthextension={0} selected={node.selected ?? false}
+      onClick={selectNode}>
         <NodeTitle>New Node</NodeTitle>
         <BlankSpace width={1} height={10}></BlankSpace>
         <Container flexdir="row">
