@@ -1,6 +1,5 @@
 // useAudio.tsx
-import { NodeContext } from "@/app/Node/NodeState";
-import { useState, useEffect, useRef, useContext } from "react";
+import { useState, useEffect, useRef } from "react";
 
 export type AudioState = {
   src: string;
@@ -10,11 +9,19 @@ export type AudioState = {
   duration: number;
 };
 
-const useAudio = (source: string) => {
+const useAudio = (source: string, loop?:boolean) => {
   const [isPlaying, setIsPlaying] = useState(false);
   const [duration, setDuration] = useState(0);
   const [progress, setProgress] = useState(0);
   const audioRef = useRef(new Audio());
+
+  useEffect(() => {
+    if(!loop){
+      loop = false;
+    }
+    audioRef.current.loop = loop;
+  }, [loop]);
+  
 
   // Function to update progress using requestAnimationFrame
   const updateProgress = () => {

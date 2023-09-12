@@ -26,7 +26,7 @@ export default function OpenNodeView(props: Props) {
       case NodeType.Split:
         return <div>Split</div>;
       default:
-        return <div>NodeType Error</div>;
+        return <div>You must set the type of the node before editing it.</div>;
     }
   }
 

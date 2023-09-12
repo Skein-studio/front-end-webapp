@@ -23,7 +23,7 @@ export default function SignalPresenter() {
   const [audioUrl, setAudioUrl] = useState<string>(nodeState.model.Outputs[0].Src);
   const [fetched, setFetched] = useState<boolean>(false);
   const [fetching , setFetching] = useState<boolean>(false);
-  const audioState = useAudio(audioUrl);
+  const audioState = useAudio(audioUrl, true);
 
   // useEffect to reset fetched state when node.model.Dirty changes
   useEffect(() => {

@@ -52,7 +52,7 @@ const SourceView: React.FC<SourceProps> = ({ base }) => {
       <BlankSpace height={5} width={5}></BlankSpace>
       {<NodeIcon src={SourceImg} />}
       <NodeTitle>
-        Source{base != "" && base != undefined ? `[${base}]` : ""}
+        source{base != "" && base != undefined ? `[${base}]` : ""}
       </NodeTitle>
       <Container style={{ flex: 1 }}>
         {base ? <SmallView /> : <></>}
