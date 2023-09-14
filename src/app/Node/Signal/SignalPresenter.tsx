@@ -61,7 +61,6 @@ export default function SignalPresenter() {
           n.data.nodeState.loading = true
       })
 
-
       await SendGraphForCompute(transformtoTypescriptTypes(graph));
       let url: string;
 
@@ -73,7 +72,6 @@ export default function SignalPresenter() {
           return n.id == `${node.id}`;
         })
       );
-
 
       url = graph.nodes.find((n) => {
         return n.id == `${node.id}`;
