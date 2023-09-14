@@ -32,12 +32,12 @@ type Coordinate = {
 };
 
 export class NodeState {
-  position: Coordinate;
-  model: NodeModel;
-  selected: boolean;
-  id: string;
-  type: NodeType;
-  loading: boolean
+  position: Coordinate; // The XY position of the node in the graph
+  model: NodeModel; // The model of the node, which is used to generate the JSON
+  selected: boolean; // Whether the node is selected or not
+  id: string; // The ID of the node
+  type: NodeType; // The type of the node (Signal, Source, Merge, Split, Unspecified)
+  loading: boolean; // Used to show the spinner when the node is loading
 
   constructor(x: number, y: number, type: NodeType, id?: string) {
     this.position = {
@@ -198,7 +198,7 @@ export const NodeContext = React.createContext<{
 
 type NodeProviderProps = {
   children: React.ReactNode;
-  initialNodeState: NodeState; // Add this line to define a new prop for the initial node state
+  initialNodeState: NodeState; 
 };
 
 export const NodeProvider: React.FC<NodeProviderProps> = ({
