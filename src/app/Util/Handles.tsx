@@ -80,11 +80,9 @@ export function GenerateHandles(
   );
 }
 
-export function GetWidthExtension(node: NodeState | undefined) {
+export function GetWidthExtension(node: NodeState) {
   // This is a temporary solution to the problem of nodes not being wide enough to fit all their handles
-  if (!node) {
-    return 0;
-  }
+
   let length = 0;
   if (!node.model.Inputs) {
     if (node.model.Outputs) {
