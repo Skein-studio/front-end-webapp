@@ -1,18 +1,23 @@
 //SplitPresenter.tsx
 
-import React, { useState, useEffect, useContext } from "react";
+import React, {useContext } from "react";
 import SplitView from "./SplitView";
 import { NodeContext } from "../NodeState";
+import { useGraph } from "../GraphContext";
 
 function SplitPresenter() {
   const nodeContext = useContext(NodeContext);
   const node = nodeContext.nodeState;
-  const nodeModel = node!.model;
+  const graph = useGraph();
+
+  function selectNode() {
+    graph.selectNode(node);
+  }
+
 
   return (
     <SplitView
-      numberOfSourceHandles={nodeModel.Outputs?.length || 0}
-      numberOfTargetHandles={nodeModel.Inputs?.length || 0}
+      selectNode={selectNode}
     />
   );
 }

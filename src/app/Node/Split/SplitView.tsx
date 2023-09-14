@@ -5,31 +5,22 @@ import { NodeSmall, NodeIcon, NodeTitle } from "@/app/Util/Flow/NodeStyles";
 import { useGraph } from "../GraphContext";
 import { NodeContext } from "../NodeState";
 import SplitImg from "./split.svg";
-import { Position } from "reactflow";
 import { GenerateHandles, GetWidthExtension } from "@/app/Util/Handles";
 
-interface SplitViewProps {
-  numberOfSourceHandles: number;
-  numberOfTargetHandles: number;
+interface Props {
+  selectNode: () => void;
 }
 
-function SplitView({
-  numberOfSourceHandles,
-  numberOfTargetHandles,
-}: SplitViewProps) {
-  const graph = useGraph();
-  const { nodeState, forceReload } = useContext(NodeContext);
-  const node = nodeState;
 
-  function selectNode() {
-    graph.selectNode(node);
-  }
+function SplitView(props:Props) {
+  const nodeContext = useContext(NodeContext);
+  const node = nodeContext.nodeState;
 
   return (
     <NodeSmall
       widthextension={GetWidthExtension(node)}
       selected={node.selected ?? false}
-      onClick={selectNode}
+      onClick={props.selectNode}
     >
       {GenerateHandles(node, true)}
 
