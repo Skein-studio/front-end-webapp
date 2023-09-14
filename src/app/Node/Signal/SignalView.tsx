@@ -47,7 +47,6 @@ function SignalView(props: Props) {
         <Container flexdir="row">
           <AudioPlayer
             audioState={modifiedAudioState}
-            isComputing={false}
             audioComputed={props.fetched} // Use the fetched prop
             error=""
             smallplayer={true}

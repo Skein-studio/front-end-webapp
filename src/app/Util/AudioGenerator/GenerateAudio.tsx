@@ -31,7 +31,6 @@ const GenerateAudio: React.FC = () => {
       {audioData && (
         <AudioPlayer
           audioState={audioState}
-          isComputing={false}
           audioComputed={true}
           error=""
         />

@@ -27,7 +27,6 @@ function RecordView({
       {audioState.src && (
         <AudioPlayer
           audioState={audioState}
-          isComputing={false}
           audioComputed={true}
           error=""
         />

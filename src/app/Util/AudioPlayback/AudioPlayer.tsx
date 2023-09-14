@@ -8,7 +8,6 @@ import { AudioState } from "./useAudio";
 
 export type AudioPlayerProps = {
   audioState: AudioState;
-  isComputing: boolean;
   audioComputed: boolean | undefined;
   error: string;
   smallplayer?: boolean;
@@ -23,8 +22,6 @@ export default function AudioPlayer(props: AudioPlayerProps) {
         ) : !props.audioComputed && !props.isComputing ? (
           // <ProgressBarText>compute for 3 tokens</ProgressBarText>
           <ProgressBarText>Compute to play</ProgressBarText>
-        ) : props.isComputing ? (
-          <ProgressBarText>"computing..."</ProgressBarText>
         ) : (
           <></>
         )}
