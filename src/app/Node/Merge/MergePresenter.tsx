@@ -24,7 +24,10 @@ const MergePresenter: React.FC = () => {
     });
 
     // If all target handles are connected, add a new one
-    if (numberOfTargetHandles > 0 && connectedHandles == numberOfTargetHandles) {
+    if (
+      numberOfTargetHandles > 0 &&
+      connectedHandles == numberOfTargetHandles
+    ) {
       addTargetHandle();
     }
   }, [node, graph.edges]);
@@ -38,10 +41,7 @@ const MergePresenter: React.FC = () => {
     graph.reloadComponent(); // TODO: This should be replaced, instead of reloading the whole graph, just reload the node that was changed (currently causes issues when connecting to newly added target handle)
   };
 
-  return (
-    <MergeView
-    />
-  );
+  return <MergeView />;
 };
 
 export default MergePresenter;

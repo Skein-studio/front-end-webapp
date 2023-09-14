@@ -11,8 +11,7 @@ interface Props {
   selectNode: () => void;
 }
 
-
-function SplitView(props:Props) {
+function SplitView(props: Props) {
   const nodeContext = useContext(NodeContext);
   const node = nodeContext.nodeState;
 

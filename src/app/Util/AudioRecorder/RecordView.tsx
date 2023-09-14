@@ -25,11 +25,7 @@ function RecordView({
         {isRecording ? "Stop Recording" : "Start Recording"}
       </Button>
       {audioState.src && (
-        <AudioPlayer
-          audioState={audioState}
-          audioComputed={true}
-          error=""
-        />
+        <AudioPlayer audioState={audioState} audioComputed={true} error="" />
       )}
     </Container>
   );

@@ -29,11 +29,7 @@ const GenerateAudio: React.FC = () => {
     <Container>
       <Button onClick={handleClick}>Generate</Button>
       {audioData && (
-        <AudioPlayer
-          audioState={audioState}
-          audioComputed={true}
-          error=""
-        />
+        <AudioPlayer audioState={audioState} audioComputed={true} error="" />
       )}
     </Container>
   );

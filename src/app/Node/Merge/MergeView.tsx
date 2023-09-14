@@ -1,11 +1,7 @@
 //MergeView.tsx
 
 import React, { useContext } from "react";
-import {
-  NodeSmall,
-  NodeIcon,
-  NodeTitle,
-} from "@/app/Node/NodeStyles";
+import { NodeSmall, NodeIcon, NodeTitle } from "@/app/Node/NodeStyles";
 import { useGraph } from "../GraphContext";
 import { NodeContext } from "../NodeState";
 import MergeImg from "./merge.svg";
@@ -30,7 +26,6 @@ function MergeView() {
 
       <NodeIcon src={MergeImg}></NodeIcon>
       <NodeTitle>merge</NodeTitle>
-
     </NodeSmall>
   );
 }

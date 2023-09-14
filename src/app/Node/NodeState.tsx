@@ -55,7 +55,7 @@ export class NodeState {
       Data: this.initializeData(type),
     };
     this.selected = false;
-    this.loading = false
+    this.loading = false;
   }
 
   initializeData(
@@ -198,7 +198,7 @@ export const NodeContext = React.createContext<{
 
 type NodeProviderProps = {
   children: React.ReactNode;
-  initialNodeState: NodeState; 
+  initialNodeState: NodeState;
 };
 
 export const NodeProvider: React.FC<NodeProviderProps> = ({

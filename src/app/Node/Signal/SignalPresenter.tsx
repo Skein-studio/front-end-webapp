@@ -5,13 +5,16 @@ import { useContext, useEffect, useState } from "react";
 import { NodeContext } from "../NodeState";
 import {
   transformtoTypescriptTypes,
-  topologicalSort
+  topologicalSort,
 } from "@/app/Util/modelTransformation";
 import { useGraph } from "../GraphContext";
-import { SendGraphForCompute, populateDependenciesByNodeID } from "@/app/Util/ComputeAPI";
+import {
+  SendGraphForCompute,
+  populateDependenciesByNodeID,
+} from "@/app/Util/ComputeAPI";
 
 function delay(ms: number) {
-  return new Promise( resolve => setTimeout(resolve, ms) );
+  return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
 export default function SignalPresenter() {
@@ -49,13 +52,14 @@ export default function SignalPresenter() {
     setFetching(true); // Set fetching to true when the audio is being fetched, so that the spinner is shown
 
     try {
-      let loadingNodes: string[] = topologicalSort(transformtoTypescriptTypes(graph).Sketch.Graph)
+      let loadingNodes: string[] = topologicalSort(
+        transformtoTypescriptTypes(graph).Sketch.Graph
+      );
       //console.log(loadingNodes)
-      loadingNodes.forEach((id)=>{
-        let n = graph.nodes.find(n => n.id == id)
-        if(n)
-          n.data.nodeState.loading = true
-      })
+      loadingNodes.forEach((id) => {
+        let n = graph.nodes.find((n) => n.id == id);
+        if (n) n.data.nodeState.loading = true;
+      });
 
       await SendGraphForCompute(transformtoTypescriptTypes(graph));
       let url: string;
@@ -80,7 +84,7 @@ export default function SignalPresenter() {
     } catch (e) {
       console.log(e);
     }
-    
+
     //console.log(graph)
   };
 

@@ -243,7 +243,7 @@ const Canvas: React.FC = () => {
   const connectionToEdgeModel = (
     connection: Connection,
     newTargetNode?: Node
-  ): edgeModel => { 
+  ): edgeModel => {
     let inputsOfTargetNode: Input[];
 
     if (newTargetNode) {
