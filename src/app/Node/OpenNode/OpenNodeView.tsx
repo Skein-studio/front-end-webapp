@@ -1,6 +1,6 @@
 import { NodeState } from "../NodeState";
 import { styled } from "styled-components";
-import { purple, NodeTitle, NodeIcon } from "@/app/Util/Flow/NodeStyles";
+import { purple, NodeTitle, NodeIcon } from "@/app/Node/NodeStyles";
 import { NodeTypeToString, NodeType } from "../NodeState";
 import OpenSourcePresenter from "../Source/OpenSourcePresenter";
 import { BlankSpace } from "@/app/Util/BaseStyles";

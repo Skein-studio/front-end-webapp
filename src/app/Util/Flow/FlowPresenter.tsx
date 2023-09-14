@@ -38,7 +38,7 @@ import FlowView from "./FlowView";
 /* This component's purpose is to create the flowchart 
 view and handle the logic for the flowchart. 
 It is the central file of the app. */
-import { NODE_WIDTH, NODE_HEIGHT } from "./NodeStyles";
+import { NODE_WIDTH, NODE_HEIGHT } from "../../Node/NodeStyles";
 import useWindowDimensions from "../windowDimensions";
 import {
   Input,
@@ -240,10 +240,10 @@ const Canvas: React.FC = () => {
     );
   }
 
-  const connectionToEdge = (
+  const connectionToEdgeModel = (
     connection: Connection,
     newTargetNode?: Node
-  ): edgeModel => {
+  ): edgeModel => { 
     let inputsOfTargetNode: Input[];
 
     if (newTargetNode) {
@@ -314,7 +314,7 @@ const Canvas: React.FC = () => {
             target: connection.target,
             sourceHandle: connection.sourceHandle,
             targetHandle: connection.targetHandle,
-            data: connectionToEdge(connection),
+            data: connectionToEdgeModel(connection),
           };
           eds.map((e) => e.data);
           const newEdges = addEdge(newEdge, eds);
@@ -397,7 +397,7 @@ const Canvas: React.FC = () => {
           target: newConnection.target,
           sourceHandle: newConnection.sourceHandle,
           targetHandle: newConnection.targetHandle,
-          data: connectionToEdge(newConnection, newNode),
+          data: connectionToEdgeModel(newConnection, newNode),
         };
         setEdges((eds) => {
           const newEdges = addEdge(newEdge, eds);

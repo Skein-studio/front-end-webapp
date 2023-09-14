@@ -1,7 +1,7 @@
 //SplitView.tsx
 
 import React, { useContext } from "react";
-import { NodeSmall, NodeIcon, NodeTitle } from "@/app/Util/Flow/NodeStyles";
+import { NodeSmall, NodeIcon, NodeTitle } from "@/app/Node/NodeStyles";
 import { useGraph } from "../GraphContext";
 import { NodeContext } from "../NodeState";
 import SplitImg from "./split.svg";

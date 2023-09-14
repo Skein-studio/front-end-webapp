@@ -1,7 +1,7 @@
 //SourceView.tsx
 
 import { Container, BlankSpace } from "@/app/Util/BaseStyles";
-import { NodeSmall, NodeTitle, NodeIcon } from "@/app/Util/Flow/NodeStyles";
+import { NodeSmall, NodeTitle, NodeIcon } from "@/app/Node/NodeStyles";
 import { useGraph } from "../GraphContext";
 import { NodeContext } from "../NodeState";
 import { useContext, useEffect } from "react";

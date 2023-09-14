@@ -1,7 +1,7 @@
 //UnspecifiedView.tsx
 
 import { BlankSpace, Button, Container } from "@/app/Util/BaseStyles";
-import { NodeSmall, NodeTitle } from "@/app/Util/Flow/NodeStyles";
+import { NodeSmall, NodeTitle } from "@/app/Node/NodeStyles";
 import { NodeContext, NodeType } from "../NodeState";
 import { useContext } from "react";
 import { useGraph } from "../GraphContext";

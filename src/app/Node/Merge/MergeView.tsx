@@ -5,7 +5,7 @@ import {
   NodeSmall,
   NodeIcon,
   NodeTitle,
-} from "@/app/Util/Flow/NodeStyles";
+} from "@/app/Node/NodeStyles";
 import { useGraph } from "../GraphContext";
 import { NodeContext } from "../NodeState";
 import MergeImg from "./merge.svg";

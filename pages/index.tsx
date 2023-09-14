@@ -1,10 +1,8 @@
 //index.tsx
 
 import React from "react";
-import ReactFlow from "reactflow";
 import "reactflow/dist/style.css";
-import { Container } from "@/app/Util/BaseStyles";
-import Canvas from "@/app/Util/Flow/Flow";
+import Canvas from "@/app/Util/Flow/FlowPresenter";
 import { styled } from "styled-components";
 const ApplicationFrame = styled.div`
   display: flex;

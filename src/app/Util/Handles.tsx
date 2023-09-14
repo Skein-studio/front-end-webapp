@@ -2,7 +2,7 @@
 
 import { Position } from "reactflow";
 import { NodeState } from "../Node/NodeState";
-import { StyledHandle, NODE_WIDTH } from "./Flow/NodeStyles";
+import { StyledHandle, NODE_WIDTH } from "../Node/NodeStyles";
 import styled from "styled-components";
 
 interface HandleProps {
@@ -19,7 +19,7 @@ const HandleSpacing = styled.div<HandleProps>`
       : NODE_WIDTH / 6 + "px"};
 `;
 
-import { purple } from "./Flow/NodeStyles";
+import { purple } from "../Node/NodeStyles";
 
 const HandleName = styled.div`
   // This is the text that appears above the handle, temporary style // TODO: make this look better
