@@ -19,8 +19,8 @@ const PreviewText = styled.p`
 `;
 
 const SmallView = () => {
-  const { nodeState, forceReload } = useContext(NodeContext);
-  const node = nodeState;
+  const nodeContext = useContext(NodeContext);
+  const node = nodeContext.nodeState;
 
   return (
     <>
