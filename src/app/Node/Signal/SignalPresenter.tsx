@@ -36,8 +36,6 @@ export default function SignalPresenter() {
     */
   }, [node.model.Dirty]);
 
-
-
   //  play button's callback include the fetchAudio function
   const playAudio = () => {
     if (fetched) {
@@ -82,7 +80,7 @@ export default function SignalPresenter() {
     } catch (e) {
       console.log(e);
     }
-
+    
     //console.log(graph)
   };
 

@@ -1,7 +1,6 @@
 import { Container } from "@/app/Util/BaseStyles";
 import styled from "styled-components";
 import StarImg from "../Signal/stars.svg";
-import { useEffect, useState } from "react";
 
 interface Props {
   setPrompt(value: string): void;

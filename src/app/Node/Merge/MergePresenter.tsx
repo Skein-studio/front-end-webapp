@@ -13,7 +13,7 @@ const MergePresenter: React.FC = () => {
   useEffect(() => {
     // Check if all target handles are connected
 
-    const numberOfTargetHandles = node.model.Inputs?.length || 0;
+    const numberOfTargetHandles = node.model.Inputs.length;
     let connectedHandles = 0;
 
     // Iterate over edges to find the number of connections for this node's target handles
@@ -24,16 +24,13 @@ const MergePresenter: React.FC = () => {
     });
 
     // If all target handles are connected, add a new one
-    if (
-      numberOfTargetHandles > 0 &&
-      connectedHandles >= numberOfTargetHandles
-    ) {
+    if (numberOfTargetHandles > 0 && connectedHandles == numberOfTargetHandles) {
       addTargetHandle();
     }
   }, [node, graph.edges]);
 
   const addTargetHandle = () => {
-    if (node.model.Inputs!.length >= 10) {
+    if (node.model.Inputs.length >= 10) {
       return;
     }
     node.addTargetHandle();
@@ -43,9 +40,6 @@ const MergePresenter: React.FC = () => {
 
   return (
     <MergeView
-      numberOfSourceHandles={node.model.Outputs.length}
-      numberOfTargetHandles={node.model.Inputs.length}
-      addTargetHandle={addTargetHandle}
     />
   );
 };

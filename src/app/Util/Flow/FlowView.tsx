@@ -15,7 +15,6 @@ import ReactFlow, {
 import { OuterBox, GraphNameInput } from "../BaseStyles";
 import styled from "styled-components";
 import OptionsView from "./OptionsView/OptionsView";
-import { NodeState } from "@/app/Node/NodeState";
 
 interface Props {
   flowKey: number;
