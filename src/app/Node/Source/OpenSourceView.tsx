@@ -4,7 +4,6 @@ import ImportAudio from "@/app/Util/AudioImporter/ImportAudio";
 import RecordPresenter from "@/app/Util/AudioRecorder/RecordPresenter";
 import { Button, Container } from "@/app/Util/BaseStyles";
 import { useContext, useState } from "react";
-import { useGraph } from "../GraphContext";
 import { NodeContext } from "../NodeState";
 import { SourceType } from "@/app/Util/modelTransformation";
 
@@ -48,9 +47,7 @@ export default function OpenSourceView() {
 
   return (
     <Container flexdir="column">
-      {BaseComponent(
-        (node?.model.Data as SourceType).base ?? "Select a base"
-      )}
+      {BaseComponent((node?.model.Data as SourceType).base ?? "Select a base")}
     </Container>
   );
 }

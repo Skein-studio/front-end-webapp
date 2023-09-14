@@ -14,7 +14,7 @@ import {
   Output,
   Input,
 } from "../Util/modelTransformation";
-import { v4 as uuidv4 } from 'uuid';
+import { v4 as uuidv4 } from "uuid";
 
 let nodeID = 0; // This is used to generate unique IDs for each node, IDK why it has to start at -2 to make the first Node have ID 0
 

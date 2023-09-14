@@ -27,7 +27,7 @@ const createDummyEdge = (): Edge => ({
 
 const createDummyInput = (): Input => ({
   ID: "dummyInputID",
-  Name: "dummyInputName"
+  Name: "dummyInputName",
 });
 
 const createDummyOutput = (): Output => ({
@@ -94,14 +94,16 @@ function gatherDirtyIds(
     // Add current nodeId if it's dirty or if parent is dirty
     if (currentNode.Dirty || isParentDirty) {
       idsToMarkDirty.push(nodeId);
-      isParentDirty = true;  // For subsequent child nodes
+      isParentDirty = true; // For subsequent child nodes
     }
 
     // Get child node IDs for the current node
     const childNodeIds = getChildNodeIds(graph, nodeId);
 
     for (const childId of childNodeIds) {
-      idsToMarkDirty.push(...gatherDirtyIds(graph, childId, visited, isParentDirty));
+      idsToMarkDirty.push(
+        ...gatherDirtyIds(graph, childId, visited, isParentDirty)
+      );
     }
   }
 
@@ -129,19 +131,18 @@ export const transformtoTypescriptTypes = (graphContext: deniGraph): Root => {
   const transformNode = (node: flowNode): Node => {
     let nodeState = node.data.nodeState as NodeState;
 
-    const transformNodeInputs = (input: Input): any => {   
-      return { 
-        Name: input.Name 
-      };;
+    const transformNodeInputs = (input: Input): any => {
+      return {
+        Name: input.Name,
+      };
     };
     const transformNodeOutputs = (output: Output): Output => {
       return {
-          ID: output.ID,
-          Name: output.Name,
-          Src: output.Src,
-        };    
+        ID: output.ID,
+        Name: output.Name,
+        Src: output.Src,
+      };
     };
-    
 
     switch (NodeTypeToString(nodeState.type)) {
       case "signal": {
@@ -249,7 +250,7 @@ export interface UnspecifiedType {}
 
 export interface Input {
   ID: string;
-  Name: string
+  Name: string;
   [k: string]: unknown;
 }
 export interface Output {

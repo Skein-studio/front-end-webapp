@@ -29,7 +29,7 @@ function MergeView({
   const graph = useGraph();
   const nodeContext = useContext(NodeContext);
   const node = nodeContext.nodeState;
-  
+
   function selectNode() {
     graph.selectNode(node);
   }

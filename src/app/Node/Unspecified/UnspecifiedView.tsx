@@ -25,8 +25,11 @@ function UnspecifiedView(props: Props) {
 
   return (
     <Container>
-      <NodeSmall widthextension={0} selected={node.selected ?? false}
-      onClick={selectNode}>
+      <NodeSmall
+        widthextension={0}
+        selected={node.selected ?? false}
+        onClick={selectNode}
+      >
         <NodeTitle>New Node</NodeTitle>
         <BlankSpace width={1} height={10}></BlankSpace>
         <Container flexdir="row">

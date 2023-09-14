@@ -49,7 +49,6 @@ import {
   transformtoTypescriptTypes,
 } from "../modelTransformation";
 
-
 const proOptions = { hideAttribution: true };
 
 const nodeTypes = {
@@ -241,22 +240,33 @@ const Canvas: React.FC = () => {
     );
   }
 
-  const connectionToEdge = (connection: Connection, newTargetNode?: Node): edgeModel => {
+  const connectionToEdge = (
+    connection: Connection,
+    newTargetNode?: Node
+  ): edgeModel => {
     let inputsOfTargetNode: Input[];
-  
+
     if (newTargetNode) {
       inputsOfTargetNode = newTargetNode.data.nodeState.model.Inputs;
     } else {
-      inputsOfTargetNode = graph.nodes.find((node) => node.id == connection.target)?.data.nodeState.model.Inputs; 
+      inputsOfTargetNode = graph.nodes.find(
+        (node) => node.id == connection.target
+      )?.data.nodeState.model.Inputs;
     }
     let n = (nodes.find((node) => node.id == connection.source)?.data as any)
       .nodeState as NodeState;
 
-    let outputsOfSourceNode: Output[] = graph.nodes.find((node) => node.id == connection.source)?.data.nodeState.model.Outputs; // get the outputs of the source node
+    let outputsOfSourceNode: Output[] = graph.nodes.find(
+      (node) => node.id == connection.source
+    )?.data.nodeState.model.Outputs; // get the outputs of the source node
 
-    let inputName = inputsOfTargetNode.find((input:Input) => input.ID == connection.targetHandle)?.Name; // get the name of the input
-    let outputName = outputsOfSourceNode.find((output:Output) => output.ID == connection.sourceHandle)?.Name; // get the name of the output
-    
+    let inputName = inputsOfTargetNode.find(
+      (input: Input) => input.ID == connection.targetHandle
+    )?.Name; // get the name of the input
+    let outputName = outputsOfSourceNode.find(
+      (output: Output) => output.ID == connection.sourceHandle
+    )?.Name; // get the name of the output
+
     if (n.model.Type == "split") {
       outputName =
         handleType[
@@ -275,7 +285,7 @@ const Canvas: React.FC = () => {
       },
     } as edgeModel;
   };
-  
+
   const onConnect = useCallback(
     (connection: any) => {
       // Get the source and target nodes
@@ -439,9 +449,14 @@ const Canvas: React.FC = () => {
   }
 
   useMemo(() => {
-    console.log("Graph loaded: ", graph)
-    if(nodes.length == 0) {
-      addNewNode(((window.width * 0.95) / 2 - viewport.x) / viewport.zoom - NODE_WIDTH / 2, ((window.height * 0.95) / 2 - viewport.y) / viewport.zoom - NODE_HEIGHT, NodeType.Source);
+    console.log("Graph loaded: ", graph);
+    if (nodes.length == 0) {
+      addNewNode(
+        ((window.width * 0.95) / 2 - viewport.x) / viewport.zoom -
+          NODE_WIDTH / 2,
+        ((window.height * 0.95) / 2 - viewport.y) / viewport.zoom - NODE_HEIGHT,
+        NodeType.Source
+      );
     }
   }, []);
 

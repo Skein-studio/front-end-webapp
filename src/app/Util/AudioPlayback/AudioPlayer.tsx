@@ -23,7 +23,6 @@ export default function AudioPlayer(props: AudioPlayerProps) {
         ) : !props.audioComputed && !props.isComputing ? (
           // <ProgressBarText>compute for 3 tokens</ProgressBarText>
           <ProgressBarText>Compute to play</ProgressBarText>
-
         ) : props.isComputing ? (
           <ProgressBarText>"computing..."</ProgressBarText>
         ) : (
@@ -31,9 +30,9 @@ export default function AudioPlayer(props: AudioPlayerProps) {
         )}
         {props.audioState.playing ? (
           <PlayButton img={PauseImg} callback={props.audioState.onPlayPause} />
+        ) : props.audioComputed ? (
+          <PlayButton img={PlayImg} callback={props.audioState.onPlayPause} />
         ) : (
-          props.audioComputed ? 
-          <PlayButton img={PlayImg} callback={props.audioState.onPlayPause} /> :
           <PlayButton img={DirtyImg} callback={props.audioState.onPlayPause} />
         )}
 
@@ -68,7 +67,8 @@ const StyledPlayButton = styled.button`
   justify-content: center;
   background-color: lightgrey;
 
-  img { // Targeting the img element inside StyledPlayButton
+  img {
+    // Targeting the img element inside StyledPlayButton
     width: 32px;
     height: 32px;
   }

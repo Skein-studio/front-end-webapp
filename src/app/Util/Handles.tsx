@@ -21,7 +21,8 @@ const HandleSpacing = styled.div<HandleProps>`
 
 import { purple } from "./Flow/NodeStyles";
 
-const HandleName = styled.div` // This is the text that appears above the handle, temporary style // TODO: make this look better
+const HandleName = styled.div`
+  // This is the text that appears above the handle, temporary style // TODO: make this look better
   position: absolute;
   top: -20px;
   left: -15px;
@@ -29,15 +30,20 @@ const HandleName = styled.div` // This is the text that appears above the handle
   font-family: "verdana";
   color: ${purple};
   z-index: 100;
-  `;
+`;
 
-export function GenerateHandles(node: NodeState, displayOutputHandleNames?:boolean) {
+export function GenerateHandles(
+  node: NodeState,
+  displayOutputHandleNames?: boolean
+) {
   function createOutputHandles() {
     const handles = [];
     for (let i = 0; i < node.model.Outputs.length; i++) {
       handles.push(
         <HandleSpacing key={i} handletype="source" offset={i}>
-          {displayOutputHandleNames && <HandleName>{node.model.Outputs[i].Name}</HandleName>}
+          {displayOutputHandleNames && (
+            <HandleName>{node.model.Outputs[i].Name}</HandleName>
+          )}
           <StyledHandle
             handleType="source"
             position={Position.Bottom}

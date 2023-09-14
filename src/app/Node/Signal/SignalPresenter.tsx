@@ -3,10 +3,11 @@ import useAudio from "@/app/Util/AudioPlayback/useAudio";
 import SignalView from "./SignalView";
 import { useContext, useEffect, useState } from "react";
 import { NodeContext } from "../NodeState";
-import { SendGraphForCompute,populateDependenciesByNodeID } from "@/app/Util/ComputeAPI";
 import {
-  transformtoTypescriptTypes,
-} from "@/app/Util/modelTransformation";
+  SendGraphForCompute,
+  populateDependenciesByNodeID,
+} from "@/app/Util/ComputeAPI";
+import { transformtoTypescriptTypes } from "@/app/Util/modelTransformation";
 import { useGraph } from "../GraphContext";
 
 export default function SignalPresenter() {
@@ -15,7 +16,7 @@ export default function SignalPresenter() {
   const node = nodeContext.nodeState;
   const [audioUrl, setAudioUrl] = useState<string>(node.model.Outputs[0].Src);
   const [fetched, setFetched] = useState<boolean>(false);
-  const [fetching , setFetching] = useState<boolean>(false);
+  const [fetching, setFetching] = useState<boolean>(false);
   const audioState = useAudio(audioUrl, true);
 
   // useEffect to reset fetched state when node.model.Dirty changes
@@ -41,16 +42,16 @@ export default function SignalPresenter() {
   };
 
   const fetchAudio = async () => {
-    setFetching(true);// Set fetching to true when the audio is being fetched, so that the spinner is shown
+    setFetching(true); // Set fetching to true when the audio is being fetched, so that the spinner is shown
 
     try {
       await SendGraphForCompute(transformtoTypescriptTypes(graph));
-      console.log(transformtoTypescriptTypes(graph))
+      console.log(transformtoTypescriptTypes(graph));
       let url: string;
 
       await populateDependenciesByNodeID(node.id, graph);
-  
-      graph.reloadComponent()
+
+      graph.reloadComponent();
       console.log(
         graph.nodes.find((n) => {
           return n.id == `${node.id}`;

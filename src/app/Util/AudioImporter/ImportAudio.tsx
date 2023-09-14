@@ -29,11 +29,7 @@ const ImportAudio: React.FC = () => {
 
   return (
     <Container>
-      <input 
-      type="file" 
-      accept="audio/*" 
-      onChange={handleChange} 
-      />
+      <input type="file" accept="audio/*" onChange={handleChange} />
       {audioData && (
         <AudioPlayer
           audioState={audioState}
