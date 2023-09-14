@@ -52,7 +52,7 @@ export default function SignalPresenter() {
 
     try {
       let loadingNodes: string[] = topologicalSort(transformtoTypescriptTypes(graph).Sketch.Graph)
-      console.log(loadingNodes)
+      //console.log(loadingNodes)
       loadingNodes.forEach((id)=>{
         let n = graph.nodes.find(n => n.id == id)
         if(n)
@@ -64,13 +64,14 @@ export default function SignalPresenter() {
 
       await populateDependenciesByNodeID(node.id, graph);
 
-      graph.reloadComponent();
+      graph.reloadComponent(); // Reload the component to show the spinner
+      /*
       console.log(
         graph.nodes.find((n) => {
           return n.id == `${node.id}`;
         })
       );
-
+        */
       url = graph.nodes.find((n) => {
         return n.id == `${node.id}`;
       })?.data.nodeState.model.Data.URL as string;
@@ -82,7 +83,7 @@ export default function SignalPresenter() {
       console.log(e);
     }
 
-    console.log(graph)
+    //console.log(graph)
   };
 
   return (

@@ -22,7 +22,7 @@ const RecordPresenter: React.FC = () => {
         if (nodeData.URL) {
           URL.revokeObjectURL(nodeData.URL);
         }
-        console.log(e.data);
+        //console.log(e.data);
         const fileUrl = await uploadAudioBlob(e.data);
 
         nodeData.URL = fileUrl;

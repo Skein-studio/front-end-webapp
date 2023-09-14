@@ -152,7 +152,7 @@ const Canvas: React.FC = () => {
       if (edgeToDelete) {
         deleteEdges(graph, [edgeToDelete]);
       } else {
-        console.log("huh");
+        console.log("Something strange happened when trying to delete edge");
       }
     }
   }

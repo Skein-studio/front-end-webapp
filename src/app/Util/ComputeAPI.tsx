@@ -8,7 +8,7 @@ const COMPUTED_NODES_ENDPOINT =
   "http://localhost:5001/compute/get_computed_nodes";
 
 export async function SendGraphForCompute(graph: Root) {
-  console.log("Sending graph for compute: ", graph);
+  //console.log("Sending graph for compute: ", graph);
 
   await fetch(COMPUTE_ENDPOINT, {
     method: "POST", // or 'PUT'
@@ -63,8 +63,8 @@ export async function populateDependenciesByNodeID(
 
       let newDict: nodeOutputMapping = await response.json();
       newDict = getDifferences(nestedDict, newDict);
-      console.log("nestedDict: " + nestedDict);
-      console.log("newDixt:" + newDict);
+      //console.log("nestedDict: " + nestedDict);
+      //console.log("newDixt:" + newDict);
 
       if (Object.keys(newDict).length > 0) {
         updateGraph(graphContext, newDict);
