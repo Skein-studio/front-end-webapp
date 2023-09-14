@@ -19,7 +19,7 @@ export default function AudioPlayer(props: AudioPlayerProps) {
       <ProgressBarContainer smallplayer={props.smallplayer}>
         {props.error != "" ? (
           <ProgressBarText>{props.error}</ProgressBarText>
-        ) : !props.audioComputed && !props.isComputing ? (
+        ) : !props.audioComputed ? (
           // <ProgressBarText>compute for 3 tokens</ProgressBarText>
           <ProgressBarText>Compute to play</ProgressBarText>
         ) : (
