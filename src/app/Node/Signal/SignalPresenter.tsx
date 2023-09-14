@@ -5,8 +5,6 @@ import { useContext, useEffect, useState } from "react";
 import { NodeContext } from "../NodeState";
 import {
   transformtoTypescriptTypes,
-  Graph,
-  topologicalSortFromGraph,
   topologicalSort
 } from "@/app/Util/modelTransformation";
 import { useGraph } from "../GraphContext";
