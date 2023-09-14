@@ -1,3 +1,4 @@
+//OpenSourceView.tsx
 import GenerateAudio from "@/app/Util/AudioGenerator/GenerateAudio";
 import ImportAudio from "@/app/Util/AudioImporter/ImportAudio";
 import RecordPresenter from "@/app/Util/AudioRecorder/RecordPresenter";
@@ -8,9 +9,8 @@ import { NodeContext } from "../NodeState";
 import { SourceType } from "@/app/Util/modelTransformation";
 
 function BaseComponent(base: string) {
-  const graph = useGraph();
-  const { nodeState, forceReload } = useContext(NodeContext);
-  const node = nodeState;
+  const nodeContext = useContext(NodeContext);
+  const node = nodeContext.nodeState;
   const [reload, setReload] = useState<boolean>(false);
 
   function handleBaseChange(text: string) {
@@ -43,12 +43,13 @@ function BaseComponent(base: string) {
 }
 
 export default function OpenSourceView() {
-  const { nodeState, forceReload } = useContext(NodeContext);
+  const nodeContext = useContext(NodeContext);
+  const node = nodeContext.nodeState;
 
   return (
     <Container flexdir="column">
       {BaseComponent(
-        (nodeState?.model.Data as SourceType).base ?? "Select a base"
+        (node?.model.Data as SourceType).base ?? "Select a base"
       )}
     </Container>
   );

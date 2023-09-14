@@ -9,8 +9,8 @@ import AudioPlayer from "../AudioPlayback/AudioPlayer";
 import { SourceType } from "../modelTransformation";
 
 const GenerateAudio: React.FC = () => {
-  const { nodeState, forceReload } = useContext(NodeContext);
-  const node = nodeState;
+  const nodeContext = useContext(NodeContext);
+  const node = nodeContext.nodeState;
   const nodeData = node.model.Data as SourceType;
   const audioData = nodeData.URL;
   const graph = useGraph();
@@ -22,7 +22,7 @@ const GenerateAudio: React.FC = () => {
     nodeData.Dirty = true;
     nodeData.URL = "/dummy.mp3";
     graph.reloadComponent(); // TODO: This should be replaced , and the node should be updated via forceReload, not just here in the OpenView but in the small view too (SourcePresenter.tsx, SignalPresenter.tsx, etc.)
-    forceReload(); // Only this should be needed, but it's not working currently since it doesn't update the node in the small view
+    nodeContext.forceReload(); // Only this should be needed, but it's not working currently since it doesn't update the node in the small view
   };
 
   return (

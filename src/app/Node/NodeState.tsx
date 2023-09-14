@@ -203,11 +203,11 @@ export const NodeProvider: React.FC<NodeProviderProps> = ({
   children,
   initialNodeState,
 }) => {
-  const [reloadTrigger, setReloadTrigger] = useState(0);
-  const [nodeState, setNodeState] = useState<NodeState>(initialNodeState);
+  const [reloadTrigger, setReloadTrigger] = useState(false);
+  const [nodeState, _] = useState<NodeState>(initialNodeState);
 
   const forceReload = () => {
-    setReloadTrigger((prev) => prev + 1);
+    setReloadTrigger(!reloadTrigger);
   };
 
   return (

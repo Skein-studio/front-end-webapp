@@ -35,8 +35,8 @@ type SourceProps = {
 
 const SourceView: React.FC<SourceProps> = ({ base }) => {
   const graph = useGraph();
-  const { nodeState, forceReload } = useContext(NodeContext);
-  const node = nodeState;
+  const nodeContext = useContext(NodeContext);
+  const node = nodeContext.nodeState;
 
   function selectNode() {
     graph.selectNode(node);

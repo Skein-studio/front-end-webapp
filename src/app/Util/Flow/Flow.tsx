@@ -405,6 +405,7 @@ const Canvas: React.FC = () => {
     const newNodes = [...nodes, newNode];
     setNodes(newNodes);
     console.log("nodes updated: ", newNodes);
+    selectNode(newNode.data.nodeState); // select the new node
     return newNode;
   };
 

@@ -6,8 +6,8 @@ import { NodeContext } from "../NodeState";
 import { useGraph } from "../GraphContext";
 
 const MergePresenter: React.FC = () => {
-  const { nodeState, forceReload } = useContext(NodeContext);
-  const node = nodeState;
+  const nodeContext = useContext(NodeContext);
+  const node = nodeContext.nodeState;
   const graph = useGraph();
 
   useEffect(() => {
@@ -37,7 +37,7 @@ const MergePresenter: React.FC = () => {
       return;
     }
     node.addTargetHandle();
-    forceReload();
+    nodeContext.forceReload();
     graph.reloadComponent(); // TODO: This should be replaced, instead of reloading the whole graph, just reload the node that was changed (currently causes issues when connecting to newly added target handle)
   };
 

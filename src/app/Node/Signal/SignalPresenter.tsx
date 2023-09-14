@@ -11,9 +11,9 @@ import { useGraph } from "../GraphContext";
 
 export default function SignalPresenter() {
   const graph = useGraph();
-  const { nodeState, forceReload } = useContext(NodeContext);
-  const node = nodeState;
-  const [audioUrl, setAudioUrl] = useState<string>(nodeState.model.Outputs[0].Src);
+  const nodeContext = useContext(NodeContext);
+  const node = nodeContext.nodeState;
+  const [audioUrl, setAudioUrl] = useState<string>(node.model.Outputs[0].Src);
   const [fetched, setFetched] = useState<boolean>(false);
   const [fetching , setFetching] = useState<boolean>(false);
   const audioState = useAudio(audioUrl, true);
