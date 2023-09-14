@@ -326,7 +326,7 @@ export function topologicalSortFromGraph(graph: Graph) {
 
 
 
-export function topologicalSort(graphJson: Graph): string | string[] {
+export function topologicalSort(graphJson: Graph): string[] {
     const graph: Map<string, string[]> = new Map();
     const indegree: Map<string, number> = new Map();
     const dirtyNodes: Set<string> = new Set();
