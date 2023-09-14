@@ -4,11 +4,17 @@ import SignalView from "./SignalView";
 import { useContext, useEffect, useState } from "react";
 import { NodeContext } from "../NodeState";
 import {
-  SendGraphForCompute,
-  populateDependenciesByNodeID,
-} from "@/app/Util/ComputeAPI";
-import { transformtoTypescriptTypes } from "@/app/Util/modelTransformation";
+  transformtoTypescriptTypes,
+  Graph,
+  topologicalSortFromGraph,
+  topologicalSort
+} from "@/app/Util/modelTransformation";
 import { useGraph } from "../GraphContext";
+import { SendGraphForCompute, populateDependenciesByNodeID } from "@/app/Util/ComputeAPI";
+
+function delay(ms: number) {
+  return new Promise( resolve => setTimeout(resolve, ms) );
+}
 
 export default function SignalPresenter() {
   const graph = useGraph();
@@ -32,6 +38,8 @@ export default function SignalPresenter() {
     */
   }, [node.model.Dirty]);
 
+
+
   //  play button's callback include the fetchAudio function
   const playAudio = () => {
     if (fetched) {
@@ -45,8 +53,16 @@ export default function SignalPresenter() {
     setFetching(true); // Set fetching to true when the audio is being fetched, so that the spinner is shown
 
     try {
+      let loadingNodes: string[] = topologicalSort(transformtoTypescriptTypes(graph).Sketch.Graph)
+      console.log(loadingNodes)
+      loadingNodes.forEach((id)=>{
+        let n = graph.nodes.find(n => n.id == id)
+        if(n)
+          n.data.nodeState.loading = true
+      })
+
+
       await SendGraphForCompute(transformtoTypescriptTypes(graph));
-      console.log(transformtoTypescriptTypes(graph));
       let url: string;
 
       await populateDependenciesByNodeID(node.id, graph);
@@ -57,15 +73,20 @@ export default function SignalPresenter() {
           return n.id == `${node.id}`;
         })
       );
+
+
       url = graph.nodes.find((n) => {
         return n.id == `${node.id}`;
       })?.data.nodeState.model.Data.URL as string;
+
       setFetching(false);
       setAudioUrl(url);
       setFetched(true); // Set fetched to true once the audio URL is obtained
     } catch (e) {
       console.log(e);
     }
+
+    console.log(graph)
   };
 
   return (
@@ -73,7 +94,7 @@ export default function SignalPresenter() {
       audioState={audioState}
       playAudio={playAudio}
       fetched={fetched}
-      fetching={fetching}
+      fetching={node.loading}
     />
   );
 }

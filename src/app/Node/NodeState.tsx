@@ -37,6 +37,7 @@ export class NodeState {
   selected: boolean;
   id: string;
   type: NodeType;
+  loading: boolean
 
   constructor(x: number, y: number, type: NodeType, id?: string) {
     this.position = {
@@ -54,6 +55,7 @@ export class NodeState {
       Data: this.initializeData(type),
     };
     this.selected = false;
+    this.loading = false
   }
 
   initializeData(

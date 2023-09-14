@@ -1,4 +1,3 @@
-import { Node } from "reactflow";
 import { Graph } from "../Node/GraphContext";
 import { Root, Output as modelOutput } from "./modelTransformation";
 import isEqual from "lodash/isEqual";
@@ -94,23 +93,25 @@ export async function populateDependenciesByNodeID(
   }
 }
 
-function updateGraph(graph: Graph, diff: nodeOutputMapping) {
-  for (const nodeID in diff) {
-    const node = graph.nodes.find((n) => n.data.nodeState.model.ID === nodeID);
-    if (!node) {
-      continue;
-    }
-    node.data.nodeState.model.Dirty = false;
-    // Traverse each output of the node
-    node.data.nodeState.model.Outputs.forEach((output: modelOutput) => {
-      const outputName = output.Name;
-
-      // Check if the outputName exists in the JSON data for the current node
-      if (diff[nodeID][outputName]) {
-        output.Src = diff[nodeID][outputName];
+function updateGraph(graph: Graph, diff: nodeOutputMapping){
+  for(const nodeID in diff){
+      const node = graph.nodes.find(n => n.data.nodeState.model.ID === nodeID);
+      if (!node){
+        continue
       }
-    });
-  }
+      node.data.nodeState.model.Dirty = false;
+      node.data.nodeState.loading = false
+      // Traverse each output of the node
+      node.data.nodeState.model.Outputs.forEach((output: modelOutput) => {
+        const outputName = output.Name;
+
+        // Check if the outputName exists in the JSON data for the current node
+        if (diff[nodeID][outputName]) {
+          output.Src = diff[nodeID][outputName];
+        }
+      });
+      graph.reloadComponent()
+    }    
 }
 
 function getDifferences(
