@@ -1,14 +1,13 @@
 import React, { useContext } from "react";
 import { Container } from "@/app/Util/BaseStyles";
-import { NodeIcon, NodeSmall, NodeTitle } from "@/app/Util/Flow/NodeStyles";
+import { NodeIcon, NodeSmall, NodeTitle } from "@/app/Node/NodeStyles";
 import { NodeContext } from "../NodeState";
 import { useGraph } from "../GraphContext";
 import SignalImg from "./signal.svg";
-import SpinnerImg from "./Ellipsis-4.3s-800px.svg"
+import SpinnerImg from "./Ellipsis-4.3s-800px.svg";
 import AudioPlayer from "@/app/Util/AudioPlayback/AudioPlayer";
 import { GenerateHandles, GetWidthExtension } from "@/app/Util/Handles";
 import { AudioState } from "@/app/Util/AudioPlayback/useAudio";
-
 
 interface Props {
   audioState: AudioState;
@@ -42,16 +41,18 @@ function SignalView(props: Props) {
 
       <NodeIcon src={SignalImg}></NodeIcon>
       <NodeTitle>signal</NodeTitle>
-      {props.fetching? <LoadingIcon src={SpinnerImg} />:<Container flexdir="row">
-        <AudioPlayer
-          audioState={modifiedAudioState}
-          isComputing={false}
-          audioComputed={props.fetched} // Use the fetched prop
-          error=""
-          smallplayer={true}
-        />
-      </Container>
-     }
+      {props.fetching ? (
+        <LoadingIcon src={SpinnerImg} />
+      ) : (
+        <Container flexdir="row">
+          <AudioPlayer
+            audioState={modifiedAudioState}
+            audioComputed={props.fetched} // Use the fetched prop
+            error=""
+            smallplayer={true}
+          />
+        </Container>
+      )}
       {/*<GenerateHandles handleType="source" numberOfHandles={numberOfSourceHandles}/> away for now */}
     </NodeSmall>
   );

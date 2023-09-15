@@ -6,14 +6,14 @@ import { NodeContext } from "../NodeState";
 import { useGraph } from "../GraphContext";
 
 const MergePresenter: React.FC = () => {
-  const { nodeState, forceReload } = useContext(NodeContext);
-  const node = nodeState;
+  const nodeContext = useContext(NodeContext);
+  const node = nodeContext.nodeState;
   const graph = useGraph();
 
   useEffect(() => {
     // Check if all target handles are connected
 
-    const numberOfTargetHandles = node.model.Inputs?.length || 0;
+    const numberOfTargetHandles = node.model.Inputs.length;
     let connectedHandles = 0;
 
     // Iterate over edges to find the number of connections for this node's target handles
@@ -26,28 +26,22 @@ const MergePresenter: React.FC = () => {
     // If all target handles are connected, add a new one
     if (
       numberOfTargetHandles > 0 &&
-      connectedHandles >= numberOfTargetHandles
+      connectedHandles == numberOfTargetHandles
     ) {
       addTargetHandle();
     }
   }, [node, graph.edges]);
 
   const addTargetHandle = () => {
-    if (node.model.Inputs!.length >= 10) {
+    if (node.model.Inputs.length >= 10) {
       return;
     }
     node.addTargetHandle();
-    forceReload();
+    nodeContext.forceReload();
     graph.reloadComponent(); // TODO: This should be replaced, instead of reloading the whole graph, just reload the node that was changed (currently causes issues when connecting to newly added target handle)
   };
 
-  return (
-    <MergeView
-      numberOfSourceHandles={node.model.Outputs.length}
-      numberOfTargetHandles={node.model.Inputs.length}
-      addTargetHandle={addTargetHandle}
-    />
-  );
+  return <MergeView />;
 };
 
 export default MergePresenter;

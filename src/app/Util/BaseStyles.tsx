@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import { purple, spookwhite } from "./Flow/NodeStyles";
+import { purple, spookwhite } from "../Node/NodeStyles";
 
 interface TextProps {
   size?: number;

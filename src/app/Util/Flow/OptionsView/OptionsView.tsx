@@ -2,12 +2,11 @@
 
 import React from "react";
 import styled from "styled-components";
-import { purple } from "../NodeStyles";
+import { purple } from "../../../Node/NodeStyles";
 import plus from "./plus.svg";
 import redo from "./redo.svg";
 import trashcan from "./trashcan.svg";
 import undo from "./undo.svg";
-import enlarge from "./enlarge.svg";
 import edit from "./edit.svg";
 
 /* This component is the options view for the flow editor. 

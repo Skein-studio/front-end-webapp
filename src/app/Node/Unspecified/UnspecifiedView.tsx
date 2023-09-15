@@ -1,7 +1,7 @@
 //UnspecifiedView.tsx
 
 import { BlankSpace, Button, Container } from "@/app/Util/BaseStyles";
-import { NodeSmall, NodeTitle } from "@/app/Util/Flow/NodeStyles";
+import { NodeSmall, NodeTitle } from "@/app/Node/NodeStyles";
 import { NodeContext, NodeType } from "../NodeState";
 import { useContext } from "react";
 import { useGraph } from "../GraphContext";
@@ -25,8 +25,11 @@ function UnspecifiedView(props: Props) {
 
   return (
     <Container>
-      <NodeSmall widthextension={0} selected={node.selected ?? false}
-      onClick={selectNode}>
+      <NodeSmall
+        widthextension={0}
+        selected={node.selected ?? false}
+        onClick={selectNode}
+      >
         <NodeTitle>New Node</NodeTitle>
         <BlankSpace width={1} height={10}></BlankSpace>
         <Container flexdir="row">

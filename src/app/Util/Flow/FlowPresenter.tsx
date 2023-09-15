@@ -38,7 +38,7 @@ import FlowView from "./FlowView";
 /* This component's purpose is to create the flowchart 
 view and handle the logic for the flowchart. 
 It is the central file of the app. */
-import { NODE_WIDTH, NODE_HEIGHT } from "./NodeStyles";
+import { NODE_WIDTH, NODE_HEIGHT } from "../../Node/NodeStyles";
 import useWindowDimensions from "../windowDimensions";
 import {
   Input,
@@ -48,7 +48,6 @@ import {
   handleType,
   transformtoTypescriptTypes,
 } from "../modelTransformation";
-
 
 const proOptions = { hideAttribution: true };
 
@@ -153,7 +152,7 @@ const Canvas: React.FC = () => {
       if (edgeToDelete) {
         deleteEdges(graph, [edgeToDelete]);
       } else {
-        console.log("huh");
+        console.log("Something strange happened when trying to delete edge");
       }
     }
   }
@@ -241,22 +240,33 @@ const Canvas: React.FC = () => {
     );
   }
 
-  const connectionToEdge = (connection: Connection, newTargetNode?: Node): edgeModel => {
+  const connectionToEdgeModel = (
+    connection: Connection,
+    newTargetNode?: Node
+  ): edgeModel => {
     let inputsOfTargetNode: Input[];
-  
+
     if (newTargetNode) {
       inputsOfTargetNode = newTargetNode.data.nodeState.model.Inputs;
     } else {
-      inputsOfTargetNode = graph.nodes.find((node) => node.id == connection.target)?.data.nodeState.model.Inputs; 
+      inputsOfTargetNode = graph.nodes.find(
+        (node) => node.id == connection.target
+      )?.data.nodeState.model.Inputs;
     }
     let n = (nodes.find((node) => node.id == connection.source)?.data as any)
       .nodeState as NodeState;
 
-    let outputsOfSourceNode: Output[] = graph.nodes.find((node) => node.id == connection.source)?.data.nodeState.model.Outputs; // get the outputs of the source node
+    let outputsOfSourceNode: Output[] = graph.nodes.find(
+      (node) => node.id == connection.source
+    )?.data.nodeState.model.Outputs; // get the outputs of the source node
 
-    let inputName = inputsOfTargetNode.find((input:Input) => input.ID == connection.targetHandle)?.Name; // get the name of the input
-    let outputName = outputsOfSourceNode.find((output:Output) => output.ID == connection.sourceHandle)?.Name; // get the name of the output
-    
+    let inputName = inputsOfTargetNode.find(
+      (input: Input) => input.ID == connection.targetHandle
+    )?.Name; // get the name of the input
+    let outputName = outputsOfSourceNode.find(
+      (output: Output) => output.ID == connection.sourceHandle
+    )?.Name; // get the name of the output
+
     if (n.model.Type == "split") {
       outputName =
         handleType[
@@ -275,7 +285,7 @@ const Canvas: React.FC = () => {
       },
     } as edgeModel;
   };
-  
+
   const onConnect = useCallback(
     (connection: any) => {
       // Get the source and target nodes
@@ -304,7 +314,7 @@ const Canvas: React.FC = () => {
             target: connection.target,
             sourceHandle: connection.sourceHandle,
             targetHandle: connection.targetHandle,
-            data: connectionToEdge(connection),
+            data: connectionToEdgeModel(connection),
           };
           eds.map((e) => e.data);
           const newEdges = addEdge(newEdge, eds);
@@ -387,7 +397,7 @@ const Canvas: React.FC = () => {
           target: newConnection.target,
           sourceHandle: newConnection.sourceHandle,
           targetHandle: newConnection.targetHandle,
-          data: connectionToEdge(newConnection, newNode),
+          data: connectionToEdgeModel(newConnection, newNode),
         };
         setEdges((eds) => {
           const newEdges = addEdge(newEdge, eds);
@@ -405,6 +415,7 @@ const Canvas: React.FC = () => {
     const newNodes = [...nodes, newNode];
     setNodes(newNodes);
     console.log("nodes updated: ", newNodes);
+    selectNode(newNode.data.nodeState); // select the new node
     return newNode;
   };
 
@@ -438,9 +449,14 @@ const Canvas: React.FC = () => {
   }
 
   useMemo(() => {
-    console.log("Graph loaded: ", graph)
-    if(nodes.length == 0) {
-      addNewNode(((window.width * 0.95) / 2 - viewport.x) / viewport.zoom - NODE_WIDTH / 2, ((window.height * 0.95) / 2 - viewport.y) / viewport.zoom - NODE_HEIGHT, NodeType.Source);
+    console.log("Graph loaded: ", graph);
+    if (nodes.length == 0) {
+      addNewNode(
+        ((window.width * 0.95) / 2 - viewport.x) / viewport.zoom -
+          NODE_WIDTH / 2,
+        ((window.height * 0.95) / 2 - viewport.y) / viewport.zoom - NODE_HEIGHT,
+        NodeType.Source
+      );
     }
   }, []);
 

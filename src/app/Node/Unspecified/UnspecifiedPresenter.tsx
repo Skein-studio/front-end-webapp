@@ -8,8 +8,8 @@ import { NodeTypeToString } from "../NodeState";
 import { useGraph, setNode } from "../GraphContext";
 
 function UnspecifiedPresenter() {
-  const { nodeState, forceReload } = useContext(NodeContext);
-  const node = nodeState;
+  const nodeContext = useContext(NodeContext);
+  const node = nodeContext.nodeState;
   const graph = useGraph();
 
   function changeType(type: NodeType) {

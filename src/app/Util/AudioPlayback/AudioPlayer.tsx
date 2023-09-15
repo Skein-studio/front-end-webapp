@@ -8,7 +8,6 @@ import { AudioState } from "./useAudio";
 
 export type AudioPlayerProps = {
   audioState: AudioState;
-  isComputing: boolean;
   audioComputed: boolean | undefined;
   error: string;
   smallplayer?: boolean;
@@ -20,20 +19,17 @@ export default function AudioPlayer(props: AudioPlayerProps) {
       <ProgressBarContainer smallplayer={props.smallplayer}>
         {props.error != "" ? (
           <ProgressBarText>{props.error}</ProgressBarText>
-        ) : !props.audioComputed && !props.isComputing ? (
+        ) : !props.audioComputed ? (
           // <ProgressBarText>compute for 3 tokens</ProgressBarText>
           <ProgressBarText>Compute to play</ProgressBarText>
-
-        ) : props.isComputing ? (
-          <ProgressBarText>"computing..."</ProgressBarText>
         ) : (
           <></>
         )}
         {props.audioState.playing ? (
           <PlayButton img={PauseImg} callback={props.audioState.onPlayPause} />
+        ) : props.audioComputed ? (
+          <PlayButton img={PlayImg} callback={props.audioState.onPlayPause} />
         ) : (
-          props.audioComputed ? 
-          <PlayButton img={PlayImg} callback={props.audioState.onPlayPause} /> :
           <PlayButton img={DirtyImg} callback={props.audioState.onPlayPause} />
         )}
 
@@ -68,7 +64,8 @@ const StyledPlayButton = styled.button`
   justify-content: center;
   background-color: lightgrey;
 
-  img { // Targeting the img element inside StyledPlayButton
+  img {
+    // Targeting the img element inside StyledPlayButton
     width: 32px;
     height: 32px;
   }

@@ -27,7 +27,7 @@ const createDummyEdge = (): Edge => ({
 
 const createDummyInput = (): Input => ({
   ID: "dummyInputID",
-  Name: "dummyInputName"
+  Name: "dummyInputName",
 });
 
 const createDummyOutput = (): Output => ({
@@ -94,14 +94,16 @@ function gatherDirtyIds(
     // Add current nodeId if it's dirty or if parent is dirty
     if (currentNode.Dirty || isParentDirty) {
       idsToMarkDirty.push(nodeId);
-      isParentDirty = true;  // For subsequent child nodes
+      isParentDirty = true; // For subsequent child nodes
     }
 
     // Get child node IDs for the current node
     const childNodeIds = getChildNodeIds(graph, nodeId);
 
     for (const childId of childNodeIds) {
-      idsToMarkDirty.push(...gatherDirtyIds(graph, childId, visited, isParentDirty));
+      idsToMarkDirty.push(
+        ...gatherDirtyIds(graph, childId, visited, isParentDirty)
+      );
     }
   }
 
@@ -129,19 +131,18 @@ export const transformtoTypescriptTypes = (graphContext: deniGraph): Root => {
   const transformNode = (node: flowNode): Node => {
     let nodeState = node.data.nodeState as NodeState;
 
-    const transformNodeInputs = (input: Input): any => {   
-      return { 
-        Name: input.Name 
-      };;
+    const transformNodeInputs = (input: Input): any => {
+      return {
+        Name: input.Name,
+      };
     };
     const transformNodeOutputs = (output: Output): Output => {
       return {
-          ID: output.ID,
-          Name: output.Name,
-          Src: output.Src,
-        };    
+        ID: output.ID,
+        Name: output.Name,
+        Src: output.Src,
+      };
     };
-    
 
     switch (NodeTypeToString(nodeState.type)) {
       case "signal": {
@@ -249,7 +250,7 @@ export interface UnspecifiedType {}
 
 export interface Input {
   ID: string;
-  Name: string
+  Name: string;
   [k: string]: unknown;
 }
 export interface Output {
@@ -257,4 +258,61 @@ export interface Output {
   Name: string;
   Src: string;
   [k: string]: unknown;
+}
+
+export function topologicalSort(graphJson: Graph): string[] {
+  const graph: Map<string, string[]> = new Map();
+  const indegree: Map<string, number> = new Map();
+  const dirtyNodes: Set<string> = new Set();
+  const signalNodes: Set<string> = new Set();
+
+  // Extract node dependencies from the JSON graph
+  for (const edge of graphJson.Edges) {
+    const inputNode = edge.Input.NodeID;
+    const outputNode = edge.Output.NodeID;
+    const existingEdges = graph.get(inputNode) || [];
+    graph.set(inputNode, [...existingEdges, outputNode]);
+  }
+
+  // Extract nodes information and indegree
+  for (const node of graphJson.Nodes) {
+    const nodeId = node.ID;
+    if (node.Type === "signal") {
+      signalNodes.add(nodeId);
+    }
+
+    if (node.Dirty && signalNodes.has(nodeId)) {
+      dirtyNodes.add(nodeId);
+      const relatedNodes = graph.get(nodeId) || [];
+      for (const outputNode of relatedNodes) {
+        const currentIndegree = indegree.get(outputNode) || 0;
+        indegree.set(outputNode, currentIndegree + 1);
+      }
+    }
+  }
+
+  const queue: string[] = Array.from(dirtyNodes).filter(
+    (node) => (indegree.get(node) || 0) === 0
+  );
+  const result: string[] = [];
+
+  while (queue.length) {
+    const u = queue.shift()!;
+    result.push(u);
+    const children = graph.get(u) || [];
+    for (const v of children) {
+      if (dirtyNodes.has(v)) {
+        const currentIndegree = indegree.get(v) || 0;
+        indegree.set(v, currentIndegree - 1);
+        if (indegree.get(v) === 0) {
+          queue.push(v);
+        }
+      }
+    }
+  }
+
+  if (result.length !== dirtyNodes.size) {
+    return [];
+  }
+  return result;
 }

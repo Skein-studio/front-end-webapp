@@ -6,8 +6,8 @@ import { NodeContext } from "../NodeState";
 import { useGraph } from "../GraphContext";
 
 function OpenSignalPresenter() {
-  const { nodeState, forceReload } = useContext(NodeContext);
-  const node = nodeState;
+  const nodeContext = useContext(NodeContext);
+  const node = nodeContext.nodeState;
   const nodeData = node.model.Data as SignalType;
   const graph = useGraph();
 

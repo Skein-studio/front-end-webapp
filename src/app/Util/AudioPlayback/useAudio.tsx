@@ -9,19 +9,18 @@ export type AudioState = {
   duration: number;
 };
 
-const useAudio = (source: string, loop?:boolean) => {
+const useAudio = (source: string, loop?: boolean) => {
   const [isPlaying, setIsPlaying] = useState(false);
   const [duration, setDuration] = useState(0);
   const [progress, setProgress] = useState(0);
   const audioRef = useRef(new Audio());
 
   useEffect(() => {
-    if(!loop){
+    if (!loop) {
       loop = false;
     }
     audioRef.current.loop = loop;
   }, [loop]);
-  
 
   // Function to update progress using requestAnimationFrame
   const updateProgress = () => {

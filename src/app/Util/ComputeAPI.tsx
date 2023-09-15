@@ -1,14 +1,14 @@
-import { Node } from "reactflow";
 import { Graph } from "../Node/GraphContext";
-import { Root, Output as modelOutput} from "./modelTransformation";
-import isEqual from 'lodash/isEqual';
+import { Root, Output as modelOutput } from "./modelTransformation";
+import isEqual from "lodash/isEqual";
 
 const COMPUTE_ENDPOINT = "http://localhost:5001/compute";
 const AUDIO_UPLOAD_ENDPOINT = "http://localhost:5001/audio/put";
-const COMPUTED_NODES_ENDPOINT = "http://localhost:5001/compute/get_computed_nodes";
+const COMPUTED_NODES_ENDPOINT =
+  "http://localhost:5001/compute/get_computed_nodes";
 
 export async function SendGraphForCompute(graph: Root) {
-  console.log("Sending graph for compute: ", graph);
+  //console.log("Sending graph for compute: ", graph);
 
   await fetch(COMPUTE_ENDPOINT, {
     method: "POST", // or 'PUT'
@@ -41,10 +41,7 @@ type OutputMapping = {
   [outputName: string]: string;
 };
 
-
-
 const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
-
 
 export async function populateDependenciesByNodeID(
   id: string,
@@ -59,21 +56,19 @@ export async function populateDependenciesByNodeID(
 
   while (retries < maxRetries) {
     try {
-
       const response = await fetch(COMPUTED_NODES_ENDPOINT);
       if (!response.ok) {
         throw new Error("{$response.status}");
       }
 
-       
-      let newDict: nodeOutputMapping = await response.json();   
-      newDict = getDifferences(nestedDict, newDict)
-      console.log("nestedDict: " + nestedDict)  
-      console.log("newDixt:" + newDict)  
+      let newDict: nodeOutputMapping = await response.json();
+      newDict = getDifferences(nestedDict, newDict);
+      //console.log("nestedDict: " + nestedDict);
+      //console.log("newDixt:" + newDict);
 
-      if(Object.keys(newDict).length > 0){
-        updateGraph(graphContext,newDict)
-        nestedDict = { ...nestedDict, ...newDict}
+      if (Object.keys(newDict).length > 0) {
+        updateGraph(graphContext, newDict);
+        nestedDict = { ...nestedDict, ...newDict };
       }
 
       if (nestedDict[idString]) {
@@ -84,7 +79,6 @@ export async function populateDependenciesByNodeID(
       if (retries < maxRetries) {
         await sleep(retryDelay);
       }
-
     } catch (error) {
       console.error(error);
       retries++;
@@ -99,27 +93,31 @@ export async function populateDependenciesByNodeID(
   }
 }
 
-function updateGraph(graph: Graph, diff: nodeOutputMapping){
-  for(const nodeID in diff){
-      const node = graph.nodes.find(n => n.data.nodeState.model.ID === nodeID);
-      if (!node){
-        continue
-      }
-      node.data.nodeState.model.Dirty = false;
-      // Traverse each output of the node
-      node.data.nodeState.model.Outputs.forEach((output: modelOutput) => {
-        const outputName = output.Name;
+function updateGraph(graph: Graph, diff: nodeOutputMapping) {
+  for (const nodeID in diff) {
+    const node = graph.nodes.find((n) => n.data.nodeState.model.ID === nodeID);
+    if (!node) {
+      continue;
+    }
+    node.data.nodeState.model.Dirty = false;
+    node.data.nodeState.loading = false;
+    // Traverse each output of the node
+    node.data.nodeState.model.Outputs.forEach((output: modelOutput) => {
+      const outputName = output.Name;
 
-        // Check if the outputName exists in the JSON data for the current node
-        if (diff[nodeID][outputName]) {
-          output.Src = diff[nodeID][outputName];
-        }
-      });
-    }    
+      // Check if the outputName exists in the JSON data for the current node
+      if (diff[nodeID][outputName]) {
+        output.Src = diff[nodeID][outputName];
+      }
+    });
+    graph.reloadComponent();
+  }
 }
 
-
-function getDifferences(oldDict: nodeOutputMapping, newDict: nodeOutputMapping): nodeOutputMapping {
+function getDifferences(
+  oldDict: nodeOutputMapping,
+  newDict: nodeOutputMapping
+): nodeOutputMapping {
   const differences: nodeOutputMapping = {};
 
   for (const nodeId in newDict) {

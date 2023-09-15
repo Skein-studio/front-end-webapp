@@ -1,7 +1,7 @@
 //SourceView.tsx
 
 import { Container, BlankSpace } from "@/app/Util/BaseStyles";
-import { NodeSmall, NodeTitle, NodeIcon } from "@/app/Util/Flow/NodeStyles";
+import { NodeSmall, NodeTitle, NodeIcon } from "@/app/Node/NodeStyles";
 import { useGraph } from "../GraphContext";
 import { NodeContext } from "../NodeState";
 import { useContext, useEffect } from "react";
@@ -19,8 +19,8 @@ const PreviewText = styled.p`
 `;
 
 const SmallView = () => {
-  const { nodeState, forceReload } = useContext(NodeContext);
-  const node = nodeState;
+  const nodeContext = useContext(NodeContext);
+  const node = nodeContext.nodeState;
 
   return (
     <>
@@ -35,8 +35,8 @@ type SourceProps = {
 
 const SourceView: React.FC<SourceProps> = ({ base }) => {
   const graph = useGraph();
-  const { nodeState, forceReload } = useContext(NodeContext);
-  const node = nodeState;
+  const nodeContext = useContext(NodeContext);
+  const node = nodeContext.nodeState;
 
   function selectNode() {
     graph.selectNode(node);

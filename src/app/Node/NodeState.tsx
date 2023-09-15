@@ -14,7 +14,7 @@ import {
   Output,
   Input,
 } from "../Util/modelTransformation";
-import { v4 as uuidv4 } from 'uuid';
+import { v4 as uuidv4 } from "uuid";
 
 let nodeID = 0; // This is used to generate unique IDs for each node, IDK why it has to start at -2 to make the first Node have ID 0
 
@@ -32,11 +32,12 @@ type Coordinate = {
 };
 
 export class NodeState {
-  position: Coordinate;
-  model: NodeModel;
-  selected: boolean;
-  id: string;
-  type: NodeType;
+  position: Coordinate; // The XY position of the node in the graph
+  model: NodeModel; // The model of the node, which is used to generate the JSON
+  selected: boolean; // Whether the node is selected or not
+  id: string; // The ID of the node
+  type: NodeType; // The type of the node (Signal, Source, Merge, Split, Unspecified)
+  loading: boolean; // Used to show the spinner when the node is loading
 
   constructor(x: number, y: number, type: NodeType, id?: string) {
     this.position = {
@@ -54,6 +55,7 @@ export class NodeState {
       Data: this.initializeData(type),
     };
     this.selected = false;
+    this.loading = false;
   }
 
   initializeData(
@@ -196,18 +198,18 @@ export const NodeContext = React.createContext<{
 
 type NodeProviderProps = {
   children: React.ReactNode;
-  initialNodeState: NodeState; // Add this line to define a new prop for the initial node state
+  initialNodeState: NodeState;
 };
 
 export const NodeProvider: React.FC<NodeProviderProps> = ({
   children,
   initialNodeState,
 }) => {
-  const [reloadTrigger, setReloadTrigger] = useState(0);
-  const [nodeState, setNodeState] = useState<NodeState>(initialNodeState);
+  const [reloadTrigger, setReloadTrigger] = useState(false);
+  const [nodeState, _] = useState<NodeState>(initialNodeState);
 
   const forceReload = () => {
-    setReloadTrigger((prev) => prev + 1);
+    setReloadTrigger(!reloadTrigger);
   };
 
   return (
