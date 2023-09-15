@@ -1,36 +1,4 @@
-## MVP TO-DO
-
-sorted by decreasing importance.
-
-#### Bigger Picture Stuff
-
-#### Front End Stuff
-
-##### To-Do:
-
-- Styling check for texts and stuff inside nodes.
-  - The "compute for 3 tokens" text should fit more neatly inside the progress bar. (??)
-  - The text after generating sounds in the source node is center-aligned instead of left-aligned. It is also the color white. (what should it be?)
-  - The white background. (??)
-  - Style Edit inside the signal node. Should there be a "set" button or something similar?
-
-##### Bugs:
-
-###### Nodes
-
-###### Source Node
-
-###### Signal Node
-
-###### Merge Node
-
-###### Split Node
-
----
-
-Node.js stuff below
-
----
+Requires backend.py or backend_mock.py running to work properly currently
 
 This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
 
