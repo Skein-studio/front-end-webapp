@@ -1,10 +1,13 @@
-import { Container } from "@/app/Util/BaseStyles";
+// OpenSignalView.tsx
+
+import { Container, Button} from "@/app/Util/BaseStyles";
 import styled from "styled-components";
 import StarImg from "../Signal/stars.svg";
 
 interface Props {
   setPrompt(value: string): void;
   prompt: string;
+  exportFile(): void;
 }
 
 export default function OpenSignalView(props: Props) {
@@ -14,6 +17,10 @@ export default function OpenSignalView(props: Props) {
     props.setPrompt(event.target.value);
   };
 
+  function handleExport() {
+    props.exportFile();
+  }
+  
   return (
     <Container>
       <Container>
@@ -27,6 +34,7 @@ export default function OpenSignalView(props: Props) {
           onChange={handleInstrumentChange}
         />
       </Container>
+      <Button onClick={handleExport}>Export</Button>
     </Container>
   );
 }
