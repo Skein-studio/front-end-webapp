@@ -1,6 +1,5 @@
 //OptionsView.tsx
-
-import React from "react";
+import React, { useState } from "react";
 import styled from "styled-components";
 import { purple } from "../../../Node/NodeStyles";
 import plus from "./plus.svg";
@@ -9,9 +8,6 @@ import trashcan from "./trashcan.svg";
 import undo from "./undo.svg";
 import edit from "./edit.svg";
 
-/* This component is the options view for the flow editor. 
-It contains the options buttons in the corner of the window */
-
 interface Props {
   toggle: () => void;
   deleteSelectedNode: () => void;
@@ -19,54 +15,65 @@ interface Props {
   addButtonHandler: () => void;
 }
 
+const Tooltip = styled.div`
+  position: absolute;
+  top: -10px;
+  width: fit-content;
+  background-color: #333;
+  color: white;
+  padding: 5px;
+  border-radius: 5px;
+  opacity: 0;
+  transition: opacity 0.3s ease-in-out;
+  z-index: 10;
+  &.visible {
+    opacity: 1;
+  }
+`;
+
+interface OptionsButtonProps {
+  img: string;
+  callback: () => void;
+  tooltipText: string;
+}
+
+export const OptionsButton: React.FC<OptionsButtonProps> = ({
+  img,
+  callback,
+  tooltipText,
+}) => {
+  const [isHovered, setHovered] = useState(false);
+
+  return (
+    <StyledOptionsButton
+      onClick={callback}
+      onMouseEnter={() => setHovered(true)}
+      onMouseLeave={() => setHovered(false)}
+    >
+      <Tooltip className={isHovered ? "visible" : ""}>{tooltipText}</Tooltip>
+      <NodeIcon src={img} />
+    </StyledOptionsButton>
+  );
+};
+
 export default function OptionsView(props: Props) {
   return (
     <OptionsContainer>
-      <OptionsButton img={edit} callback={props.toggle} />
+      <OptionsButton img={edit} callback={props.toggle} tooltipText="Edit" />
       <OptionsButton
         img={trashcan}
         callback={() => {
           props.deleteSelectedNode();
           props.deleteSelectedEdge();
         }}
+        tooltipText="Delete"
       />
-      <OptionsButton
-        img={undo}
-        callback={() => {
-          console.log("undo");
-        }}
-      />
-      <OptionsButton
-        img={redo}
-        callback={() => {
-          console.log("redo");
-        }}
-      />
-      <OptionsButton
-        img={plus}
-        callback={() => {
-          props.addButtonHandler();
-        }}
-      />
+      <OptionsButton img={undo} callback={() => console.log("undo")} tooltipText="Undo" />
+      <OptionsButton img={redo} callback={() => console.log("redo")} tooltipText="Redo" />
+      <OptionsButton img={plus} callback={() => props.addButtonHandler()} tooltipText="Add" />
     </OptionsContainer>
   );
 }
-
-interface OptionsButtonProps {
-  img: string;
-  callback: () => void;
-}
-
-export const OptionsButton: React.FC<OptionsButtonProps> = ({
-  img,
-  callback,
-}) => {
-  return (
-    <StyledOptionsButton onClick={callback}>
-      <NodeIcon src={img} />
-    </StyledOptionsButton>
-  );
-};
 
 const StyledOptionsButton = styled.button`
   height: 32px;
