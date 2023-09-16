@@ -1,36 +1,4 @@
-## MVP TO-DO
-
-sorted by decreasing importance.
-
-#### Bigger Picture Stuff
-
-#### Front End Stuff
-
-##### To-Do:
-
-- Styling check for texts and stuff inside nodes.
-  - The "compute for 3 tokens" text should fit more neatly inside the progress bar. (??)
-  - The text after generating sounds in the source node is center-aligned instead of left-aligned. It is also the color white. (what should it be?)
-  - The white background. (??)
-  - Style Edit inside the signal node. Should there be a "set" button or something similar?
-
-##### Bugs:
-
-###### Nodes
-
-###### Source Node
-
-###### Signal Node
-
-###### Merge Node
-
-###### Split Node
-
----
-
-Node.js stuff below
-
----
+Requires backend.py or backend_mock.py running to work properly currently
 
 This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
 
@@ -47,22 +15,3 @@ pnpm dev
 ```
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
-
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
-
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
