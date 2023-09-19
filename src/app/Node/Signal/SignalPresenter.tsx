@@ -43,11 +43,9 @@ export default function SignalPresenter() {
       graph.refresh(); // Reload the component to show the spinner
 
       await SendGraphForCompute(transformtoTypescriptTypes(graph));
-      let url: string;
-
       await populateDependenciesByNodeID(node.id, graph);
 
-      graph.refresh()
+      graph.refresh(); // done
     } catch (e) {
       console.log(e);
     }
