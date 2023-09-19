@@ -37,7 +37,7 @@ const MergePresenter: React.FC = () => {
       return;
     }
     node.addTargetHandle();
-    graph.refresh(); 
+    graph.refresh();
   };
 
   return <MergeView />;

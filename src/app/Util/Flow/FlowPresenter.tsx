@@ -54,37 +54,27 @@ const proOptions = { hideAttribution: true };
 const nodeTypes = {
   // this is where we define the node types
   source: (nodeData: any) => (
-    <NodeContext.Provider
-      value={{ nodeState: nodeData.data.nodeState}}
-    >
+    <NodeContext.Provider value={{ nodeState: nodeData.data.nodeState }}>
       <SourcePresenter />
     </NodeContext.Provider>
   ),
   unspecified: (nodeData: any) => (
-    <NodeContext.Provider
-      value={{ nodeState: nodeData.data.nodeState }}
-    >
+    <NodeContext.Provider value={{ nodeState: nodeData.data.nodeState }}>
       <UnspecifiedPresenter />
     </NodeContext.Provider>
   ),
   split: (nodeData: any) => (
-    <NodeContext.Provider
-      value={{ nodeState: nodeData.data.nodeState }}
-    >
+    <NodeContext.Provider value={{ nodeState: nodeData.data.nodeState }}>
       <SplitPresenter />
     </NodeContext.Provider>
   ),
   merge: (nodeData: any) => (
-    <NodeContext.Provider
-      value={{ nodeState: nodeData.data.nodeState }}
-    >
+    <NodeContext.Provider value={{ nodeState: nodeData.data.nodeState }}>
       <MergePresenter />
     </NodeContext.Provider>
   ),
   signal: (nodeData: any) => (
-    <NodeContext.Provider
-      value={{ nodeState: nodeData.data.nodeState }}
-    >
+    <NodeContext.Provider value={{ nodeState: nodeData.data.nodeState }}>
       <SignalPresenter />
     </NodeContext.Provider>
   ),
@@ -173,15 +163,7 @@ function FlowPresenter() {
       setNodes,
       setEdges,
     }),
-    [
-      nodes,
-      edges,
-      refresh,
-      selectNode,
-      selectedNode,
-      setNodes,
-      setEdges,
-    ]
+    [nodes, edges, refresh, selectNode, selectedNode, setNodes, setEdges]
   );
 
   useEffect(() => {
@@ -502,7 +484,7 @@ function FlowPresenter() {
       </GraphContext.Provider>
     </ReactFlowProvider>
   );
-};
+}
 
 function FlowWrapper() {
   return (

@@ -31,7 +31,6 @@ export default function SignalPresenter() {
   };
 
   const fetchAudio = async () => {
-
     try {
       let loadingNodes: string[] = topologicalSort(
         transformtoTypescriptTypes(graph).Sketch.Graph
@@ -49,7 +48,6 @@ export default function SignalPresenter() {
     } catch (e) {
       console.log(e);
     }
-
   };
 
   return (
