@@ -42,7 +42,7 @@ function OpenSignalPresenter() {
   return (
     <OpenSignalView
       exportFile={exportFile}
-      prompt={nodeData.Prompt as string}
+      prompt={nodeData.Prompt}
       setPrompt={handlePromptChange}
     />
   );
