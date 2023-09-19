@@ -1,7 +1,7 @@
 // SignalPresenter.tsx
 import useAudio from "@/app/Util/AudioPlayback/useAudio";
 import SignalView from "./SignalView";
-import { useContext, useEffect, useState } from "react";
+import { useContext } from "react";
 import { NodeContext } from "../NodeState";
 import {
   transformtoTypescriptTypes,
