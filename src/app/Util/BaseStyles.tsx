@@ -103,7 +103,7 @@ const OuterBox = styled.div<OuterBoxProps>`
   box-shadow: ${(props) =>
     props.shadow ? "0px 2px 8px rgba(0, 0, 0, 0.25)" : "0px"};
   border-radius: 10px;
-  border: 4px solid black;
+  border: 1px solid black;
   padding: 4px;
   margin: 4px;
   overflow: hidden;
