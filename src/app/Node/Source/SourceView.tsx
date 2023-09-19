@@ -2,9 +2,8 @@
 
 import { Container, BlankSpace } from "@/app/Util/BaseStyles";
 import { NodeSmall, NodeTitle, NodeIcon } from "@/app/Node/NodeStyles";
-import { useGraph } from "../GraphContext";
 import { NodeContext } from "../NodeState";
-import { useContext, useEffect } from "react";
+import { useContext } from "react";
 import { styled } from "styled-components";
 import SourceImg from "./source.svg";
 import { GenerateHandles } from "@/app/Util/Handles";
