@@ -16,25 +16,24 @@ function OpenSignalPresenter() {
   const handlePromptChange = (prompt: string) => {
     node.setPrompt(prompt);
     node.model.Dirty = true;
-    //nodeContext.forceReload();
-    graph.reloadComponent();
+    graph.refresh();
   };
 
   const exportFile = async () => {
     const outputSrc = node.model.Outputs[0].Src;
-    
+
     // Fetch the file
     const response = await fetch(outputSrc);
     const blob = await response.blob();
-  
+
     // Create a temporary anchor element and simulate a click event
     const url = window.URL.createObjectURL(blob);
-    const link = document.createElement('a');
+    const link = document.createElement("a");
     link.href = url;
-    link.setAttribute('download', `skeinstudio-${outputSrc}.mp3`);  // You can dynamically set the file name as well
+    link.setAttribute("download", `skeinstudio-${outputSrc}.mp3`); // You can dynamically set the file name as well
     document.body.appendChild(link);
     link.click();
-  
+
     // Cleanup
     window.URL.revokeObjectURL(url);
     document.body.removeChild(link);

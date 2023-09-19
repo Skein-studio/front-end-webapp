@@ -1,6 +1,6 @@
 // OpenSignalView.tsx
 
-import { Container, Button} from "@/app/Util/BaseStyles";
+import { Container, Button } from "@/app/Util/BaseStyles";
 import styled from "styled-components";
 import StarImg from "../Signal/stars.svg";
 
@@ -20,7 +20,7 @@ export default function OpenSignalView(props: Props) {
   function handleExport() {
     props.exportFile();
   }
-  
+
   return (
     <Container>
       <Container>

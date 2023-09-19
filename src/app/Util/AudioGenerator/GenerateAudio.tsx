@@ -21,8 +21,7 @@ const GenerateAudio: React.FC = () => {
     // For now, we'll use a dummy audio file
     nodeData.Dirty = true;
     nodeData.URL = "/dummyshort.mp3";
-    graph.reloadComponent(); // TODO: This should be replaced , and the node should be updated via forceReload, not just here in the OpenView but in the small view too (SourcePresenter.tsx, SignalPresenter.tsx, etc.)
-    nodeContext.forceReload(); // TODO: Only this should be needed, but it's not working currently since it doesn't update the node in the small view
+    graph.refresh();
   };
 
   return (

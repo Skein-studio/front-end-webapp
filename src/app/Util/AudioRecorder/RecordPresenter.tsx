@@ -28,8 +28,7 @@ const RecordPresenter: React.FC = () => {
         nodeData.URL = fileUrl;
         nodeData.Dirty = true;
 
-        graph.reloadComponent(); // TODO: This should be replaced , and the node should be updated via forceReload, not just here in the OpenView but in the small view too (SourcePresenter.tsx, SignalPresenter.tsx, etc.)
-        nodeContext.forceReload(); //Only this should be needed, but it's not working currently since it doesn't update the node in the small view
+        graph.refresh();
       };
     });
 

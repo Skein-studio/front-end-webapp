@@ -13,7 +13,7 @@ import { Edge, Node } from "reactflow";
 export type Graph = {
   nodes: Node[];
   edges: Edge[];
-  reloadComponent: () => void;
+  refresh: () => void;
   selectNode: (nodeState: NodeState | undefined) => void;
   selectedNode: NodeState | undefined;
   setNodes: (nodes: Node[]) => void;
@@ -41,7 +41,7 @@ export function deleteEdges(context: Graph, edges: Edge[]) {
     (edge) => !edges.find((e) => e.id === edge.id)
   );
   context.setEdges(newEdges); // Assuming setEdges is defined in Graph type
-  context.reloadComponent();
+  context.refresh();
 }
 
 export function setDirtyNodes(context: Graph, dirtyIds: string[]) {
@@ -98,7 +98,7 @@ export function createNewNode(x: number, y: number, nodeType: NodeType) {
 export const GraphContext = createContext<Graph>({
   nodes: [],
   edges: [],
-  reloadComponent: () => {},
+  refresh: () => {},
   selectNode: (nodeState: NodeState | undefined) => {},
   selectedNode: undefined,
   setNodes: () => {},

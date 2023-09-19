@@ -68,9 +68,21 @@ export default function OptionsView(props: Props) {
         }}
         tooltipText="Delete"
       />
-      <OptionsButton img={undo} callback={() => console.log("undo")} tooltipText="Undo" />
-      <OptionsButton img={redo} callback={() => console.log("redo")} tooltipText="Redo" />
-      <OptionsButton img={plus} callback={() => props.addButtonHandler()} tooltipText="Add" />
+      <OptionsButton
+        img={undo}
+        callback={() => console.log("undo")}
+        tooltipText="Undo"
+      />
+      <OptionsButton
+        img={redo}
+        callback={() => console.log("redo")}
+        tooltipText="Redo"
+      />
+      <OptionsButton
+        img={plus}
+        callback={() => props.addButtonHandler()}
+        tooltipText="Add"
+      />
     </OptionsContainer>
   );
 }

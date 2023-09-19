@@ -2,7 +2,7 @@
 
 import React from "react";
 import "reactflow/dist/style.css";
-import Canvas from "@/app/Util/Flow/FlowPresenter";
+import FlowWrapper from "@/app/Util/Flow/FlowPresenter";
 import { styled } from "styled-components";
 const ApplicationFrame = styled.div`
   display: flex;
@@ -16,7 +16,7 @@ const ApplicationFrame = styled.div`
 export default function Home() {
   return (
     <ApplicationFrame>
-      <Canvas></Canvas>
+      <FlowWrapper />
       {/*This content is outside the Flow window*/}
     </ApplicationFrame>
   );

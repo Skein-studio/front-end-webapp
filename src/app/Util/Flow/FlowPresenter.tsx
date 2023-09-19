@@ -55,35 +55,35 @@ const nodeTypes = {
   // this is where we define the node types
   source: (nodeData: any) => (
     <NodeContext.Provider
-      value={{ nodeState: nodeData.data.nodeState, forceReload: () => {} }}
+      value={{ nodeState: nodeData.data.nodeState}}
     >
       <SourcePresenter />
     </NodeContext.Provider>
   ),
   unspecified: (nodeData: any) => (
     <NodeContext.Provider
-      value={{ nodeState: nodeData.data.nodeState, forceReload: () => {} }}
+      value={{ nodeState: nodeData.data.nodeState }}
     >
       <UnspecifiedPresenter />
     </NodeContext.Provider>
   ),
   split: (nodeData: any) => (
     <NodeContext.Provider
-      value={{ nodeState: nodeData.data.nodeState, forceReload: () => {} }}
+      value={{ nodeState: nodeData.data.nodeState }}
     >
       <SplitPresenter />
     </NodeContext.Provider>
   ),
   merge: (nodeData: any) => (
     <NodeContext.Provider
-      value={{ nodeState: nodeData.data.nodeState, forceReload: () => {} }}
+      value={{ nodeState: nodeData.data.nodeState }}
     >
       <MergePresenter />
     </NodeContext.Provider>
   ),
   signal: (nodeData: any) => (
     <NodeContext.Provider
-      value={{ nodeState: nodeData.data.nodeState, forceReload: () => {} }}
+      value={{ nodeState: nodeData.data.nodeState }}
     >
       <SignalPresenter />
     </NodeContext.Provider>
@@ -92,7 +92,7 @@ const nodeTypes = {
 
 const START_ZOOM = 0.75;
 
-const Canvas: React.FC = () => {
+function FlowPresenter() {
   const reactFlowInstance = useReactFlow();
   const window = useWindowDimensions();
   const [viewport, setViewport] = useState<Viewport>({
@@ -110,8 +110,8 @@ const Canvas: React.FC = () => {
   const [connectStartNode, setConnectStartNode] = useState<Node>();
   const [connectStartHandleId, setConnectStartHandleId] = useState<string>();
 
-  const reloadComponent = () => {
-    console.warn("Forced reload of entire graph (reloadComponent())");
+  const refresh = () => {
+    console.warn("Refreshed graph (refresh())");
     if (flowKey == 0) {
       setFlowKey((prevKey) => prevKey + 1);
     } else {
@@ -123,7 +123,7 @@ const Canvas: React.FC = () => {
       so that it can be used to force a refresh from inside the context, like when setting or updating using the
       functions inside GraphContext.tsx (setNodes() etc).
       This way, we don't need to double click on any button to make it refresh
-      TODO: Remove this, but to do that, must find alternative for graph.reloadComponent() in RecordPresenter & ImportAudio & GenerateAudio
+      TODO: Consider this
     */
   };
 
@@ -167,7 +167,7 @@ const Canvas: React.FC = () => {
     () => ({
       nodes,
       edges,
-      reloadComponent,
+      refresh,
       selectNode,
       selectedNode,
       setNodes,
@@ -176,7 +176,7 @@ const Canvas: React.FC = () => {
     [
       nodes,
       edges,
-      reloadComponent,
+      refresh,
       selectNode,
       selectedNode,
       setNodes,
@@ -504,12 +504,12 @@ const Canvas: React.FC = () => {
   );
 };
 
-function Flow() {
+function FlowWrapper() {
   return (
     <ReactFlowProvider>
-      <Canvas></Canvas>
+      <FlowPresenter></FlowPresenter>
     </ReactFlowProvider>
   );
 }
 
-export default Flow;
+export default FlowWrapper;

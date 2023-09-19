@@ -37,8 +37,7 @@ const MergePresenter: React.FC = () => {
       return;
     }
     node.addTargetHandle();
-    nodeContext.forceReload();
-    graph.reloadComponent(); // TODO: This should be replaced, instead of reloading the whole graph, just reload the node that was changed (currently causes issues when connecting to newly added target handle)
+    graph.refresh(); 
   };
 
   return <MergeView />;

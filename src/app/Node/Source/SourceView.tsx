@@ -18,48 +18,47 @@ const PreviewText = styled.p`
   bottom: 0px;
 `;
 
-const SmallView = () => {
-  const nodeContext = useContext(NodeContext);
-  const node = nodeContext.nodeState;
+interface SmallViewProps {
+  url: string;
+}
 
+function SmallView(props: SmallViewProps) {
   return (
     <>
-      <PreviewText>{(node.model.Data as SourceType).URL}</PreviewText>
+      <PreviewText>{props.url}</PreviewText>
     </>
   );
-};
+}
 
 type SourceProps = {
-  base: string;
+  selectNode: () => void;
 };
 
-const SourceView: React.FC<SourceProps> = ({ base }) => {
-  const graph = useGraph();
+function SourceView(props: SourceProps) {
   const nodeContext = useContext(NodeContext);
   const node = nodeContext.nodeState;
-
-  function selectNode() {
-    graph.selectNode(node);
-  }
+  const sourceData = node.model.Data as SourceType;
 
   return (
-    //can extend width by multiplying a value times the number of outputs - 10 or something in that manner
     <NodeSmall
       widthextension={0}
       selected={node.selected ?? false}
-      onClick={selectNode}
+      onClick={props.selectNode}
     >
       <BlankSpace height={5} width={5}></BlankSpace>
       {<NodeIcon src={SourceImg} />}
       <NodeTitle>
-        source{base != "" && base != undefined ? `[${base}]` : ""}
+        source
+        {sourceData.base != "" && sourceData.base != undefined
+          ? `[${sourceData.base}]`
+          : ""}
       </NodeTitle>
       <Container style={{ flex: 1 }}>
-        {base ? <SmallView /> : <></>}
+        {sourceData.base ? <SmallView url={sourceData.URL} /> : <></>}
         {GenerateHandles(node)}
       </Container>
     </NodeSmall>
   );
-};
+}
 
 export default SourceView;

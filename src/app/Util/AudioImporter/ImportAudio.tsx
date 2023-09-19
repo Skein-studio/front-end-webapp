@@ -22,8 +22,7 @@ const ImportAudio: React.FC = () => {
       const fileUrl = await uploadAudioBlob(e.target.files[0]);
       nodeData.URL = fileUrl;
       node.model.Dirty = true;
-      nodeContext.forceReload();
-      graph.reloadComponent(); // TODO: This should be replaced , and the node should be updated via forceReload, not just here in the OpenView but in the small view too (SourcePresenter.tsx, SignalPresenter.tsx, etc.)
+      graph.refresh();
     }
   };
 

@@ -110,7 +110,7 @@ function updateGraph(graph: Graph, diff: nodeOutputMapping) {
         output.Src = diff[nodeID][outputName];
       }
     });
-    graph.reloadComponent();
+    graph.refresh();
   }
 }
 

@@ -190,10 +190,8 @@ import React, { useState } from "react";
 
 export const NodeContext = React.createContext<{
   nodeState: NodeState;
-  forceReload: () => void;
 }>({
   nodeState: new NodeState(0, 0, NodeType.Unspecified),
-  forceReload: () => {},
 });
 
 type NodeProviderProps = {
@@ -205,15 +203,10 @@ export const NodeProvider: React.FC<NodeProviderProps> = ({
   children,
   initialNodeState,
 }) => {
-  const [reloadTrigger, setReloadTrigger] = useState(false);
   const [nodeState, _] = useState<NodeState>(initialNodeState);
 
-  const forceReload = () => {
-    setReloadTrigger(!reloadTrigger);
-  };
-
   return (
-    <NodeContext.Provider value={{ nodeState, forceReload }}>
+    <NodeContext.Provider value={{ nodeState }}>
       {children}
     </NodeContext.Provider>
   );

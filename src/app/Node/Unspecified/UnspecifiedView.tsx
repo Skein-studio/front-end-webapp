@@ -12,8 +12,8 @@ interface Props {
 
 function UnspecifiedView(props: Props) {
   const graph = useGraph();
-  const { nodeState, forceReload } = useContext(NodeContext);
-  const node = nodeState;
+  const nodeContext = useContext(NodeContext);
+  const node = nodeContext.nodeState;
 
   function setNode(type: NodeType) {
     props.setNode(type);

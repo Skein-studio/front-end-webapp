@@ -1,25 +1,21 @@
 //SourcePresenter.tsx
-import React, { useState, useContext, useEffect } from "react";
+import React, { useContext, useEffect } from "react";
 import SourceView from "./SourceView";
 import { NodeContext } from "../NodeState";
 import { SourceType } from "@/app/Util/modelTransformation";
+import { useGraph } from "../GraphContext";
 
 function SourcePresenter() {
   const nodeContext = useContext(NodeContext);
   const node = nodeContext.nodeState;
-  const nodeData = node?.model.Data as SourceType;
+  const nodeData = node.model.Data as SourceType;
+  const graph = useGraph();
 
-  const [base, setBase] = useState<string>(
-    (node?.model.Data as SourceType).base ?? ""
-  );
+  function selectNode() {
+    graph.selectNode(node);
+  }
 
-  useEffect(() => {
-    nodeContext.forceReload();
-  }, [nodeData.URL, nodeData.base]);
-
-  //useEffect to load audioData etc from backend upon component load?
-
-  return <SourceView base={base} />;
+  return <SourceView selectNode={selectNode} />;
 }
 
 export default SourcePresenter;
