@@ -7,15 +7,15 @@ const AUDIO_UPLOAD_ENDPOINT = "http://localhost:5001/audio/put";
 const COMPUTED_NODES_ENDPOINT =
   "http://localhost:5001/compute/get_computed_nodes";
 
-export async function SendGraphForCompute(graph: RootModel) {
-  //console.log("Sending graph for compute: ", graph);
+export async function SendGraphForCompute(rootModel: RootModel) {
+  //console.log("Sending graph(rootmodel) for compute: ", rootModel);
 
   await fetch(COMPUTE_ENDPOINT, {
     method: "POST", // or 'PUT'
     headers: {
       "Content-Type": "application/json",
     },
-    body: JSON.stringify(graph),
+    body: JSON.stringify(rootModel),
   });
 }
 
@@ -43,7 +43,7 @@ type OutputMapping = {
 
 const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
 
-export async function populateDependenciesByNodeID(
+export async function populateDependenciesByNodeID( // TODO: Refactor this ?
   id: string,
   graphContext: Graph,
   maxRetries: number = 100,
