@@ -19,7 +19,7 @@ const GenerateAudio: React.FC = () => {
   const handleClick = async () => {
     // This is where we will call our backend service to generate the audio
     // For now, we'll use a dummy audio file
-    nodeData.Dirty = true;
+    node.model.Dirty = true;
     nodeData.URL = "/dummyshort.mp3";
     graph.refresh();
   };
