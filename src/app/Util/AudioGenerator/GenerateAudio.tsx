@@ -6,12 +6,12 @@ import { NodeContext } from "@/app/Node/NodeState";
 import { useGraph } from "@/app/Node/GraphContext";
 import useAudio from "@/app/Util/AudioPlayback/useAudio";
 import AudioPlayer from "../AudioPlayback/AudioPlayer";
-import { SourceType } from "../modelTransformation";
+import { SourceTypeModel } from "../modelTransformation";
 
 const GenerateAudio: React.FC = () => {
   const nodeContext = useContext(NodeContext);
   const node = nodeContext.nodeState;
-  const nodeData = node.model.Data as SourceType;
+  const nodeData = node.model.Data as SourceTypeModel;
   const audioData = nodeData.URL;
   const graph = useGraph();
   const audioState = useAudio(audioData);

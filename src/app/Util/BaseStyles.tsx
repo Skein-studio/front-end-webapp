@@ -6,23 +6,23 @@ interface TextProps {
   color?: string;
   weight?: string;
   align?: string;
-  noMargin?: boolean;
-  hoverColor?: string;
+  nomargin?: boolean;
+  hovercolor?: string;
 }
 
 const Text = styled.p<TextProps>`
   font-size: ${({ size }) => (size ? `${size}px` : "20px")};
   color: ${({ color }) => (color ? color : "#333")};
   line-height: 1.7;
-  font-family: "Roboto", "Helvetica", "Arial", sans-serif;
+  font-family: "Helvetica", "Arial", sans-serif;
   font-weight: ${({ weight }) => (weight ? weight : "400")};
   text-align: ${({ align }) => (align ? align : "justify")};
   margin: 2px;
-  margin: ${({ noMargin }) => (noMargin ? "0" : "0 0 20px 0")};
+  margin: ${({ nomargin: noMargin }) => (noMargin ? "0" : "0 0 20px 0")};
   transition: color 0.3s ease;
 
   &:hover {
-    color: ${({ hoverColor }) => (hoverColor ? hoverColor : "#007BFF")};
+    color: ${({ hovercolor: hoverColor }) => (hoverColor ? hoverColor : "#007BFF")};
   }
 `;
 

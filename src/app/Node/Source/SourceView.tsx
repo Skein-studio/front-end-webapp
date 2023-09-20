@@ -7,7 +7,7 @@ import { useContext } from "react";
 import { styled } from "styled-components";
 import SourceImg from "./source.svg";
 import { GenerateHandles } from "@/app/Util/Handles";
-import { SourceType } from "@/app/Util/modelTransformation";
+import { SourceTypeModel } from "@/app/Util/modelTransformation";
 
 const PreviewText = styled.p`
   color: white;
@@ -36,7 +36,7 @@ type SourceProps = {
 function SourceView(props: SourceProps) {
   const nodeContext = useContext(NodeContext);
   const node = nodeContext.nodeState;
-  const sourceData = node.model.Data as SourceType;
+  const sourceData = node.model.Data as SourceTypeModel;
 
   return (
     <NodeSmall

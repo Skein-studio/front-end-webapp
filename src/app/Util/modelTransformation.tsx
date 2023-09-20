@@ -1,7 +1,7 @@
 //modelTransformation.tsx
-import { Graph as deniGraph } from "../Node/GraphContext";
-import { Edge as flowEdge, Node as flowNode } from "reactflow";
-import { NodeState, NodeTypeToString } from "../Node/NodeState";
+import { Graph } from "../Node/GraphContext";
+import { Edge, Node} from "reactflow";
+import { NodeState, NodeType, NodeTypeToString } from "../Node/NodeState";
 // Create a dummy data generator function for each type
 
 export enum handleType {
@@ -13,7 +13,7 @@ export enum handleType {
   "bass",
 }
 
-const createDummyEdge = (): Edge => ({
+const createDummyEdgeModel = (): EdgeModel => ({
   ID: "dummyEdgeID",
   Input: {
     NodeID: "dummyInputNodeID",
@@ -25,43 +25,43 @@ const createDummyEdge = (): Edge => ({
   },
 });
 
-const createDummyInput = (): Input => ({
+const createDummyInputModel = (): InputModel => ({
   ID: "dummyInputID",
   Name: "dummyInputName",
 });
 
-const createDummyOutput = (): Output => ({
+const createDummyOutputModel = (): OutputModel => ({
   ID: "dummyOutputID",
   Name: "dummyOutputName",
   Src: "dummySrc",
 });
 
-const createDummyNode = (): Node => ({
+const createDummyNodeModel = (): NodeModel => ({
   ID: "dummyNodeID",
   Dirty: false,
-  Type: "SourceType", // this can be changed as needed: SourceType, SignalType, MergeType, SplitType
+  Type: "source", // this can be changed as needed: source, signal, merge, split
   Data: {
     URL: "dummyURL",
   },
-  Inputs: [createDummyInput()],
-  Outputs: [createDummyOutput()],
+  Inputs: [createDummyInputModel()],
+  Outputs: [createDummyOutputModel()],
 });
 
-const createDummyGraph = (): Graph => ({
-  Edges: [createDummyEdge()],
-  Nodes: [createDummyNode()],
+const createDummyGraphModel = (): GraphModel => ({
+  Edges: [createDummyEdgeModel()],
+  Nodes: [createDummyNodeModel()],
 });
 
-const createDummyRoot = (): Root => ({
+const createDummyRootModel = (): RootModel => ({
   Sketch: {
     ID: "dummySketchID",
     Name: "dummySketchName",
-    Graph: createDummyGraph(),
+    Graph: createDummyGraphModel(),
   },
 });
-export const dummyData: Root = createDummyRoot();
+export const dummyData: RootModel = createDummyRootModel();
 
-function getChildNodeIds(graph: Graph, nodeId: string): string[] {
+function getChildNodeIds(graph: GraphModel, nodeId: string): string[] {
   const childNodeIds: string[] = [];
 
   // Iterate through the graph's edges to find child nodes for the given node
@@ -74,7 +74,7 @@ function getChildNodeIds(graph: Graph, nodeId: string): string[] {
   return childNodeIds;
 }
 function gatherDirtyIds(
-  graph: Graph,
+  graph: GraphModel,
   nodeId: string,
   visited: Set<string> = new Set(),
   isParentDirty: boolean = false
@@ -110,7 +110,7 @@ function gatherDirtyIds(
   return idsToMarkDirty;
 }
 
-export function gatherAllDirtyIds(graph: Graph): string[] {
+export function gatherAllDirtyIds(graph: GraphModel): string[] {
   const allDirtyIds: Set<string> = new Set();
 
   for (const node of graph.Nodes) {
@@ -124,63 +124,24 @@ export function gatherAllDirtyIds(graph: Graph): string[] {
 
   return Array.from(allDirtyIds);
 }
-export const transformtoTypescriptTypes = (graphContext: deniGraph): Root => {
-  if (!graphContext) {
-    return {} as Root;
-  }
-  const transformNode = (node: flowNode): Node => {
+export const transformGraphToRootModel = (graphContext: Graph): RootModel => { 
+
+  const transformNodeToNodeModel = (node: Node): NodeModel => {
     let nodeState = node.data.nodeState as NodeState;
 
-    const transformNodeInputs = (input: Input): any => {
-      return {
-        Name: input.Name,
-      };
-    };
-    const transformNodeOutputs = (output: Output): Output => {
-      return {
-        ID: output.ID,
-        Name: output.Name,
-        Src: output.Src,
-      };
-    };
-
-    switch (NodeTypeToString(nodeState.type)) {
-      case "signal": {
-        nodeState.model.Data = {
-          Prompt: (nodeState.model.Data as SignalType).Prompt,
-          Seed: (nodeState.model.Data as SignalType).Seed,
-        };
-        break;
-      }
-
-      case "source": {
-        nodeState.model.Data = {
-          URL: (nodeState.model.Data as SourceType).URL,
-          base: (nodeState.model.Data as SourceType).base,
-        };
-        break;
-      }
-      // case "merge":{}
-      // case "split":{}
-
-      default: {
-        nodeState.model.Data = {};
-      }
-    }
-
     let n = {
-      Type: NodeTypeToString(nodeState.type),
+      Type: NodeTypeToString(nodeState.type), // TODO: Is this conversion necessary? 
       Dirty: nodeState.model.Dirty,
       Data: nodeState.model.Data,
-      Inputs: nodeState.model.Inputs.map(transformNodeInputs),
-      Outputs: nodeState.model.Outputs.map(transformNodeOutputs),
+      Inputs: nodeState.model.Inputs,
+      Outputs: nodeState.model.Outputs,
       ID: `${nodeState.id}`,
-    } as Node;
+    } as NodeModel;
     return n;
   };
 
-  const transformEdge = (edge: flowEdge): Edge => {
-    return edge.data as Edge;
+  const transformEdgeToEdgeModel = (edge: Edge): EdgeModel => {
+    return edge.data as EdgeModel;
   };
   // Construct the final transformed structure
   return {
@@ -188,29 +149,29 @@ export const transformtoTypescriptTypes = (graphContext: deniGraph): Root => {
       ID: "1", // Placeholder ID. Replace or derive from actual data as needed.
       Name: "spaghetti", // Placeholder Name. Replace or derive from actual data as needed.
       Graph: {
-        Edges: graphContext.edges.map(transformEdge), // Transform all edges
-        Nodes: graphContext.nodes.map(transformNode), // Transform all nodes
+        Edges: graphContext.edges.map(transformEdgeToEdgeModel), // Transform all edges
+        Nodes: graphContext.nodes.map(transformNodeToNodeModel), // Transform all nodes
       },
     },
   };
 };
 
-export interface Root {
+export interface RootModel {
   Sketch: {
     ID: string;
     Name: string;
-    Graph: Graph;
+    Graph: GraphModel;
     [k: string]: unknown;
   };
   [k: string]: unknown;
 }
-export interface Graph {
-  Edges: Edge[];
-  Nodes: Node[];
+export interface GraphModel {
+  Edges: EdgeModel[];
+  Nodes: NodeModel[];
   [k: string]: unknown;
 }
 
-export interface Edge {
+export interface EdgeModel {
   ID: string;
   Input: {
     NodeID: string;
@@ -224,43 +185,43 @@ export interface Edge {
   };
   [k: string]: unknown;
 }
-export interface Node {
+export interface NodeModel {
   ID: string;
   Dirty: boolean;
-  Data: SourceType | SignalType | MergeType | SplitType | UnspecifiedType;
+  Data: SourceTypeModel | SignalTypeModel | MergeTypeModel | SplitTypeModel | UnspecifiedTypeModel;
   Type: string;
   //type is either the strings SourceType or SignalType or MergeType or SplitType
-  Inputs: Input[];
-  Outputs: Output[];
+  Inputs: InputModel[];
+  Outputs: OutputModel[];
   [k: string]: unknown;
 }
-export interface SourceType {
+export interface SourceTypeModel {
   URL: string;
   base: string; // whether the source is a record, import or generate type
   [k: string]: unknown;
 }
-export interface SignalType {
+export interface SignalTypeModel {
   Prompt: string;
   Seed: string;
   [k: string]: unknown;
 }
-export interface MergeType {}
-export interface SplitType {}
-export interface UnspecifiedType {}
+export interface MergeTypeModel {}
+export interface SplitTypeModel {}
+export interface UnspecifiedTypeModel {}
 
-export interface Input {
+export interface InputModel {
   ID: string;
   Name: string;
   [k: string]: unknown;
 }
-export interface Output {
+export interface OutputModel {
   ID: string;
   Name: string;
   Src: string;
   [k: string]: unknown;
 }
 
-export function topologicalSort(graphJson: Graph): string[] {
+export function topologicalSort(graphJson: GraphModel): string[] {
   const graph: Map<string, string[]> = new Map();
   const indegree: Map<string, number> = new Map();
   const dirtyNodes: Set<string> = new Set();

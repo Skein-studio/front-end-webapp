@@ -6,13 +6,13 @@ import useAudio from "@/app/Util/AudioPlayback/useAudio";
 import AudioPlayer from "../AudioPlayback/AudioPlayer";
 import { Container } from "../BaseStyles";
 import { uploadAudioBlob } from "../ComputeAPI";
-import { SignalType, SourceType } from "../modelTransformation";
+import { SignalTypeModel, SourceTypeModel } from "../modelTransformation";
 
 const ImportAudio: React.FC = () => {
   const nodeContext = useContext(NodeContext);
   const node = nodeContext.nodeState;
   const nodeData =
-    (node.model.Data as SourceType) ?? (node.model.Data as SignalType);
+    (node.model.Data as SourceTypeModel) ?? (node.model.Data as SignalTypeModel);
   const audioData = nodeData.URL as string;
   const audioState = useAudio(audioData);
   const graph = useGraph();

@@ -1,5 +1,5 @@
 import { Graph } from "../Node/GraphContext";
-import { Root, Output as modelOutput } from "./modelTransformation";
+import { RootModel, OutputModel as modelOutput } from "./modelTransformation";
 import isEqual from "lodash/isEqual";
 
 const COMPUTE_ENDPOINT = "http://localhost:5001/compute";
@@ -7,7 +7,7 @@ const AUDIO_UPLOAD_ENDPOINT = "http://localhost:5001/audio/put";
 const COMPUTED_NODES_ENDPOINT =
   "http://localhost:5001/compute/get_computed_nodes";
 
-export async function SendGraphForCompute(graph: Root) {
+export async function SendGraphForCompute(graph: RootModel) {
   //console.log("Sending graph for compute: ", graph);
 
   await fetch(COMPUTE_ENDPOINT, {

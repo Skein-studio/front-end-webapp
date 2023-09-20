@@ -41,12 +41,12 @@ It is the central file of the app. */
 import { NODE_WIDTH, NODE_HEIGHT } from "../../Node/NodeStyles";
 import useWindowDimensions from "../windowDimensions";
 import {
-  Input,
-  Output,
-  Edge as edgeModel,
+  InputModel,
+  OutputModel,
+  EdgeModel as edgeModel,
   gatherAllDirtyIds,
   handleType,
-  transformtoTypescriptTypes,
+  transformGraphToRootModel,
 } from "../modelTransformation";
 
 const proOptions = { hideAttribution: true };
@@ -168,7 +168,7 @@ function FlowPresenter() {
 
   useEffect(() => {
     // this is called when the graph changes, so we can set the dirty nodes
-    const root = transformtoTypescriptTypes(graph);
+    const root = transformGraphToRootModel(graph);
     const allDirtyIds = gatherAllDirtyIds(root.Sketch.Graph); // Get all the dirty IDs
     setDirtyNodes(graph, allDirtyIds);
   }, [nodes, edges]);
@@ -226,7 +226,7 @@ function FlowPresenter() {
     connection: Connection,
     newTargetNode?: Node
   ): edgeModel => {
-    let inputsOfTargetNode: Input[];
+    let inputsOfTargetNode: InputModel[];
 
     if (newTargetNode) {
       inputsOfTargetNode = newTargetNode.data.nodeState.model.Inputs;
@@ -238,15 +238,15 @@ function FlowPresenter() {
     let n = (nodes.find((node) => node.id == connection.source)?.data as any)
       .nodeState as NodeState;
 
-    let outputsOfSourceNode: Output[] = graph.nodes.find(
+    let outputsOfSourceNode: OutputModel[] = graph.nodes.find(
       (node) => node.id == connection.source
     )?.data.nodeState.model.Outputs; // get the outputs of the source node
 
     let inputName = inputsOfTargetNode.find(
-      (input: Input) => input.ID == connection.targetHandle
+      (input: InputModel) => input.ID == connection.targetHandle
     )?.Name; // get the name of the input
     let outputName = outputsOfSourceNode.find(
-      (output: Output) => output.ID == connection.sourceHandle
+      (output: OutputModel) => output.ID == connection.sourceHandle
     )?.Name; // get the name of the output
 
     if (n.model.Type == "split") {
@@ -371,7 +371,7 @@ function FlowPresenter() {
           source: connectStartNode.id,
           target: lastNode.id,
           sourceHandle: connectStartHandleId!,
-          targetHandle: (lastNode.data.nodeState.model.Inputs[0] as Input).ID,
+          targetHandle: (lastNode.data.nodeState.model.Inputs[0] as InputModel).ID,
         };
         const newEdge = {
           id: `reactflow__edge-${newConnection.source}${newConnection.sourceHandle}-${newConnection.target}${newConnection.targetHandle}`,

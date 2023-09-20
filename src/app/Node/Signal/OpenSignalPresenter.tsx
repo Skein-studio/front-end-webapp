@@ -1,6 +1,6 @@
 // OpenSignalPresenter.tsx
 import OpenSignalView from "./OpenSignalView";
-import { SignalType } from "@/app/Util/modelTransformation";
+import { SignalTypeModel } from "@/app/Util/modelTransformation";
 import { useContext } from "react";
 import { NodeContext } from "../NodeState";
 import { useGraph } from "../GraphContext";
@@ -8,7 +8,7 @@ import { useGraph } from "../GraphContext";
 function OpenSignalPresenter() {
   const nodeContext = useContext(NodeContext);
   const node = nodeContext.nodeState;
-  const nodeData = node.model.Data as SignalType;
+  const nodeData = node.model.Data as SignalTypeModel;
   const graph = useGraph();
 
   const handlePromptChange = (prompt: string) => {

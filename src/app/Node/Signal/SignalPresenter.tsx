@@ -4,7 +4,7 @@ import SignalView from "./SignalView";
 import { useContext } from "react";
 import { NodeContext } from "../NodeState";
 import {
-  transformtoTypescriptTypes,
+  transformGraphToRootModel,
   topologicalSort,
 } from "@/app/Util/modelTransformation";
 import { useGraph } from "../GraphContext";
@@ -33,7 +33,7 @@ export default function SignalPresenter() {
   const fetchAudio = async () => {
     try {
       let loadingNodes: string[] = topologicalSort(
-        transformtoTypescriptTypes(graph).Sketch.Graph
+        transformGraphToRootModel(graph).Sketch.Graph
       );
       loadingNodes.forEach((id) => {
         let n = graph.nodes.find((n) => n.id == id);
@@ -41,7 +41,7 @@ export default function SignalPresenter() {
       });
       graph.refresh(); // Reload the component to show the spinner
 
-      await SendGraphForCompute(transformtoTypescriptTypes(graph));
+      await SendGraphForCompute(transformGraphToRootModel(graph));
       await populateDependenciesByNodeID(node.id, graph);
 
       graph.refresh(); // done

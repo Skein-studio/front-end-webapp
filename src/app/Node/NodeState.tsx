@@ -5,14 +5,14 @@ which is used to store the individual state of
 each node in the graph. */
 
 import {
-  Node as NodeModel,
-  SourceType,
-  SignalType,
-  MergeType,
-  SplitType,
-  UnspecifiedType,
-  Output,
-  Input,
+  NodeModel as NodeModel,
+  SourceTypeModel,
+  SignalTypeModel,
+  MergeTypeModel,
+  SplitTypeModel,
+  UnspecifiedTypeModel,
+  OutputModel,
+  InputModel,
 } from "../Util/modelTransformation";
 import { v4 as uuidv4 } from "uuid";
 
@@ -60,7 +60,7 @@ export class NodeState {
 
   initializeData(
     type: NodeType
-  ): SourceType | SignalType | MergeType | SplitType | UnspecifiedType {
+  ): SourceTypeModel | SignalTypeModel | MergeTypeModel | SplitTypeModel | UnspecifiedTypeModel {
     switch (type) {
       case NodeType.Source:
         return { URL: "", base: "" };
@@ -76,7 +76,7 @@ export class NodeState {
   }
 
   setPrompt(p: string) {
-    (this.model.Data as SignalType).Prompt = p;
+    (this.model.Data as SignalTypeModel).Prompt = p;
   }
 
   addTargetHandle() {
@@ -86,12 +86,12 @@ export class NodeState {
     });
   }
 
-  setInputs(type: NodeType, ID: string): Input[] {
-    let newInputs: Input[] = [];
+  setInputs(type: NodeType, ID: string): InputModel[] {
+    let newInputs: InputModel[] = [];
 
     const add = () => {
       newInputs.push({
-        ID: ID + "in[" + newInputs.length + "]",
+        ID: "[" + ID + "]in[" + newInputs.length + "]",
         Name: "input" + newInputs.length,
       });
     };
@@ -114,13 +114,13 @@ export class NodeState {
     return newInputs;
   }
 
-  setOutputs(type: NodeType, ID: string): Output[] {
+  setOutputs(type: NodeType, ID: string): OutputModel[] {
     let numOutputs = 0;
-    let newOutputs: Output[] = [];
+    let newOutputs: OutputModel[] = [];
 
     const add = (name: string) => {
       newOutputs.push({
-        ID: ID + "out[" + newOutputs.length + "]",
+        ID: "[" + ID + "]out[" + newOutputs.length + "]",
         Name: name,
         Src: "",
       });
@@ -143,7 +143,7 @@ export class NodeState {
       add("bass");
     } else {
       for (let i = 0; i < numOutputs; i++) {
-        add("standard-output");
+        add("output["+i+"]");
       }
     }
 

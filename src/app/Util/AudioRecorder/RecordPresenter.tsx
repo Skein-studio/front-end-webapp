@@ -3,7 +3,7 @@ import RecordView from "./RecordView";
 import { NodeContext } from "@/app/Node/NodeState";
 import { useGraph } from "@/app/Node/GraphContext";
 import { uploadAudioBlob } from "../ComputeAPI";
-import { SourceType } from "../modelTransformation";
+import { SourceTypeModel } from "../modelTransformation";
 import useAudio from "../AudioPlayback/useAudio";
 
 const RecordPresenter: React.FC = () => {
@@ -11,7 +11,7 @@ const RecordPresenter: React.FC = () => {
   const nodeContext = useContext(NodeContext);
   const node = nodeContext.nodeState;
   const graph = useGraph();
-  const nodeData = node.model.Data as SourceType;
+  const nodeData = node.model.Data as SourceTypeModel;
   const mediaRecorder = useRef<MediaRecorder | null>(null);
   const audio = useAudio(nodeData.URL || ""); // Use the useAudio hook with the URL from nodeData
 
