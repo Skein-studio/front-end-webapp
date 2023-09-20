@@ -39,8 +39,16 @@ export default function OpenSignalView(props: Props) {
           onChange={handleInstrumentChange}
         />
       </Container>
-      <Button onClick={handleExport} disabled={node.model.Dirty}>Export</Button>
-      {node.model.Dirty ? <Text size={12} hovercolor="solid black">You must fetch the node before exporting.</Text> : <></>}
+      <Button onClick={handleExport} disabled={node.model.Dirty}>
+        Export
+      </Button>
+      {node.model.Dirty ? (
+        <Text size={12} hovercolor="solid black">
+          You must fetch the node before exporting.
+        </Text>
+      ) : (
+        <></>
+      )}
     </Container>
   );
 }

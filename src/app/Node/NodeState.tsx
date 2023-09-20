@@ -60,7 +60,12 @@ export class NodeState {
 
   initializeData(
     type: NodeType
-  ): SourceTypeModel | SignalTypeModel | MergeTypeModel | SplitTypeModel | UnspecifiedTypeModel {
+  ):
+    | SourceTypeModel
+    | SignalTypeModel
+    | MergeTypeModel
+    | SplitTypeModel
+    | UnspecifiedTypeModel {
     switch (type) {
       case NodeType.Source:
         return { URL: "", base: "" };
@@ -143,7 +148,7 @@ export class NodeState {
       add("bass");
     } else {
       for (let i = 0; i < numOutputs; i++) {
-        add("output["+i+"]");
+        add("output[" + i + "]");
       }
     }
 

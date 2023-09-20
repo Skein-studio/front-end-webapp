@@ -371,7 +371,8 @@ function FlowPresenter() {
           source: connectStartNode.id,
           target: lastNode.id,
           sourceHandle: connectStartHandleId!,
-          targetHandle: (lastNode.data.nodeState.model.Inputs[0] as InputModel).ID,
+          targetHandle: (lastNode.data.nodeState.model.Inputs[0] as InputModel)
+            .ID,
         };
         const newEdge = {
           id: `reactflow__edge-${newConnection.source}${newConnection.sourceHandle}-${newConnection.target}${newConnection.targetHandle}`,

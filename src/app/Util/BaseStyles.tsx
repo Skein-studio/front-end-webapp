@@ -22,7 +22,8 @@ const Text = styled.p<TextProps>`
   transition: color 0.3s ease;
 
   &:hover {
-    color: ${({ hovercolor: hoverColor }) => (hoverColor ? hoverColor : "#007BFF")};
+    color: ${({ hovercolor: hoverColor }) =>
+      hoverColor ? hoverColor : "#007BFF"};
   }
 `;
 

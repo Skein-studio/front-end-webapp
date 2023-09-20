@@ -1,6 +1,6 @@
 //modelTransformation.tsx
 import { Graph } from "../Node/GraphContext";
-import { Edge, Node} from "reactflow";
+import { Edge, Node } from "reactflow";
 import { NodeState, NodeType, NodeTypeToString } from "../Node/NodeState";
 // Create a dummy data generator function for each type
 
@@ -124,13 +124,13 @@ export function gatherAllDirtyIds(graph: GraphModel): string[] {
 
   return Array.from(allDirtyIds);
 }
-export const transformGraphToRootModel = (graphContext: Graph): RootModel => { 
 
+export const transformGraphToRootModel = (graphContext: Graph): RootModel => {
   const transformNodeToNodeModel = (node: Node): NodeModel => {
     let nodeState = node.data.nodeState as NodeState;
 
     let n = {
-      Type: NodeTypeToString(nodeState.type), // TODO: Is this conversion necessary? 
+      Type: NodeTypeToString(nodeState.type), // TODO: Is this conversion necessary?
       Dirty: nodeState.model.Dirty,
       Data: nodeState.model.Data,
       Inputs: nodeState.model.Inputs,
@@ -188,7 +188,12 @@ export interface EdgeModel {
 export interface NodeModel {
   ID: string;
   Dirty: boolean;
-  Data: SourceTypeModel | SignalTypeModel | MergeTypeModel | SplitTypeModel | UnspecifiedTypeModel;
+  Data:
+    | SourceTypeModel
+    | SignalTypeModel
+    | MergeTypeModel
+    | SplitTypeModel
+    | UnspecifiedTypeModel;
   Type: string;
   //type is either the strings SourceType or SignalType or MergeType or SplitType
   Inputs: InputModel[];
