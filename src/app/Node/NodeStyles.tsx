@@ -12,7 +12,7 @@ interface HandleProps {
   id: string;
 }
 
-/** 
+/**
  * A styled handle for the nodes.
  * @param props - The props for the handle.
  * @returns A Handle component.
@@ -49,7 +49,7 @@ const NodeTitle = styled.p`
   color: ${purple};
 `;
 
-/** 
+/**
  * A styled container for the icon of the node.
  * @returns A styled div.
  * */

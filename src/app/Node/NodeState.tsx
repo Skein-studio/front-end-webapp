@@ -73,6 +73,11 @@ export class NodeState {
     this.loading = false;
   }
 
+  /**
+   * Initializes the data of the node based on the type of the node
+   * @param {NodeType} type - The type of the node
+   * @returns {SourceTypeModel | SignalTypeModel | MergeTypeModel | SplitTypeModel | UnspecifiedTypeModel} - The data of the node
+   */
   initializeData(
     type: NodeType
   ):
@@ -95,10 +100,17 @@ export class NodeState {
     }
   }
 
+  /**
+   * Sets the prompt of the node, used for the Signal node
+   * @param {string} p - The prompt to set
+   */
   setPrompt(p: string) {
     (this.model.Data as SignalTypeModel).Prompt = p;
   }
 
+  /**
+   * Adds a new input to the node
+   */
   addTargetHandle() {
     this.model.Inputs.push({
       ID: this.model.ID + "in[" + this.model.Inputs.length + "]",
@@ -106,6 +118,12 @@ export class NodeState {
     });
   }
 
+  /**
+   * Sets inputs of the node based on the type of the node
+   * @param {NodeType} type - The type of the node
+   * @param {string} ID - The ID of the node
+   * @returns {InputModel[]} - The inputs of the node
+   */
   setInputs(type: NodeType, ID: string): InputModel[] {
     let newInputs: InputModel[] = [];
 
@@ -134,6 +152,12 @@ export class NodeState {
     return newInputs;
   }
 
+  /**
+   * Sets outputs of the node based on the type of the node
+   * @param {NodeType} type - The type of the node
+   * @param {string} ID - The ID of the node
+   * @returns {OutputModel[]} - The outputs of the node
+   */
   setOutputs(type: NodeType, ID: string): OutputModel[] {
     let numOutputs = 0;
     let newOutputs: OutputModel[] = [];
@@ -170,6 +194,10 @@ export class NodeState {
     return newOutputs;
   }
 
+  /**
+   * Sets the node to the given node, this is used to copy the state of a node to another node, like when setting unspecified nodes to a specific type
+   * @param {NodeState} node - The node to set to
+   */
   setNode(node: NodeState) {
     this.position = node.position;
     this.model = { ...node.model };
@@ -180,34 +208,30 @@ export class NodeState {
     return `Node ${this.model.ID}`;
   }
 
-  generateID(): number {
-    return nodeID++;
-  }
-
   getID(): string {
     return this.id;
   }
-
-  setType(type: NodeType): void {
-    this.model.Type = NodeTypeToString(type);
-    this.model.Data = this.initializeData(type);
-    this.model.Inputs = this.setInputs(type, this.model.ID);
-  }
-
+  /**
+   * Sets the position of the node
+   * @param {number} x - The x coordinate of the node
+   * @param {number} y - The y coordinate of the node
+   */
   setPosition(x: number, y: number) {
     this.position.x = x;
     this.position.y = y;
-  }
-
-  // Static method
-  static fromJson(json: string): NodeState {
-    const data = JSON.parse(json);
-    return new NodeState(data.x, data.y, data.type);
   }
 }
 
 import React, { useState } from "react";
 
+/**
+ * The context of the node, used to store the state of the node
+ * @type {React.Context<{nodeState: NodeState}>}
+ * @property {NodeState} nodeState - The state of the node
+ * @property {React.ReactNode} children - The children of the node, this will be the different presenters (SourcePresenter, SignalPresenter etc)
+ * @property {NodeState} initialNodeState - The initial state of the node
+ * @property {React.FC<NodeProviderProps>} NodeProvider - The provider of the node
+ */
 export const NodeContext = React.createContext<{
   nodeState: NodeState;
 }>({
@@ -232,6 +256,13 @@ export const NodeProvider: React.FC<NodeProviderProps> = ({
   );
 };
 
+/**
+ * Converts the NodeType to a string
+ * @param {NodeType} nodeType - The type of the node
+ * @returns {string} - The string representation of the node type
+ * @example
+ * NodeTypeToString(NodeType.Source) // "source"
+ */
 export function NodeTypeToString(nodeType: NodeType): string {
   switch (nodeType) {
     case NodeType.Source:

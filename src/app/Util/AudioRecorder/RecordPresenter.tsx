@@ -67,6 +67,6 @@ function RecordPresenter() {
       audioState={audio} // Pass the audio state from useAudio to the view
     />
   );
-};
+}
 
 export default RecordPresenter;

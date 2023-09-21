@@ -121,7 +121,8 @@ const START_ZOOM = 0.75;
  * @var graph: the graph object that is passed to the GraphContext.Provider
  * @returns {JSX.Element} The ReactFlow component.
  */
-export function FlowPresenter() { // export is for documentation purposes
+export function FlowPresenter() {
+  // export is for documentation purposes
   const reactFlowInstance = useReactFlow();
   const window = useWindowDimensions();
   const [viewport, setViewport] = useState<Viewport>({

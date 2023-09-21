@@ -12,7 +12,7 @@ import { SignalTypeModel, SourceTypeModel } from "../modelTransformation";
  * The view for the ImportAudio component, which is used to import audio for the Source node.
  * @returns A Container component, which contains an input element and an AudioPlayer.
  * */
-function ImportAudio()  {
+function ImportAudio() {
   const nodeContext = useContext(NodeContext);
   const node = nodeContext.nodeState;
   const nodeData =
@@ -39,6 +39,6 @@ function ImportAudio()  {
       )}
     </Container>
   );
-};
+}
 
 export default ImportAudio;

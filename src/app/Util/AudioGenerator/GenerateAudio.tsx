@@ -36,6 +36,6 @@ function GenerateAudio() {
       )}
     </Container>
   );
-};
+}
 
 export default GenerateAudio;

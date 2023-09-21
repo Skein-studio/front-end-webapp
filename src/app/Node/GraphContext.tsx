@@ -18,7 +18,7 @@ export type Graph = {
    * An array of all nodes in the graph.
    */
   nodes: Node[];
-  
+
   /**
    * An array of all edges in the graph.
    */
