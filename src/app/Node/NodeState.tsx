@@ -30,7 +30,22 @@ type Coordinate = {
   x: number;
   y: number;
 };
-
+/**
+ * Represents the state of a node in the graph.
+ * Contains following properties:
+ * - position: The XY position of the node in the graph
+ * - model: The model of the node, which is used to generate the JSON
+ * - selected: Whether the node is selected or not
+ * - id: The ID of the node
+ * - type: The type of the node (Signal, Source, Merge, Split, Unspecified)
+ * - loading: Used to show the spinner when the node is loading
+ * @class NodeState
+ * @constructor
+ * @param {number} x - The x coordinate of the node
+ * @param {number} y - The y coordinate of the node
+ * @param {NodeType} type - The type of the node
+ * @param {string} id - The ID of the node
+ */
 export class NodeState {
   position: Coordinate; // The XY position of the node in the graph
   model: NodeModel; // The model of the node, which is used to generate the JSON

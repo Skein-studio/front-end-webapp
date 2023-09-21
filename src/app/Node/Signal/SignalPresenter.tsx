@@ -13,6 +13,10 @@ import {
   populateDependenciesByNodeID,
 } from "@/app/Util/ComputeAPI";
 
+/**
+ * The presenter for the Signal node.
+ * @returns A SignalView component.
+ * */
 export default function SignalPresenter() {
   const graph = useGraph();
   const nodeContext = useContext(NodeContext);

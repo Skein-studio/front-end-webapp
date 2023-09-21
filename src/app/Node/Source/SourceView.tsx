@@ -33,6 +33,10 @@ type SourceProps = {
   selectNode: () => void;
 };
 
+/**
+ * The view for the Source node.
+ * @returns A NodeSmall component.
+ * */
 function SourceView(props: SourceProps) {
   const nodeContext = useContext(NodeContext);
   const node = nodeContext.nodeState;

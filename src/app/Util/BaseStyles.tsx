@@ -35,6 +35,11 @@ interface ButtonProps {
   onChange?: React.ChangeEventHandler<HTMLInputElement>;
 }
 
+/**
+ * A standard button, can be used for essentially anything.
+ * @param props - The props for the button.
+ * @returns A styled button.
+ * */
 const Button = styled.button<ButtonProps>`
   display: flex;
   font-family: verdana;
@@ -69,9 +74,11 @@ const Button = styled.button<ButtonProps>`
   }
 `;
 
-// Usage
-<Button disabled={true}>My Button</Button>;
-
+/**
+ * An input name for the graph name.
+ * @param props - The props for the input field.
+ * @returns A styled input field.
+ * */
 const GraphNameInput = styled.input`
   z-index: 1; /* Add a higher z-index value */
   position: absolute;
@@ -92,6 +99,11 @@ interface OuterBoxProps {
   shadow?: boolean;
 }
 
+/**
+ * This is the outermost container that contains the ReactFlow View
+ * @param props - The props for the container.
+ * @returns A styled div.
+ * */
 const OuterBox = styled.div<OuterBoxProps>`
   display: flex;
   flex-direction: ${(props) => (props.flexdir ? props.flexdir : "column")};
@@ -118,6 +130,11 @@ interface BoxProps {
   backgroundColor?: string;
 }
 
+/**
+ * A standard container, can be used for essentially anything.
+ * @param props - The props for the container.
+ * @returns A styled div.
+ * */
 const Container = styled.div<BoxProps>`
   display: flex;
   flex-direction: ${(props) => (props.flexdir ? props.flexdir : "column")};
@@ -138,6 +155,12 @@ interface BlankProps {
   width: number;
   height: number;
 }
+
+/**
+ * Just a blank space to use as a spacer between elements.
+ * @param props - The props for the blank space.
+ * @returns A styled div.
+ * */
 const BlankSpace = styled.div<BlankProps>`
   display: flex;
   flex-direction: ${(props) => (props.flexdir ? props.flexdir : "column")};

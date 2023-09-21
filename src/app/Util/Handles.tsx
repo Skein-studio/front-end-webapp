@@ -32,6 +32,12 @@ const HandleName = styled.div`
   z-index: 100;
 `;
 
+/**
+ * Generates the handles for a node.
+ * @param node The node to generate handles for.
+ * @param displayOutputHandleNames Whether or not to display the names of the output handles.
+ * @returns A list of handles.
+ */
 export function GenerateHandles(
   node: NodeState,
   displayOutputHandleNames?: boolean
@@ -79,7 +85,11 @@ export function GenerateHandles(
     </>
   );
 }
-
+/**
+ * Gets the width extension for a node, it is calculated using the number of handles to make sure that all handles fit in the node.
+ * @param node The node to get the width extension for.
+ * @returns The width extension.
+ */
 export function GetWidthExtension(node: NodeState) {
   // This is a temporary solution to the problem of nodes not being wide enough to fit all their handles
 

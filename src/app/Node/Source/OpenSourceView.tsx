@@ -41,6 +41,10 @@ function BaseComponent(base: string) {
   }
 }
 
+/**
+ * The view for the opened Source node, where source node base can be set, and then you can record, import, or generate audio.
+ * @returns A Container component, which contains the selected BaseComponent.
+ * */
 export default function OpenSourceView() {
   const nodeContext = useContext(NodeContext);
   const node = nodeContext.nodeState;

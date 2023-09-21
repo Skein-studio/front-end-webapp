@@ -5,6 +5,10 @@ interface WindowDimensions {
   height: number;
 }
 
+/**
+ * A hook for getting the window dimensions.
+ * @returns A WindowDimensions object, which contains the width and height of the window.
+ * */
 const useWindowDimensions = (): WindowDimensions => {
   const hasWindow = typeof window !== "undefined";
 

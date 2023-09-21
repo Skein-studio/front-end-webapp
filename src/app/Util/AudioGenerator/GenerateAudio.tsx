@@ -8,7 +8,11 @@ import useAudio from "@/app/Util/AudioPlayback/useAudio";
 import AudioPlayer from "../AudioPlayback/AudioPlayer";
 import { SourceTypeModel } from "../modelTransformation";
 
-const GenerateAudio: React.FC = () => {
+/**
+ * The view for the GenerateAudio component, which is used to generate audio for the Source node.
+ * @returns A Container component, which contains a Button and an AudioPlayer.
+ * */
+function GenerateAudio() {
   const nodeContext = useContext(NodeContext);
   const node = nodeContext.nodeState;
   const nodeData = node.model.Data as SourceTypeModel;

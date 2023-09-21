@@ -16,6 +16,10 @@ interface Props {
   fetching: boolean;
 }
 
+/**
+ * The view for the Signal node.
+ * @returns A NodeSmall component.
+ * */
 function SignalView(props: Props) {
   const graph = useGraph();
   const nodeContext = useContext(NodeContext);

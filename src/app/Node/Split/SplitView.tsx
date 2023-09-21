@@ -11,6 +11,10 @@ interface Props {
   selectNode: () => void;
 }
 
+/**
+ * The view for the Split node.
+ * @returns A NodeSmall component.
+ * */
 function SplitView(props: Props) {
   const nodeContext = useContext(NodeContext);
   const node = nodeContext.nodeState;

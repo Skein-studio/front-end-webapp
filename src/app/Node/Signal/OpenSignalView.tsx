@@ -12,6 +12,10 @@ interface Props {
   exportFile(): void;
 }
 
+/**
+ * The view for the opened Signal node, where signal can be edited or exported.
+ * @returns A Container component.
+ * */
 export default function OpenSignalView(props: Props) {
   const nodeContext = useContext(NodeContext);
   const node = nodeContext.nodeState;

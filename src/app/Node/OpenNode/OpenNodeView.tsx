@@ -14,6 +14,10 @@ interface Props {
   nodeState: NodeState;
   closeWindow: () => void;
 }
+/**
+ * The view for the opened node.
+ * @returns An opened node component, based on the type of the node.
+ * */
 export default function OpenNodeView(props: Props) {
   function Contents() {
     switch (props.nodeState.type) {

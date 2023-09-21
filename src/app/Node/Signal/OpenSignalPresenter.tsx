@@ -5,6 +5,10 @@ import { useContext } from "react";
 import { NodeContext } from "../NodeState";
 import { useGraph } from "../GraphContext";
 
+/**
+ * The presenter for the opened Signal node, where signal can be edited or exported.
+ * @returns An OpenSignalView component.
+ * */
 function OpenSignalPresenter() {
   const nodeContext = useContext(NodeContext);
   const node = nodeContext.nodeState;

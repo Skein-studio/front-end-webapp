@@ -30,7 +30,8 @@
     ".next/types/**/*.ts",
     "pages/_document.tsx",
     "pages/_document.jsx",
-    "src/app/Util/FlowExample.tsx"
+    "src/**/*",
+    "pages/**/*"
   ],
   "exclude": ["node_modules"]
 }

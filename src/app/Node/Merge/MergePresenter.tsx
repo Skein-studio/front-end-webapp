@@ -5,6 +5,10 @@ import MergeView from "./MergeView";
 import { NodeContext } from "../NodeState";
 import { useGraph } from "../GraphContext";
 
+/**
+ * The presenter for the Merge node.
+ * @returns A MergeView component.
+ * */
 const MergePresenter: React.FC = () => {
   const nodeContext = useContext(NodeContext);
   const node = nodeContext.nodeState;

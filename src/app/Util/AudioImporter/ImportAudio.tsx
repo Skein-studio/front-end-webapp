@@ -8,7 +8,11 @@ import { Container } from "../BaseStyles";
 import { uploadAudioBlob } from "../ComputeAPI";
 import { SignalTypeModel, SourceTypeModel } from "../modelTransformation";
 
-const ImportAudio: React.FC = () => {
+/**
+ * The view for the ImportAudio component, which is used to import audio for the Source node.
+ * @returns A Container component, which contains an input element and an AudioPlayer.
+ * */
+function ImportAudio()  {
   const nodeContext = useContext(NodeContext);
   const node = nodeContext.nodeState;
   const nodeData =

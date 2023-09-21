@@ -7,6 +7,11 @@ import { NodeType } from "../NodeState";
 import { NodeTypeToString } from "../NodeState";
 import { useGraph, setNode } from "../GraphContext";
 
+/**
+ * The presenter for the Unspecified node.
+ * @returns A UnspecifiedView component.
+ * */
+
 function UnspecifiedPresenter() {
   const nodeContext = useContext(NodeContext);
   const node = nodeContext.nodeState;

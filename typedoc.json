@@ -1,0 +1,8 @@
+{
+    "entryPointStrategy": "expand",
+    "entryPoints": ["src/app/"],
+    "out": "docs",
+    "name": "Skein Studio Web App",
+    "readme": "README.md"
+  }
+  

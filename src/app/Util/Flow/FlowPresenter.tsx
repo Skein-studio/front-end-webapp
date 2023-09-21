@@ -82,7 +82,46 @@ const nodeTypes = {
 
 const START_ZOOM = 0.75;
 
-function FlowPresenter() {
+/**
+ * FlowPresenter is the main component of the app, it contains handlers for all the events that can happen in ReactFlow component
+ * It contains the following handlers:
+ * @function onConnectStart: called when the user starts connecting by dragging from a node handle
+ * @function onConnectEnd: called when the user stops connecting by dragging from a node handle
+ * @function onConnect: called when the user connects two nodes
+ * @function onNodeDragStop: called when the user stops dragging a node
+ * @function onNodesDelete: called when the user deletes a node
+ * @function onEdgesDelete: called when the user deletes an edge
+ * @function onMove: called when the user moves the canvas
+ * @function onSelectionChange: called when an edge selection is changed
+ * @function handlePaneClick: called when the user clicks on the canvas
+ * @function addButtonHandler: called when the user clicks on the "add" button
+ * @function showSelected: called when the user clicks on a node
+ * @function hideSelected: called when the user clicks on the "close" button in the node view
+ * @function deleteSelectedNode: called when the user clicks on the delete button
+ * @function deleteSelectedEdge: called when the user clicks on the delete button
+ * @function stopSelect: called when the user clicks on the canvas (deselects current node)
+ * @function selectNode: called when the user clicks on a node (selects the node)
+ * @function refresh: refreshes the graph, making the ReactFlow component re-render
+ * @function addNewNode: called when the user adds a new node
+ * @function doesNodeExistAtPosition: called when the user adds a new node, checks if there is already a node at the position where the user wants to add a new node
+ * @function connectionToEdgeModel: called when the user adds a new node, creates an edge model from the connection
+ * @function openSelectedNode: called when the user clicks on a node, opens the node view
+ * @function openNodeView: called when the user clicks on a the "open" button in the node view, shows the node in enlarged view
+ * @var reactFlowInstance: the ReactFlow component instance
+ * @var window: the window dimensions
+ * @var viewport: the viewport dimensions
+ * @var nodes: the nodes in the graph
+ * @var edges: the edges in the graph
+ * @var flowKey: the key of the ReactFlow component, used to force a refresh
+ * @var selectedNode: the currently selected node
+ * @var selectedEdge: the currently selected edge
+ * @var selectedNodeIsOpen: whether the node view is open or not
+ * @var connectStartNode: the node that the user started connecting from
+ * @var connectStartHandleId: the handle id of the node that the user started connecting from
+ * @var graph: the graph object that is passed to the GraphContext.Provider
+ * @returns {JSX.Element} The ReactFlow component.
+ */
+export function FlowPresenter() { // export is for documentation purposes
   const reactFlowInstance = useReactFlow();
   const window = useWindowDimensions();
   const [viewport, setViewport] = useState<Viewport>({
@@ -96,7 +135,7 @@ function FlowPresenter() {
   const [flowKey, setFlowKey] = useState(0);
   const [selectedNode, setSelectedNode] = useState<NodeState>(); // do not use this directly, use selectNode() instead
   const [selectedEdge, setSelectedEdge] = useState<Edge>();
-  const [openSelectedNode, setOpenSelectedNode] = useState<boolean>(false);
+  const [selectedNodeIsOpen, setSelectedNodeIsOpen] = useState<boolean>(false);
   const [connectStartNode, setConnectStartNode] = useState<Node>();
   const [connectStartHandleId, setConnectStartHandleId] = useState<string>();
 
@@ -177,7 +216,7 @@ function FlowPresenter() {
     // this is called when the user clicks on the canvas
     deselectNode(graph);
     setSelectedNode(undefined);
-    setOpenSelectedNode(false);
+    setSelectedNodeIsOpen(false);
   }
   function onSelectionChange(params: OnSelectionChangeParams) {
     // this is called when an edge selection is changed
@@ -410,14 +449,14 @@ function FlowPresenter() {
   function showSelected() {
     // this is called when the user clicks on a node
     if (selectedNode) {
-      setOpenSelectedNode(true);
+      setSelectedNodeIsOpen(true);
     } else {
       console.log("Cannot enlarge without selecting a node");
     }
   }
   function hideSelected() {
     // this is called when the user clicks on the "close" button in the node view
-    setOpenSelectedNode(false);
+    setSelectedNodeIsOpen(false);
   }
 
   function openNodeView() {
@@ -475,7 +514,7 @@ function FlowPresenter() {
           onConnectEnd={onConnectEnd}
           viewport={viewport}
           onMove={onMove}
-          openSelectedNode={openSelectedNode}
+          openSelectedNode={selectedNodeIsOpen}
           showSelected={showSelected}
           hideSelected={hideSelected}
           handlePaneClick={handlePaneClick}
@@ -487,6 +526,10 @@ function FlowPresenter() {
   );
 }
 
+/**
+ * Wrapper for the ReactFlow component
+ * @returns {JSX.Element} The wrapped ReactFlow component.
+ */
 function FlowWrapper() {
   return (
     <ReactFlowProvider>

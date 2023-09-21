@@ -6,7 +6,12 @@ import { uploadAudioBlob } from "../ComputeAPI";
 import { SourceTypeModel } from "../modelTransformation";
 import useAudio from "../AudioPlayback/useAudio";
 
-const RecordPresenter: React.FC = () => {
+/**
+ * The presenter for the audio recorder, which is used to record audio for the Source node.
+ * @returns A RecordView component.
+ * */
+
+function RecordPresenter() {
   const [isRecording, setIsRecording] = useState<boolean>(false);
   const nodeContext = useContext(NodeContext);
   const node = nodeContext.nodeState;
