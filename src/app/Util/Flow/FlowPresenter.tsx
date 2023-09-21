@@ -148,12 +148,7 @@ export function FlowPresenter() {
       setFlowKey((prevKey) => prevKey - 1);
     }
     /*
-      this is just a dumb temporary fix to just refresh by changing
-      a property of the ReactFlow component (key), this function is passed into the GraphContext 
-      so that it can be used to force a refresh from inside the context, like when setting or updating using the
-      functions inside GraphContext.tsx (setNodes() etc).
-      This way, we don't need to double click on any button to make it refresh
-      TODO: Consider this
+      This forces a re-render of the ReactFlow component.
     */
   };
 
