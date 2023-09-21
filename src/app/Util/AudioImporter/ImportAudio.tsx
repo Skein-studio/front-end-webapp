@@ -6,7 +6,10 @@ import useAudio from "@/app/Util/AudioPlayback/useAudio";
 import AudioPlayer from "../AudioPlayback/AudioPlayer";
 import { Container } from "../BaseStyles";
 import { uploadAudioBlob } from "../ComputeAPI";
-import { SignalTypeModel, SourceTypeModel } from "../modelTransformation";
+import {
+  SignalTypeModel,
+  SourceTypeModel,
+} from "../../Node/Model/modelDatatypes";
 
 /**
  * The view for the ImportAudio component, which is used to import audio for the Source node.

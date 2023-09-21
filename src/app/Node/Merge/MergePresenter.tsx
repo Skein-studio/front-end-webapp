@@ -22,7 +22,7 @@ const MergePresenter: React.FC = () => {
 
     // Iterate over edges to find the number of connections for this node's target handles
     graph.edges.forEach((edge) => {
-      if (edge.target === node.model.ID) {
+      if (edge.target === node.getID()) {
         connectedHandles++;
       }
     });

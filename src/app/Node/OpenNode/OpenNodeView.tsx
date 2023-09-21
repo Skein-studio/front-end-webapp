@@ -1,7 +1,7 @@
 import { NodeState } from "../NodeState";
 import { styled } from "styled-components";
 import { purple, NodeTitle, NodeIcon } from "@/app/Node/NodeStyles";
-import { NodeTypeToString, NodeType } from "../NodeState";
+import { NodeType } from "../NodeState";
 import OpenSourcePresenter from "../Source/OpenSourcePresenter";
 import { BlankSpace } from "@/app/Util/BaseStyles";
 import SourceImg from "../Source/source.svg";
@@ -20,7 +20,7 @@ interface Props {
  * */
 export default function OpenNodeView(props: Props) {
   function Contents() {
-    switch (props.nodeState.type) {
+    switch (props.nodeState.getType()) {
       case NodeType.Source:
         return <OpenSourcePresenter />;
       case NodeType.Signal:
@@ -35,7 +35,7 @@ export default function OpenNodeView(props: Props) {
   }
 
   function Icon() {
-    switch (props.nodeState.type) {
+    switch (props.nodeState.getType()) {
       case NodeType.Source:
         return <NodeIcon src={SourceImg} />;
       case NodeType.Signal:
@@ -54,7 +54,7 @@ export default function OpenNodeView(props: Props) {
       <BlankSpace width={1} height={75}></BlankSpace>
       {Icon()}
       <CloseButton onClick={props.closeWindow}>-</CloseButton>
-      <NodeTitle>{NodeTypeToString(props.nodeState.type)}</NodeTitle>
+      <NodeTitle>{props.nodeState.model.Type}</NodeTitle>
       <InnerBox>{Contents()}</InnerBox>
     </Window>
   );

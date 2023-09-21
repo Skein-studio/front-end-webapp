@@ -1,6 +1,6 @@
 // OpenSignalPresenter.tsx
 import OpenSignalView from "./OpenSignalView";
-import { SignalTypeModel } from "@/app/Util/modelTransformation";
+import { SignalTypeModel } from "@/app/Node/Model/modelDatatypes";
 import { useContext } from "react";
 import { NodeContext } from "../NodeState";
 import { useGraph } from "../GraphContext";

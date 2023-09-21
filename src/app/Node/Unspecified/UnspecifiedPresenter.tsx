@@ -1,10 +1,13 @@
 //UnspecifiedPresenter.tsx
 
-import React, { useState, useContext } from "react";
-import { NodeContext, NodeState } from "../NodeState";
+import React, { useContext } from "react";
+import {
+  NodeContext,
+  NodeState,
+  NodeTypeToString,
+  NodeType,
+} from "../NodeState";
 import UnspecifiedView from "./UnspecifiedView";
-import { NodeType } from "../NodeState";
-import { NodeTypeToString } from "../NodeState";
 import { useGraph, setNode } from "../GraphContext";
 
 /**
@@ -23,18 +26,18 @@ function UnspecifiedPresenter() {
       return;
     }
     const nodeState = new NodeState(
-      node.position.x,
-      node.position.y,
+      node.getPosition().x,
+      node.getPosition().y,
       type,
-      node.id
+      node.getID()
     );
     const updatedNode = {
-      id: node.id!.toString(),
+      id: node.getID(),
       type: NodeTypeToString(type),
       data: {
         nodeState,
       },
-      position: node.position,
+      position: node.getPosition(),
     };
 
     setNode(graph, updatedNode, graph.setNodes);

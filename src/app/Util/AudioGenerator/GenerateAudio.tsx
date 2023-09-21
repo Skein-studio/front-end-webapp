@@ -6,7 +6,7 @@ import { NodeContext } from "@/app/Node/NodeState";
 import { useGraph } from "@/app/Node/GraphContext";
 import useAudio from "@/app/Util/AudioPlayback/useAudio";
 import AudioPlayer from "../AudioPlayback/AudioPlayer";
-import { SourceTypeModel } from "../modelTransformation";
+import { SourceTypeModel } from "../../Node/Model/modelDatatypes";
 
 /**
  * The view for the GenerateAudio component, which is used to generate audio for the Source node.

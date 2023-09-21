@@ -154,7 +154,7 @@ export function createNewNode(x: number, y: number, nodeType: NodeType) {
   let newNodeState = new NodeState(x, y, nodeType);
 
   const newNode: Node = {
-    id: newNodeState.getID().toString(),
+    id: newNodeState.getID(),
     type: NodeTypeToString(nodeType),
     data: {
       nodeState: newNodeState,

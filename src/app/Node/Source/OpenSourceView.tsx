@@ -5,7 +5,7 @@ import RecordPresenter from "@/app/Util/AudioRecorder/RecordPresenter";
 import { Button, Container } from "@/app/Util/BaseStyles";
 import { useContext, useState } from "react";
 import { NodeContext } from "../NodeState";
-import { SourceTypeModel } from "@/app/Util/modelTransformation";
+import { SourceTypeModel } from "@/app/Node/Model/modelDatatypes";
 
 function BaseComponent(base: string) {
   const nodeContext = useContext(NodeContext);

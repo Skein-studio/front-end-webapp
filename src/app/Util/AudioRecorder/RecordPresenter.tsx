@@ -3,7 +3,7 @@ import RecordView from "./RecordView";
 import { NodeContext } from "@/app/Node/NodeState";
 import { useGraph } from "@/app/Node/GraphContext";
 import { uploadAudioBlob } from "../ComputeAPI";
-import { SourceTypeModel } from "../modelTransformation";
+import { SourceTypeModel } from "../../Node/Model/modelDatatypes";
 import useAudio from "../AudioPlayback/useAudio";
 
 /**
@@ -31,7 +31,7 @@ function RecordPresenter() {
         const fileUrl = await uploadAudioBlob(e.data);
 
         nodeData.URL = fileUrl;
-        nodeData.Dirty = true;
+        node.model.Dirty = true;
 
         graph.refresh();
       };

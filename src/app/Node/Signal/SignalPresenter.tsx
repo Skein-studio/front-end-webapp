@@ -6,7 +6,7 @@ import { NodeContext } from "../NodeState";
 import {
   transformGraphToRootModel,
   topologicalSort,
-} from "@/app/Util/modelTransformation";
+} from "@/app/Node/Model/modelTransformation";
 import { useGraph } from "../GraphContext";
 import {
   SendGraphForCompute,
@@ -46,7 +46,7 @@ export default function SignalPresenter() {
       graph.refresh(); // Reload the component to show the spinner
 
       await SendGraphForCompute(transformGraphToRootModel(graph));
-      await populateDependenciesByNodeID(node.id, graph);
+      await populateDependenciesByNodeID(node.getID(), graph);
 
       graph.refresh(); // done
     } catch (e) {

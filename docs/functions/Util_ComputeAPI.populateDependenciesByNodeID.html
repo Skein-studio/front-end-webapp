@@ -20,20 +20,38 @@
 <ul class="tsd-signatures">
 <li class="tsd-signature tsd-anchor-link" id="populateDependenciesByNodeID"><span class="tsd-kind-call-signature">populate<wbr/>Dependencies<wbr/>By<wbr/>NodeID</span><span class="tsd-signature-symbol">(</span><span class="tsd-kind-parameter">id</span>, <span class="tsd-kind-parameter">graphContext</span>, <span class="tsd-kind-parameter">maxRetries</span><span class="tsd-signature-symbol">?</span>, <span class="tsd-kind-parameter">retryDelay</span><span class="tsd-signature-symbol">?</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type ">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">&gt;</span><a href="#populateDependenciesByNodeID" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></li>
 <li class="tsd-description">
+<div class="tsd-comment tsd-typography"><p>This function continuously fetches from the COMPUTED_NODES_ENDPOINT until it retrieves data for a given node ID or the maximum number of retries is reached. It updates the graph context with newly fetched data during each iteration.</p>
+</div>
 <div class="tsd-parameters">
 <h4 class="tsd-parameters-title">Parameters</h4>
 <ul class="tsd-parameter-list">
 <li>
-<h5><span class="tsd-kind-parameter">id</span>: <span class="tsd-signature-type">string</span></h5></li>
+<h5><span class="tsd-kind-parameter">id</span>: <span class="tsd-signature-type">string</span></h5>
+<div class="tsd-comment tsd-typography"><p>The ID of the node to fetch data for</p>
+</div>
+<div class="tsd-comment tsd-typography"></div></li>
 <li>
-<h5><span class="tsd-kind-parameter">graphContext</span>: <a href="../types/Node_GraphContext.Graph.html" class="tsd-signature-type tsd-kind-type-alias">Graph</a></h5></li>
+<h5><span class="tsd-kind-parameter">graphContext</span>: <a href="../types/Node_GraphContext.Graph.html" class="tsd-signature-type tsd-kind-type-alias">Graph</a></h5>
+<div class="tsd-comment tsd-typography"><p>The graph context to update</p>
+</div>
+<div class="tsd-comment tsd-typography"></div></li>
 <li>
-<h5><span class="tsd-kind-parameter">maxRetries</span>: <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol"> = 100</span></h5></li>
+<h5><span class="tsd-kind-parameter">maxRetries</span>: <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol"> = 100</span></h5>
+<div class="tsd-comment tsd-typography"><p>The maximum number of retries</p>
+</div>
+<div class="tsd-comment tsd-typography"></div></li>
 <li>
-<h5><span class="tsd-kind-parameter">retryDelay</span>: <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol"> = 2000</span></h5></li></ul></div>
-<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type ">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">&gt;</span></h4><aside class="tsd-sources">
+<h5><span class="tsd-kind-parameter">retryDelay</span>: <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol"> = 2000</span></h5>
+<div class="tsd-comment tsd-typography"><p>The delay between each retry</p>
+</div>
+<div class="tsd-comment tsd-typography"></div></li></ul></div>
+<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type ">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">&gt;</span></h4><ul>
+<li>A promise that resolves when the node data is fetched</li>
+</ul>
+
+<div class="tsd-comment tsd-typography"></div><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/Skein-studio/front-end-webapp/blob/4161440c/src/app/Util/ComputeAPI.tsx#L46">src/app/Util/ComputeAPI.tsx:46</a></li></ul></aside></li></ul></section></div>
+<li>Defined in <a href="https://github.com/Skein-studio/front-end-webapp/blob/d031f75f/src/app/Util/ComputeAPI.tsx#L55">src/app/Util/ComputeAPI.tsx:55</a></li></ul></aside></li></ul></section></div>
 <div class="col-sidebar">
 <div class="page-menu">
 <div class="tsd-navigation settings">
@@ -55,6 +73,8 @@
 <li><a href="../modules/Node_GraphContext.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2"></use></svg>Node/GraphContext</a></li>
 <li><a href="../modules/Node_Merge_MergePresenter.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2"></use></svg>Node/Merge/MergePresenter</a></li>
 <li><a href="../modules/Node_Merge_MergeView.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2"></use></svg>Node/Merge/MergeView</a></li>
+<li><a href="../modules/Node_Model_modelDatatypes.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2"></use></svg>Node/Model/modelDatatypes</a></li>
+<li><a href="../modules/Node_Model_modelTransformation.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2"></use></svg>Node/Model/modelTransformation</a></li>
 <li><a href="../modules/Node_NodeState.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2"></use></svg>Node/NodeState</a></li>
 <li><a href="../modules/Node_NodeStyles.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2"></use></svg>Node/NodeStyles</a></li>
 <li><a href="../modules/Node_OpenNode_OpenNodePresenter.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2"></use></svg>Node/OpenNode/OpenNodePresenter</a></li>
@@ -71,8 +91,6 @@
 <li><a href="../modules/Node_Split_SplitView.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2"></use></svg>Node/Split/SplitView</a></li>
 <li><a href="../modules/Node_Unspecified_UnspecifiedPresenter.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2"></use></svg>Node/Unspecified/UnspecifiedPresenter</a></li>
 <li><a href="../modules/Node_Unspecified_UnspecifiedView.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2"></use></svg>Node/Unspecified/UnspecifiedView</a></li>
-<li><a href="../modules/Util_AudioGenerator_GenerateAudio.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2"></use></svg>Util/AudioGenerator/GenerateAudio</a></li>
-<li><a href="../modules/Util_AudioImporter_ImportAudio.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2"></use></svg>Util/AudioImporter/ImportAudio</a></li>
 <li>Loading...</li></ul></nav></div></div></div>
 <div class="tsd-generator">
 <p>Generated using <a href="https://typedoc.org/" rel="noopener" target="_blank">TypeDoc</a></p></div>

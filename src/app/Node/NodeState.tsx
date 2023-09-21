@@ -4,8 +4,9 @@
 which is used to store the individual state of 
 each node in the graph. */
 
+import { Coordinate } from "./Model/modelDatatypes";
 import {
-  NodeModel as NodeModel,
+  NodeModel,
   SourceTypeModel,
   SignalTypeModel,
   MergeTypeModel,
@@ -13,10 +14,8 @@ import {
   UnspecifiedTypeModel,
   OutputModel,
   InputModel,
-} from "../Util/modelTransformation";
+} from "./Model/modelDatatypes";
 import { v4 as uuidv4 } from "uuid";
-
-let nodeID = 0; // This is used to generate unique IDs for each node, IDK why it has to start at -2 to make the first Node have ID 0
 
 export enum NodeType {
   Source,
@@ -26,18 +25,11 @@ export enum NodeType {
   Unspecified,
 }
 
-type Coordinate = {
-  x: number;
-  y: number;
-};
 /**
  * Represents the state of a node in the graph.
  * Contains following properties:
- * - position: The XY position of the node in the graph
- * - model: The model of the node, which is used to generate the JSON
+ * - model: The model of the node, which is used to generate the JSON. The model contains all the information about the node, including the type, position, inputs, outputs and data.
  * - selected: Whether the node is selected or not
- * - id: The ID of the node
- * - type: The type of the node (Signal, Source, Merge, Split, Unspecified)
  * - loading: Used to show the spinner when the node is loading
  * @class NodeState
  * @constructor
@@ -47,26 +39,20 @@ type Coordinate = {
  * @param {string} id - The ID of the node
  */
 export class NodeState {
-  position: Coordinate; // The XY position of the node in the graph
   model: NodeModel; // The model of the node, which is used to generate the JSON
   selected: boolean; // Whether the node is selected or not
-  id: string; // The ID of the node
-  type: NodeType; // The type of the node (Signal, Source, Merge, Split, Unspecified)
   loading: boolean; // Used to show the spinner when the node is loading
 
   constructor(x: number, y: number, type: NodeType, id?: string) {
-    this.position = {
-      x: x,
-      y: y,
-    };
-    this.type = type;
-    id ? (this.id = id) : (this.id = uuidv4());
+    let newID;
+    id ? (newID = id) : (newID = uuidv4());
     this.model = {
-      ID: this.id.toString(),
+      Position: { x: x, y: y },
+      ID: newID,
       Dirty: true,
       Type: NodeTypeToString(type),
-      Inputs: this.setInputs(type, this.id.toString()),
-      Outputs: this.setOutputs(type, this.id.toString()),
+      Inputs: this.setInputs(type, newID),
+      Outputs: this.setOutputs(type, newID),
       Data: this.initializeData(type),
     };
     this.selected = false;
@@ -116,6 +102,10 @@ export class NodeState {
       ID: this.model.ID + "in[" + this.model.Inputs.length + "]",
       Name: "input" + this.model.Inputs.length,
     });
+  }
+
+  getType(): NodeType {
+    return StringToNodeType(this.model.Type);
   }
 
   /**
@@ -199,17 +189,19 @@ export class NodeState {
    * @param {NodeState} node - The node to set to
    */
   setNode(node: NodeState) {
-    this.position = node.position;
     this.model = { ...node.model };
     this.selected = node.selected;
   }
 
   toString(): string {
-    return `Node ${this.model.ID}`;
+    return `Node ${this.getID()}`;
   }
 
   getID(): string {
-    return this.id;
+    return this.model.ID;
+  }
+  getPosition(): Coordinate {
+    return this.model.Position;
   }
   /**
    * Sets the position of the node
@@ -217,8 +209,8 @@ export class NodeState {
    * @param {number} y - The y coordinate of the node
    */
   setPosition(x: number, y: number) {
-    this.position.x = x;
-    this.position.y = y;
+    this.model.Position.x = x;
+    this.model.Position.y = y;
   }
 }
 
@@ -275,5 +267,20 @@ export function NodeTypeToString(nodeType: NodeType): string {
       return "split";
     default:
       return "unspecified";
+  }
+}
+
+export function StringToNodeType(nodeType: string): NodeType {
+  switch (nodeType) {
+    case "source":
+      return NodeType.Source;
+    case "signal":
+      return NodeType.Signal;
+    case "merge":
+      return NodeType.Merge;
+    case "split":
+      return NodeType.Split;
+    default:
+      return NodeType.Unspecified;
   }
 }

@@ -41,13 +41,15 @@ It is the central file of the app. */
 import { NODE_WIDTH, NODE_HEIGHT } from "../../Node/NodeStyles";
 import useWindowDimensions from "../windowDimensions";
 import {
+  gatherAllDirtyIds,
+  transformGraphToRootModel,
+} from "../../Node/Model/modelTransformation";
+import { handleType } from "../../Node/Model/modelDatatypes";
+import {
   InputModel,
   OutputModel,
   EdgeModel as edgeModel,
-  gatherAllDirtyIds,
-  handleType,
-  transformGraphToRootModel,
-} from "../modelTransformation";
+} from "../../Node/Model/modelDatatypes";
 
 const proOptions = { hideAttribution: true };
 
@@ -160,11 +162,11 @@ export function FlowPresenter() {
   function deleteSelectedNode() {
     // this is called when the user clicks on the delete button
     if (graph.selectedNode) {
-      const nodeToDelete = getNode(graph, graph.selectedNode.id);
+      const nodeToDelete = getNode(graph, graph.selectedNode.model.ID);
       if (nodeToDelete) {
         deleteNodes(graph, [nodeToDelete]);
       } else {
-        console.log(`No node found with id: ${graph.selectedNode.id}`);
+        console.log(`No node found with id: ${graph.selectedNode.model.ID}`);
       }
     }
     setSelectedNode(undefined);

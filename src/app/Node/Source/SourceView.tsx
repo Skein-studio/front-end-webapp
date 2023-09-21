@@ -7,7 +7,7 @@ import { useContext } from "react";
 import { styled } from "styled-components";
 import SourceImg from "./source.svg";
 import { GenerateHandles } from "@/app/Util/Handles";
-import { SourceTypeModel } from "@/app/Util/modelTransformation";
+import { SourceTypeModel } from "@/app/Node/Model/modelDatatypes";
 
 const PreviewText = styled.p`
   color: white;
