@@ -37,6 +37,13 @@ interface OptionsButtonProps {
   tooltipText: string;
 }
 
+/**
+ * A button for the OptionsView.
+ * @param img The image to be displayed on the button.
+ * @param callback The function to be called when the button is clicked.
+ * @param tooltipText The text to be displayed in the tooltip.
+ * @returns A button component.
+ * */
 export const OptionsButton: React.FC<OptionsButtonProps> = ({
   img,
   callback,
@@ -56,6 +63,10 @@ export const OptionsButton: React.FC<OptionsButtonProps> = ({
   );
 };
 
+/**
+ * The view for the OptionsView.
+ * @returns A OptionsContainer component.
+ * */
 export default function OptionsView(props: Props) {
   return (
     <OptionsContainer>
@@ -68,9 +79,21 @@ export default function OptionsView(props: Props) {
         }}
         tooltipText="Delete"
       />
-      <OptionsButton img={undo} callback={() => console.log("undo")} tooltipText="Undo" />
-      <OptionsButton img={redo} callback={() => console.log("redo")} tooltipText="Redo" />
-      <OptionsButton img={plus} callback={() => props.addButtonHandler()} tooltipText="Add" />
+      <OptionsButton
+        img={undo}
+        callback={() => console.log("undo")}
+        tooltipText="Undo"
+      />
+      <OptionsButton
+        img={redo}
+        callback={() => console.log("redo")}
+        tooltipText="Redo"
+      />
+      <OptionsButton
+        img={plus}
+        callback={() => props.addButtonHandler()}
+        tooltipText="Add"
+      />
     </OptionsContainer>
   );
 }

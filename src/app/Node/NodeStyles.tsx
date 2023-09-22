@@ -12,6 +12,11 @@ interface HandleProps {
   id: string;
 }
 
+/**
+ * A styled handle for the nodes.
+ * @param props - The props for the handle.
+ * @returns A Handle component.
+ * */
 function StyledHandle(props: HandleProps) {
   return (
     <Handle
@@ -44,6 +49,10 @@ const NodeTitle = styled.p`
   color: ${purple};
 `;
 
+/**
+ * A styled container for the icon of the node.
+ * @returns A styled div.
+ * */
 const IconContainer = styled.div`
   position: absolute;
   left: 10px;
@@ -60,6 +69,11 @@ interface IconProps {
   src: string;
 }
 
+/**
+ * A styled icon for the node.
+ * @param props - The props for the icon.
+ * @returns A styled img.
+ * */
 const NodeIcon = (props: IconProps) => {
   return (
     <IconContainer>
@@ -80,6 +94,11 @@ interface NodeProps {
   selected: boolean;
 }
 
+/**
+ * A styled container for the node, this is how the nodes look in their normal (small) state.
+ * @param props - The props for the node.
+ * @returns A styled div.
+ * */
 const NodeSmall = styled.div<NodeProps>`
   display: flex;
   font-family: verdana;

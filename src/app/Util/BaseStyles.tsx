@@ -6,23 +6,24 @@ interface TextProps {
   color?: string;
   weight?: string;
   align?: string;
-  noMargin?: boolean;
-  hoverColor?: string;
+  nomargin?: boolean;
+  hovercolor?: string;
 }
 
 const Text = styled.p<TextProps>`
   font-size: ${({ size }) => (size ? `${size}px` : "20px")};
   color: ${({ color }) => (color ? color : "#333")};
   line-height: 1.7;
-  font-family: "Roboto", "Helvetica", "Arial", sans-serif;
+  font-family: "Helvetica", "Arial", sans-serif;
   font-weight: ${({ weight }) => (weight ? weight : "400")};
   text-align: ${({ align }) => (align ? align : "justify")};
   margin: 2px;
-  margin: ${({ noMargin }) => (noMargin ? "0" : "0 0 20px 0")};
+  margin: ${({ nomargin: noMargin }) => (noMargin ? "0" : "0 0 20px 0")};
   transition: color 0.3s ease;
 
   &:hover {
-    color: ${({ hoverColor }) => (hoverColor ? hoverColor : "#007BFF")};
+    color: ${({ hovercolor: hoverColor }) =>
+      hoverColor ? hoverColor : "#007BFF"};
   }
 `;
 
@@ -34,6 +35,11 @@ interface ButtonProps {
   onChange?: React.ChangeEventHandler<HTMLInputElement>;
 }
 
+/**
+ * A standard button, can be used for essentially anything.
+ * @param props - The props for the button.
+ * @returns A styled button.
+ * */
 const Button = styled.button<ButtonProps>`
   display: flex;
   font-family: verdana;
@@ -68,9 +74,11 @@ const Button = styled.button<ButtonProps>`
   }
 `;
 
-// Usage
-<Button disabled={true}>My Button</Button>;
-
+/**
+ * An input name for the graph name.
+ * @param props - The props for the input field.
+ * @returns A styled input field.
+ * */
 const GraphNameInput = styled.input`
   z-index: 1; /* Add a higher z-index value */
   position: absolute;
@@ -91,6 +99,11 @@ interface OuterBoxProps {
   shadow?: boolean;
 }
 
+/**
+ * This is the outermost container that contains the ReactFlow View
+ * @param props - The props for the container.
+ * @returns A styled div.
+ * */
 const OuterBox = styled.div<OuterBoxProps>`
   display: flex;
   flex-direction: ${(props) => (props.flexdir ? props.flexdir : "column")};
@@ -103,7 +116,7 @@ const OuterBox = styled.div<OuterBoxProps>`
   box-shadow: ${(props) =>
     props.shadow ? "0px 2px 8px rgba(0, 0, 0, 0.25)" : "0px"};
   border-radius: 10px;
-  border: 4px solid black;
+  border: 1px solid black;
   padding: 4px;
   margin: 4px;
   overflow: hidden;
@@ -117,6 +130,11 @@ interface BoxProps {
   backgroundColor?: string;
 }
 
+/**
+ * A standard container, can be used for essentially anything.
+ * @param props - The props for the container.
+ * @returns A styled div.
+ * */
 const Container = styled.div<BoxProps>`
   display: flex;
   flex-direction: ${(props) => (props.flexdir ? props.flexdir : "column")};
@@ -137,6 +155,12 @@ interface BlankProps {
   width: number;
   height: number;
 }
+
+/**
+ * Just a blank space to use as a spacer between elements.
+ * @param props - The props for the blank space.
+ * @returns A styled div.
+ * */
 const BlankSpace = styled.div<BlankProps>`
   display: flex;
   flex-direction: ${(props) => (props.flexdir ? props.flexdir : "column")};

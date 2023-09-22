@@ -7,6 +7,10 @@ import { NodeContext } from "../NodeState";
 import MergeImg from "./merge.svg";
 import { GenerateHandles, GetWidthExtension } from "@/app/Util/Handles";
 
+/**
+ * The view for the Merge node.
+ * @returns A NodeSmall component.
+ * */
 function MergeView() {
   const graph = useGraph();
   const nodeContext = useContext(NodeContext);

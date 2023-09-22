@@ -46,9 +46,10 @@ interface Props {
   addButtonHandler: () => void;
 }
 
-/* This component is the main view for the flow editor. 
-It contains the reactflow graph, the options view, and the overlay. */
-
+/**
+ * The view for the Flow component.
+ * @returns A ReactFlow component.
+ * */
 function FlowView(props: Props) {
   return (
     <OuterBox width="95vw" height="95vh">

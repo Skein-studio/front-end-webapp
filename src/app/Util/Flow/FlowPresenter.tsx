@@ -41,50 +41,42 @@ It is the central file of the app. */
 import { NODE_WIDTH, NODE_HEIGHT } from "../../Node/NodeStyles";
 import useWindowDimensions from "../windowDimensions";
 import {
-  Input,
-  Output,
-  Edge as edgeModel,
   gatherAllDirtyIds,
-  handleType,
-  transformtoTypescriptTypes,
-} from "../modelTransformation";
+  transformGraphToRootModel,
+} from "../../Node/Model/modelTransformation";
+import { handleType } from "../../Node/Model/modelDatatypes";
+import {
+  InputModel,
+  OutputModel,
+  EdgeModel as edgeModel,
+} from "../../Node/Model/modelDatatypes";
 
 const proOptions = { hideAttribution: true };
 
 const nodeTypes = {
   // this is where we define the node types
   source: (nodeData: any) => (
-    <NodeContext.Provider
-      value={{ nodeState: nodeData.data.nodeState, forceReload: () => {} }}
-    >
+    <NodeContext.Provider value={{ nodeState: nodeData.data.nodeState }}>
       <SourcePresenter />
     </NodeContext.Provider>
   ),
   unspecified: (nodeData: any) => (
-    <NodeContext.Provider
-      value={{ nodeState: nodeData.data.nodeState, forceReload: () => {} }}
-    >
+    <NodeContext.Provider value={{ nodeState: nodeData.data.nodeState }}>
       <UnspecifiedPresenter />
     </NodeContext.Provider>
   ),
   split: (nodeData: any) => (
-    <NodeContext.Provider
-      value={{ nodeState: nodeData.data.nodeState, forceReload: () => {} }}
-    >
+    <NodeContext.Provider value={{ nodeState: nodeData.data.nodeState }}>
       <SplitPresenter />
     </NodeContext.Provider>
   ),
   merge: (nodeData: any) => (
-    <NodeContext.Provider
-      value={{ nodeState: nodeData.data.nodeState, forceReload: () => {} }}
-    >
+    <NodeContext.Provider value={{ nodeState: nodeData.data.nodeState }}>
       <MergePresenter />
     </NodeContext.Provider>
   ),
   signal: (nodeData: any) => (
-    <NodeContext.Provider
-      value={{ nodeState: nodeData.data.nodeState, forceReload: () => {} }}
-    >
+    <NodeContext.Provider value={{ nodeState: nodeData.data.nodeState }}>
       <SignalPresenter />
     </NodeContext.Provider>
   ),
@@ -92,7 +84,47 @@ const nodeTypes = {
 
 const START_ZOOM = 0.75;
 
-const Canvas: React.FC = () => {
+/**
+ * FlowPresenter is the main component of the app, it contains handlers for all the events that can happen in ReactFlow component
+ * It contains the following handlers:
+ * @function onConnectStart: called when the user starts connecting by dragging from a node handle
+ * @function onConnectEnd: called when the user stops connecting by dragging from a node handle
+ * @function onConnect: called when the user connects two nodes
+ * @function onNodeDragStop: called when the user stops dragging a node
+ * @function onNodesDelete: called when the user deletes a node
+ * @function onEdgesDelete: called when the user deletes an edge
+ * @function onMove: called when the user moves the canvas
+ * @function onSelectionChange: called when an edge selection is changed
+ * @function handlePaneClick: called when the user clicks on the canvas
+ * @function addButtonHandler: called when the user clicks on the "add" button
+ * @function showSelected: called when the user clicks on a node
+ * @function hideSelected: called when the user clicks on the "close" button in the node view
+ * @function deleteSelectedNode: called when the user clicks on the delete button
+ * @function deleteSelectedEdge: called when the user clicks on the delete button
+ * @function stopSelect: called when the user clicks on the canvas (deselects current node)
+ * @function selectNode: called when the user clicks on a node (selects the node)
+ * @function refresh: refreshes the graph, making the ReactFlow component re-render
+ * @function addNewNode: called when the user adds a new node
+ * @function doesNodeExistAtPosition: called when the user adds a new node, checks if there is already a node at the position where the user wants to add a new node
+ * @function connectionToEdgeModel: called when the user adds a new node, creates an edge model from the connection
+ * @function openSelectedNode: called when the user clicks on a node, opens the node view
+ * @function openNodeView: called when the user clicks on a the "open" button in the node view, shows the node in enlarged view
+ * @var reactFlowInstance: the ReactFlow component instance
+ * @var window: the window dimensions
+ * @var viewport: the viewport dimensions
+ * @var nodes: the nodes in the graph
+ * @var edges: the edges in the graph
+ * @var flowKey: the key of the ReactFlow component, used to force a refresh
+ * @var selectedNode: the currently selected node
+ * @var selectedEdge: the currently selected edge
+ * @var selectedNodeIsOpen: whether the node view is open or not
+ * @var connectStartNode: the node that the user started connecting from
+ * @var connectStartHandleId: the handle id of the node that the user started connecting from
+ * @var graph: the graph object that is passed to the GraphContext.Provider
+ * @returns {JSX.Element} The ReactFlow component.
+ */
+export function FlowPresenter() {
+  // export is for documentation purposes
   const reactFlowInstance = useReactFlow();
   const window = useWindowDimensions();
   const [viewport, setViewport] = useState<Viewport>({
@@ -106,24 +138,19 @@ const Canvas: React.FC = () => {
   const [flowKey, setFlowKey] = useState(0);
   const [selectedNode, setSelectedNode] = useState<NodeState>(); // do not use this directly, use selectNode() instead
   const [selectedEdge, setSelectedEdge] = useState<Edge>();
-  const [openSelectedNode, setOpenSelectedNode] = useState<boolean>(false);
+  const [selectedNodeIsOpen, setSelectedNodeIsOpen] = useState<boolean>(false);
   const [connectStartNode, setConnectStartNode] = useState<Node>();
   const [connectStartHandleId, setConnectStartHandleId] = useState<string>();
 
-  const reloadComponent = () => {
-    console.warn("Forced reload of entire graph (reloadComponent())");
+  const refresh = () => {
+    console.warn("Refreshed graph (refresh())");
     if (flowKey == 0) {
       setFlowKey((prevKey) => prevKey + 1);
     } else {
       setFlowKey((prevKey) => prevKey - 1);
     }
     /*
-      this is just a dumb temporary fix to just refresh by changing
-      a property of the ReactFlow component (key), this function is passed into the GraphContext 
-      so that it can be used to force a refresh from inside the context, like when setting or updating using the
-      functions inside GraphContext.tsx (setNodes() etc).
-      This way, we don't need to double click on any button to make it refresh
-      TODO: Remove this, but to do that, must find alternative for graph.reloadComponent() in RecordPresenter & ImportAudio & GenerateAudio
+      This forces a re-render of the ReactFlow component.
     */
   };
 
@@ -135,11 +162,11 @@ const Canvas: React.FC = () => {
   function deleteSelectedNode() {
     // this is called when the user clicks on the delete button
     if (graph.selectedNode) {
-      const nodeToDelete = getNode(graph, graph.selectedNode.id);
+      const nodeToDelete = getNode(graph, graph.selectedNode.model.ID);
       if (nodeToDelete) {
         deleteNodes(graph, [nodeToDelete]);
       } else {
-        console.log(`No node found with id: ${graph.selectedNode.id}`);
+        console.log(`No node found with id: ${graph.selectedNode.model.ID}`);
       }
     }
     setSelectedNode(undefined);
@@ -167,26 +194,18 @@ const Canvas: React.FC = () => {
     () => ({
       nodes,
       edges,
-      reloadComponent,
+      refresh,
       selectNode,
       selectedNode,
       setNodes,
       setEdges,
     }),
-    [
-      nodes,
-      edges,
-      reloadComponent,
-      selectNode,
-      selectedNode,
-      setNodes,
-      setEdges,
-    ]
+    [nodes, edges, refresh, selectNode, selectedNode, setNodes, setEdges]
   );
 
   useEffect(() => {
     // this is called when the graph changes, so we can set the dirty nodes
-    const root = transformtoTypescriptTypes(graph);
+    const root = transformGraphToRootModel(graph);
     const allDirtyIds = gatherAllDirtyIds(root.Sketch.Graph); // Get all the dirty IDs
     setDirtyNodes(graph, allDirtyIds);
   }, [nodes, edges]);
@@ -195,7 +214,7 @@ const Canvas: React.FC = () => {
     // this is called when the user clicks on the canvas
     deselectNode(graph);
     setSelectedNode(undefined);
-    setOpenSelectedNode(false);
+    setSelectedNodeIsOpen(false);
   }
   function onSelectionChange(params: OnSelectionChangeParams) {
     // this is called when an edge selection is changed
@@ -244,7 +263,7 @@ const Canvas: React.FC = () => {
     connection: Connection,
     newTargetNode?: Node
   ): edgeModel => {
-    let inputsOfTargetNode: Input[];
+    let inputsOfTargetNode: InputModel[];
 
     if (newTargetNode) {
       inputsOfTargetNode = newTargetNode.data.nodeState.model.Inputs;
@@ -256,15 +275,15 @@ const Canvas: React.FC = () => {
     let n = (nodes.find((node) => node.id == connection.source)?.data as any)
       .nodeState as NodeState;
 
-    let outputsOfSourceNode: Output[] = graph.nodes.find(
+    let outputsOfSourceNode: OutputModel[] = graph.nodes.find(
       (node) => node.id == connection.source
     )?.data.nodeState.model.Outputs; // get the outputs of the source node
 
     let inputName = inputsOfTargetNode.find(
-      (input: Input) => input.ID == connection.targetHandle
+      (input: InputModel) => input.ID == connection.targetHandle
     )?.Name; // get the name of the input
     let outputName = outputsOfSourceNode.find(
-      (output: Output) => output.ID == connection.sourceHandle
+      (output: OutputModel) => output.ID == connection.sourceHandle
     )?.Name; // get the name of the output
 
     if (n.model.Type == "split") {
@@ -389,7 +408,8 @@ const Canvas: React.FC = () => {
           source: connectStartNode.id,
           target: lastNode.id,
           sourceHandle: connectStartHandleId!,
-          targetHandle: (lastNode.data.nodeState.model.Inputs[0] as Input).ID,
+          targetHandle: (lastNode.data.nodeState.model.Inputs[0] as InputModel)
+            .ID,
         };
         const newEdge = {
           id: `reactflow__edge-${newConnection.source}${newConnection.sourceHandle}-${newConnection.target}${newConnection.targetHandle}`,
@@ -427,14 +447,14 @@ const Canvas: React.FC = () => {
   function showSelected() {
     // this is called when the user clicks on a node
     if (selectedNode) {
-      setOpenSelectedNode(true);
+      setSelectedNodeIsOpen(true);
     } else {
       console.log("Cannot enlarge without selecting a node");
     }
   }
   function hideSelected() {
     // this is called when the user clicks on the "close" button in the node view
-    setOpenSelectedNode(false);
+    setSelectedNodeIsOpen(false);
   }
 
   function openNodeView() {
@@ -492,7 +512,7 @@ const Canvas: React.FC = () => {
           onConnectEnd={onConnectEnd}
           viewport={viewport}
           onMove={onMove}
-          openSelectedNode={openSelectedNode}
+          openSelectedNode={selectedNodeIsOpen}
           showSelected={showSelected}
           hideSelected={hideSelected}
           handlePaneClick={handlePaneClick}
@@ -502,14 +522,18 @@ const Canvas: React.FC = () => {
       </GraphContext.Provider>
     </ReactFlowProvider>
   );
-};
+}
 
-function Flow() {
+/**
+ * Wrapper for the ReactFlow component
+ * @returns {JSX.Element} The wrapped ReactFlow component.
+ */
+function FlowWrapper() {
   return (
     <ReactFlowProvider>
-      <Canvas></Canvas>
+      <FlowPresenter></FlowPresenter>
     </ReactFlowProvider>
   );
 }
 
-export default Flow;
+export default FlowWrapper;

@@ -5,6 +5,10 @@ import SplitView from "./SplitView";
 import { NodeContext } from "../NodeState";
 import { useGraph } from "../GraphContext";
 
+/**
+ * The presenter for the Split node.
+ * @returns A SplitView component.
+ * */
 function SplitPresenter() {
   const nodeContext = useContext(NodeContext);
   const node = nodeContext.nodeState;

@@ -1,40 +1,41 @@
 // OpenSignalPresenter.tsx
 import OpenSignalView from "./OpenSignalView";
-import { SignalType } from "@/app/Util/modelTransformation";
-import { useContext, useEffect } from "react";
+import { SignalTypeModel } from "@/app/Node/Model/modelDatatypes";
+import { useContext } from "react";
 import { NodeContext } from "../NodeState";
 import { useGraph } from "../GraphContext";
 
+/**
+ * The presenter for the opened Signal node, where signal can be edited or exported.
+ * @returns An OpenSignalView component.
+ * */
 function OpenSignalPresenter() {
   const nodeContext = useContext(NodeContext);
   const node = nodeContext.nodeState;
-  const nodeData = node.model.Data as SignalType;
+  const nodeData = node.model.Data as SignalTypeModel;
   const graph = useGraph();
-
-  useEffect(() => {}, [node]);
 
   const handlePromptChange = (prompt: string) => {
     node.setPrompt(prompt);
     node.model.Dirty = true;
-    //nodeContext.forceReload();
-    graph.reloadComponent();
+    graph.refresh();
   };
 
   const exportFile = async () => {
     const outputSrc = node.model.Outputs[0].Src;
-    
+
     // Fetch the file
     const response = await fetch(outputSrc);
     const blob = await response.blob();
-  
+
     // Create a temporary anchor element and simulate a click event
     const url = window.URL.createObjectURL(blob);
-    const link = document.createElement('a');
+    const link = document.createElement("a");
     link.href = url;
-    link.setAttribute('download', `skeinstudio-${outputSrc}.mp3`);  // You can dynamically set the file name as well
+    link.setAttribute("download", `skeinstudio-${outputSrc}.mp3`); // You can dynamically set the file name as well
     document.body.appendChild(link);
     link.click();
-  
+
     // Cleanup
     window.URL.revokeObjectURL(url);
     document.body.removeChild(link);
@@ -43,7 +44,7 @@ function OpenSignalPresenter() {
   return (
     <OpenSignalView
       exportFile={exportFile}
-      prompt={nodeData.Prompt as string}
+      prompt={nodeData.Prompt}
       setPrompt={handlePromptChange}
     />
   );

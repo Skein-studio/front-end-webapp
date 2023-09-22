@@ -11,6 +11,10 @@ type Props = {
   audioState: AudioState;
 };
 
+/**
+ * The view for the RecordView component, which is used to record audio for the Source node.
+ * @returns A Container component, which contains a Button and an AudioPlayer.
+ * */
 function RecordView({
   isRecording,
   onStart,

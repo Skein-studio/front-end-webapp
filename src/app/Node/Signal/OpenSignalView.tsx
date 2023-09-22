@@ -1,8 +1,10 @@
 // OpenSignalView.tsx
 
-import { Container, Button} from "@/app/Util/BaseStyles";
+import { Container, Button, Text } from "@/app/Util/BaseStyles";
 import styled from "styled-components";
 import StarImg from "../Signal/stars.svg";
+import { NodeContext } from "../NodeState";
+import { useContext } from "react";
 
 interface Props {
   setPrompt(value: string): void;
@@ -10,7 +12,14 @@ interface Props {
   exportFile(): void;
 }
 
+/**
+ * The view for the opened Signal node, where signal can be edited or exported.
+ * @returns A Container component.
+ * */
 export default function OpenSignalView(props: Props) {
+  const nodeContext = useContext(NodeContext);
+  const node = nodeContext.nodeState;
+
   const handleInstrumentChange = (
     event: React.ChangeEvent<HTMLInputElement>
   ) => {
@@ -20,7 +29,7 @@ export default function OpenSignalView(props: Props) {
   function handleExport() {
     props.exportFile();
   }
-  
+
   return (
     <Container>
       <Container>
@@ -34,7 +43,16 @@ export default function OpenSignalView(props: Props) {
           onChange={handleInstrumentChange}
         />
       </Container>
-      <Button onClick={handleExport}>Export</Button>
+      <Button onClick={handleExport} disabled={node.model.Dirty}>
+        Export
+      </Button>
+      {node.model.Dirty ? (
+        <Text size={12} hovercolor="solid black">
+          You must fetch the node before exporting.
+        </Text>
+      ) : (
+        <></>
+      )}
     </Container>
   );
 }

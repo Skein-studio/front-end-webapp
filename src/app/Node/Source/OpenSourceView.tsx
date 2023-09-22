@@ -5,7 +5,7 @@ import RecordPresenter from "@/app/Util/AudioRecorder/RecordPresenter";
 import { Button, Container } from "@/app/Util/BaseStyles";
 import { useContext, useState } from "react";
 import { NodeContext } from "../NodeState";
-import { SourceType } from "@/app/Util/modelTransformation";
+import { SourceTypeModel } from "@/app/Node/Model/modelDatatypes";
 
 function BaseComponent(base: string) {
   const nodeContext = useContext(NodeContext);
@@ -13,7 +13,7 @@ function BaseComponent(base: string) {
   const [reload, setReload] = useState<boolean>(false);
 
   function handleBaseChange(text: string) {
-    (node.model.Data as SourceType).base = text;
+    (node.model.Data as SourceTypeModel).base = text;
     setReload(!reload);
   }
 
@@ -41,13 +41,19 @@ function BaseComponent(base: string) {
   }
 }
 
+/**
+ * The view for the opened Source node, where source node base can be set, and then you can record, import, or generate audio.
+ * @returns A Container component, which contains the selected BaseComponent.
+ * */
 export default function OpenSourceView() {
   const nodeContext = useContext(NodeContext);
   const node = nodeContext.nodeState;
 
   return (
     <Container flexdir="column">
-      {BaseComponent((node?.model.Data as SourceType).base ?? "Select a base")}
+      {BaseComponent(
+        (node?.model.Data as SourceTypeModel).base ?? "Select a base"
+      )}
     </Container>
   );
 }

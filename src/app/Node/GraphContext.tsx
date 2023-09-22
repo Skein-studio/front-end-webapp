@@ -10,16 +10,54 @@ import { createContext, useContext } from "react";
 import { NodeState, NodeTypeToString, NodeType } from "./NodeState";
 import { Edge, Node } from "reactflow";
 
+/**
+ * Represents a graph data structure.
+ */
 export type Graph = {
+  /**
+   * An array of all nodes in the graph.
+   */
   nodes: Node[];
+
+  /**
+   * An array of all edges in the graph.
+   */
   edges: Edge[];
-  reloadComponent: () => void;
+
+  /**
+   * Refreshes the graph, re-rendering it.
+   */
+  refresh: () => void;
+
+  /**
+   * Selects a node in the graph.
+   * @param nodeState - The state of the node to select.
+   */
   selectNode: (nodeState: NodeState | undefined) => void;
+
+  /**
+   * The currently selected node.
+   */
   selectedNode: NodeState | undefined;
+
+  /**
+   * Sets the nodes of the graph.
+   * @param nodes - An array of nodes.
+   */
   setNodes: (nodes: Node[]) => void;
+
+  /**
+   * Sets the edges of the graph.
+   * @param edges - An array of edges.
+   */
   setEdges: (edges: Edge[]) => void;
 };
 
+/**
+ * Deletes the given nodes from the graph.
+ * @param context - The graph.
+ * @param nodes - The nodes to delete.
+ * */
 export function deleteNodes(context: Graph, nodes: Node[]) {
   const newNodes = context.nodes.filter(
     (node) => !nodes.find((n) => n.id === node.id)
@@ -27,6 +65,11 @@ export function deleteNodes(context: Graph, nodes: Node[]) {
   context.setNodes(newNodes);
 }
 
+/**
+ * Deletes the given edges from the graph.
+ * @param context - The graph.
+ * @param edges - The edges to delete.
+ * */
 export function deleteEdges(context: Graph, edges: Edge[]) {
   // set each node affected by the change to dirty
   for (const edge of edges) {
@@ -41,9 +84,14 @@ export function deleteEdges(context: Graph, edges: Edge[]) {
     (edge) => !edges.find((e) => e.id === edge.id)
   );
   context.setEdges(newEdges); // Assuming setEdges is defined in Graph type
-  context.reloadComponent();
+  context.refresh();
 }
 
+/**
+ * Sets nodes with the given IDs to dirty.
+ * @param context - The graph.
+ * @param node - The node to set to dirty.
+ * */
 export function setDirtyNodes(context: Graph, dirtyIds: string[]) {
   // This function is used to set the dirty property of the nodes in the graph
   for (const node of context.nodes) {
@@ -53,6 +101,10 @@ export function setDirtyNodes(context: Graph, dirtyIds: string[]) {
   }
 }
 
+/**
+ * Deselects the currently selected node.
+ * @param context - The graph.
+ * */
 export function deselectNode(context: Graph) {
   // This function is used to deselect the node in the graph
   if (context.selectedNode) {
@@ -61,6 +113,11 @@ export function deselectNode(context: Graph) {
   context.selectedNode = undefined;
 }
 
+/**
+ * Gets the node with the given ID.
+ * @param context - The graph.
+ * @param id - The ID of the node to get.
+ * */
 export function getNode(context: Graph, id: string) {
   // This function is used to get the node from the graph
   for (const element of context.nodes) {
@@ -70,6 +127,12 @@ export function getNode(context: Graph, id: string) {
   }
 }
 
+/**
+ * Sets the given node to the given node.
+ * @param context - The graph.
+ * @param node - The node to set.
+ * @param setNodes - The function to set the nodes.
+ * */
 export function setNode(context: Graph, node: Node, setNodes: Function) {
   const newNodes = context.nodes.map((n) => {
     if (n.id === node.id) {
@@ -80,12 +143,18 @@ export function setNode(context: Graph, node: Node, setNodes: Function) {
   setNodes(newNodes);
 }
 
+/**
+ * Creates a new node with the given parameters.
+ * @param x - The x coordinate of the node.
+ * @param y - The y coordinate of the node.
+ * @param nodeType - The type of the node.
+ * */
 export function createNewNode(x: number, y: number, nodeType: NodeType) {
   // This function is used to create a new node in the graph
   let newNodeState = new NodeState(x, y, nodeType);
 
   const newNode: Node = {
-    id: newNodeState.getID().toString(),
+    id: newNodeState.getID(),
     type: NodeTypeToString(nodeType),
     data: {
       nodeState: newNodeState,
@@ -95,22 +164,34 @@ export function createNewNode(x: number, y: number, nodeType: NodeType) {
   return newNode;
 }
 
+/**
+ * Creates a context for the graph.
+ * */
 export const GraphContext = createContext<Graph>({
   nodes: [],
   edges: [],
-  reloadComponent: () => {},
+  refresh: () => {},
   selectNode: (nodeState: NodeState | undefined) => {},
   selectedNode: undefined,
   setNodes: () => {},
   setEdges: () => {},
 });
 
+/**
+ * Creates a provider for the graph.
+ * */
 export function useGraph() {
   // This function is used to get the graph from the GraphContext
   return useContext(GraphContext);
 }
 
-function hasCycle(context: Graph, sourceId: string, targetId: string) {
+/**
+ * Checks if a cycle exists in the graph.
+ * @param context - The graph.
+ * @param sourceId - The ID of the source node.
+ * @param targetId - The ID of the target node.
+ * */
+export function hasCycle(context: Graph, sourceId: string, targetId: string) {
   // Use a set to keep track of visited nodes
   const visited = new Set<string>();
 
@@ -141,6 +222,14 @@ function hasCycle(context: Graph, sourceId: string, targetId: string) {
   return visit(targetId); // Start DFS from the target node
 }
 
+/**
+ * Checks if a connection exists between two nodes.
+ * @param context - The graph.
+ * @param sourceId - The ID of the source node.
+ * @param targetId - The ID of the target node.
+ * @param sourceHandle - The handle of the source node.
+ * @param targetHandle - The handle of the target node.
+ * */
 export function connectionExists(
   context: Graph,
   sourceId: string,

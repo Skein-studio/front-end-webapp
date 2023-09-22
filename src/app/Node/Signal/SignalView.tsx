@@ -16,10 +16,14 @@ interface Props {
   fetching: boolean;
 }
 
+/**
+ * The view for the Signal node.
+ * @returns A NodeSmall component.
+ * */
 function SignalView(props: Props) {
   const graph = useGraph();
-  const { nodeState, forceReload } = useContext(NodeContext);
-  const node = nodeState;
+  const nodeContext = useContext(NodeContext);
+  const node = nodeContext.nodeState;
 
   function selectNode() {
     graph.selectNode(node);
@@ -36,7 +40,6 @@ function SignalView(props: Props) {
       selected={node.selected ?? false}
       onClick={selectNode}
     >
-      {/*<GenerateHandles handleType="target" numberOfHandles={numberOfTargetHandles}/> away for now*/}
       {GenerateHandles(node)}
 
       <NodeIcon src={SignalImg}></NodeIcon>
@@ -47,13 +50,12 @@ function SignalView(props: Props) {
         <Container flexdir="row">
           <AudioPlayer
             audioState={modifiedAudioState}
-            audioComputed={props.fetched} // Use the fetched prop
+            audioComputed={props.fetched}
             error=""
             smallplayer={true}
           />
         </Container>
       )}
-      {/*<GenerateHandles handleType="source" numberOfHandles={numberOfSourceHandles}/> away for now */}
     </NodeSmall>
   );
 }
@@ -69,11 +71,3 @@ const LoadingIcon = styled.img`
   right: 70px; // Adjust the position as needed
   top: -10px; // Adjust the position as needed
 `;
-
-// const LoadingIcon = styled.img`
-//   width: 32px;
-//   height: 32px;
-//   position: absolute;
-//   right: 75px; // Adjust the position as needed
-//   top: 15px; // Adjust the position as needed
-// `;

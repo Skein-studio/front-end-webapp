@@ -6,12 +6,16 @@ import { NodeContext } from "@/app/Node/NodeState";
 import { useGraph } from "@/app/Node/GraphContext";
 import useAudio from "@/app/Util/AudioPlayback/useAudio";
 import AudioPlayer from "../AudioPlayback/AudioPlayer";
-import { SourceType } from "../modelTransformation";
+import { SourceTypeModel } from "../../Node/Model/modelDatatypes";
 
-const GenerateAudio: React.FC = () => {
+/**
+ * The view for the GenerateAudio component, which is used to generate audio for the Source node.
+ * @returns A Container component, which contains a Button and an AudioPlayer.
+ * */
+function GenerateAudio() {
   const nodeContext = useContext(NodeContext);
   const node = nodeContext.nodeState;
-  const nodeData = node.model.Data as SourceType;
+  const nodeData = node.model.Data as SourceTypeModel;
   const audioData = nodeData.URL;
   const graph = useGraph();
   const audioState = useAudio(audioData);
@@ -19,10 +23,9 @@ const GenerateAudio: React.FC = () => {
   const handleClick = async () => {
     // This is where we will call our backend service to generate the audio
     // For now, we'll use a dummy audio file
-    nodeData.Dirty = true;
+    node.model.Dirty = true;
     nodeData.URL = "/dummyshort.mp3";
-    graph.reloadComponent(); // TODO: This should be replaced , and the node should be updated via forceReload, not just here in the OpenView but in the small view too (SourcePresenter.tsx, SignalPresenter.tsx, etc.)
-    nodeContext.forceReload(); // TODO: Only this should be needed, but it's not working currently since it doesn't update the node in the small view
+    graph.refresh();
   };
 
   return (
@@ -33,6 +36,6 @@ const GenerateAudio: React.FC = () => {
       )}
     </Container>
   );
-};
+}
 
 export default GenerateAudio;

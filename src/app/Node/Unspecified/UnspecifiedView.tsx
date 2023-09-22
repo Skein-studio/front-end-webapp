@@ -10,10 +10,14 @@ interface Props {
   setNode: (type: NodeType) => void;
 }
 
+/**
+ * The view for the Unspecified node, where you can choose what type of node you want to create.
+ * @returns A NodeSmall component.
+ * */
 function UnspecifiedView(props: Props) {
   const graph = useGraph();
-  const { nodeState, forceReload } = useContext(NodeContext);
-  const node = nodeState;
+  const nodeContext = useContext(NodeContext);
+  const node = nodeContext.nodeState;
 
   function setNode(type: NodeType) {
     props.setNode(type);

@@ -9,6 +9,12 @@ export type AudioState = {
   duration: number;
 };
 
+/**
+ * A hook for playing audio.
+ * @param source The source of the audio.
+ * @param loop Whether or not the audio should loop.
+ * @returns An AudioState object, which contains the source, whether or not the audio is playing, a function to play/pause the audio, the progress of the audio, and the duration of the audio.
+ * */
 const useAudio = (source: string, loop?: boolean) => {
   const [isPlaying, setIsPlaying] = useState(false);
   const [duration, setDuration] = useState(0);

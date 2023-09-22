@@ -2,13 +2,12 @@
 
 import { Container, BlankSpace } from "@/app/Util/BaseStyles";
 import { NodeSmall, NodeTitle, NodeIcon } from "@/app/Node/NodeStyles";
-import { useGraph } from "../GraphContext";
 import { NodeContext } from "../NodeState";
-import { useContext, useEffect } from "react";
+import { useContext } from "react";
 import { styled } from "styled-components";
 import SourceImg from "./source.svg";
 import { GenerateHandles } from "@/app/Util/Handles";
-import { SourceType } from "@/app/Util/modelTransformation";
+import { SourceTypeModel } from "@/app/Node/Model/modelDatatypes";
 
 const PreviewText = styled.p`
   color: white;
@@ -18,48 +17,51 @@ const PreviewText = styled.p`
   bottom: 0px;
 `;
 
-const SmallView = () => {
-  const nodeContext = useContext(NodeContext);
-  const node = nodeContext.nodeState;
+interface SmallViewProps {
+  url: string;
+}
 
+function SmallView(props: SmallViewProps) {
   return (
     <>
-      <PreviewText>{(node.model.Data as SourceType).URL}</PreviewText>
+      <PreviewText>{props.url}</PreviewText>
     </>
   );
-};
+}
 
 type SourceProps = {
-  base: string;
+  selectNode: () => void;
 };
 
-const SourceView: React.FC<SourceProps> = ({ base }) => {
-  const graph = useGraph();
+/**
+ * The view for the Source node.
+ * @returns A NodeSmall component.
+ * */
+function SourceView(props: SourceProps) {
   const nodeContext = useContext(NodeContext);
   const node = nodeContext.nodeState;
-
-  function selectNode() {
-    graph.selectNode(node);
-  }
+  const sourceData = node.model.Data as SourceTypeModel;
 
   return (
-    //can extend width by multiplying a value times the number of outputs - 10 or something in that manner
     <NodeSmall
       widthextension={0}
       selected={node.selected ?? false}
-      onClick={selectNode}
+      onClick={props.selectNode}
     >
       <BlankSpace height={5} width={5}></BlankSpace>
       {<NodeIcon src={SourceImg} />}
       <NodeTitle>
-        source{base != "" && base != undefined ? `[${base}]` : ""}
+        source
+        {sourceData.base != "" && sourceData.base != undefined
+          ? `[${sourceData.base}]`
+          : ""}
       </NodeTitle>
       <Container style={{ flex: 1 }}>
-        {base ? <SmallView /> : <></>}
+        {sourceData.base ? <SmallView url={sourceData.URL} /> : <></>}
         {GenerateHandles(node)}
       </Container>
     </NodeSmall>
   );
-};
+}
 
 export default SourceView;

@@ -13,6 +13,10 @@ export type AudioPlayerProps = {
   smallplayer?: boolean;
 };
 
+/**
+ * The view for the AudioPlayer component, which is used to play audio in various components.
+ * @returns A Container component, which contains a ProgressBarContainer component.
+ * */
 export default function AudioPlayer(props: AudioPlayerProps) {
   return (
     <Container flexdir="row">
