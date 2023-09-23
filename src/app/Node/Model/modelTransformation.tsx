@@ -81,6 +81,58 @@ export const transformGraphToRootModel = (graphContext: Graph): RootModel => ({
 });
 
 /**
+ * Perform a topological sort starting from a child node. This function traverses from child nodes to their parents
+ * and stops if it encounters a node where the 'Dirty' field is true.
+ * 
+ * @param startNodeID {string} - ID of the child node from where to start the sort
+ * @param graph {GraphModel} - The graph object containing the nodes and edges
+ * 
+ * @returns {NodeModel[]} - An array containing nodes in topologically sorted order starting from the child, stopping at a 'Dirty' node
+ */
+function topologicalSortFromChild(startNodeID: string, graph: GraphModel): string[] {
+  const visited = new Set<string>();
+  const stack: string[] = [];
+
+  function visit(node: NodeModel) {
+    // Check if this node has already been visited
+    if (visited.has(node.ID)) {
+      return;
+    }
+
+    // Mark the node as visited
+    visited.add(node.ID);
+
+    // Stop if the node is marked as 'Dirty'
+    if (!node.Dirty) {
+      stack.push(node.ID);
+      return;
+    }
+
+    // Find edges where this node is the parent (Output)
+    const incomingEdges = graph.Edges.filter((edge) => edge.Output.NodeID === node.ID);
+
+    for (const edge of incomingEdges) {
+      const parentNode = graph.Nodes.find((n) => n.ID === edge.Input.NodeID);
+      if (parentNode) {
+        visit(parentNode);
+      }
+    }
+
+    // Add this node to the stack
+    stack.push(node.ID);
+  }
+
+  // Start the sorting from the node with ID = startNodeID
+  const startNode = graph.Nodes.find((n) => n.ID === startNodeID);
+  if (startNode) {
+    visit(startNode);
+  }
+
+  return stack.reverse();
+}
+
+
+/**
  * This function performs a topological sort on the graph model. It takes into account only nodes that are "dirty" and returns a sorted array of their IDs. Topological sort ensures that for every directed edge (u, v), node u comes before v in the sorted list. The function uses a Map to keep track of nodes connected to each node (graph) and another Map (indegree) to keep track of the number of incoming edges for each node. The actual topological sorting is done by using a queue and BFS-like algorithm.
  * @param {GraphModel} graphModel - The graph model to sort
  * @returns {string[]} - A sorted array of node IDs
