@@ -44,11 +44,11 @@ import {
   gatherAllDirtyIds,
   transformGraphToRootModel,
 } from "../../Node/Model/modelTransformation";
-import { handleType } from "../../Node/Model/modelDatatypes";
 import {
+  handleType,
   InputModel,
   OutputModel,
-  EdgeModel as edgeModel,
+  EdgeModel as edgeModel
 } from "../../Node/Model/modelDatatypes";
 
 const proOptions = { hideAttribution: true };
