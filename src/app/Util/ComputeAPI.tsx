@@ -9,7 +9,7 @@ import { Node } from "reactflow";
  * @property {Array} nodeStatus - An array of individual node statuses.
  */
 type Job = {
-  nodeStatus: { status: boolean; nodeID: string }[];
+  nodeStatus: {status: boolean; nodeID: string}[];
   jobStatus: boolean;
 };
 
@@ -137,13 +137,22 @@ export async function ComputeNodesInOrder(
  * TODO @returns {Promise<Response>} - The response from the compute endpoint 
  * */
 const computeNode = (node: NodeModel) =>{
-  fetch(COMPUTE_ENDPOINT, {
+  return fetch(COMPUTE_ENDPOINT, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(node),
   });
 }
+//TODO should be changed to ComputeNodesInOrder
+export async function populateDependenciesByNodeID(
 
+  id: string,
+  graphContext: Graph,
+  maxRetries: number = 100,
+  retryDelay: number = 2000
+) {
+  console.log("REMOVE THIS")
+}
 
 /**
  * This function uploads an audio blob to a specific endpoint and returns the URL of the uploaded file. It uses the FormData object to hold the blob data and sends it via a POST request.

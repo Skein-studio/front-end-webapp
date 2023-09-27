@@ -1,4 +1,4 @@
-<!DOCTYPE html><html class="default" lang="en"><head><meta charSet="utf-8"/><meta http-equiv="x-ua-compatible" content="IE=edge"/><title>OptionsButton | Skein Studio Web App</title><meta name="description" content="Documentation for Skein Studio Web App"/><meta name="viewport" content="width=device-width, initial-scale=1"/><link rel="stylesheet" href="../assets/style.css"/><link rel="stylesheet" href="../assets/highlight.css"/><script defer src="../assets/main.js"></script><script async src="../assets/search.js" id="tsd-search-script"></script><script async src="../assets/navigation.js" id="tsd-nav-script"></script></head><body><script>document.documentElement.dataset.theme = localStorage.getItem("tsd-theme") || "os"</script><header class="tsd-page-toolbar">
+<!DOCTYPE html><html class="default" lang="en"><head><meta charSet="utf-8"/><meta http-equiv="x-ua-compatible" content="IE=edge"/><title>ComputeNodesInOrder | Skein Studio Web App</title><meta name="description" content="Documentation for Skein Studio Web App"/><meta name="viewport" content="width=device-width, initial-scale=1"/><link rel="stylesheet" href="../assets/style.css"/><link rel="stylesheet" href="../assets/highlight.css"/><script defer src="../assets/main.js"></script><script async src="../assets/search.js" id="tsd-search-script"></script><script async src="../assets/navigation.js" id="tsd-nav-script"></script></head><body><script>document.documentElement.dataset.theme = localStorage.getItem("tsd-theme") || "os"</script><header class="tsd-page-toolbar">
 <div class="tsd-toolbar-contents container">
 <div class="table-cell" id="tsd-search" data-base="..">
 <div class="field"><label for="tsd-search-field" class="tsd-widget tsd-toolbar-icon search no-caption"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><use href="#icon-search"></use></svg></label><input type="text" id="tsd-search-field" aria-label="Search"/></div>
@@ -13,27 +13,44 @@
 <div class="tsd-page-title">
 <ul class="tsd-breadcrumb">
 <li><a href="../index.html">Skein Studio Web App</a></li>
-<li><a href="../modules/Util_Flow_OptionsView_OptionsView.html">Util/Flow/OptionsView/OptionsView</a></li>
-<li><a href="Util_Flow_OptionsView_OptionsView.OptionsButton.html">OptionsButton</a></li></ul>
-<h1>Function OptionsButton</h1></div>
+<li><a href="../modules/Util_ComputeAPI.html">Util/ComputeAPI</a></li>
+<li><a href="Util_ComputeAPI.ComputeNodesInOrder.html">ComputeNodesInOrder</a></li></ul>
+<h1>Function ComputeNodesInOrder</h1></div>
 <section class="tsd-panel">
 <ul class="tsd-signatures">
-<li class="tsd-signature tsd-anchor-link" id="OptionsButton"><span class="tsd-kind-call-signature">Options<wbr/>Button</span><span class="tsd-signature-symbol">(</span><span class="tsd-kind-parameter">props</span>, <span class="tsd-kind-parameter">context</span><span class="tsd-signature-symbol">?</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type ">ReactNode</span><a href="#OptionsButton" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></li>
+<li class="tsd-signature tsd-anchor-link" id="ComputeNodesInOrder"><span class="tsd-kind-call-signature">Compute<wbr/>Nodes<wbr/>In<wbr/>Order</span><span class="tsd-signature-symbol">(</span><span class="tsd-kind-parameter">nodeIDs</span>, <span class="tsd-kind-parameter">graph</span>, <span class="tsd-kind-parameter">maxRetries</span><span class="tsd-signature-symbol">?</span>, <span class="tsd-kind-parameter">retryDelay</span><span class="tsd-signature-symbol">?</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type ">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">&gt;</span><a href="#ComputeNodesInOrder" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></li>
 <li class="tsd-description">
-<div class="tsd-comment tsd-typography"><p>A button for the OptionsView.</p>
+<div class="tsd-comment tsd-typography"><p>Computes an array of nodes in a specific order.</p>
 </div>
 <div class="tsd-parameters">
 <h4 class="tsd-parameters-title">Parameters</h4>
 <ul class="tsd-parameter-list">
 <li>
-<h5><span class="tsd-kind-parameter">props</span>: <span class="tsd-signature-type ">OptionsButtonProps</span></h5></li>
+<h5><span class="tsd-kind-parameter">nodeIDs</span>: <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">[]</span></h5>
+<div class="tsd-comment tsd-typography"><p>An array of node IDs to be computed.</p>
+</div>
+<div class="tsd-comment tsd-typography"></div></li>
 <li>
-<h5><code class="tsd-tag ts-flagOptional">Optional</code> <span class="tsd-kind-parameter">context</span>: <span class="tsd-signature-type">any</span></h5></li></ul></div>
-<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type ">ReactNode</span></h4><p>A button component.</p>
-
-<div class="tsd-comment tsd-typography"></div><aside class="tsd-sources">
+<h5><span class="tsd-kind-parameter">graph</span>: <a href="../types/Node_GraphContext.Graph.html" class="tsd-signature-type tsd-kind-type-alias">Graph</a></h5>
+<div class="tsd-comment tsd-typography"><p>The graph containing the nodes to be computed.</p>
+</div>
+<div class="tsd-comment tsd-typography"></div></li>
+<li>
+<h5><span class="tsd-kind-parameter">maxRetries</span>: <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol"> = 100</span></h5>
+<div class="tsd-comment tsd-typography"><p>Maximum number of retries in case of failure. Default is 100.</p>
+</div>
+<div class="tsd-comment tsd-typography"></div></li>
+<li>
+<h5><span class="tsd-kind-parameter">retryDelay</span>: <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol"> = 2000</span></h5>
+<div class="tsd-comment tsd-typography"><p>Time delay between each retry in milliseconds. Default is 2000.</p>
+</div>
+<div class="tsd-comment tsd-typography"></div></li></ul></div>
+<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type ">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">&gt;</span></h4>
+<div class="tsd-comment tsd-typography">
+<h4>Throws</h4><p>Will throw an error if a node is not found or if the job was stopped.</p>
+</div><aside class="tsd-sources">
 <ul>
-<li>Defined in node_modules/@types/react/index.d.ts:556</li></ul></aside></li></ul></section></div>
+<li>Defined in <a href="https://github.com/Skein-studio/front-end-webapp/blob/63009531/src/app/Util/ComputeAPI.tsx#L93">src/app/Util/ComputeAPI.tsx:93</a></li></ul></aside></li></ul></section></div>
 <div class="col-sidebar">
 <div class="page-menu">
 <div class="tsd-navigation settings">
@@ -55,6 +72,8 @@
 <li><a href="../modules/Node_GraphContext.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2"></use></svg>Node/GraphContext</a></li>
 <li><a href="../modules/Node_Merge_MergePresenter.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2"></use></svg>Node/Merge/MergePresenter</a></li>
 <li><a href="../modules/Node_Merge_MergeView.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2"></use></svg>Node/Merge/MergeView</a></li>
+<li><a href="../modules/Node_Model_modelDatatypes.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2"></use></svg>Node/Model/modelDatatypes</a></li>
+<li><a href="../modules/Node_Model_modelTransformation.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2"></use></svg>Node/Model/modelTransformation</a></li>
 <li><a href="../modules/Node_NodeState.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2"></use></svg>Node/NodeState</a></li>
 <li><a href="../modules/Node_NodeStyles.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2"></use></svg>Node/NodeStyles</a></li>
 <li><a href="../modules/Node_OpenNode_OpenNodePresenter.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2"></use></svg>Node/OpenNode/OpenNodePresenter</a></li>
@@ -71,8 +90,6 @@
 <li><a href="../modules/Node_Split_SplitView.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2"></use></svg>Node/Split/SplitView</a></li>
 <li><a href="../modules/Node_Unspecified_UnspecifiedPresenter.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2"></use></svg>Node/Unspecified/UnspecifiedPresenter</a></li>
 <li><a href="../modules/Node_Unspecified_UnspecifiedView.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2"></use></svg>Node/Unspecified/UnspecifiedView</a></li>
-<li><a href="../modules/Util_AudioGenerator_GenerateAudio.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2"></use></svg>Util/AudioGenerator/GenerateAudio</a></li>
-<li><a href="../modules/Util_AudioImporter_ImportAudio.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2"></use></svg>Util/AudioImporter/ImportAudio</a></li>
 <li>Loading...</li></ul></nav></div></div></div>
 <div class="tsd-generator">
 <p>Generated using <a href="https://typedoc.org/" rel="noopener" target="_blank">TypeDoc</a></p></div>
