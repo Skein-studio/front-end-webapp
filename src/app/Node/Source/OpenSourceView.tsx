@@ -22,7 +22,7 @@ function BaseComponent(base: string) {
       <Container flexdir="row">
         <Button onClick={() => handleBaseChange("record")}>record</Button>
         <Button onClick={() => handleBaseChange("import")}>import</Button>
-        <Button onClick={() => handleBaseChange("generate")} disabled={true}>
+        <Button onClick={() => handleBaseChange("generate")} disabled={false}>
           generate
         </Button>
       </Container>

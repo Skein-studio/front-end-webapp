@@ -38,6 +38,7 @@ export interface NodeModel {
 export interface SourceTypeModel {
   URL: string;
   base: string; // whether the source is a record, import or generate type
+  Prompt:string;
 }
 export interface SignalTypeModel {
   Prompt: string;

@@ -172,4 +172,32 @@ const BlankSpace = styled.div<BlankProps>`
   padding: 4px;
   margin: 4px;
 `;
-export { Text, Button, Container, BlankSpace, OuterBox, GraphNameInput };
+
+const StyledInput = styled.input`
+  width: 100%;
+  font-family: verdana;
+  margin: 0;
+  font-size: 12px;
+  padding: 10px;
+  border: none;
+  border-radius: 10px;
+  background-color: lightgrey; // Adjust as needed
+`;
+
+const FieldTitle = styled.div`
+  left: 0;
+  font-size: 14px;
+  font-family: verdana;
+  display: flex;
+  align-items: center;
+  margin-right: auto; // pushes the element to the left
+  margin-bottom: 10px;
+
+  & > img {
+    width: 16px;
+    height: 16px;
+    margin-right: 4px;
+  }
+`;
+
+export { Text, Button, Container, BlankSpace, OuterBox, GraphNameInput, StyledInput, FieldTitle };

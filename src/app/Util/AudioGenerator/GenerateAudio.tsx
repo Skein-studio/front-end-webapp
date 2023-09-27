@@ -1,7 +1,7 @@
 //GenerateAudio.tsx
 
 import React, { useContext } from "react";
-import { Button, Container } from "../BaseStyles";
+import { BlankSpace, Button, Container, FieldTitle, StyledInput } from "../BaseStyles";
 import { NodeContext } from "@/app/Node/NodeState";
 import { useGraph } from "@/app/Node/GraphContext";
 import useAudio from "@/app/Util/AudioPlayback/useAudio";
@@ -19,6 +19,12 @@ function GenerateAudio() {
   const audioData = nodeData.URL;
   const graph = useGraph();
   const audioState = useAudio(audioData);
+  const [prompt, setPrompt] = React.useState(nodeData.Prompt);
+
+  const handlePromptChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setPrompt(event.target.value);
+    nodeData.Prompt = event.target.value;
+  };
 
   const handleClick = async () => {
     // This is where we will call our backend service to generate the audio
@@ -30,6 +36,18 @@ function GenerateAudio() {
 
   return (
     <Container>
+        <FieldTitle>
+          🤖
+          <p>
+           Prompt
+          </p>
+        </FieldTitle>
+        <StyledInput
+          type="text"
+          value={prompt}
+          onChange={handlePromptChange}
+        />
+        <BlankSpace width={5} height={10} />
       <Button onClick={handleClick}>Generate</Button>
       {audioData && (
         <AudioPlayer audioState={audioState} audioComputed={true} error="" />

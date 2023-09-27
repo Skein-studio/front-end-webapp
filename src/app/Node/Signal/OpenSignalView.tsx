@@ -1,6 +1,6 @@
 // OpenSignalView.tsx
 
-import { Container, Button, Text } from "@/app/Util/BaseStyles";
+import { Container, Button, Text, StyledInput, FieldTitle } from "@/app/Util/BaseStyles";
 import styled from "styled-components";
 import StarImg from "../Signal/stars.svg";
 import { NodeContext } from "../NodeState";
@@ -56,33 +56,6 @@ export default function OpenSignalView(props: Props) {
     </Container>
   );
 }
-
-const FieldTitle = styled.div`
-  left: 0;
-  font-size: 14px;
-  font-family: verdana;
-  display: flex;
-  align-items: center;
-  margin-right: auto; // pushes the element to the left
-  margin-bottom: 10px;
-
-  & > img {
-    width: 16px;
-    height: 16px;
-    margin-right: 4px;
-  }
-`;
-
-const StyledInput = styled.input`
-  width: 100%;
-  font-family: verdana;
-  margin: 0;
-  font-size: 12px;
-  padding: 10px;
-  border: none;
-  border-radius: 10px;
-  background-color: lightgrey; // Adjust as needed
-`;
 
 const Dropdown = styled.div`
   width: 100%;
