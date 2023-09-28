@@ -7,12 +7,14 @@ import redo from "./redo.svg";
 import trashcan from "./trashcan.svg";
 import undo from "./undo.svg";
 import edit from "./edit.svg";
+import load from "./load.svg";
 
 interface Props {
   toggle: () => void;
   deleteSelectedNode: () => void;
   deleteSelectedEdge: () => void;
   addButtonHandler: () => void;
+  loadFromRootModel: ()=>void;
 }
 
 const Tooltip = styled.div`
@@ -72,6 +74,11 @@ export default function OptionsView(props: Props) {
     <OptionsContainer>
       <OptionsButton img={edit} callback={props.toggle} tooltipText="Edit" />
       <OptionsButton
+        img={plus}
+        callback={() => props.addButtonHandler()}
+        tooltipText="Add"
+      />
+      <OptionsButton
         img={trashcan}
         callback={() => {
           props.deleteSelectedNode();
@@ -89,11 +96,13 @@ export default function OptionsView(props: Props) {
         callback={() => console.log("redo")}
         tooltipText="Redo"
       />
+
       <OptionsButton
-        img={plus}
-        callback={() => props.addButtonHandler()}
-        tooltipText="Add"
+        img={load}
+        callback={() => props.loadFromRootModel()}
+        tooltipText="Load"
       />
+      
     </OptionsContainer>
   );
 }
@@ -151,7 +160,7 @@ const OptionsContainer = styled.div`
   justify-content: space-between;
   align-items: center;
   height: 50px;
-  width: 200px;
+  width: 250px;
   z-index: 2;
   padding: 10px;
   background-color: white;

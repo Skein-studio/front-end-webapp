@@ -4,6 +4,7 @@ import { Position } from "reactflow";
 import { NodeState } from "../Node/NodeState";
 import { StyledHandle, NODE_WIDTH } from "../Node/NodeStyles";
 import styled from "styled-components";
+import { useUpdateNodeInternals } from 'reactflow';
 
 interface HandleProps {
   handletype: "source" | "target";
@@ -20,6 +21,9 @@ const HandleSpacing = styled.div<HandleProps>`
 `;
 
 import { purple } from "../Node/NodeStyles";
+import { useGraph } from "../Node/GraphContext";
+import { update } from "lodash";
+import { useEffect } from "react";
 
 const HandleName = styled.div`
   // This is the text that appears above the handle, temporary style // TODO: make this look better
@@ -42,6 +46,7 @@ export function GenerateHandles(
   node: NodeState,
   displayOutputHandleNames?: boolean
 ) {
+
   function createOutputHandles() {
     const handles = [];
     for (let i = 0; i < node.model.Outputs.length; i++) {
@@ -57,7 +62,9 @@ export function GenerateHandles(
           />
         </HandleSpacing>
       );
+
     }
+    
     return handles;
   }
 
@@ -74,7 +81,6 @@ export function GenerateHandles(
         </HandleSpacing>
       );
     }
-
     return handles;
   }
 

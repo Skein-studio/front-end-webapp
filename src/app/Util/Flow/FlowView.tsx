@@ -44,6 +44,7 @@ interface Props {
   deleteSelectedNode: () => void;
   deleteSelectedEdge: () => void;
   addButtonHandler: () => void;
+  loadFromRootModel: ()=>void;
 }
 
 /**
@@ -66,6 +67,8 @@ function FlowView(props: Props) {
         deleteSelectedNode={props.deleteSelectedNode}
         deleteSelectedEdge={props.deleteSelectedEdge}
         addButtonHandler={props.addButtonHandler}
+        loadFromRootModel={props.loadFromRootModel}
+        
       />
       <Overlay
         show={props.openSelectedNode ? true : undefined}

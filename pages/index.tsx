@@ -19,35 +19,24 @@ export default function Home() {
         "Graph": {
             "Edges": [
                 {
-                    "ID": "[62889fba-1e12-4867-8019-1d3199aaf8c4:[output-[0] 62889fba-1e12-4867-8019-1d3199aaf8c4]out[0]]-[9774941b-1886-4dcb-ae85-b824c575644d:9774941b-1886-4dcb-ae85-b824c575644din[0]]",
+                    "ID": "[eda9bfb3-f55c-410e-aec1-4ada87da1d78:[output-[0] eda9bfb3-f55c-410e-aec1-4ada87da1d78]out[0]]-[a8e389b5-261d-4574-b337-53b90e42a322:a8e389b5-261d-4574-b337-53b90e42a322in[0]]",
                     "Input": {
                         "InputName": "input-[0]",
-                        "NodeID": "9774941b-1886-4dcb-ae85-b824c575644d"
+                        "NodeID": "a8e389b5-261d-4574-b337-53b90e42a322"
                     },
                     "Output": {
-                        "NodeID": "62889fba-1e12-4867-8019-1d3199aaf8c4",
+                        "NodeID": "eda9bfb3-f55c-410e-aec1-4ada87da1d78",
                         "OutputName": "output-[0]"
                     }
                 },
                 {
-                    "ID": "[a3cc9c13-31e1-4f81-9dc6-7e75080d4b80:[output-[0] a3cc9c13-31e1-4f81-9dc6-7e75080d4b80]out[0]]-[a48718c2-a050-4724-8570-29c73eef8b41:a48718c2-a050-4724-8570-29c73eef8b41in[0]]",
+                    "ID": "[f739abeb-f167-4a38-a30b-9bce7b053a26:[output-[0] f739abeb-f167-4a38-a30b-9bce7b053a26]out[0]]-[eda9bfb3-f55c-410e-aec1-4ada87da1d78:eda9bfb3-f55c-410e-aec1-4ada87da1d78in[0]]",
                     "Input": {
                         "InputName": "input-[0]",
-                        "NodeID": "a48718c2-a050-4724-8570-29c73eef8b41"
+                        "NodeID": "eda9bfb3-f55c-410e-aec1-4ada87da1d78"
                     },
                     "Output": {
-                        "NodeID": "a3cc9c13-31e1-4f81-9dc6-7e75080d4b80",
-                        "OutputName": "output-[0]"
-                    }
-                },
-                {
-                    "ID": "[a48718c2-a050-4724-8570-29c73eef8b41:[output-[0] a48718c2-a050-4724-8570-29c73eef8b41]out[0]]-[62889fba-1e12-4867-8019-1d3199aaf8c4:62889fba-1e12-4867-8019-1d3199aaf8c4in[0]]",
-                    "Input": {
-                        "InputName": "input-[0]",
-                        "NodeID": "62889fba-1e12-4867-8019-1d3199aaf8c4"
-                    },
-                    "Output": {
-                        "NodeID": "a48718c2-a050-4724-8570-29c73eef8b41",
+                        "NodeID": "f739abeb-f167-4a38-a30b-9bce7b053a26",
                         "OutputName": "output-[0]"
                     }
                 }
@@ -59,46 +48,47 @@ export default function Home() {
                         "base": ""
                     },
                     "Dirty": true,
-                    "ID": "a3cc9c13-31e1-4f81-9dc6-7e75080d4b80",
+                    "ID": "f739abeb-f167-4a38-a30b-9bce7b053a26",
                     "Inputs": [],
                     "Outputs": [
                         {
-                            "ID": "[output-[0] a3cc9c13-31e1-4f81-9dc6-7e75080d4b80]out[0]",
+                            "ID": "[output-[0] f739abeb-f167-4a38-a30b-9bce7b053a26]out[0]",
                             "Name": "output-[0]",
                             "Src": ""
                         }
                     ],
                     "Position": {
-                        "x": 156.3,
-                        "y": 561
+                        "x": 149.63333333333333,
+                        "y": 262.3333333333333
                     },
                     "Type": "source"
                 },
                 {
-                    "Data": {
-                        "Prompt": "",
-                        "Seed": "1234"
-                    },
+                    "Data": {},
                     "Dirty": true,
-                    "ID": "62889fba-1e12-4867-8019-1d3199aaf8c4",
+                    "ID": "eda9bfb3-f55c-410e-aec1-4ada87da1d78",
                     "Inputs": [
                         {
-                            "ID": "62889fba-1e12-4867-8019-1d3199aaf8c4in[0]",
+                            "ID": "eda9bfb3-f55c-410e-aec1-4ada87da1d78in[0]",
                             "Name": "input-[0]"
+                        },
+                        {
+                            "ID": "eda9bfb3-f55c-410e-aec1-4ada87da1d78in[1]",
+                            "Name": "input-[1]"
                         }
                     ],
                     "Outputs": [
                         {
-                            "ID": "[output-[0] 62889fba-1e12-4867-8019-1d3199aaf8c4]out[0]",
+                            "ID": "[output-[0] eda9bfb3-f55c-410e-aec1-4ada87da1d78]out[0]",
                             "Name": "output-[0]",
                             "Src": ""
                         }
                     ],
                     "Position": {
-                        "x": 137,
-                        "y": 908.3333333333334
+                        "x": 144.29999999999995,
+                        "y": 440.99999999999994
                     },
-                    "Type": "signal"
+                    "Type": "merge"
                 },
                 {
                     "Data": {
@@ -106,52 +96,25 @@ export default function Home() {
                         "Seed": "1234"
                     },
                     "Dirty": true,
-                    "ID": "9774941b-1886-4dcb-ae85-b824c575644d",
+                    "ID": "a8e389b5-261d-4574-b337-53b90e42a322",
                     "Inputs": [
                         {
-                            "ID": "9774941b-1886-4dcb-ae85-b824c575644din[0]",
+                            "ID": "a8e389b5-261d-4574-b337-53b90e42a322in[0]",
                             "Name": "input-[0]"
                         }
                     ],
                     "Outputs": [
                         {
-                            "ID": "[output-[0] 9774941b-1886-4dcb-ae85-b824c575644d]out[0]",
+                            "ID": "[output-[0] a8e389b5-261d-4574-b337-53b90e42a322]out[0]",
                             "Name": "output-[0]",
                             "Src": ""
                         }
                     ],
                     "Position": {
                         "x": 126.33333333333334,
-                        "y": 1072.3333333333333
+                        "y": 580.3333333333334
                     },
                     "Type": "signal"
-                },
-                {
-                    "Data": {},
-                    "Dirty": true,
-                    "ID": "a48718c2-a050-4724-8570-29c73eef8b41",
-                    "Inputs": [
-                        {
-                            "ID": "a48718c2-a050-4724-8570-29c73eef8b41in[0]",
-                            "Name": "input-[0]"
-                        },
-                        {
-                            "ID": "a48718c2-a050-4724-8570-29c73eef8b41in[1]",
-                            "Name": "input-[1]"
-                        }
-                    ],
-                    "Outputs": [
-                        {
-                            "ID": "[output-[0] a48718c2-a050-4724-8570-29c73eef8b41]out[0]",
-                            "Name": "output-[0]",
-                            "Src": ""
-                        }
-                    ],
-                    "Position": {
-                        "x": 152.3,
-                        "y": 713
-                    },
-                    "Type": "merge"
                 }
             ]
         },

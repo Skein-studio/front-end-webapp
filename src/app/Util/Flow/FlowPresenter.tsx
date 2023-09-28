@@ -13,6 +13,7 @@ import {
   OnConnectStartParams,
   OnSelectionChangeParams,
   Connection,
+  useUpdateNodeInternals,
 } from "reactflow";
 import SourcePresenter from "../../Node/Source/SourcePresenter";
 import UnspecifiedPresenter from "../../Node/Unspecified/UnspecifiedPresenter";
@@ -47,13 +48,11 @@ import {
   transformGraphToRootModel,
 } from "../../Node/Model/modelTransformation";
 import {
-  getHandleTypes,
   InputModel,
   OutputModel,
   EdgeModel as edgeModel,
   RootModel
 } from "../../Node/Model/modelDatatypes";
-import { forEach } from "lodash";
 
 const proOptions = { hideAttribution: true };
 
@@ -150,6 +149,7 @@ export function FlowPresenter(props:FlowPresenterProps) {
   const [selectedNodeIsOpen, setSelectedNodeIsOpen] = useState<boolean>(false);
   const [connectStartNode, setConnectStartNode] = useState<Node>();
   const [connectStartHandleId, setConnectStartHandleId] = useState<string>();
+  const updateInternals = useUpdateNodeInternals();
 
   const refresh = () => {
     console.warn("Refreshed graph (refresh())");
@@ -307,20 +307,21 @@ export function FlowPresenter(props:FlowPresenterProps) {
     console.log("new edge model: ", newEdgeModel);
     return newEdgeModel;
   };
+  
 
   const onConnect = useCallback(
-    (connection: any) => {
+    (connection: Connection) => {
       // Get the source and target nodes
       const sourceNode = nodes.find((node) => node.id === connection.source);
       const targetNode = nodes.find((node) => node.id === connection.target);
-
+      
       if (
         connectionExists(
           graph,
-          connection.source,
-          connection.target,
-          connection.sourceHandle,
-          connection.targetHandle
+          connection.source!,
+          connection.target!,
+          connection.sourceHandle!,
+          connection.targetHandle!
         )
       ) {
         console.log("Connection already exists", connection, edges);
@@ -346,6 +347,7 @@ export function FlowPresenter(props:FlowPresenterProps) {
           return newEdges;
         }); // add the edge to the list of edges, in the graph
       }
+      refresh();  
     },
     [setEdges, nodes]
   );
@@ -481,17 +483,16 @@ export function FlowPresenter(props:FlowPresenterProps) {
     addNewNode(x, y, NodeType.Unspecified);
   }
 
-  useMemo(() => {
-
-    if(props.rootModel){
-      let loadedNodes = RootModelToNodes(props.rootModel);
-      let loadedEdges = RootModelToEdges(props.rootModel);
-      setNodes(loadedNodes);
-      setEdges(loadedEdges);
-      graph.refresh();
-      console.log("Graph loaded: ", props.rootModel, graph);
-      return;
+  function loadFromRootModel() {
+    if (props.rootModel) {
+      const nodes = RootModelToNodes(props.rootModel);
+      const edges = RootModelToEdges(props.rootModel);
+      setNodes(nodes);
+      setEdges(edges);
     }
+  }
+
+  useMemo(() => {
     
     if (nodes.length == 0) {
       addNewNode(
@@ -505,7 +506,6 @@ export function FlowPresenter(props:FlowPresenterProps) {
   }, []);
 
   return (
-    <ReactFlowProvider>
       <GraphContext.Provider value={graph}>
         <FlowView
           flowKey={flowKey}
@@ -532,9 +532,9 @@ export function FlowPresenter(props:FlowPresenterProps) {
           handlePaneClick={handlePaneClick}
           onSelectionChange={onSelectionChange}
           addButtonHandler={addButtonHandler}
+          loadFromRootModel={loadFromRootModel}
         />
       </GraphContext.Provider>
-    </ReactFlowProvider>
   );
 }
 

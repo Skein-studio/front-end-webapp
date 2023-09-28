@@ -1,5 +1,5 @@
 //MergePresenter.tsx
-
+import { useUpdateNodeInternals } from 'reactflow';
 import React, { useEffect, useContext } from "react";
 import MergeView from "./MergeView";
 import { NodeContext } from "../NodeState";
@@ -13,6 +13,7 @@ const MergePresenter: React.FC = () => {
   const nodeContext = useContext(NodeContext);
   const node = nodeContext.nodeState;
   const graph = useGraph();
+  const updateInternals = useUpdateNodeInternals();
 
   useEffect(() => {
     // Check if all target handles are connected
@@ -34,14 +35,16 @@ const MergePresenter: React.FC = () => {
     ) {
       addTargetHandle();
     }
+
   }, [node, graph.edges]);
 
   const addTargetHandle = () => {
+    updateInternals(node.getID());
     if (node.model.Inputs.length >= 10) {
       return;
     }
     node.addTargetHandle();
-    graph.refresh();
+    
   };
 
   return <MergeView />;
