@@ -7,8 +7,9 @@
 */
 
 import { createContext, useContext } from "react";
-import { NodeState, NodeTypeToString, NodeType } from "./NodeState";
+import { NodeState, NodeTypeToString, NodeType, StringToNodeType } from "./NodeState";
 import { Edge, Node } from "reactflow";
+import { RootModel } from "./Model/modelDatatypes";
 
 /**
  * Represents a graph data structure.
@@ -259,4 +260,61 @@ export function connectionExists(
   }
 
   return exists;
+}
+
+/**
+ * Converts the RootModel to nodes.
+ * @param rootModel - The RootModel to convert.
+ * @returns The nodes.
+ * */
+export function RootModelToNodes(rootModel:RootModel) {
+  // This function is used to convert the RootModel to nodes
+  let nodes: Node[] = [];
+  let nodeModels = rootModel.Sketch.Graph.Nodes;
+
+  for (let i = 0; i < nodeModels.length; i++) {
+    let nodeModel = nodeModels[i];
+    let nodeType = StringToNodeType(nodeModel.Type);
+    let newNodeState = new NodeState(
+      nodeModel.Position.x,
+      nodeModel.Position.y,
+      StringToNodeType(nodeModel.Type)
+    );
+    newNodeState.model = nodeModel;
+    const newNode: Node = {
+      id: newNodeState.getID(),
+      type: NodeTypeToString(nodeType),
+      data: {
+        nodeState: newNodeState,
+      },
+      position: { x: nodeModel.Position.x, y: nodeModel.Position.y },
+    };
+    nodes.push(newNode);
+  }
+  return nodes;
+}
+
+/**
+ * Converts the RootModel to edges.
+ * @param rootModel - The RootModel to convert.
+ * @returns The edges.
+ * */
+export function RootModelToEdges(rootModel:RootModel) {
+  let edges: Edge[] = [];
+  let edgeModels = rootModel.Sketch.Graph.Edges;
+
+  for(let i = 0; i < edgeModels.length; i++) {
+    let edgeModel = edgeModels[i];
+    let newEdge: Edge = {
+      id: edgeModel.ID,
+      source: edgeModel.Output.NodeID,
+      sourceHandle: edgeModel.Output.OutputName,
+      target: edgeModel.Input.NodeID,
+      targetHandle: edgeModel.Input.InputName,
+    };
+    newEdge.data = edgeModel;
+    edges.push(newEdge);
+    console.log("Converted an edgeModel to edge", edgeModel, newEdge);
+  }
+  return edges;
 }

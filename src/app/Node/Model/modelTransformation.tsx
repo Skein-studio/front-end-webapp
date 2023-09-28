@@ -8,10 +8,11 @@ import { EdgeModel, GraphModel, NodeModel, RootModel } from "./modelDatatypes";
  * @param {string} nodeId - The node ID to search for
  * @returns {string[]} - An array of child node IDs
  */
-const getChildNodeIds = (graph: GraphModel, nodeId: string): string[] =>
-  graph.Edges.filter((edge) => edge.Output.NodeID === nodeId).map(
+function getChildNodeIds (graph: GraphModel, nodeId: string): string[] {
+  return graph.Edges.filter((edge) => edge.Output.NodeID === nodeId).map(
     (edge) => edge.Input.NodeID
   );
+}
 
 /**
  * This is a recursive function that traverses the graph from a given nodeId and collects IDs of nodes that are "dirty" or have a dirty parent. The visited set keeps track of nodes already visited to prevent infinite recursion.

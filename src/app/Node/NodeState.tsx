@@ -100,7 +100,7 @@ export class NodeState {
   addTargetHandle() {
     this.model.Inputs.push({
       ID: this.model.ID + "in[" + this.model.Inputs.length + "]",
-      Name: "input" + this.model.Inputs.length,
+      Name: "input-[" + this.model.Inputs.length + "]",
     });
   }
 
@@ -119,8 +119,8 @@ export class NodeState {
 
     const add = () => {
       newInputs.push({
-        ID: "[" + ID + "]in[" + newInputs.length + "]",
-        Name: "input" + newInputs.length,
+        ID: ID + "in[" + newInputs.length + "]",
+        Name: "input-[" + newInputs.length + "]",
       });
     };
 
@@ -154,7 +154,7 @@ export class NodeState {
 
     const add = (name: string) => {
       newOutputs.push({
-        ID: "[" + ID + "]out[" + newOutputs.length + "]",
+        ID: "[" + name + " " + ID + "]out[" + newOutputs.length + "]",
         Name: name,
         Src: "",
       });
@@ -177,10 +177,9 @@ export class NodeState {
       add("bass");
     } else {
       for (let i = 0; i < numOutputs; i++) {
-        add("output[" + i + "]");
+        add("output-[" + i + "]");
       }
     }
-
     return newOutputs;
   }
 

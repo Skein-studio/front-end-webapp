@@ -12,13 +12,13 @@ export interface GraphModel {
 
 export interface EdgeModel {
   ID: string;
-  Input: {
-    NodeID: string;
-    InputName: string;
-  };
   Output: {
     NodeID: string;
     OutputName: string;
+  };
+  Input: {
+    NodeID: string;
+    InputName: string;
   };
 }
 export interface NodeModel {
@@ -62,13 +62,21 @@ export type Coordinate = {
   y: number;
 };
 
-export enum handleType {
-  "drums",
-  "piano",
-  "vocals",
-  "guitar",
-  "other",
-  "bass",
+export function getHandleTypes(str:string) {
+  switch(str){
+  case("drums"):
+    return [0];
+  case("piano"):
+    return [1];
+  case("vocals"):
+    return [2];
+  case("guitar"):
+    return [3];
+  case("other"):
+    return [4];
+  case("bass"):
+    return [5];
+  }
 }
 const createDummyEdgeModel = (): EdgeModel => ({
   ID: "dummyEdgeID",

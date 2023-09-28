@@ -31,6 +31,8 @@ import {
   getNode,
   connectionExists,
   setDirtyNodes,
+  RootModelToNodes,
+  RootModelToEdges,
 } from "../../Node/GraphContext";
 import OpenNodePresenter from "@/app/Node/OpenNode/OpenNodePresenter";
 import FlowView from "./FlowView";
@@ -45,11 +47,13 @@ import {
   transformGraphToRootModel,
 } from "../../Node/Model/modelTransformation";
 import {
-  handleType,
+  getHandleTypes,
   InputModel,
   OutputModel,
-  EdgeModel as edgeModel
+  EdgeModel as edgeModel,
+  RootModel
 } from "../../Node/Model/modelDatatypes";
+import { forEach } from "lodash";
 
 const proOptions = { hideAttribution: true };
 
@@ -83,6 +87,10 @@ const nodeTypes = {
 };
 
 const START_ZOOM = 0.75;
+
+interface FlowPresenterProps {
+  rootModel?: RootModel;
+}
 
 /**
  * FlowPresenter is the main component of the app, it contains handlers for all the events that can happen in ReactFlow component
@@ -121,9 +129,10 @@ const START_ZOOM = 0.75;
  * @var connectStartNode: the node that the user started connecting from
  * @var connectStartHandleId: the handle id of the node that the user started connecting from
  * @var graph: the graph object that is passed to the GraphContext.Provider
+ * @param {FlowPresenterProps} props - The props of the component (a RootModel, for loading a graph).
  * @returns {JSX.Element} The ReactFlow component.
  */
-export function FlowPresenter() {
+export function FlowPresenter(props:FlowPresenterProps) {
   // export is for documentation purposes
   const reactFlowInstance = useReactFlow();
   const window = useWindowDimensions();
@@ -272,8 +281,6 @@ export function FlowPresenter() {
         (node) => node.id == connection.target
       )?.data.nodeState.model.Inputs;
     }
-    let n = (nodes.find((node) => node.id == connection.source)?.data as any)
-      .nodeState as NodeState;
 
     let outputsOfSourceNode: OutputModel[] = graph.nodes.find(
       (node) => node.id == connection.source
@@ -286,23 +293,19 @@ export function FlowPresenter() {
       (output: OutputModel) => output.ID == connection.sourceHandle
     )?.Name; // get the name of the output
 
-    if (n.model.Type == "split") {
-      outputName =
-        handleType[
-          parseInt(connection.sourceHandle!.split("[", 2)[1].split("]", 2)[0])
-        ];
-    }
-    return {
-      ID: `reactflow__edge-${connection.source}${connection.sourceHandle}-${connection.target}${connection.target}out[0]`,
-      Output: {
-        NodeID: connection.source!,
-        OutputName: outputName,
-      },
+    let newEdgeModel = {
+      ID: `[${connection.source}:${connection.sourceHandle}]-[${connection.target}:${connection.targetHandle}]`,
       Input: {
         NodeID: connection.target!,
         InputName: inputName,
       },
+      Output: {
+        NodeID: connection.source!,
+        OutputName: outputName,
+      },
     } as edgeModel;
+    console.log("new edge model: ", newEdgeModel);
+    return newEdgeModel;
   };
 
   const onConnect = useCallback(
@@ -468,18 +471,6 @@ export function FlowPresenter() {
     }
   }
 
-  useMemo(() => {
-    console.log("Graph loaded: ", graph);
-    if (nodes.length == 0) {
-      addNewNode(
-        ((window.width * 0.95) / 2 - viewport.x) / viewport.zoom -
-          NODE_WIDTH / 2,
-        ((window.height * 0.95) / 2 - viewport.y) / viewport.zoom - NODE_HEIGHT,
-        NodeType.Source
-      );
-    }
-  }, []);
-
   function addButtonHandler() {
     // this is called when the user clicks on the "add" button
 
@@ -489,6 +480,29 @@ export function FlowPresenter() {
       ((window.height * 0.95) / 2 - viewport.y) / viewport.zoom - NODE_HEIGHT; // centered, relative to the viewport, not the window
     addNewNode(x, y, NodeType.Unspecified);
   }
+
+  useMemo(() => {
+
+    if(props.rootModel){
+      let loadedNodes = RootModelToNodes(props.rootModel);
+      let loadedEdges = RootModelToEdges(props.rootModel);
+      setNodes(loadedNodes);
+      setEdges(loadedEdges);
+      graph.refresh();
+      console.log("Graph loaded: ", props.rootModel, graph);
+      return;
+    }
+    
+    if (nodes.length == 0) {
+      addNewNode(
+        ((window.width * 0.95) / 2 - viewport.x) / viewport.zoom -
+          NODE_WIDTH / 2,
+        ((window.height * 0.95) / 2 - viewport.y) / viewport.zoom - NODE_HEIGHT,
+        NodeType.Source
+      );
+    }
+    console.log("Graph created: ", graph);
+  }, []);
 
   return (
     <ReactFlowProvider>
@@ -528,10 +542,10 @@ export function FlowPresenter() {
  * Wrapper for the ReactFlow component
  * @returns {JSX.Element} The wrapped ReactFlow component.
  */
-function FlowWrapper() {
+function FlowWrapper(props:FlowPresenterProps) {
   return (
     <ReactFlowProvider>
-      <FlowPresenter></FlowPresenter>
+      <FlowPresenter rootModel={props.rootModel}></FlowPresenter>
     </ReactFlowProvider>
   );
 }
