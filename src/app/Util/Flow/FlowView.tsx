@@ -1,16 +1,15 @@
 //FlowView.tsx
 
-import React, { useState } from "react";
 import ReactFlow, {
   MiniMap,
   Background,
   BackgroundVariant,
   Node,
   Edge,
-  Viewport,
   NodeChange,
   EdgeChange,
   OnSelectionChangeParams,
+  Viewport,
 } from "reactflow";
 import { OuterBox, GraphNameInput } from "../BaseStyles";
 import styled from "styled-components";
@@ -27,12 +26,10 @@ interface Props {
     params: any
   ) => void;
   onConnectEnd: (event: MouseEvent | TouchEvent) => void;
-  onMove: (event: MouseEvent | TouchEvent, viewport: Viewport) => void;
   onNodesChange: (change: NodeChange[]) => void;
   onEdgesChange: (change: EdgeChange[]) => void;
   onConnect: (connection: any) => void;
   onNodeDragStop: (event: React.MouseEvent, node: Node, nodes: Node[]) => void;
-  viewport: Viewport;
   openNodeView: () => JSX.Element | null;
   openSelectedNode: boolean;
   showSelected: () => void;
@@ -44,7 +41,8 @@ interface Props {
   deleteSelectedNode: () => void;
   deleteSelectedEdge: () => void;
   addButtonHandler: () => void;
-  loadFromRootModel: ()=>void;
+  loadFromGraph: ()=>void;
+  onMove:(event: MouseEvent | TouchEvent, viewport: Viewport)=>void;
 }
 
 /**
@@ -67,7 +65,7 @@ function FlowView(props: Props) {
         deleteSelectedNode={props.deleteSelectedNode}
         deleteSelectedEdge={props.deleteSelectedEdge}
         addButtonHandler={props.addButtonHandler}
-        loadFromRootModel={props.loadFromRootModel}
+        loadFromGraph={props.loadFromGraph}
         
       />
       <Overlay
@@ -92,9 +90,8 @@ function FlowView(props: Props) {
         onConnect={props.onConnect}
         onConnectStart={props.onConnectStart}
         onConnectEnd={props.onConnectEnd}
-        defaultViewport={props.viewport}
-        onMove={props.onMove}
         onPaneClick={props.handlePaneClick}
+        onMove={props.onMove}
       >
         <Background color="#ccc" variant={BackgroundVariant.Cross} />
       </ReactFlow>

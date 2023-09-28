@@ -2,7 +2,8 @@
 import React, { useContext } from "react";
 import SourceView from "./SourceView";
 import { NodeContext } from "../NodeState";
-import { useGraph } from "../GraphContext";
+import { useReactFlow } from "reactflow";
+import { useUI } from "../GraphFunctions";
 
 /**
  * The presenter for the Source node.
@@ -11,10 +12,10 @@ import { useGraph } from "../GraphContext";
 function SourcePresenter() {
   const nodeContext = useContext(NodeContext);
   const node = nodeContext.nodeState;
-  const graph = useGraph();
+  const ui = useUI();
 
   function selectNode() {
-    graph.selectNode(node);
+    ui.selectNode(node);
   }
 
   return <SourceView selectNode={selectNode} />;

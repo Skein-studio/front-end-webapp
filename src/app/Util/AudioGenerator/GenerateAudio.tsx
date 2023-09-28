@@ -3,10 +3,9 @@
 import React, { useContext } from "react";
 import { BlankSpace, Button, Container, FieldTitle, StyledInput } from "../BaseStyles";
 import { NodeContext } from "@/app/Node/NodeState";
-import { useGraph } from "@/app/Node/GraphContext";
 import useAudio from "@/app/Util/AudioPlayback/useAudio";
 import AudioPlayer from "../AudioPlayback/AudioPlayer";
-import { SourceTypeModel } from "../../Node/Model/modelDatatypes";
+import { useUpdateNodeInternals } from "reactflow";
 
 /**
  * The view for the GenerateAudio component, which is used to generate audio for the Source node.
@@ -15,9 +14,9 @@ import { SourceTypeModel } from "../../Node/Model/modelDatatypes";
 function GenerateAudio() {
   const nodeContext = useContext(NodeContext);
   const node = nodeContext.nodeState;
-  const nodeData = node.model.Data as SourceTypeModel;
+  const nodeData = node.model.Data;
   const audioData = nodeData.URL;
-  const graph = useGraph();
+  const updateInternals = useUpdateNodeInternals();
   const audioState = useAudio(audioData);
   const [prompt, setPrompt] = React.useState(nodeData.Prompt);
 
@@ -31,7 +30,7 @@ function GenerateAudio() {
     // For now, we'll use a dummy audio file
     node.model.Dirty = true;
     nodeData.URL = "/dummyshort.mp3";
-    graph.refresh();
+    updateInternals(node.model.ID);
   };
 
   return (

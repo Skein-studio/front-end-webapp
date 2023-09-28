@@ -3,7 +3,7 @@
 import React, { useContext } from "react";
 import SplitView from "./SplitView";
 import { NodeContext } from "../NodeState";
-import { useGraph } from "../GraphContext";
+import { useReactFlow } from "reactflow";
 
 /**
  * The presenter for the Split node.
@@ -12,10 +12,17 @@ import { useGraph } from "../GraphContext";
 function SplitPresenter() {
   const nodeContext = useContext(NodeContext);
   const node = nodeContext.nodeState;
-  const graph = useGraph();
+  const reactFlowInstance = useReactFlow();
 
   function selectNode() {
-    graph.selectNode(node);
+    reactFlowInstance.getNodes().forEach((n) => {
+      if (n.id != node.model.ID) {
+        n.data.nodeState.selected = false;
+      }
+    }
+    );
+    node.selected = true;
+
   }
 
   return <SplitView selectNode={selectNode} />;

@@ -2,7 +2,7 @@
 
 import React, { useContext } from "react";
 import { NodeSmall, NodeIcon, NodeTitle } from "@/app/Node/NodeStyles";
-import { useGraph } from "../GraphContext";
+import { useGraph } from "../GraphFunctions";
 import { NodeContext } from "../NodeState";
 import SplitImg from "./split.svg";
 import { GenerateHandles, GetWidthExtension } from "@/app/Util/Handles";

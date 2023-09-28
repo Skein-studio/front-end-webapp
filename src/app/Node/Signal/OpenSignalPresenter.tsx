@@ -1,9 +1,8 @@
 // OpenSignalPresenter.tsx
 import OpenSignalView from "./OpenSignalView";
-import { SignalTypeModel } from "@/app/Node/Model/modelDatatypes";
 import { useContext } from "react";
 import { NodeContext } from "../NodeState";
-import { useGraph } from "../GraphContext";
+import { useReactFlow, useUpdateNodeInternals } from "reactflow";
 
 /**
  * The presenter for the opened Signal node, where signal can be edited or exported.
@@ -12,13 +11,14 @@ import { useGraph } from "../GraphContext";
 function OpenSignalPresenter() {
   const nodeContext = useContext(NodeContext);
   const node = nodeContext.nodeState;
-  const nodeData = node.model.Data as SignalTypeModel;
-  const graph = useGraph();
+  const nodeData = node.model.Data;
+  const reactFlowInstance = useReactFlow();
+  const updateInternals = useUpdateNodeInternals();
 
   const handlePromptChange = (prompt: string) => {
     node.setPrompt(prompt);
     node.model.Dirty = true;
-    graph.refresh();
+    updateInternals(node.model.ID);
   };
 
   const exportFile = async () => {

@@ -1,6 +1,5 @@
 import { useContext } from "react";
-import { Graph, GraphContext } from "../Node/GraphContext";
-import { RootModel, OutputModel, NodeModel } from "../Node/Model/modelDatatypes";
+import { Output, NodeModel } from "../Node/Model/modelDatatypes";
 import { Node } from "reactflow";
 
 /**
@@ -32,16 +31,20 @@ const fetchJSON = async (url: string, opts = {}) =>
 
 
 /**
- * This function sends a graph model to the compute endpoint. It takes a RootModel object, stringifies it, and sends it in the POST request's body.
- * @param {RootModel} rootModel - The RootModel object to send to the compute endpoint
+ * This function sends a graph model to the compute endpoint. It takes a JSON object, and sends it in the POST request's body.
+ * @param {any} graph - The graph object to send to the compute endpoint
  * @returns {Promise<Response>} - The response from the compute endpoint
  * */
-export const SendGraphForCompute = (rootModel: RootModel) =>
+export function SendGraphForCompute (graph: any) {
+  console.log("Sending graph for compute");
+  console.log(JSON.stringify(graph));
+
   fetch(COMPUTE_ENDPOINT, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(rootModel),
+    body: JSON.stringify(graph),
   });
+}
 
 /**
  * Stops all pending tasks by setting the job status to false.
@@ -92,7 +95,7 @@ async function retry(fn: () => Promise<any>, maxRetries: number, retryDelay: num
  */
 export async function ComputeNodesInOrder(
   nodeIDs: string[],
-  graph: Graph, // Moved graph here as an argument
+  nodes: Node[],
   maxRetries: number = 100,
   retryDelay: number = 2000
 ) {
@@ -102,7 +105,7 @@ export async function ComputeNodesInOrder(
       throw new Error("Job was stopped");
     }
 
-    const node: Node | undefined = graph.nodes.find(node => (node.data.model as NodeModel).ID === nodeID);
+    const node: Node | undefined = nodes.find(node => (node.data.model as NodeModel).ID === nodeID);
     if (!node) {
       throw new Error("Node not found");
     }
@@ -118,7 +121,7 @@ export async function ComputeNodesInOrder(
         // Update node state
         node.data.nodeState.model.Dirty = false;
         node.data.nodeState.loading = false;
-        node.data.nodeState.model.Outputs.forEach((output: OutputModel) => {
+        node.data.nodeState.model.Outputs.forEach((output: Output) => {
           output.Src = newDict[output.Name];
         });
       }, maxRetries, retryDelay);
@@ -133,7 +136,7 @@ export async function ComputeNodesInOrder(
 
 /**
  * This function sends a node model to the compute endpoint. It takes a NodeModel object, stringifies it, and sends it in the POST request's body.
- * @param {NodeModel} node - The RootModel object to send to the compute endpoint
+ * @param {NodeModel} node - The NodeModel object to send to the compute endpoint
  * TODO @returns {Promise<Response>} - The response from the compute endpoint 
  * */
 const computeNode = (node: NodeModel) =>{
@@ -147,7 +150,6 @@ const computeNode = (node: NodeModel) =>{
 export async function populateDependenciesByNodeID(
 
   id: string,
-  graphContext: Graph,
   maxRetries: number = 100,
   retryDelay: number = 2000
 ) {

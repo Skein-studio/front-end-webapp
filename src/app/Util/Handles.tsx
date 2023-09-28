@@ -21,7 +21,6 @@ const HandleSpacing = styled.div<HandleProps>`
 `;
 
 import { purple } from "../Node/NodeStyles";
-import { useGraph } from "../Node/GraphContext";
 import { update } from "lodash";
 import { useEffect } from "react";
 

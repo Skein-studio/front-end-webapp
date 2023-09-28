@@ -14,7 +14,7 @@ interface Props {
   deleteSelectedNode: () => void;
   deleteSelectedEdge: () => void;
   addButtonHandler: () => void;
-  loadFromRootModel: ()=>void;
+  loadFromGraph: ()=>void;
 }
 
 const Tooltip = styled.div`
@@ -99,7 +99,7 @@ export default function OptionsView(props: Props) {
 
       <OptionsButton
         img={load}
-        callback={() => props.loadFromRootModel()}
+        callback={() => props.loadFromGraph()}
         tooltipText="Load"
       />
       

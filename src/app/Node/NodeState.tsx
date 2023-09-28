@@ -7,13 +7,9 @@ each node in the graph. */
 import { Coordinate } from "./Model/modelDatatypes";
 import {
   NodeModel,
-  SourceTypeModel,
-  SignalTypeModel,
-  MergeTypeModel,
-  SplitTypeModel,
-  UnspecifiedTypeModel,
-  OutputModel,
-  InputModel,
+  NodeParameters,
+  Output,
+  Input,
 } from "./Model/modelDatatypes";
 import { v4 as uuidv4 } from "uuid";
 
@@ -53,7 +49,7 @@ export class NodeState {
       Type: NodeTypeToString(type),
       Inputs: this.setInputs(type, newID),
       Outputs: this.setOutputs(type, newID),
-      Data: this.initializeData(type),
+      Data: this.initializeData(),
     };
     this.selected = false;
     this.loading = false;
@@ -64,26 +60,14 @@ export class NodeState {
    * @param {NodeType} type - The type of the node
    * @returns {SourceTypeModel | SignalTypeModel | MergeTypeModel | SplitTypeModel | UnspecifiedTypeModel} - The data of the node
    */
-  initializeData(
-    type: NodeType
-  ):
-    | SourceTypeModel
-    | SignalTypeModel
-    | MergeTypeModel
-    | SplitTypeModel
-    | UnspecifiedTypeModel {
-    switch (type) {
-      case NodeType.Source:
-        return { URL: "", base: "" };
-      case NodeType.Signal:
-        return { Prompt: "", Seed: "1234" };
-      case NodeType.Merge:
-        return {};
-      case NodeType.Split:
-        return {};
-      default:
-        return {};
-    }
+  initializeData():NodeParameters{
+    let data:NodeParameters = {
+      URL: "",
+      base: "",
+      Prompt: "",
+      Seed: "1234",
+    };
+    return data;
   }
 
   /**
@@ -91,7 +75,7 @@ export class NodeState {
    * @param {string} p - The prompt to set
    */
   setPrompt(p: string) {
-    (this.model.Data as SignalTypeModel).Prompt = p;
+    this.model.Data.Prompt = p;
   }
 
   /**
@@ -112,10 +96,10 @@ export class NodeState {
    * Sets inputs of the node based on the type of the node
    * @param {NodeType} type - The type of the node
    * @param {string} ID - The ID of the node
-   * @returns {InputModel[]} - The inputs of the node
+   * @returns {Input[]} - The inputs of the node
    */
-  setInputs(type: NodeType, ID: string): InputModel[] {
-    let newInputs: InputModel[] = [];
+  setInputs(type: NodeType, ID: string): Input[] {
+    let newInputs: Input[] = [];
 
     const add = () => {
       newInputs.push({
@@ -146,11 +130,11 @@ export class NodeState {
    * Sets outputs of the node based on the type of the node
    * @param {NodeType} type - The type of the node
    * @param {string} ID - The ID of the node
-   * @returns {OutputModel[]} - The outputs of the node
+   * @returns {Output[]} - The outputs of the node
    */
-  setOutputs(type: NodeType, ID: string): OutputModel[] {
+  setOutputs(type: NodeType, ID: string): Output[] {
     let numOutputs = 0;
-    let newOutputs: OutputModel[] = [];
+    let newOutputs: Output[] = [];
 
     const add = (name: string) => {
       newOutputs.push({
@@ -193,24 +177,14 @@ export class NodeState {
   }
 
   toString(): string {
-    return `Node ${this.getID()}`;
-  }
-
-  getID(): string {
-    return this.model.ID;
-  }
-  getPosition(): Coordinate {
-    return this.model.Position;
+    return `Node ${this.model.ID}`;
   }
   /**
    * Sets the position of the node
    * @param {number} x - The x coordinate of the node
    * @param {number} y - The y coordinate of the node
    */
-  setPosition(x: number, y: number) {
-    this.model.Position.x = x;
-    this.model.Position.y = y;
-  }
+
 }
 
 import React, { useState } from "react";
