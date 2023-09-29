@@ -43,7 +43,7 @@ export function useUI() {
 
 /**
  * Creates a graph JSON from the given react flow data.
- * @param reactFlowData - The react flow data to create a graph JSON from.
+ * @param reactFlowData - The react flow data to create a graph JSON from, it comes from reactFlowInstance.toObject()
  * @returns A graph JSON containing ID, version, nodes, edges, and viewport.
  * */
 export function createGraphJSON(reactFlowData:any) {
