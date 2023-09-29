@@ -163,11 +163,6 @@ export function FlowPresenter(props: FlowPresenterProps) {
     return nodes.find((node) => node.id == id);
   }
 
-  function onMove(event: MouseEvent | TouchEvent, viewport: Viewport) {
-    // this is called when the user moves the canvas
-    setViewport(viewport);
-  }
-
   function deleteSelectedNode() {
     // this is called when the user clicks on the delete button
     if (selectedNode) {
@@ -226,6 +221,13 @@ export function FlowPresenter(props: FlowPresenterProps) {
       // deselect all nodes
       (node.data as any).nodeState.selected = false;
     });
+  }
+
+  function onMove(
+    event: TouchEvent | MouseEvent,
+    viewport: Viewport
+  ) {
+    setViewport(viewport);
   }
 
   function doesNodeExistAtPosition(
@@ -314,16 +316,12 @@ export function FlowPresenter(props: FlowPresenterProps) {
       clientX = event.changedTouches[0].clientX;
       clientY = event.changedTouches[0].clientY;
     }
+    
+    let { x, y } = reactFlowInstance.project({x:clientX, y:clientY});
 
-    let { x, y } = reactFlowInstance.project({ x: clientX, y: clientY });
-
-    // Subtract viewport's position from the projected coordinates and adjust for the zoom level
-    x =
-      (x - reactFlowInstance.getViewport().x) / reactFlowInstance.getZoom() -
-      NODE_WIDTH / 4;
-    y =
-      (y - reactFlowInstance.getViewport().y) / reactFlowInstance.getZoom() -
-      NODE_HEIGHT / 2;
+    // Subtract width and height of node to center the node on the handle
+    x = x - NODE_WIDTH / 4;
+    y = y - NODE_HEIGHT / 2;
     // Only add a new node if there isn't one at this position already
     let newNode = null;
     if (
@@ -426,12 +424,12 @@ export function FlowPresenter(props: FlowPresenterProps) {
     // this is called when the user clicks on the "add" button
 
     let x =
-      ((window.width * 0.95) / 2 - reactFlowInstance.getViewport().x) /
-        reactFlowInstance.getZoom() -
+      ((window.width * 0.95) / 2 - viewport.x) /
+        viewport.zoom -
       NODE_WIDTH / 2; // half the width of the node, so it's centered, relative to the viewport, not the window
     let y =
-      ((window.height * 0.95) / 2 - reactFlowInstance.getViewport().y) /
-        reactFlowInstance.getZoom() -
+      ((window.height * 0.95) / 2 - viewport.y) /
+        viewport.zoom -
       NODE_HEIGHT; // centered, relative to the viewport, not the window
     addNewNode(x, y, NodeType.Unspecified);
   }
@@ -453,15 +451,14 @@ export function FlowPresenter(props: FlowPresenterProps) {
   }
 
   useMemo(() => {
-    reactFlowInstance.setViewport(viewport);
 
     if (nodes.length == 0) {
       addNewNode(
-        ((window.width * 0.95) / 2 - reactFlowInstance.getViewport().x) /
-          reactFlowInstance.getZoom() -
+        ((window.width * 0.95) / 2 - viewport.x) /
+          viewport.zoom -
           NODE_WIDTH / 2,
-        ((window.height * 0.95) / 2 - reactFlowInstance.getViewport().y) /
-          reactFlowInstance.getZoom() -
+        ((window.height * 0.95) / 2 - viewport.y) /
+          viewport.zoom -
           NODE_HEIGHT,
         NodeType.Source
       );
@@ -495,6 +492,7 @@ export function FlowPresenter(props: FlowPresenterProps) {
         onSelectionChange={onSelectionChange}
         addButtonHandler={addButtonHandler}
         loadFromGraph={loadFromGraph}
+        defaultViewport={viewport}
         onMove={onMove}
       />
     </UIContext.Provider>

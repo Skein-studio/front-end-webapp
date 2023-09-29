@@ -42,7 +42,8 @@ interface Props {
   deleteSelectedEdge: () => void;
   addButtonHandler: () => void;
   loadFromGraph: () => void;
-  onMove: (event: MouseEvent | TouchEvent, viewport: Viewport) => void;
+  defaultViewport: Viewport;
+  onMove: (event:TouchEvent | MouseEvent, viewport: Viewport) => void;
 }
 
 /**
@@ -90,6 +91,7 @@ function FlowView(props: Props) {
         onConnectStart={props.onConnectStart}
         onConnectEnd={props.onConnectEnd}
         onPaneClick={props.handlePaneClick}
+        defaultViewport={props.defaultViewport}
         onMove={props.onMove}
       >
         <Background color="#ccc" variant={BackgroundVariant.Cross} />
