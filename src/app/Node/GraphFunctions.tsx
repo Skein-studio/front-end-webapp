@@ -4,7 +4,6 @@ import {
   NodeState,
   NodeTypeToString,
   NodeType,
-  StringToNodeType,
 } from "./NodeState";
 import { Edge, Node } from "reactflow";
 import { NodeModel } from "./Model/modelDatatypes";

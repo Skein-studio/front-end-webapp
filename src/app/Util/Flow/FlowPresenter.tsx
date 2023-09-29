@@ -12,7 +12,6 @@ import {
   OnConnectStartParams,
   OnSelectionChangeParams,
   Connection,
-  useUpdateNodeInternals,
   Viewport,
 } from "reactflow";
 import SourcePresenter from "../../Node/Source/SourcePresenter";
@@ -25,15 +24,14 @@ import {
   NodeType,
   NodeContext,
   NodeState,
-  StringToNodeType,
-} from "../../Node/NodeState";
+} from "@/app/Node/NodeState";
 import {
   createNewNode,
   connectionExists,
   setDirtyNodes,
   getNodeModelFromNode,
   UIContext,
-} from "../../Node/GraphFunctions";
+} from "@/app/Node/GraphFunctions";
 import OpenNodePresenter from "@/app/Node/OpenNode/OpenNodePresenter";
 import FlowView from "./FlowView";
 
@@ -43,7 +41,7 @@ It is the central file of the app. */
 import { NODE_WIDTH, NODE_HEIGHT } from "../../Node/NodeStyles";
 import useWindowDimensions from "../windowDimensions";
 import { gatherAllDirtyIds } from "../../Node/Model/modelTransformation";
-import { Input } from "../../Node/Model/modelDatatypes";
+import { Input } from "@/app/Node/Model/modelDatatypes";
 import { forEach } from "lodash";
 
 const proOptions = { hideAttribution: true };
@@ -349,7 +347,7 @@ export function FlowPresenter(props: FlowPresenterProps) {
           source: connectStartNode.id,
           target: lastNode.id,
           sourceHandle: connectStartHandleId!,
-          targetHandle: (lastNode.data.nodeState.model.Inputs[0] as InputModel)
+          targetHandle: (lastNode.data.nodeState.model.Inputs[0] as Input)
             .ID,
         };
         const newEdge = {

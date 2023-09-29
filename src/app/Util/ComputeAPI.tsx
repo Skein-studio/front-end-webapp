@@ -1,6 +1,5 @@
-import { useContext } from "react";
-import { Output, NodeModel } from "../Node/Model/modelDatatypes";
 import { Node } from "reactflow";
+import { NodeModel, Output } from "../Node/Model/modelDatatypes";
 
 /**
  * Represents the job and node statuses.
@@ -42,6 +41,8 @@ export function SendGraphForCompute(graph: any) {
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(graph),
   });
+}
+  
 
 /**
  * Stops all pending tasks by setting the job status to false.

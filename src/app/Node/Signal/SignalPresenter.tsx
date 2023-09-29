@@ -39,10 +39,11 @@ export default function SignalPresenter() {
       let loadingNodes: string[] = topologicalSort(nodes, edges);
       loadingNodes.forEach((id) => {
         let n = nodes.find((n) => n.id == id);
-        if (n) n.data.nodeState.loading = true;
+        if (n) {
+          n.data.nodeState.loading = true;
+          updateInternals(n.id);
+        }
       });
-      updateInternals(node.model.ID);
-      node.loading = true;
       await SendGraphForCompute(reactFlowInstance.toObject());
       await populateDependenciesByNodeID(node.model.ID);
 
