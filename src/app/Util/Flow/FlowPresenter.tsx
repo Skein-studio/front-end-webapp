@@ -434,7 +434,7 @@ export function FlowPresenter(props: FlowPresenterProps) {
     addNewNode(x, y, NodeType.Unspecified);
   }
 
-  function loadFromGraph() {
+  function loadGraphFromJSON() {
     if (props.graph) {
       const loadedNodes = props.graph.nodes;
       const loadedEdges = props.graph.edges;
@@ -491,7 +491,7 @@ export function FlowPresenter(props: FlowPresenterProps) {
         handlePaneClick={handlePaneClick}
         onSelectionChange={onSelectionChange}
         addButtonHandler={addButtonHandler}
-        loadFromGraph={loadFromGraph}
+        loadFromGraph={loadGraphFromJSON}
         defaultViewport={viewport}
         onMove={onMove}
       />
