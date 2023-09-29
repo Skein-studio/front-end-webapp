@@ -8,13 +8,12 @@ import { Node } from "reactflow";
  * @property {Array} nodeStatus - An array of individual node statuses.
  */
 type Job = {
-  nodeStatus: {status: boolean; nodeID: string}[];
+  nodeStatus: { status: boolean; nodeID: string }[];
   jobStatus: boolean;
 };
 
 // Initialize job with default values
-let job: Job = {jobStatus: false, nodeStatus: []};
-
+let job: Job = { jobStatus: false, nodeStatus: [] };
 
 const BASE_URL = "http://localhost:5001";
 const COMPUTE_ENDPOINT = `${BASE_URL}/compute`;
@@ -29,13 +28,12 @@ const COMPUTED_NODE_ENDPOINT = `${BASE_URL}/compute/get_computed_node`;
 const fetchJSON = async (url: string, opts = {}) =>
   (await fetch(url, opts)).json();
 
-
 /**
  * This function sends a graph model to the compute endpoint. It takes a JSON object, and sends it in the POST request's body.
  * @param {any} graph - The graph object to send to the compute endpoint
  * @returns {Promise<Response>} - The response from the compute endpoint
  * */
-export function SendGraphForCompute (graph: any) {
+export function SendGraphForCompute(graph: any) {
   console.log("Sending graph for compute");
   console.log(JSON.stringify(graph));
 
@@ -50,7 +48,7 @@ export function SendGraphForCompute (graph: any) {
  * Stops all pending tasks by setting the job status to false.
  */
 export function stopJob() {
-  job.nodeStatus = []
+  job.nodeStatus = [];
   job.jobStatus = false;
 }
 
@@ -58,7 +56,7 @@ export function stopJob() {
  * Retrieves the current job status.
  * @returns The current job object.
  */
-export function getJob(){
+export function getJob() {
   return job;
 }
 /**
@@ -69,7 +67,11 @@ export function getJob(){
  * @throws Will throw an error if the maximum number of retries is reached.
  * @returns The result of the promise-based function if successful.
  */
-async function retry(fn: () => Promise<any>, maxRetries: number, retryDelay: number) {
+async function retry(
+  fn: () => Promise<any>,
+  maxRetries: number,
+  retryDelay: number
+) {
   let retries = 0;
   while (retries < maxRetries) {
     try {
@@ -88,7 +90,7 @@ async function retry(fn: () => Promise<any>, maxRetries: number, retryDelay: num
 /**
  * Computes an array of nodes in a specific order.
  * @param {string[]} nodeIDs - An array of node IDs to be computed.
- * @param {Graph} graph - The graph containing the nodes to be computed. 
+ * @param {Graph} graph - The graph containing the nodes to be computed.
  * @param {number} maxRetries - Maximum number of retries in case of failure. Default is 100.
  * @param {number} retryDelay - Time delay between each retry in milliseconds. Default is 2000.
  * @throws Will throw an error if a node is not found or if the job was stopped.
@@ -101,30 +103,38 @@ export async function ComputeNodesInOrder(
 ) {
   for (const nodeID of nodeIDs) {
     if (!job.jobStatus) {
-      console.log('Stopped the execution.');
+      console.log("Stopped the execution.");
       throw new Error("Job was stopped");
     }
 
-    const node: Node | undefined = nodes.find(node => (node.data.model as NodeModel).ID === nodeID);
+    const node: Node | undefined = nodes.find(
+      (node) => (node.data.model as NodeModel).ID === nodeID
+    );
     if (!node) {
       throw new Error("Node not found");
     }
 
     try {
-      await retry(async () => {
-        // Perform the actual computation for the node
-        await computeNode(node.data.model);
+      await retry(
+        async () => {
+          // Perform the actual computation for the node
+          await computeNode(node.data.model);
 
-        // Fetch and update node data from server
-        const newDict = await fetchJSON(`${BASE_URL}${COMPUTED_NODE_ENDPOINT}/${node.data.model.ID}`);
-        
-        // Update node state
-        node.data.nodeState.model.Dirty = false;
-        node.data.nodeState.loading = false;
-        node.data.nodeState.model.Outputs.forEach((output: Output) => {
-          output.Src = newDict[output.Name];
-        });
-      }, maxRetries, retryDelay);
+          // Fetch and update node data from server
+          const newDict = await fetchJSON(
+            `${BASE_URL}${COMPUTED_NODE_ENDPOINT}/${node.data.model.ID}`
+          );
+
+          // Update node state
+          node.data.nodeState.model.Dirty = false;
+          node.data.nodeState.loading = false;
+          node.data.nodeState.model.Outputs.forEach((output: Output) => {
+            output.Src = newDict[output.Name];
+          });
+        },
+        maxRetries,
+        retryDelay
+      );
 
       console.log(`Successfully computed node ${nodeID}`);
     } catch (error) {
@@ -137,23 +147,22 @@ export async function ComputeNodesInOrder(
 /**
  * This function sends a node model to the compute endpoint. It takes a NodeModel object, stringifies it, and sends it in the POST request's body.
  * @param {NodeModel} node - The NodeModel object to send to the compute endpoint
- * TODO @returns {Promise<Response>} - The response from the compute endpoint 
+ * TODO @returns {Promise<Response>} - The response from the compute endpoint
  * */
-const computeNode = (node: NodeModel) =>{
+const computeNode = (node: NodeModel) => {
   return fetch(COMPUTE_ENDPOINT, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(node),
   });
-}
+};
 //TODO should be changed to ComputeNodesInOrder
 export async function populateDependenciesByNodeID(
-
   id: string,
   maxRetries: number = 100,
   retryDelay: number = 2000
 ) {
-  console.log("REMOVE THIS")
+  console.log("REMOVE THIS");
 }
 
 /**

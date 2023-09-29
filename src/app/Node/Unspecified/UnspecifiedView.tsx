@@ -15,7 +15,6 @@ interface Props {
  * @returns A NodeSmall component.
  * */
 function UnspecifiedView(props: Props) {
-
   const nodeContext = useContext(NodeContext);
   const node = nodeContext.nodeState;
 

@@ -41,8 +41,8 @@ interface Props {
   deleteSelectedNode: () => void;
   deleteSelectedEdge: () => void;
   addButtonHandler: () => void;
-  loadFromGraph: ()=>void;
-  onMove:(event: MouseEvent | TouchEvent, viewport: Viewport)=>void;
+  loadFromGraph: () => void;
+  onMove: (event: MouseEvent | TouchEvent, viewport: Viewport) => void;
 }
 
 /**
@@ -66,7 +66,6 @@ function FlowView(props: Props) {
         deleteSelectedEdge={props.deleteSelectedEdge}
         addButtonHandler={props.addButtonHandler}
         loadFromGraph={props.loadFromGraph}
-        
       />
       <Overlay
         show={props.openSelectedNode ? true : undefined}

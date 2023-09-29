@@ -3,9 +3,7 @@ import useAudio from "@/app/Util/AudioPlayback/useAudio";
 import SignalView from "./SignalView";
 import { useContext } from "react";
 import { NodeContext } from "../NodeState";
-import {
-  topologicalSort,
-} from "@/app/Node/Model/modelTransformation";
+import { topologicalSort } from "@/app/Node/Model/modelTransformation";
 import {
   SendGraphForCompute,
   populateDependenciesByNodeID,
@@ -17,7 +15,6 @@ import { useReactFlow, useUpdateNodeInternals } from "reactflow";
  * @returns A SignalView component.
  * */
 export default function SignalPresenter() {
-
   const nodeContext = useContext(NodeContext);
   const node = nodeContext.nodeState;
   const audioUrl = node.model.Outputs[0].Src;
@@ -39,8 +36,7 @@ export default function SignalPresenter() {
 
   const fetchAudio = async () => {
     try {
-      let loadingNodes: string[] = topologicalSort(nodes, edges
-      );
+      let loadingNodes: string[] = topologicalSort(nodes, edges);
       loadingNodes.forEach((id) => {
         let n = nodes.find((n) => n.id == id);
         if (n) n.data.nodeState.loading = true;

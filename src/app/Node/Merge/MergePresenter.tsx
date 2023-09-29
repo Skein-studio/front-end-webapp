@@ -1,8 +1,9 @@
 //MergePresenter.tsx
-import { useReactFlow, useUpdateNodeInternals } from 'reactflow';
+import { useReactFlow, useUpdateNodeInternals } from "reactflow";
 import React, { useEffect, useContext } from "react";
 import MergeView from "./MergeView";
 import { NodeContext } from "../NodeState";
+import { addTargetHandle } from "../NodeState";
 
 /**
  * The presenter for the Merge node.
@@ -32,18 +33,16 @@ const MergePresenter: React.FC = () => {
       numberOfTargetHandles > 0 &&
       connectedHandles == numberOfTargetHandles
     ) {
-      addTargetHandle();
+      addHandle();
     }
-
   }, [node, reactFlowInstance.getEdges()]);
 
-  const addTargetHandle = () => {
+  const addHandle = () => {
     updateInternals(node.model.ID);
     if (node.model.Inputs.length >= 10) {
       return;
     }
-    node.addTargetHandle();
-    
+    addTargetHandle(node);
   };
 
   return <MergeView />;

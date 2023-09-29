@@ -39,16 +39,21 @@ export class NodeState {
   selected: boolean; // Whether the node is selected or not
   loading: boolean; // Used to show the spinner when the node is loading
 
-  constructor(x: number, y: number, type: NodeType, id?: string, node?: NodeState) {
-
+  constructor(
+    x: number,
+    y: number,
+    type: NodeType,
+    id?: string,
+    node?: NodeState
+  ) {
     if (node) {
-      this.model = { 
+      this.model = {
         ...node.model,
         Position: { x: x, y: y },
         Dirty: true,
         Inputs: setInputs(type, node.model.ID),
         Outputs: setOutputs(type, node.model.ID),
-       };
+      };
       this.selected = node.selected;
       this.loading = false;
       return;
@@ -67,16 +72,15 @@ export class NodeState {
     this.selected = false;
     this.loading = false;
   }
-
 }
 
 /**
-   * Initializes the data of the node based on the type of the node
-   * @param {NodeType} type - The type of the node
-   * @returns {SourceTypeModel | SignalTypeModel | MergeTypeModel | SplitTypeModel | UnspecifiedTypeModel} - The data of the node
-   */
-function initializeData():NodeParameters{
-  let data:NodeParameters = {
+ * Initializes the data of the node based on the type of the node
+ * @param {NodeType} type - The type of the node
+ * @returns {SourceTypeModel | SignalTypeModel | MergeTypeModel | SplitTypeModel | UnspecifiedTypeModel} - The data of the node
+ */
+function initializeData(): NodeParameters {
+  let data: NodeParameters = {
     URL: "",
     base: "",
     Prompt: "",
@@ -89,21 +93,21 @@ function initializeData():NodeParameters{
  * Sets the prompt of the node, used for the Signal node
  * @param {string} p - The prompt to set
  */
-export function setPrompt(node:NodeState, p: string) {
+export function setPrompt(node: NodeState, p: string) {
   node.model.Data.Prompt = p;
 }
 
 /**
  * Adds a new input to the node
  */
-export function addTargetHandle(node:NodeState) {
+export function addTargetHandle(node: NodeState) {
   node.model.Inputs.push({
     ID: node.model.ID + "in[" + node.model.Inputs.length + "]",
     Name: "input-[" + node.model.Inputs.length + "]",
   });
 }
 
-export function getNodeType(node:NodeState): NodeType {
+export function getNodeType(node: NodeState): NodeType {
   return StringToNodeType(node.model.Type);
 }
 
@@ -186,18 +190,17 @@ function setOutputs(type: NodeType, ID: string): Output[] {
  * Sets the node to the given node, this is used to copy the state of a node to another node, like when setting unspecified nodes to a specific type
  * @param {NodeState} node - The node to set to
  */
-export function setNode(oldNode:NodeState, newNode: NodeState) {
+export function setNode(oldNode: NodeState, newNode: NodeState) {
   oldNode.model = { ...newNode.model };
   oldNode.selected = newNode.selected;
 }
-
 
 /**
  * Sets the position of the node
  * @param {number} x - The x coordinate of the node
  * @param {number} y - The y coordinate of the node
  */
-export function setPosition(node:NodeState, x: number, y: number) {
+export function setPosition(node: NodeState, x: number, y: number) {
   node.model.Position = { x: x, y: y };
 }
 
@@ -205,7 +208,7 @@ export function setPosition(node:NodeState, x: number, y: number) {
  * Gets the position of the node
  * @returns {Coordinate} - The position of the node
  */
-export function getPosition(node:NodeState): Coordinate {
+export function getPosition(node: NodeState): Coordinate {
   return node.model.Position;
 }
 

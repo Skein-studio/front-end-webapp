@@ -41,7 +41,11 @@ function UnspecifiedPresenter() {
       position: node.model.Position,
     };
 
-    setNode(reactFlowInstance.getNodes(), updatedNode, reactFlowInstance.setNodes);
+    setNode(
+      reactFlowInstance.getNodes(),
+      updatedNode,
+      reactFlowInstance.setNodes
+    );
   }
 
   return <UnspecifiedView setNode={changeType} />;

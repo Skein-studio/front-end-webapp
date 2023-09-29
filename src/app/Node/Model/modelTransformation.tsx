@@ -9,10 +9,10 @@ import { NodeModel } from "./modelDatatypes";
  * @param {string} nodeId - The node ID to search for
  * @returns {string[]} - An array of child node IDs
  */
-function getChildNodeIds (edges:Edge[], nodeId: string): string[] {
-  return edges.filter((edge) => edge.source === nodeId).map(
-    (edge) => edge.target
-  );
+function getChildNodeIds(edges: Edge[], nodeId: string): string[] {
+  return edges
+    .filter((edge) => edge.source === nodeId)
+    .map((edge) => edge.target);
 }
 
 /**
@@ -24,8 +24,8 @@ function getChildNodeIds (edges:Edge[], nodeId: string): string[] {
  * @returns {string[]} - An array of node IDs that are dirty or have a dirty parent
  * */
 const gatherDirtyIds = (
-  nodes:Node[],
-  edges:Edge[],
+  nodes: Node[],
+  edges: Edge[],
   nodeId: string,
   visited: Set<string> = new Set(),
   isParentDirty: boolean = false
@@ -37,7 +37,10 @@ const gatherDirtyIds = (
 
   const currentNode = nodes.find((node) => node.id === nodeId);
 
-  if (currentNode && (getNodeModelFromNode(currentNode)!.Dirty || isParentDirty)) {
+  if (
+    currentNode &&
+    (getNodeModelFromNode(currentNode)!.Dirty || isParentDirty)
+  ) {
     idsToMarkDirty.push(nodeId);
     isParentDirty = true;
   }
@@ -55,27 +58,29 @@ const gatherDirtyIds = (
  * @param {Node[]} nodes - The nodes to search
  * @returns {string[]} - An array of node IDs that are dirty or have a dirty parent
  * */
-export function gatherAllDirtyIds (nodes:Node[], edges:Edge[]): string[] {
+export function gatherAllDirtyIds(nodes: Node[], edges: Edge[]): string[] {
   return Array.from(
     new Set(
-      nodes.filter((node) => getNodeModelFromNode(node)!.Dirty).flatMap((node) =>
-        gatherDirtyIds(nodes, edges, node.id)
-      )
+      nodes
+        .filter((node) => getNodeModelFromNode(node)!.Dirty)
+        .flatMap((node) => gatherDirtyIds(nodes, edges, node.id))
     )
   );
-
 }
-
 
 /**
  * Perform a topological sort starting from a child node. This function traverses from child nodes to their parents
  * and stops if it encounters a node where the 'Dirty' field is true.
- * 
+ *
  * @param startNodeID {string} - ID of the child node from where to start the sort
- * 
+ *
  * @returns {NodeModel[]} - An array containing nodes in topologically sorted order starting from the child, stopping at a 'Dirty' node
  */
-function topologicalSortFromChild(startNodeID: string, nodes:Node[], edges:Edge[]): string[] {
+function topologicalSortFromChild(
+  startNodeID: string,
+  nodes: Node[],
+  edges: Edge[]
+): string[] {
   const reactFlowInstance = useReactFlow();
   const visited = new Set<string>();
   const stack: string[] = [];
@@ -118,13 +123,12 @@ function topologicalSortFromChild(startNodeID: string, nodes:Node[], edges:Edge[
   return stack.reverse();
 }
 
-
 /**
  * This function performs a topological sort on the graph model. It takes into account only nodes that are "dirty" and returns a sorted array of their IDs. Topological sort ensures that for every directed edge (u, v), node u comes before v in the sorted list. The function uses a Map to keep track of nodes connected to each node (graph) and another Map (indegree) to keep track of the number of incoming edges for each node. The actual topological sorting is done by using a queue and BFS-like algorithm.
  * @param {Node[]} nodes - The nodes to sort
  * @returns {string[]} - A sorted array of node IDs
  * */
-export function topologicalSort(nodes:Node[], edges:Edge[]): string[] {
+export function topologicalSort(nodes: Node[], edges: Edge[]): string[] {
   const graph = new Map<string, string[]>();
   const indegree = new Map<string, number>();
   const dirtyNodes = new Set<string>();

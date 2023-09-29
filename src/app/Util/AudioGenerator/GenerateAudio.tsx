@@ -1,7 +1,13 @@
 //GenerateAudio.tsx
 
 import React, { useContext } from "react";
-import { BlankSpace, Button, Container, FieldTitle, StyledInput } from "../BaseStyles";
+import {
+  BlankSpace,
+  Button,
+  Container,
+  FieldTitle,
+  StyledInput,
+} from "../BaseStyles";
 import { NodeContext } from "@/app/Node/NodeState";
 import useAudio from "@/app/Util/AudioPlayback/useAudio";
 import AudioPlayer from "../AudioPlayback/AudioPlayer";
@@ -35,18 +41,12 @@ function GenerateAudio() {
 
   return (
     <Container>
-        <FieldTitle>
-          🤖
-          <p>
-           Prompt
-          </p>
-        </FieldTitle>
-        <StyledInput
-          type="text"
-          value={prompt}
-          onChange={handlePromptChange}
-        />
-        <BlankSpace width={5} height={10} />
+      <FieldTitle>
+        🤖
+        <p>Prompt</p>
+      </FieldTitle>
+      <StyledInput type="text" value={prompt} onChange={handlePromptChange} />
+      <BlankSpace width={5} height={10} />
       <Button onClick={handleClick}>Generate</Button>
       {audioData && (
         <AudioPlayer audioState={audioState} audioComputed={true} error="" />

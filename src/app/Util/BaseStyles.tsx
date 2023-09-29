@@ -200,4 +200,13 @@ const FieldTitle = styled.div`
   }
 `;
 
-export { Text, Button, Container, BlankSpace, OuterBox, GraphNameInput, StyledInput, FieldTitle };
+export {
+  Text,
+  Button,
+  Container,
+  BlankSpace,
+  OuterBox,
+  GraphNameInput,
+  StyledInput,
+  FieldTitle,
+};

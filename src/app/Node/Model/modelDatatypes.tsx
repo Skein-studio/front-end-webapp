@@ -2,7 +2,7 @@ export interface NodeModel {
   Position: Coordinate;
   ID: string;
   Dirty: boolean;
-  Data:NodeParameters;
+  Data: NodeParameters;
   Type: string;
   Inputs: Input[];
   Outputs: Output[];
@@ -10,7 +10,7 @@ export interface NodeModel {
 export interface NodeParameters {
   URL: string;
   base: string; // whether the source is a record, import or generate type
-  Prompt:string;
+  Prompt: string;
   Seed: string;
 }
 
@@ -28,20 +28,19 @@ export type Coordinate = {
   y: number;
 };
 
-export function getHandleTypes(str:string) {
-  switch(str){
-  case("drums"):
-    return [0];
-  case("piano"):
-    return [1];
-  case("vocals"):
-    return [2];
-  case("guitar"):
-    return [3];
-  case("other"):
-    return [4];
-  case("bass"):
-    return [5];
+export function getHandleTypes(str: string) {
+  switch (str) {
+    case "drums":
+      return [0];
+    case "piano":
+      return [1];
+    case "vocals":
+      return [2];
+    case "guitar":
+      return [3];
+    case "other":
+      return [4];
+    case "bass":
+      return [5];
   }
 }
-

@@ -1,7 +1,7 @@
 // OpenSignalPresenter.tsx
 import OpenSignalView from "./OpenSignalView";
 import { useContext } from "react";
-import { NodeContext } from "../NodeState";
+import { NodeContext, setPrompt } from "../NodeState";
 import { useReactFlow, useUpdateNodeInternals } from "reactflow";
 
 /**
@@ -16,7 +16,7 @@ function OpenSignalPresenter() {
   const updateInternals = useUpdateNodeInternals();
 
   const handlePromptChange = (prompt: string) => {
-    node.setPrompt(prompt);
+    setPrompt(node, prompt);
     node.model.Dirty = true;
     updateInternals(node.model.ID);
   };

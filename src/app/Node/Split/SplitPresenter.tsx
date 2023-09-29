@@ -19,10 +19,8 @@ function SplitPresenter() {
       if (n.id != node.model.ID) {
         n.data.nodeState.selected = false;
       }
-    }
-    );
+    });
     node.selected = true;
-
   }
 
   return <SplitView selectNode={selectNode} />;

@@ -20,7 +20,6 @@ interface Props {
  * @returns A NodeSmall component.
  * */
 function SignalView(props: Props) {
-
   const nodeContext = useContext(NodeContext);
   const node = nodeContext.nodeState;
   const ui = useUI();

@@ -52,7 +52,7 @@ const MyFlow = () => {
       )}
       {isEditing && (
         <div>
-          {/* Your OpenNodePresenter component *//*}
+          {/* Your OpenNodePresenter component */ /*}
           <OpenNodePresenter onSave={onSaveNode} />
         </div>
       )}

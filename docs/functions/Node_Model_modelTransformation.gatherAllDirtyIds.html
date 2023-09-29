@@ -18,7 +18,7 @@
 <h1>Function gatherAllDirtyIds</h1></div>
 <section class="tsd-panel">
 <ul class="tsd-signatures">
-<li class="tsd-signature tsd-anchor-link" id="gatherAllDirtyIds"><span class="tsd-kind-call-signature">gather<wbr/>All<wbr/>Dirty<wbr/>Ids</span><span class="tsd-signature-symbol">(</span><span class="tsd-kind-parameter">graph</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">[]</span><a href="#gatherAllDirtyIds" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></li>
+<li class="tsd-signature tsd-anchor-link" id="gatherAllDirtyIds"><span class="tsd-kind-call-signature">gather<wbr/>All<wbr/>Dirty<wbr/>Ids</span><span class="tsd-signature-symbol">(</span><span class="tsd-kind-parameter">nodes</span>, <span class="tsd-kind-parameter">edges</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">[]</span><a href="#gatherAllDirtyIds" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></li>
 <li class="tsd-description">
 <div class="tsd-comment tsd-typography"><p>This function collects all the &quot;dirty&quot; node IDs in the entire graph. It uses gatherDirtyIds on every node marked as dirty in the graph to find these IDs.</p>
 </div>
@@ -26,17 +26,19 @@
 <h4 class="tsd-parameters-title">Parameters</h4>
 <ul class="tsd-parameter-list">
 <li>
-<h5><span class="tsd-kind-parameter">graph</span>: <a href="../interfaces/Node_Model_modelDatatypes.GraphModel.html" class="tsd-signature-type tsd-kind-interface">GraphModel</a></h5>
-<div class="tsd-comment tsd-typography"><p>The graph to search</p>
+<h5><span class="tsd-kind-parameter">nodes</span>: <span class="tsd-signature-type ">Node</span><span class="tsd-signature-symbol">[]</span></h5>
+<div class="tsd-comment tsd-typography"><p>The nodes to search</p>
 </div>
-<div class="tsd-comment tsd-typography"></div></li></ul></div>
+<div class="tsd-comment tsd-typography"></div></li>
+<li>
+<h5><span class="tsd-kind-parameter">edges</span>: <span class="tsd-signature-type ">Edge</span><span class="tsd-signature-symbol">[]</span></h5></li></ul></div>
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">[]</span></h4><ul>
 <li>An array of node IDs that are dirty or have a dirty parent</li>
 </ul>
 
 <div class="tsd-comment tsd-typography"></div><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/Skein-studio/front-end-webapp/blob/63009531/src/app/Node/Model/modelTransformation.tsx#L56">src/app/Node/Model/modelTransformation.tsx:56</a></li></ul></aside></li></ul></section></div>
+<li>Defined in <a href="https://github.com/Skein-studio/front-end-webapp/blob/07586b2c/src/app/Node/Model/modelTransformation.tsx#L61">src/app/Node/Model/modelTransformation.tsx:61</a></li></ul></aside></li></ul></section></div>
 <div class="col-sidebar">
 <div class="page-menu">
 <div class="tsd-navigation settings">
@@ -55,7 +57,7 @@
 <div class="site-menu">
 <nav class="tsd-navigation"><a href="../index.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-1"></use></svg><span>Skein Studio Web App</span></a>
 <ul class="tsd-small-nested-navigation" id="tsd-nav-container" data-base="..">
-<li><a href="../modules/Node_GraphContext.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2"></use></svg>Node/GraphContext</a></li>
+<li><a href="../modules/Node_GraphFunctions.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2"></use></svg>Node/GraphFunctions</a></li>
 <li><a href="../modules/Node_Merge_MergePresenter.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2"></use></svg>Node/Merge/MergePresenter</a></li>
 <li><a href="../modules/Node_Merge_MergeView.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2"></use></svg>Node/Merge/MergeView</a></li>
 <li><a href="../modules/Node_Model_modelDatatypes.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2"></use></svg>Node/Model/modelDatatypes</a></li>

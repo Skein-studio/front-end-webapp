@@ -1,6 +1,11 @@
 //GraphContext.tsx
 
-import { NodeState, NodeTypeToString, NodeType, StringToNodeType } from "./NodeState";
+import {
+  NodeState,
+  NodeTypeToString,
+  NodeType,
+  StringToNodeType,
+} from "./NodeState";
 import { Edge, Node } from "reactflow";
 import { NodeModel } from "./Model/modelDatatypes";
 import { createContext, useContext } from "react";
@@ -10,7 +15,7 @@ import { createContext, useContext } from "react";
  * @param nodes - The nodes to check if needing set to dirty.
  * @param node - The node to set to dirty.
  * */
-export function setDirtyNodes(nodes:Node[], dirtyIds: string[]) {
+export function setDirtyNodes(nodes: Node[], dirtyIds: string[]) {
   // This function is used to set the dirty property of the nodes in the graph
   for (const node of nodes) {
     if (dirtyIds.includes(node.id)) {
@@ -53,7 +58,7 @@ export function setNode(nodes: Node[], node: Node, setNodes: Function) {
   setNodes(newNodes);
 }
 
-export function getNodeModelFromNode(node:Node) : NodeModel{
+export function getNodeModelFromNode(node: Node): NodeModel {
   return (node.data as any).nodeState.model;
 }
 

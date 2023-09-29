@@ -21,7 +21,12 @@ import SignalPresenter from "@/app/Node/Signal/SignalPresenter";
 import SplitPresenter from "@/app/Node/Split/SplitPresenter";
 import MergePresenter from "@/app/Node/Merge/MergePresenter";
 
-import { NodeType, NodeContext, NodeState, StringToNodeType } from "../../Node/NodeState";
+import {
+  NodeType,
+  NodeContext,
+  NodeState,
+  StringToNodeType,
+} from "../../Node/NodeState";
 import {
   createNewNode,
   connectionExists,
@@ -37,12 +42,8 @@ view and handle the logic for the flowchart.
 It is the central file of the app. */
 import { NODE_WIDTH, NODE_HEIGHT } from "../../Node/NodeStyles";
 import useWindowDimensions from "../windowDimensions";
-import {
-  gatherAllDirtyIds,
-} from "../../Node/Model/modelTransformation";
-import {
-  Input,
-} from "../../Node/Model/modelDatatypes";
+import { gatherAllDirtyIds } from "../../Node/Model/modelTransformation";
+import { Input } from "../../Node/Model/modelDatatypes";
 import { forEach } from "lodash";
 
 const proOptions = { hideAttribution: true };
@@ -120,7 +121,7 @@ interface FlowPresenterProps {
  * @param {FlowPresenterProps} props - The props of the component (a graph, for loading a graph).
  * @returns {JSX.Element} The ReactFlow component.
  */
-export function FlowPresenter(props:FlowPresenterProps) {
+export function FlowPresenter(props: FlowPresenterProps) {
   // export is for documentation purposes
   const reactFlowInstance = useReactFlow();
   const window = useWindowDimensions();
@@ -128,7 +129,7 @@ export function FlowPresenter(props:FlowPresenterProps) {
   const [edges, setEdges, onEdgesChange] = useEdgesState<Edge>([]);
   const [flowKey, setFlowKey] = useState(0);
   const [selectedNode, setSelectedNode] = useState<NodeState>(); // do not use this directly, use selectNode() instead
-  const [selectedEdge, setSelectedEdge] = useState<Edge>();  //TODO: MAKE IT SO THAT THE SELECTED NODE IS SET FROM LOADED GRAPH
+  const [selectedEdge, setSelectedEdge] = useState<Edge>(); //TODO: MAKE IT SO THAT THE SELECTED NODE IS SET FROM LOADED GRAPH
   const [selectedNodeIsOpen, setSelectedNodeIsOpen] = useState<boolean>(false);
   const [connectStartNode, setConnectStartNode] = useState<Node>();
   const [connectStartHandleId, setConnectStartHandleId] = useState<string>();
@@ -137,7 +138,6 @@ export function FlowPresenter(props:FlowPresenterProps) {
     y: 0,
     zoom: START_ZOOM,
   });
-
 
   const refresh = () => {
     console.warn("Refreshed graph (refresh())");
@@ -151,7 +151,6 @@ export function FlowPresenter(props:FlowPresenterProps) {
     */
   };
 
-
   function deleteNodes(nodesToDelete: Node[]) {
     let nodesLeft = nodes.filter((node) => !nodesToDelete.includes(node));
     setNodes(nodesLeft);
@@ -162,7 +161,7 @@ export function FlowPresenter(props:FlowPresenterProps) {
     setEdges(edgesLeft);
   }
 
-  function getNode(id:string){
+  function getNode(id: string) {
     return nodes.find((node) => node.id == id);
   }
 
@@ -228,8 +227,7 @@ export function FlowPresenter(props:FlowPresenterProps) {
     nodes.forEach((node) => {
       // deselect all nodes
       (node.data as any).nodeState.selected = false;
-    }
-    );
+    });
   }
 
   function doesNodeExistAtPosition(
@@ -243,14 +241,13 @@ export function FlowPresenter(props:FlowPresenterProps) {
         Math.abs(node.position.y - y) < NODE_HEIGHT
     );
   }
-  
 
   const onConnect = useCallback(
     (connection: Connection) => {
       // Get the source and target nodes
       const sourceNode = nodes.find((node) => node.id === connection.source);
       const targetNode = nodes.find((node) => node.id === connection.target);
-      
+
       if (
         connectionExists(
           edges,
@@ -282,7 +279,7 @@ export function FlowPresenter(props:FlowPresenterProps) {
           return newEdges;
         }); // add the edge to the list of edges, in the graph
       }
-      refresh();  
+      refresh();
     },
     [setEdges, nodes]
   );
@@ -323,8 +320,12 @@ export function FlowPresenter(props:FlowPresenterProps) {
     let { x, y } = reactFlowInstance.project({ x: clientX, y: clientY });
 
     // Subtract viewport's position from the projected coordinates and adjust for the zoom level
-    x = (x - reactFlowInstance.getViewport().x) / reactFlowInstance.getZoom() - NODE_WIDTH / 4;
-    y = (y - reactFlowInstance.getViewport().y) / reactFlowInstance.getZoom() - NODE_HEIGHT / 2;
+    x =
+      (x - reactFlowInstance.getViewport().x) / reactFlowInstance.getZoom() -
+      NODE_WIDTH / 4;
+    y =
+      (y - reactFlowInstance.getViewport().y) / reactFlowInstance.getZoom() -
+      NODE_HEIGHT / 2;
     // Only add a new node if there isn't one at this position already
     let newNode = null;
     if (
@@ -348,8 +349,7 @@ export function FlowPresenter(props:FlowPresenterProps) {
           source: connectStartNode.id,
           target: lastNode.id,
           sourceHandle: connectStartHandleId!,
-          targetHandle: (lastNode.data.nodeState.model.Inputs[0] as Input)
-            .ID,
+          targetHandle: (lastNode.data.nodeState.model.Inputs[0] as Input).ID,
         };
         const newEdge = {
           id: `reactflow__edge-${newConnection.source}${newConnection.sourceHandle}-${newConnection.target}${newConnection.targetHandle}`,
@@ -392,10 +392,10 @@ export function FlowPresenter(props:FlowPresenterProps) {
     getNodeModelFromNode(node).Position.y = node.position.y; //update position in nodeState
   }
 
-  function selectNode(nodeState:NodeState|undefined){
+  function selectNode(nodeState: NodeState | undefined) {
     // this is called when the user clicks on a node (selects the node)
     deselectAllNodes();
-    nodeState ? nodeState.selected = true : null;
+    nodeState ? (nodeState.selected = true) : null;
     setSelectedNode(nodeState);
   }
 
@@ -427,9 +427,13 @@ export function FlowPresenter(props:FlowPresenterProps) {
     // this is called when the user clicks on the "add" button
 
     let x =
-      ((window.width * 0.95) / 2 - reactFlowInstance.getViewport().x) / reactFlowInstance.getZoom() - NODE_WIDTH / 2; // half the width of the node, so it's centered, relative to the viewport, not the window
+      ((window.width * 0.95) / 2 - reactFlowInstance.getViewport().x) /
+        reactFlowInstance.getZoom() -
+      NODE_WIDTH / 2; // half the width of the node, so it's centered, relative to the viewport, not the window
     let y =
-      ((window.height * 0.95) / 2 - reactFlowInstance.getViewport().y) / reactFlowInstance.getZoom() - NODE_HEIGHT; // centered, relative to the viewport, not the window
+      ((window.height * 0.95) / 2 - reactFlowInstance.getViewport().y) /
+        reactFlowInstance.getZoom() -
+      NODE_HEIGHT; // centered, relative to the viewport, not the window
     addNewNode(x, y, NodeType.Unspecified);
   }
 
@@ -437,26 +441,28 @@ export function FlowPresenter(props:FlowPresenterProps) {
     if (props.graph) {
       const loadedNodes = props.graph.nodes;
       const loadedEdges = props.graph.edges;
-      
+
       forEach(loadedNodes, (node) => {
         let n = node.data.nodeState;
         n.loading = false;
       });
       setNodes(loadedNodes);
       setEdges(loadedEdges);
-      selectNode(loadedNodes[0].data.nodeState)
+      selectNode(loadedNodes[0].data.nodeState);
     }
   }
 
   useMemo(() => {
-
     reactFlowInstance.setViewport(viewport);
 
     if (nodes.length == 0) {
       addNewNode(
-        ((window.width * 0.95) / 2 - reactFlowInstance.getViewport().x) / reactFlowInstance.getZoom() -
+        ((window.width * 0.95) / 2 - reactFlowInstance.getViewport().x) /
+          reactFlowInstance.getZoom() -
           NODE_WIDTH / 2,
-        ((window.height * 0.95) / 2 - reactFlowInstance.getViewport().y) / reactFlowInstance.getZoom() - NODE_HEIGHT,
+        ((window.height * 0.95) / 2 - reactFlowInstance.getViewport().y) /
+          reactFlowInstance.getZoom() -
+          NODE_HEIGHT,
         NodeType.Source
       );
     }
@@ -465,32 +471,32 @@ export function FlowPresenter(props:FlowPresenterProps) {
 
   return (
     <UIContext.Provider value={{ selectedNode, selectNode, refresh }}>
-        <FlowView
-          flowKey={flowKey}
-          proOptions={proOptions}
-          nodes={nodes}
-          nodeTypes={nodeTypes}
-          onNodesChange={onNodesChange}
-          onNodesDelete={onNodesDelete}
-          deleteSelectedNode={deleteSelectedNode}
-          onNodeDragStop={onNodeDragStop}
-          openNodeView={openNodeView}
-          edges={edges}
-          onEdgesDelete={onEdgesDelete}
-          onEdgesChange={onEdgesChange}
-          deleteSelectedEdge={deleteSelectedEdge}
-          onConnect={onConnect}
-          onConnectStart={onConnectStart}
-          onConnectEnd={onConnectEnd}
-          openSelectedNode={selectedNodeIsOpen}
-          showSelected={showSelected}
-          hideSelected={hideSelected}
-          handlePaneClick={handlePaneClick}
-          onSelectionChange={onSelectionChange}
-          addButtonHandler={addButtonHandler}
-          loadFromGraph={loadFromGraph}
-          onMove={onMove}
-        />
+      <FlowView
+        flowKey={flowKey}
+        proOptions={proOptions}
+        nodes={nodes}
+        nodeTypes={nodeTypes}
+        onNodesChange={onNodesChange}
+        onNodesDelete={onNodesDelete}
+        deleteSelectedNode={deleteSelectedNode}
+        onNodeDragStop={onNodeDragStop}
+        openNodeView={openNodeView}
+        edges={edges}
+        onEdgesDelete={onEdgesDelete}
+        onEdgesChange={onEdgesChange}
+        deleteSelectedEdge={deleteSelectedEdge}
+        onConnect={onConnect}
+        onConnectStart={onConnectStart}
+        onConnectEnd={onConnectEnd}
+        openSelectedNode={selectedNodeIsOpen}
+        showSelected={showSelected}
+        hideSelected={hideSelected}
+        handlePaneClick={handlePaneClick}
+        onSelectionChange={onSelectionChange}
+        addButtonHandler={addButtonHandler}
+        loadFromGraph={loadFromGraph}
+        onMove={onMove}
+      />
     </UIContext.Provider>
   );
 }
@@ -499,7 +505,7 @@ export function FlowPresenter(props:FlowPresenterProps) {
  * Wrapper for the ReactFlow component
  * @returns {JSX.Element} The wrapped ReactFlow component.
  */
-function FlowWrapper(props:FlowPresenterProps) {
+function FlowWrapper(props: FlowPresenterProps) {
   return (
     <ReactFlowProvider>
       <FlowPresenter graph={props.graph}></FlowPresenter>
