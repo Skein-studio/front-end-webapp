@@ -21,7 +21,7 @@ import SignalPresenter from "@/app/Node/Signal/SignalPresenter";
 import SplitPresenter from "@/app/Node/Split/SplitPresenter";
 import MergePresenter from "@/app/Node/Merge/MergePresenter";
 
-import { NodeType, NodeContext, NodeState } from "../../Node/NodeState";
+import { NodeType, NodeContext, NodeState, StringToNodeType } from "../../Node/NodeState";
 import {
   createNewNode,
   connectionExists,
@@ -43,6 +43,7 @@ import {
 import {
   Input,
 } from "../../Node/Model/modelDatatypes";
+import { forEach } from "lodash";
 
 const proOptions = { hideAttribution: true };
 
@@ -381,6 +382,7 @@ export function FlowPresenter(props:FlowPresenterProps) {
     setNodes(newNodes);
     console.log("nodes updated: ", newNodes);
     deselectAllNodes();
+    selectNode(newNode.data.nodeState);
     return newNode;
   };
 
@@ -435,15 +437,21 @@ export function FlowPresenter(props:FlowPresenterProps) {
     if (props.graph) {
       const loadedNodes = props.graph.nodes;
       const loadedEdges = props.graph.edges;
+      
+      forEach(loadedNodes, (node) => {
+        let n = node.data.nodeState;
+        n.loading = false;
+      });
       setNodes(loadedNodes);
       setEdges(loadedEdges);
+      selectNode(loadedNodes[0].data.nodeState)
     }
   }
 
   useMemo(() => {
 
     reactFlowInstance.setViewport(viewport);
-    
+
     if (nodes.length == 0) {
       addNewNode(
         ((window.width * 0.95) / 2 - reactFlowInstance.getViewport().x) / reactFlowInstance.getZoom() -

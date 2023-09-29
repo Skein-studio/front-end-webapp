@@ -1,4 +1,4 @@
-import { NodeState } from "../NodeState";
+import { NodeState, getNodeType } from "../NodeState";
 import { styled } from "styled-components";
 import { purple, NodeTitle, NodeIcon } from "@/app/Node/NodeStyles";
 import { NodeType } from "../NodeState";
@@ -20,7 +20,7 @@ interface Props {
  * */
 export default function OpenNodeView(props: Props) {
   function Contents() {
-    switch (props.nodeState.getType()) {
+    switch (getNodeType(props.nodeState)) {
       case NodeType.Source:
         return <OpenSourcePresenter />;
       case NodeType.Signal:
@@ -35,7 +35,7 @@ export default function OpenNodeView(props: Props) {
   }
 
   function Icon() {
-    switch (props.nodeState.getType()) {
+    switch (getNodeType(props.nodeState)) {
       case NodeType.Source:
         return <NodeIcon src={SourceImg} />;
       case NodeType.Signal:
