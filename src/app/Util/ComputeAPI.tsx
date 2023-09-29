@@ -1,5 +1,6 @@
 import { Node } from "reactflow";
 import { NodeModel, Output } from "../Node/Model/modelDatatypes";
+import { createGraphJSON } from "../Node/GraphFunctions";
 
 /**
  * Represents the job and node statuses.
@@ -29,20 +30,20 @@ const fetchJSON = async (url: string, opts = {}) =>
 
 /**
  * This function sends a graph model to the compute endpoint. It takes a JSON object, and sends it in the POST request's body.
- * @param {any} graph - The graph object to send to the compute endpoint
+ * @param {any} reactFlowData - The reactFlow object to send to the compute endpoint
  * @returns {Promise<Response>} - The response from the compute endpoint
  * */
-export function SendGraphForCompute(graph: any) {
+export function SendGraphForCompute(reactFlowData: any) {
   console.log("Sending graph for compute");
-  console.log(JSON.stringify(graph));
+
+  let graphJSON = createGraphJSON(reactFlowData);
 
   fetch(COMPUTE_ENDPOINT, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(graph),
+    body: JSON.stringify(graphJSON),
   });
 }
-  
 
 /**
  * Stops all pending tasks by setting the job status to false.

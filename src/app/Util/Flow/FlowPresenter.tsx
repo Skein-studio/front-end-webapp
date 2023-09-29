@@ -41,7 +41,7 @@ It is the central file of the app. */
 import { NODE_WIDTH, NODE_HEIGHT } from "../../Node/NodeStyles";
 import useWindowDimensions from "../windowDimensions";
 import { gatherAllDirtyIds } from "../../Node/Model/modelTransformation";
-import { Input } from "@/app/Node/Model/modelDatatypes";
+import { Graph, Input } from "@/app/Node/Model/modelDatatypes";
 import { forEach } from "lodash";
 
 const proOptions = { hideAttribution: true };
@@ -78,7 +78,7 @@ const nodeTypes = {
 const START_ZOOM = 0.75;
 
 interface FlowPresenterProps {
-  graph?: any;
+  graph?: Graph;
 }
 
 /**
@@ -379,7 +379,7 @@ export function FlowPresenter(props: FlowPresenterProps) {
     const newNode = createNewNode(x, y, nodeType); // create a new node
     const newNodes = [...nodes, newNode];
     setNodes(newNodes);
-    console.log("nodes updated: ", newNodes);
+    console.log("added a new node: ", newNode);
     deselectAllNodes();
     selectNode(newNode.data.nodeState);
     return newNode;
@@ -448,6 +448,7 @@ export function FlowPresenter(props: FlowPresenterProps) {
       setNodes(loadedNodes);
       setEdges(loadedEdges);
       selectNode(loadedNodes[0].data.nodeState);
+      console.log("Loaded graph: ", props.graph);
     }
   }
 
@@ -465,7 +466,7 @@ export function FlowPresenter(props: FlowPresenterProps) {
         NodeType.Source
       );
     }
-    console.log("Graph created: ", nodes, edges);
+    console.log("Initialized (useMemo)")
   }, []);
 
   return (

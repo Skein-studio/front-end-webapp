@@ -5,8 +5,8 @@ import {
   NodeTypeToString,
   NodeType,
 } from "./NodeState";
-import { Edge, Node } from "reactflow";
-import { NodeModel } from "./Model/modelDatatypes";
+import { Edge, Node, Viewport } from "reactflow";
+import { Graph, NodeModel } from "./Model/modelDatatypes";
 import { createContext, useContext } from "react";
 
 /**
@@ -39,6 +39,25 @@ export const UIContext = createContext<UI>({
 //AND a use context for it
 export function useUI() {
   return useContext(UIContext);
+}
+
+/**
+ * Creates a graph JSON from the given react flow data.
+ * @param reactFlowData - The react flow data to create a graph JSON from.
+ * @returns A graph JSON containing ID, version, nodes, edges, and viewport.
+ * */
+export function createGraphJSON(reactFlowData:any) {
+  let nodes: Node[] = reactFlowData.nodes;
+  let edges: Edge[] = reactFlowData.edges;
+  let viewport:Viewport = reactFlowData.viewport;
+  let graphJSON: Graph = {
+    ID: "IDPLACEHOLDER",
+    version: 0,
+    nodes: nodes,
+    edges: edges,
+    viewport: viewport,
+  };
+  return graphJSON;
 }
 
 /**

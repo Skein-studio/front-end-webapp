@@ -15,6 +15,8 @@ const ApplicationFrame = styled.div`
 
 export default function Home() {
   const dummyData = {
+    ID: "IDPLACEHOLDER",
+    version: 0,
     nodes: [
       {
         width: 308,

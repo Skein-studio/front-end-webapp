@@ -1,3 +1,5 @@
+import { Edge, Node, Viewport } from "reactflow";
+
 export interface NodeModel {
   Position: Coordinate;
   ID: string;
@@ -6,6 +8,14 @@ export interface NodeModel {
   Type: string;
   Inputs: Input[];
   Outputs: Output[];
+}
+
+export interface Graph {
+  ID: string;
+  version: number;
+  nodes: Node[];
+  edges: Edge[];
+  viewport: Viewport;
 }
 export interface NodeParameters {
   URL: string;
