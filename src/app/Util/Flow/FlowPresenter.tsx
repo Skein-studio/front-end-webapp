@@ -435,6 +435,7 @@ export function FlowPresenter(props: FlowPresenterProps) {
   }
 
   function loadGraphFromJSON() {
+    selectNode(undefined);
     if (props.graph) {
       const loadedNodes = props.graph.nodes;
       const loadedEdges = props.graph.edges;
