@@ -16,6 +16,11 @@ import { useReactFlow } from "reactflow";
  * @returns A UnspecifiedView component.
  * */
 
+/**
+ * The presenter for the Unspecified node.
+ * @returns A UnspecifiedView component.
+ * */
+
 function UnspecifiedPresenter() {
   const nodeContext = useContext(NodeContext);
   const node = nodeContext.nodeState;

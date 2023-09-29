@@ -42,7 +42,6 @@ export function SendGraphForCompute(graph: any) {
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(graph),
   });
-}
 
 /**
  * Stops all pending tasks by setting the job status to false.
