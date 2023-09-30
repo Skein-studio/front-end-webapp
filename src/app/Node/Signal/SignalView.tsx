@@ -2,7 +2,6 @@ import React, { useContext } from "react";
 import { Container } from "@/app/Util/BaseStyles";
 import { NodeIcon, NodeSmall, NodeTitle } from "@/app/Node/NodeStyles";
 import { NodeContext } from "../NodeState";
-import { useGraph } from "../GraphContext";
 import SignalImg from "./signal.svg";
 import SpinnerImg from "./Ellipsis-4.3s-800px.svg";
 import AudioPlayer from "@/app/Util/AudioPlayback/AudioPlayer";
@@ -21,12 +20,12 @@ interface Props {
  * @returns A NodeSmall component.
  * */
 function SignalView(props: Props) {
-  const graph = useGraph();
   const nodeContext = useContext(NodeContext);
   const node = nodeContext.nodeState;
+  const ui = useUI();
 
   function selectNode() {
-    graph.selectNode(node);
+    ui.selectNode(node);
   }
 
   const modifiedAudioState: AudioState = {
@@ -63,6 +62,8 @@ function SignalView(props: Props) {
 export default SignalView;
 
 import styled from "styled-components";
+import { useReactFlow } from "reactflow";
+import { UIContext, useUI } from "../GraphFunctions";
 
 const LoadingIcon = styled.img`
   width: 80px;

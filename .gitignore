@@ -4,6 +4,9 @@ node_modules/
 # Ignore logs
 *.log
 
+# Ignore docs
+docs/
+
 # Ignore build output
 /build/
 /dist/

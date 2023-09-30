@@ -9,10 +9,10 @@ import {
   useEdgesState,
   useNodesState,
   useReactFlow,
-  Viewport,
   OnConnectStartParams,
   OnSelectionChangeParams,
   Connection,
+  Viewport,
 } from "reactflow";
 import SourcePresenter from "../../Node/Source/SourcePresenter";
 import UnspecifiedPresenter from "../../Node/Unspecified/UnspecifiedPresenter";
@@ -20,18 +20,18 @@ import SignalPresenter from "@/app/Node/Signal/SignalPresenter";
 import SplitPresenter from "@/app/Node/Split/SplitPresenter";
 import MergePresenter from "@/app/Node/Merge/MergePresenter";
 
-import { NodeType, NodeContext, NodeState } from "../../Node/NodeState";
+import {
+  NodeType,
+  NodeContext,
+  NodeState,
+} from "@/app/Node/NodeState";
 import {
   createNewNode,
-  Graph,
-  GraphContext,
-  deselectNode,
-  deleteNodes,
-  deleteEdges,
-  getNode,
   connectionExists,
   setDirtyNodes,
-} from "../../Node/GraphContext";
+  getNodeModelFromNode,
+  UIContext,
+} from "@/app/Node/GraphFunctions";
 import OpenNodePresenter from "@/app/Node/OpenNode/OpenNodePresenter";
 import FlowView from "./FlowView";
 
@@ -40,16 +40,9 @@ view and handle the logic for the flowchart.
 It is the central file of the app. */
 import { NODE_WIDTH, NODE_HEIGHT } from "../../Node/NodeStyles";
 import useWindowDimensions from "../windowDimensions";
-import {
-  gatherAllDirtyIds,
-  transformGraphToRootModel,
-} from "../../Node/Model/modelTransformation";
-import { handleType } from "../../Node/Model/modelDatatypes";
-import {
-  InputModel,
-  OutputModel,
-  EdgeModel as edgeModel,
-} from "../../Node/Model/modelDatatypes";
+import { gatherAllDirtyIds } from "../../Node/Model/modelTransformation";
+import { Graph, Input } from "@/app/Node/Model/modelDatatypes";
+import { forEach } from "lodash";
 
 const proOptions = { hideAttribution: true };
 
@@ -84,6 +77,10 @@ const nodeTypes = {
 
 const START_ZOOM = 0.75;
 
+interface FlowPresenterProps {
+  graph?: Graph;
+}
+
 /**
  * FlowPresenter is the main component of the app, it contains handlers for all the events that can happen in ReactFlow component
  * It contains the following handlers:
@@ -93,7 +90,6 @@ const START_ZOOM = 0.75;
  * @function onNodeDragStop: called when the user stops dragging a node
  * @function onNodesDelete: called when the user deletes a node
  * @function onEdgesDelete: called when the user deletes an edge
- * @function onMove: called when the user moves the canvas
  * @function onSelectionChange: called when an edge selection is changed
  * @function handlePaneClick: called when the user clicks on the canvas
  * @function addButtonHandler: called when the user clicks on the "add" button
@@ -111,7 +107,6 @@ const START_ZOOM = 0.75;
  * @function openNodeView: called when the user clicks on a the "open" button in the node view, shows the node in enlarged view
  * @var reactFlowInstance: the ReactFlow component instance
  * @var window: the window dimensions
- * @var viewport: the viewport dimensions
  * @var nodes: the nodes in the graph
  * @var edges: the edges in the graph
  * @var flowKey: the key of the ReactFlow component, used to force a refresh
@@ -121,26 +116,26 @@ const START_ZOOM = 0.75;
  * @var connectStartNode: the node that the user started connecting from
  * @var connectStartHandleId: the handle id of the node that the user started connecting from
  * @var graph: the graph object that is passed to the GraphContext.Provider
+ * @param {FlowPresenterProps} props - The props of the component (a graph, for loading a graph).
  * @returns {JSX.Element} The ReactFlow component.
  */
-export function FlowPresenter() {
+export function FlowPresenter(props: FlowPresenterProps) {
   // export is for documentation purposes
   const reactFlowInstance = useReactFlow();
   const window = useWindowDimensions();
-  const [viewport, setViewport] = useState<Viewport>({
-    x: 0,
-    y: 0,
-    zoom: START_ZOOM,
-  }); // find a way to save the viewport and pass it to reactflow component
-
   const [nodes, setNodes, onNodesChange] = useNodesState<Node>([]);
   const [edges, setEdges, onEdgesChange] = useEdgesState<Edge>([]);
   const [flowKey, setFlowKey] = useState(0);
   const [selectedNode, setSelectedNode] = useState<NodeState>(); // do not use this directly, use selectNode() instead
-  const [selectedEdge, setSelectedEdge] = useState<Edge>();
+  const [selectedEdge, setSelectedEdge] = useState<Edge>(); //TODO: MAKE IT SO THAT THE SELECTED NODE IS SET FROM LOADED GRAPH
   const [selectedNodeIsOpen, setSelectedNodeIsOpen] = useState<boolean>(false);
   const [connectStartNode, setConnectStartNode] = useState<Node>();
   const [connectStartHandleId, setConnectStartHandleId] = useState<string>();
+  const [viewport, setViewport] = useState<Viewport>({
+    x: 0,
+    y: 0,
+    zoom: START_ZOOM,
+  });
 
   const refresh = () => {
     console.warn("Refreshed graph (refresh())");
@@ -154,19 +149,28 @@ export function FlowPresenter() {
     */
   };
 
-  function selectNode(nodeState: NodeState | undefined) {
-    deselectNode(graph);
-    setSelectedNode(nodeState);
-    nodeState!.selected = true;
+  function deleteNodes(nodesToDelete: Node[]) {
+    let nodesLeft = nodes.filter((node) => !nodesToDelete.includes(node));
+    setNodes(nodesLeft);
   }
+
+  function deleteEdges(edgesToDelete: Edge[]) {
+    let edgesLeft = edges.filter((edge) => !edgesToDelete.includes(edge));
+    setEdges(edgesLeft);
+  }
+
+  function getNode(id: string) {
+    return nodes.find((node) => node.id == id);
+  }
+
   function deleteSelectedNode() {
     // this is called when the user clicks on the delete button
-    if (graph.selectedNode) {
-      const nodeToDelete = getNode(graph, graph.selectedNode.model.ID);
+    if (selectedNode) {
+      const nodeToDelete = getNode(selectedNode.model.ID);
       if (nodeToDelete) {
-        deleteNodes(graph, [nodeToDelete]);
+        deleteNodes([nodeToDelete]);
       } else {
-        console.log(`No node found with id: ${graph.selectedNode.model.ID}`);
+        console.log(`No node found with id: ${selectedNode.model.ID}`);
       }
     }
     setSelectedNode(undefined);
@@ -177,45 +181,19 @@ export function FlowPresenter() {
     if (selectedEdge) {
       const edgeToDelete = selectedEdge;
       if (edgeToDelete) {
-        deleteEdges(graph, [edgeToDelete]);
+        deleteEdges([edgeToDelete]);
       } else {
         console.log("Something strange happened when trying to delete edge");
       }
     }
   }
 
-  /*
-    We wrap the value passed to the provider in a useMemo hook. 
-    The useMemo hook returns a memoized value that only recomputes when any of its dependencies change, 
-    making sure that the reference stays the same if the values of the variables didn't change.
-    This is the graph object that is passed to the GraphContext.Provider
-    */
-  const graph: Graph = useMemo(
-    () => ({
-      nodes,
-      edges,
-      refresh,
-      selectNode,
-      selectedNode,
-      setNodes,
-      setEdges,
-    }),
-    [nodes, edges, refresh, selectNode, selectedNode, setNodes, setEdges]
-  );
-
   useEffect(() => {
     // this is called when the graph changes, so we can set the dirty nodes
-    const root = transformGraphToRootModel(graph);
-    const allDirtyIds = gatherAllDirtyIds(root.Sketch.Graph); // Get all the dirty IDs
-    setDirtyNodes(graph, allDirtyIds);
+    const allDirtyIds = gatherAllDirtyIds(nodes, edges); // Get all the dirty IDs
+    setDirtyNodes(nodes, allDirtyIds);
   }, [nodes, edges]);
 
-  function stopSelect() {
-    // this is called when the user clicks on the canvas
-    deselectNode(graph);
-    setSelectedNode(undefined);
-    setSelectedNodeIsOpen(false);
-  }
   function onSelectionChange(params: OnSelectionChangeParams) {
     // this is called when an edge selection is changed
     if (params.edges.length == 0) {
@@ -227,24 +205,29 @@ export function FlowPresenter() {
     }
   }
 
-  function onMove(event: MouseEvent | TouchEvent, viewport: Viewport) {
-    // this is called when the user moves the canvas
-    setViewport({ x: viewport.x, y: viewport.y, zoom: viewport.zoom }); // save the viewport
-  }
-
   function onNodesDelete(nodesToDelete: Node[]) {
     // this is called when the user deletes a node
-    deleteNodes(graph, nodesToDelete); //  delete the node from the graph
+    deleteNodes(nodesToDelete); //  delete the node from the graph
   }
 
   function onEdgesDelete(edgesToDelete: Edge[]) {
     // this is called when the user deletes an edge
-    deleteEdges(graph, edgesToDelete); // delete the edge from the graph
+    deleteEdges(edgesToDelete); // delete the edge from the graph
   }
 
   function handlePaneClick() {
     // this is called when the user clicks on the canvas
-    stopSelect();
+    nodes.forEach((node) => {
+      // deselect all nodes
+      (node.data as any).nodeState.selected = false;
+    });
+  }
+
+  function onMove(
+    event: TouchEvent | MouseEvent,
+    viewport: Viewport
+  ) {
+    setViewport(viewport);
   }
 
   function doesNodeExistAtPosition(
@@ -259,65 +242,19 @@ export function FlowPresenter() {
     );
   }
 
-  const connectionToEdgeModel = (
-    connection: Connection,
-    newTargetNode?: Node
-  ): edgeModel => {
-    let inputsOfTargetNode: InputModel[];
-
-    if (newTargetNode) {
-      inputsOfTargetNode = newTargetNode.data.nodeState.model.Inputs;
-    } else {
-      inputsOfTargetNode = graph.nodes.find(
-        (node) => node.id == connection.target
-      )?.data.nodeState.model.Inputs;
-    }
-    let n = (nodes.find((node) => node.id == connection.source)?.data as any)
-      .nodeState as NodeState;
-
-    let outputsOfSourceNode: OutputModel[] = graph.nodes.find(
-      (node) => node.id == connection.source
-    )?.data.nodeState.model.Outputs; // get the outputs of the source node
-
-    let inputName = inputsOfTargetNode.find(
-      (input: InputModel) => input.ID == connection.targetHandle
-    )?.Name; // get the name of the input
-    let outputName = outputsOfSourceNode.find(
-      (output: OutputModel) => output.ID == connection.sourceHandle
-    )?.Name; // get the name of the output
-
-    if (n.model.Type == "split") {
-      outputName =
-        handleType[
-          parseInt(connection.sourceHandle!.split("[", 2)[1].split("]", 2)[0])
-        ];
-    }
-    return {
-      ID: `reactflow__edge-${connection.source}${connection.sourceHandle}-${connection.target}${connection.target}out[0]`,
-      Output: {
-        NodeID: connection.source!,
-        OutputName: outputName,
-      },
-      Input: {
-        NodeID: connection.target!,
-        InputName: inputName,
-      },
-    } as edgeModel;
-  };
-
   const onConnect = useCallback(
-    (connection: any) => {
+    (connection: Connection) => {
       // Get the source and target nodes
       const sourceNode = nodes.find((node) => node.id === connection.source);
       const targetNode = nodes.find((node) => node.id === connection.target);
 
       if (
         connectionExists(
-          graph,
-          connection.source,
-          connection.target,
-          connection.sourceHandle,
-          connection.targetHandle
+          edges,
+          connection.source!,
+          connection.target!,
+          connection.sourceHandle!,
+          connection.targetHandle!
         )
       ) {
         console.log("Connection already exists", connection, edges);
@@ -333,7 +270,6 @@ export function FlowPresenter() {
             target: connection.target,
             sourceHandle: connection.sourceHandle,
             targetHandle: connection.targetHandle,
-            data: connectionToEdgeModel(connection),
           };
           eds.map((e) => e.data);
           const newEdges = addEdge(newEdge, eds);
@@ -343,6 +279,7 @@ export function FlowPresenter() {
           return newEdges;
         }); // add the edge to the list of edges, in the graph
       }
+      refresh();
     },
     [setEdges, nodes]
   );
@@ -379,12 +316,12 @@ export function FlowPresenter() {
       clientX = event.changedTouches[0].clientX;
       clientY = event.changedTouches[0].clientY;
     }
+    
+    let { x, y } = reactFlowInstance.project({x:clientX, y:clientY});
 
-    let { x, y } = reactFlowInstance.project({ x: clientX, y: clientY });
-
-    // Subtract viewport's position from the projected coordinates and adjust for the zoom level
-    x = (x - viewport.x) / viewport.zoom - NODE_WIDTH / 4;
-    y = (y - viewport.y) / viewport.zoom - NODE_HEIGHT / 2;
+    // Subtract width and height of node to center the node on the handle
+    x = x - NODE_WIDTH / 4;
+    y = y - NODE_HEIGHT / 2;
     // Only add a new node if there isn't one at this position already
     let newNode = null;
     if (
@@ -408,7 +345,7 @@ export function FlowPresenter() {
           source: connectStartNode.id,
           target: lastNode.id,
           sourceHandle: connectStartHandleId!,
-          targetHandle: (lastNode.data.nodeState.model.Inputs[0] as InputModel)
+          targetHandle: (lastNode.data.nodeState.model.Inputs[0] as Input)
             .ID,
         };
         const newEdge = {
@@ -417,7 +354,6 @@ export function FlowPresenter() {
           target: newConnection.target,
           sourceHandle: newConnection.sourceHandle,
           targetHandle: newConnection.targetHandle,
-          data: connectionToEdgeModel(newConnection, newNode),
         };
         setEdges((eds) => {
           const newEdges = addEdge(newEdge, eds);
@@ -428,20 +364,36 @@ export function FlowPresenter() {
       setConnectStartHandleId(""); // reset the handle id
     }
   }
+  function deselectAllNodes() {
+    // this is called when the user clicks on the canvas (deselects current node)
+    nodes.forEach((node) => {
+      (node.data as any).nodeState.selected = false;
+    });
+    setSelectedNode(undefined);
+  }
 
   const addNewNode = (x: number, y: number, nodeType: NodeType) => {
     // this is called when the user adds a new node
     const newNode = createNewNode(x, y, nodeType); // create a new node
     const newNodes = [...nodes, newNode];
     setNodes(newNodes);
-    console.log("nodes updated: ", newNodes);
-    selectNode(newNode.data.nodeState); // select the new node
+    console.log("added a new node: ", newNode);
+    deselectAllNodes();
+    selectNode(newNode.data.nodeState);
     return newNode;
   };
 
   function onNodeDragStop(event: React.MouseEvent, node: Node, nodes: Node[]) {
     // this is called when the user stops dragging a node
-    node.data.nodeState.setPosition(node.position.x, node.position.y); //update position in nodeState
+    getNodeModelFromNode(node).Position.x = node.position.x;
+    getNodeModelFromNode(node).Position.y = node.position.y; //update position in nodeState
+  }
+
+  function selectNode(nodeState: NodeState | undefined) {
+    // this is called when the user clicks on a node (selects the node)
+    deselectAllNodes();
+    nodeState ? (nodeState.selected = true) : null;
+    setSelectedNode(nodeState);
   }
 
   function showSelected() {
@@ -461,66 +413,90 @@ export function FlowPresenter() {
     // this is called when the user clicks on a the "open" button in the node view
     if (selectedNode) {
       return (
-        <OpenNodePresenter state={selectedNode} closeWindow={stopSelect} />
+        <OpenNodePresenter state={selectedNode} closeWindow={hideSelected} />
       );
     } else {
       return null;
     }
   }
 
-  useMemo(() => {
-    console.log("Graph loaded: ", graph);
-    if (nodes.length == 0) {
-      addNewNode(
-        ((window.width * 0.95) / 2 - viewport.x) / viewport.zoom -
-          NODE_WIDTH / 2,
-        ((window.height * 0.95) / 2 - viewport.y) / viewport.zoom - NODE_HEIGHT,
-        NodeType.Source
-      );
-    }
-  }, []);
-
   function addButtonHandler() {
     // this is called when the user clicks on the "add" button
 
     let x =
-      ((window.width * 0.95) / 2 - viewport.x) / viewport.zoom - NODE_WIDTH / 2; // half the width of the node, so it's centered, relative to the viewport, not the window
+      ((window.width * 0.95) / 2 - viewport.x) /
+        viewport.zoom -
+      NODE_WIDTH / 2; // half the width of the node, so it's centered, relative to the viewport, not the window
     let y =
-      ((window.height * 0.95) / 2 - viewport.y) / viewport.zoom - NODE_HEIGHT; // centered, relative to the viewport, not the window
+      ((window.height * 0.95) / 2 - viewport.y) /
+        viewport.zoom -
+      NODE_HEIGHT; // centered, relative to the viewport, not the window
     addNewNode(x, y, NodeType.Unspecified);
   }
 
+  function loadGraphFromJSON() {
+    selectNode(undefined);
+    if (props.graph) {
+      const loadedNodes = props.graph.nodes;
+      const loadedEdges = props.graph.edges;
+
+      forEach(loadedNodes, (node) => {
+        let n = node.data.nodeState;
+        n.loading = false;
+      });
+      setNodes(loadedNodes);
+      setEdges(loadedEdges);
+      selectNode(loadedNodes[0].data.nodeState);
+      console.log("Loaded graph: ", props.graph);
+    }
+  }
+
+  useMemo(() => {
+
+    if (nodes.length == 0) {
+      addNewNode(
+        ((window.width * 0.95) / 2 - viewport.x) /
+          viewport.zoom -
+          NODE_WIDTH / 2,
+        ((window.height * 0.95) / 2 - viewport.y) /
+          viewport.zoom -
+          NODE_HEIGHT,
+        NodeType.Source
+      );
+    }
+    console.log("Initialized (useMemo)")
+  }, []);
+
   return (
-    <ReactFlowProvider>
-      <GraphContext.Provider value={graph}>
-        <FlowView
-          flowKey={flowKey}
-          proOptions={proOptions}
-          nodes={nodes}
-          nodeTypes={nodeTypes}
-          onNodesChange={onNodesChange}
-          onNodesDelete={onNodesDelete}
-          deleteSelectedNode={deleteSelectedNode}
-          onNodeDragStop={onNodeDragStop}
-          openNodeView={openNodeView}
-          edges={edges}
-          onEdgesDelete={onEdgesDelete}
-          onEdgesChange={onEdgesChange}
-          deleteSelectedEdge={deleteSelectedEdge}
-          onConnect={onConnect}
-          onConnectStart={onConnectStart}
-          onConnectEnd={onConnectEnd}
-          viewport={viewport}
-          onMove={onMove}
-          openSelectedNode={selectedNodeIsOpen}
-          showSelected={showSelected}
-          hideSelected={hideSelected}
-          handlePaneClick={handlePaneClick}
-          onSelectionChange={onSelectionChange}
-          addButtonHandler={addButtonHandler}
-        />
-      </GraphContext.Provider>
-    </ReactFlowProvider>
+    <UIContext.Provider value={{ selectedNode, selectNode, refresh }}>
+      <FlowView
+        flowKey={flowKey}
+        proOptions={proOptions}
+        nodes={nodes}
+        nodeTypes={nodeTypes}
+        onNodesChange={onNodesChange}
+        onNodesDelete={onNodesDelete}
+        deleteSelectedNode={deleteSelectedNode}
+        onNodeDragStop={onNodeDragStop}
+        openNodeView={openNodeView}
+        edges={edges}
+        onEdgesDelete={onEdgesDelete}
+        onEdgesChange={onEdgesChange}
+        deleteSelectedEdge={deleteSelectedEdge}
+        onConnect={onConnect}
+        onConnectStart={onConnectStart}
+        onConnectEnd={onConnectEnd}
+        openSelectedNode={selectedNodeIsOpen}
+        showSelected={showSelected}
+        hideSelected={hideSelected}
+        handlePaneClick={handlePaneClick}
+        onSelectionChange={onSelectionChange}
+        addButtonHandler={addButtonHandler}
+        loadFromGraph={loadGraphFromJSON}
+        defaultViewport={viewport}
+        onMove={onMove}
+      />
+    </UIContext.Provider>
   );
 }
 
@@ -528,10 +504,10 @@ export function FlowPresenter() {
  * Wrapper for the ReactFlow component
  * @returns {JSX.Element} The wrapped ReactFlow component.
  */
-function FlowWrapper() {
+function FlowWrapper(props: FlowPresenterProps) {
   return (
     <ReactFlowProvider>
-      <FlowPresenter></FlowPresenter>
+      <FlowPresenter graph={props.graph}></FlowPresenter>
     </ReactFlowProvider>
   );
 }

@@ -3,27 +3,27 @@ import useAudio from "@/app/Util/AudioPlayback/useAudio";
 import SignalView from "./SignalView";
 import { useContext } from "react";
 import { NodeContext } from "../NodeState";
-import {
-  transformGraphToRootModel,
-  topologicalSort,
-} from "@/app/Node/Model/modelTransformation";
-import { useGraph } from "../GraphContext";
+import { topologicalSort } from "@/app/Node/Model/modelTransformation";
 import {
   SendGraphForCompute,
   populateDependenciesByNodeID,
 } from "@/app/Util/ComputeAPI";
+import { useReactFlow, useUpdateNodeInternals } from "reactflow";
 
 /**
  * The presenter for the Signal node.
  * @returns A SignalView component.
  * */
 export default function SignalPresenter() {
-  const graph = useGraph();
   const nodeContext = useContext(NodeContext);
   const node = nodeContext.nodeState;
   const audioUrl = node.model.Outputs[0].Src;
   const fetched = !node.model.Dirty;
   const audioState = useAudio(audioUrl, true);
+  const reactFlowInstance = useReactFlow();
+  const nodes = reactFlowInstance.getNodes();
+  const edges = reactFlowInstance.getEdges();
+  const updateInternals = useUpdateNodeInternals();
 
   //  play button's callback include the fetchAudio function
   const playAudio = () => {
@@ -36,19 +36,18 @@ export default function SignalPresenter() {
 
   const fetchAudio = async () => {
     try {
-      let loadingNodes: string[] = topologicalSort(
-        transformGraphToRootModel(graph).Sketch.Graph
-      );
+      let loadingNodes: string[] = topologicalSort(nodes, edges);
       loadingNodes.forEach((id) => {
-        let n = graph.nodes.find((n) => n.id == id);
-        if (n) n.data.nodeState.loading = true;
+        let n = nodes.find((n) => n.id == id);
+        if (n) {
+          n.data.nodeState.loading = true;
+          updateInternals(n.id);
+        }
       });
-      graph.refresh(); // Reload the component to show the spinner
+      await SendGraphForCompute(reactFlowInstance.toObject());
+      await populateDependenciesByNodeID(node.model.ID);
 
-      await SendGraphForCompute(transformGraphToRootModel(graph));
-      await populateDependenciesByNodeID(node.getID(), graph);
-
-      graph.refresh(); // done
+      updateInternals(node.model.ID);
     } catch (e) {
       console.log(e);
     }

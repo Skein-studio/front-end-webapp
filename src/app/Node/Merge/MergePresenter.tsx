@@ -1,9 +1,9 @@
 //MergePresenter.tsx
-
+import { useReactFlow, useUpdateNodeInternals } from "reactflow";
 import React, { useEffect, useContext } from "react";
 import MergeView from "./MergeView";
 import { NodeContext } from "../NodeState";
-import { useGraph } from "../GraphContext";
+import { addTargetHandle } from "../NodeState";
 
 /**
  * The presenter for the Merge node.
@@ -12,7 +12,8 @@ import { useGraph } from "../GraphContext";
 const MergePresenter: React.FC = () => {
   const nodeContext = useContext(NodeContext);
   const node = nodeContext.nodeState;
-  const graph = useGraph();
+  const reactFlowInstance = useReactFlow();
+  const updateInternals = useUpdateNodeInternals();
 
   useEffect(() => {
     // Check if all target handles are connected
@@ -21,8 +22,8 @@ const MergePresenter: React.FC = () => {
     let connectedHandles = 0;
 
     // Iterate over edges to find the number of connections for this node's target handles
-    graph.edges.forEach((edge) => {
-      if (edge.target === node.getID()) {
+    reactFlowInstance.getEdges().forEach((edge) => {
+      if (edge.target === node.model.ID) {
         connectedHandles++;
       }
     });
@@ -32,16 +33,16 @@ const MergePresenter: React.FC = () => {
       numberOfTargetHandles > 0 &&
       connectedHandles == numberOfTargetHandles
     ) {
-      addTargetHandle();
+      addHandle();
     }
-  }, [node, graph.edges]);
+  }, [node, reactFlowInstance.getEdges()]);
 
-  const addTargetHandle = () => {
+  const addHandle = () => {
+    updateInternals(node.model.ID);
     if (node.model.Inputs.length >= 10) {
       return;
     }
-    node.addTargetHandle();
-    graph.refresh();
+    addTargetHandle(node);
   };
 
   return <MergeView />;

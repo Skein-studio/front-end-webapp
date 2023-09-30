@@ -5,7 +5,6 @@ import RecordPresenter from "@/app/Util/AudioRecorder/RecordPresenter";
 import { Button, Container } from "@/app/Util/BaseStyles";
 import { useContext, useState } from "react";
 import { NodeContext } from "../NodeState";
-import { SourceTypeModel } from "@/app/Node/Model/modelDatatypes";
 
 function BaseComponent(base: string) {
   const nodeContext = useContext(NodeContext);
@@ -13,7 +12,7 @@ function BaseComponent(base: string) {
   const [reload, setReload] = useState<boolean>(false);
 
   function handleBaseChange(text: string) {
-    (node.model.Data as SourceTypeModel).base = text;
+    node.model.Data.base = text;
     setReload(!reload);
   }
 
@@ -22,7 +21,7 @@ function BaseComponent(base: string) {
       <Container flexdir="row">
         <Button onClick={() => handleBaseChange("record")}>record</Button>
         <Button onClick={() => handleBaseChange("import")}>import</Button>
-        <Button onClick={() => handleBaseChange("generate")} disabled={true}>
+        <Button onClick={() => handleBaseChange("generate")} disabled={false}>
           generate
         </Button>
       </Container>
@@ -52,7 +51,7 @@ export default function OpenSourceView() {
   return (
     <Container flexdir="column">
       {BaseComponent(
-        (node?.model.Data as SourceTypeModel).base ?? "Select a base"
+        node?.model.Data.base ?? "Select a base"
       )}
     </Container>
   );
