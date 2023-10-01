@@ -1,6 +1,6 @@
 import { Node } from "reactflow";
 import { NodeModel, Output } from "../Node/Model/modelDatatypes";
-import { createGraphJSON } from "../Node/GraphFunctions";
+import { createGraphJSON, getNodeModelFromNode } from "../Node/GraphFunctions";
 
 /**
  * Represents the job and node statuses.
@@ -107,9 +107,9 @@ export async function ComputeNodesInOrder(
       console.log("Stopped the execution.");
       throw new Error("Job was stopped");
     }
-
+    
     const node: Node | undefined = nodes.find(
-      (node) => (node.data.model as NodeModel).ID === nodeID
+      (node) => getNodeModelFromNode(node).ID === nodeID
     );
     if (!node) {
       throw new Error("Node not found");
