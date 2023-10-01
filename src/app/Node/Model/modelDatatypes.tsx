@@ -1,58 +1,34 @@
-export interface RootModel {
-  Sketch: {
-    ID: string;
-    Name: string;
-    Graph: GraphModel;
-  };
-}
-export interface GraphModel {
-  Edges: EdgeModel[];
-  Nodes: NodeModel[];
-}
+import { Edge, Node, Viewport } from "reactflow";
 
-export interface EdgeModel {
-  ID: string;
-  Input: {
-    NodeID: string;
-    InputName: string;
-  };
-  Output: {
-    NodeID: string;
-    OutputName: string;
-  };
-}
 export interface NodeModel {
   Position: Coordinate;
   ID: string;
   Dirty: boolean;
-  Data:
-    | SourceTypeModel
-    | SignalTypeModel
-    | MergeTypeModel
-    | SplitTypeModel
-    | UnspecifiedTypeModel;
+  Data: NodeParameters;
   Type: string;
-  Inputs: InputModel[];
-  Outputs: OutputModel[];
+  Inputs: Input[];
+  Outputs: Output[];
 }
-export interface SourceTypeModel {
+
+export interface Graph {
+  ID: string;
+  version: number;
+  nodes: Node[];
+  edges: Edge[];
+  viewport: Viewport;
+}
+export interface NodeParameters {
   URL: string;
   base: string; // whether the source is a record, import or generate type
-  Prompt:string;
-}
-export interface SignalTypeModel {
   Prompt: string;
   Seed: string;
 }
-export interface MergeTypeModel {}
-export interface SplitTypeModel {}
-export interface UnspecifiedTypeModel {}
 
-export interface InputModel {
+export interface Input {
   ID: string;
   Name: string;
 }
-export interface OutputModel {
+export interface Output {
   ID: string;
   Name: string;
   Src: string;
@@ -62,54 +38,19 @@ export type Coordinate = {
   y: number;
 };
 
-export enum handleType {
-  "drums",
-  "piano",
-  "vocals",
-  "guitar",
-  "other",
-  "bass",
+export function getHandleTypes(str: string) {
+  switch (str) {
+    case "drums":
+      return [0];
+    case "piano":
+      return [1];
+    case "vocals":
+      return [2];
+    case "guitar":
+      return [3];
+    case "other":
+      return [4];
+    case "bass":
+      return [5];
+  }
 }
-const createDummyEdgeModel = (): EdgeModel => ({
-  ID: "dummyEdgeID",
-  Input: {
-    NodeID: "dummyInputNodeID",
-    InputName: "dummyInputName",
-  },
-  Output: {
-    NodeID: "dummyOutputNodeID",
-    OutputName: "dummyOutputName",
-  },
-});
-const createDummyInputModel = (): InputModel => ({
-  ID: "dummyInputID",
-  Name: "dummyInputName",
-});
-const createDummyOutputModel = (): OutputModel => ({
-  ID: "dummyOutputID",
-  Name: "dummyOutputName",
-  Src: "dummySrc",
-});
-const createDummyNodeModel = (): NodeModel => ({
-  Position: { x: 0, y: 0 },
-  ID: "dummyNodeID",
-  Dirty: false,
-  Type: "source",
-  Data: {
-    URL: "dummyURL",
-  },
-  Inputs: [createDummyInputModel()],
-  Outputs: [createDummyOutputModel()],
-});
-const createDummyGraphModel = (): GraphModel => ({
-  Edges: [createDummyEdgeModel()],
-  Nodes: [createDummyNodeModel()],
-});
-export const createDummyRootModel = (): RootModel => ({
-  Sketch: {
-    ID: "dummySketchID",
-    Name: "dummySketchName",
-    Graph: createDummyGraphModel(),
-  },
-});
-export const dummyData: RootModel = createDummyRootModel();

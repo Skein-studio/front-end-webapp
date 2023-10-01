@@ -4,7 +4,7 @@ import { BlankSpace, Button, Container } from "@/app/Util/BaseStyles";
 import { NodeSmall, NodeTitle } from "@/app/Node/NodeStyles";
 import { NodeContext, NodeType } from "../NodeState";
 import { useContext } from "react";
-import { useGraph } from "../GraphContext";
+import { useUI } from "../GraphFunctions";
 
 interface Props {
   setNode: (type: NodeType) => void;
@@ -15,16 +15,16 @@ interface Props {
  * @returns A NodeSmall component.
  * */
 function UnspecifiedView(props: Props) {
-  const graph = useGraph();
   const nodeContext = useContext(NodeContext);
   const node = nodeContext.nodeState;
 
   function setNode(type: NodeType) {
     props.setNode(type);
   }
+  const ui = useUI();
 
   function selectNode() {
-    graph.selectNode(node);
+    ui.selectNode(node);
   }
 
   return (

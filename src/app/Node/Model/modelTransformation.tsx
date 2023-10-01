@@ -1,28 +1,31 @@
 //modelTransformation.tsx
-import { Graph } from "../GraphContext";
-import { EdgeModel, GraphModel, NodeModel, RootModel } from "./modelDatatypes";
+import { Edge, Node, useReactFlow } from "reactflow";
+import { getNodeModelFromNode } from "../GraphFunctions";
+import { NodeModel } from "./modelDatatypes";
 
 /**
- * This function takes a GraphModel and a nodeId and returns an array of child node IDs. It filters edges where the output node matches the given nodeId and then returns the corresponding input node IDs.
- * @param {GraphModel} graph - The graph to search
+ * This function takes edges and a nodeId and returns an array of child node IDs. It filters edges where the output node matches the given nodeId and then returns the corresponding input node IDs.
+ * @param {Edge[]} edges - The edges to search
  * @param {string} nodeId - The node ID to search for
  * @returns {string[]} - An array of child node IDs
  */
-const getChildNodeIds = (graph: GraphModel, nodeId: string): string[] =>
-  graph.Edges.filter((edge) => edge.Output.NodeID === nodeId).map(
-    (edge) => edge.Input.NodeID
-  );
+function getChildNodeIds(edges: Edge[], nodeId: string): string[] {
+  return edges
+    .filter((edge) => edge.source === nodeId)
+    .map((edge) => edge.target);
+}
 
 /**
  * This is a recursive function that traverses the graph from a given nodeId and collects IDs of nodes that are "dirty" or have a dirty parent. The visited set keeps track of nodes already visited to prevent infinite recursion.
- * @param {GraphModel} graph - The graph to search
+ * @param {Node[]} nodes - The nodes to search
  * @param {string} nodeId - The node ID to start from
  * @param {Set<string>} visited - A set of visited node IDs
  * @param {boolean} isParentDirty - Whether the parent node is dirty
  * @returns {string[]} - An array of node IDs that are dirty or have a dirty parent
  * */
 const gatherDirtyIds = (
-  graph: GraphModel,
+  nodes: Node[],
+  edges: Edge[],
   nodeId: string,
   visited: Set<string> = new Set(),
   isParentDirty: boolean = false
@@ -32,64 +35,53 @@ const gatherDirtyIds = (
   visited.add(nodeId);
   let idsToMarkDirty: string[] = [];
 
-  const currentNode = graph.Nodes.find((node) => node.ID === nodeId);
+  const currentNode = nodes.find((node) => node.id === nodeId);
 
-  if (currentNode && (currentNode.Dirty || isParentDirty)) {
+  if (
+    currentNode &&
+    (getNodeModelFromNode(currentNode)!.Dirty || isParentDirty)
+  ) {
     idsToMarkDirty.push(nodeId);
     isParentDirty = true;
   }
-
-  const childNodeIds = getChildNodeIds(graph, nodeId);
+  const childNodeIds = getChildNodeIds(edges, nodeId);
 
   return idsToMarkDirty.concat(
     ...childNodeIds.map((childId) =>
-      gatherDirtyIds(graph, childId, visited, isParentDirty)
+      gatherDirtyIds(nodes, edges, childId, visited, isParentDirty)
     )
   );
 };
 
 /**
  * This function collects all the "dirty" node IDs in the entire graph. It uses gatherDirtyIds on every node marked as dirty in the graph to find these IDs.
- * @param {GraphModel} graph - The graph to search
+ * @param {Node[]} nodes - The nodes to search
  * @returns {string[]} - An array of node IDs that are dirty or have a dirty parent
  * */
-export const gatherAllDirtyIds = (graph: GraphModel): string[] =>
-  Array.from(
+export function gatherAllDirtyIds(nodes: Node[], edges: Edge[]): string[] {
+  return Array.from(
     new Set(
-      graph.Nodes.filter((node) => node.Dirty).flatMap((node) =>
-        gatherDirtyIds(graph, node.ID)
-      )
+      nodes
+        .filter((node) => getNodeModelFromNode(node)!.Dirty)
+        .flatMap((node) => gatherDirtyIds(nodes, edges, node.id))
     )
   );
-
-/**
- * This function transforms the graph context into a RootModel which can be more easily serialized or used for computation. It essentially packages the graph edges and nodes into a new object of type RootModel.
- * @param {Graph} graphContext - The graph context to transform
- * @returns {RootModel} - The transformed graph context
- * */
-export const transformGraphToRootModel = (graphContext: Graph): RootModel => ({
-  Sketch: {
-    ID: "1",
-    Name: "spaghetti",
-    Graph: {
-      Edges: graphContext.edges.map((edge) => edge.data as EdgeModel),
-      Nodes: graphContext.nodes.map(
-        (node) => node.data.nodeState.model as NodeModel
-      ),
-    },
-  },
-});
+}
 
 /**
  * Perform a topological sort starting from a child node. This function traverses from child nodes to their parents
  * and stops if it encounters a node where the 'Dirty' field is true.
- * 
+ *
  * @param startNodeID {string} - ID of the child node from where to start the sort
- * @param graph {GraphModel} - The graph object containing the nodes and edges
- * 
+ *
  * @returns {NodeModel[]} - An array containing nodes in topologically sorted order starting from the child, stopping at a 'Dirty' node
  */
-function topologicalSortFromChild(startNodeID: string, graph: GraphModel): string[] {
+function topologicalSortFromChild(
+  startNodeID: string,
+  nodes: Node[],
+  edges: Edge[]
+): string[] {
+  const reactFlowInstance = useReactFlow();
   const visited = new Set<string>();
   const stack: string[] = [];
 
@@ -109,12 +101,12 @@ function topologicalSortFromChild(startNodeID: string, graph: GraphModel): strin
     }
 
     // Find edges where this node is the parent (Output)
-    const incomingEdges = graph.Edges.filter((edge) => edge.Output.NodeID === node.ID);
+    const incomingEdges = edges.filter((edge) => edge.source === node.ID);
 
     for (const edge of incomingEdges) {
-      const parentNode = graph.Nodes.find((n) => n.ID === edge.Input.NodeID);
+      const parentNode = nodes.find((n) => n.id === edge.target);
       if (parentNode) {
-        visit(parentNode);
+        visit(getNodeModelFromNode(parentNode)!);
       }
     }
 
@@ -123,37 +115,37 @@ function topologicalSortFromChild(startNodeID: string, graph: GraphModel): strin
   }
 
   // Start the sorting from the node with ID = startNodeID
-  const startNode = graph.Nodes.find((n) => n.ID === startNodeID);
+  const startNode = nodes.find((n) => n.id === startNodeID);
   if (startNode) {
-    visit(startNode);
+    visit(getNodeModelFromNode(startNode)!);
   }
 
   return stack.reverse();
 }
 
-
 /**
  * This function performs a topological sort on the graph model. It takes into account only nodes that are "dirty" and returns a sorted array of their IDs. Topological sort ensures that for every directed edge (u, v), node u comes before v in the sorted list. The function uses a Map to keep track of nodes connected to each node (graph) and another Map (indegree) to keep track of the number of incoming edges for each node. The actual topological sorting is done by using a queue and BFS-like algorithm.
- * @param {GraphModel} graphModel - The graph model to sort
+ * @param {Node[]} nodes - The nodes to sort
  * @returns {string[]} - A sorted array of node IDs
  * */
-export function topologicalSort(graphModel: GraphModel): string[] {
+export function topologicalSort(nodes: Node[], edges: Edge[]): string[] {
   const graph = new Map<string, string[]>();
   const indegree = new Map<string, number>();
   const dirtyNodes = new Set<string>();
   const result: string[] = [];
 
   // Initialize graph and collect dirty and signal nodes
-  for (const edge of graphModel.Edges) {
-    const input = edge.Input.NodeID,
-      output = edge.Output.NodeID;
+  for (const edge of edges) {
+    const input = edge.target,
+      output = edge.source;
     graph.set(input, [...(graph.get(input) || []), output]);
   }
 
-  for (const node of graphModel.Nodes) {
-    if (node.Type === "signal" && node.Dirty) {
-      dirtyNodes.add(node.ID);
-      (graph.get(node.ID) || []).forEach((output) => {
+  for (const node of nodes) {
+    const n = getNodeModelFromNode(node)!;
+    if (n.Type === "signal" && n.Dirty) {
+      dirtyNodes.add(n.ID);
+      (graph.get(n.ID) || []).forEach((output) => {
         indegree.set(output, (indegree.get(output) || 0) + 1);
       });
     }

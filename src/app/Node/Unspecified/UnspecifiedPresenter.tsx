@@ -6,9 +6,15 @@ import {
   NodeState,
   NodeTypeToString,
   NodeType,
-} from "../NodeState";
+} from "@/app/Node/NodeState";
 import UnspecifiedView from "./UnspecifiedView";
-import { useGraph, setNode } from "../GraphContext";
+import { setNode, useUI } from "../GraphFunctions";
+import { useReactFlow } from "reactflow";
+
+/**
+ * The presenter for the Unspecified node.
+ * @returns A UnspecifiedView component.
+ * */
 
 /**
  * The presenter for the Unspecified node.
@@ -18,7 +24,8 @@ import { useGraph, setNode } from "../GraphContext";
 function UnspecifiedPresenter() {
   const nodeContext = useContext(NodeContext);
   const node = nodeContext.nodeState;
-  const graph = useGraph();
+  const reactFlowInstance = useReactFlow();
+  const ui = useUI();
 
   function changeType(type: NodeType) {
     // Create a new node object with updated type
@@ -26,21 +33,27 @@ function UnspecifiedPresenter() {
       return;
     }
     const nodeState = new NodeState(
-      node.getPosition().x,
-      node.getPosition().y,
+      node.model.Position.x,
+      node.model.Position.y,
       type,
-      node.getID()
+      node.model.ID
     );
+    
     const updatedNode = {
-      id: node.getID(),
+      id: node.model.ID,
       type: NodeTypeToString(type),
       data: {
         nodeState,
       },
-      position: node.getPosition(),
+      position: node.model.Position,
     };
 
-    setNode(graph, updatedNode, graph.setNodes);
+    setNode(
+      reactFlowInstance.getNodes(),
+      updatedNode,
+      reactFlowInstance.setNodes
+    );
+    ui.selectNode(undefined);
   }
 
   return <UnspecifiedView setNode={changeType} />;

@@ -1,6 +1,12 @@
 // OpenSignalView.tsx
 
-import { Container, Button, Text, StyledInput, FieldTitle } from "@/app/Util/BaseStyles";
+import {
+  Container,
+  Button,
+  Text,
+  StyledInput,
+  FieldTitle,
+} from "@/app/Util/BaseStyles";
 import styled from "styled-components";
 import StarImg from "../Signal/stars.svg";
 import { NodeContext } from "../NodeState";

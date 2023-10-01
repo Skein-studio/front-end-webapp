@@ -1,10 +1,9 @@
 import React, { useState, useEffect, useRef, useContext } from "react";
 import RecordView from "./RecordView";
 import { NodeContext } from "@/app/Node/NodeState";
-import { useGraph } from "@/app/Node/GraphContext";
 import { uploadAudioBlob } from "../ComputeAPI";
-import { SourceTypeModel } from "../../Node/Model/modelDatatypes";
 import useAudio from "../AudioPlayback/useAudio";
+import { useUpdateNodeInternals } from "reactflow";
 
 /**
  * The presenter for the audio recorder, which is used to record audio for the Source node.
@@ -15,8 +14,8 @@ function RecordPresenter() {
   const [isRecording, setIsRecording] = useState<boolean>(false);
   const nodeContext = useContext(NodeContext);
   const node = nodeContext.nodeState;
-  const graph = useGraph();
-  const nodeData = node.model.Data as SourceTypeModel;
+  const updateInternals = useUpdateNodeInternals();
+  const nodeData = node.model.Data;
   const mediaRecorder = useRef<MediaRecorder | null>(null);
   const audio = useAudio(nodeData.URL || ""); // Use the useAudio hook with the URL from nodeData
 
@@ -33,7 +32,7 @@ function RecordPresenter() {
         nodeData.URL = fileUrl;
         node.model.Dirty = true;
 
-        graph.refresh();
+        updateInternals(node.model.ID);
       };
     });
 
