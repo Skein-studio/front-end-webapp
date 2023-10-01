@@ -18,11 +18,19 @@
 <h1>Function FlowPresenter</h1></div>
 <section class="tsd-panel">
 <ul class="tsd-signatures">
-<li class="tsd-signature tsd-anchor-link" id="FlowPresenter"><span class="tsd-kind-call-signature">Flow<wbr/>Presenter</span><span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type ">Element</span><a href="#FlowPresenter" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></li>
+<li class="tsd-signature tsd-anchor-link" id="FlowPresenter"><span class="tsd-kind-call-signature">Flow<wbr/>Presenter</span><span class="tsd-signature-symbol">(</span><span class="tsd-kind-parameter">props</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type ">Element</span><a href="#FlowPresenter" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></li>
 <li class="tsd-description">
 <div class="tsd-comment tsd-typography"><p>FlowPresenter is the main component of the app, it contains handlers for all the events that can happen in ReactFlow component
 It contains the following handlers:</p>
 </div>
+<div class="tsd-parameters">
+<h4 class="tsd-parameters-title">Parameters</h4>
+<ul class="tsd-parameter-list">
+<li>
+<h5><span class="tsd-kind-parameter">props</span>: <span class="tsd-signature-type ">FlowPresenterProps</span></h5>
+<div class="tsd-comment tsd-typography"><p>The props of the component (a graph, for loading a graph).</p>
+</div>
+<div class="tsd-comment tsd-typography"></div></li></ul></div>
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type ">Element</span></h4><p>The ReactFlow component.</p>
 
 <div class="tsd-comment tsd-typography">
@@ -37,8 +45,6 @@ It contains the following handlers:</p>
 <h4>Function</h4><p>onNodesDelete: called when the user deletes a node</p>
 
 <h4>Function</h4><p>onEdgesDelete: called when the user deletes an edge</p>
-
-<h4>Function</h4><p>onMove: called when the user moves the canvas</p>
 
 <h4>Function</h4><p>onSelectionChange: called when an edge selection is changed</p>
 
@@ -74,8 +80,6 @@ It contains the following handlers:</p>
 
 <h4>Var</h4><p>window: the window dimensions</p>
 
-<h4>Var</h4><p>viewport: the viewport dimensions</p>
-
 <h4>Var</h4><p>nodes: the nodes in the graph</p>
 
 <h4>Var</h4><p>edges: the edges in the graph</p>
@@ -95,7 +99,7 @@ It contains the following handlers:</p>
 <h4>Var</h4><p>graph: the graph object that is passed to the GraphContext.Provider</p>
 </div><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/Skein-studio/front-end-webapp/blob/63009531/src/app/Util/Flow/FlowPresenter.tsx#L126">src/app/Util/Flow/FlowPresenter.tsx:126</a></li></ul></aside></li></ul></section></div>
+<li>Defined in <a href="https://github.com/Skein-studio/front-end-webapp/blob/586722ee/src/app/Util/Flow/FlowPresenter.tsx#L122">src/app/Util/Flow/FlowPresenter.tsx:122</a></li></ul></aside></li></ul></section></div>
 <div class="col-sidebar">
 <div class="page-menu">
 <div class="tsd-navigation settings">
@@ -114,7 +118,7 @@ It contains the following handlers:</p>
 <div class="site-menu">
 <nav class="tsd-navigation"><a href="../index.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-1"></use></svg><span>Skein Studio Web App</span></a>
 <ul class="tsd-small-nested-navigation" id="tsd-nav-container" data-base="..">
-<li><a href="../modules/Node_GraphContext.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2"></use></svg>Node/GraphContext</a></li>
+<li><a href="../modules/Node_GraphFunctions.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2"></use></svg>Node/GraphFunctions</a></li>
 <li><a href="../modules/Node_Merge_MergePresenter.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2"></use></svg>Node/Merge/MergePresenter</a></li>
 <li><a href="../modules/Node_Merge_MergeView.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2"></use></svg>Node/Merge/MergeView</a></li>
 <li><a href="../modules/Node_Model_modelDatatypes.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2"></use></svg>Node/Model/modelDatatypes</a></li>

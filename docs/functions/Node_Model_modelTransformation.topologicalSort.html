@@ -18,7 +18,7 @@
 <h1>Function topologicalSort</h1></div>
 <section class="tsd-panel">
 <ul class="tsd-signatures">
-<li class="tsd-signature tsd-anchor-link" id="topologicalSort"><span class="tsd-kind-call-signature">topological<wbr/>Sort</span><span class="tsd-signature-symbol">(</span><span class="tsd-kind-parameter">graphModel</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">[]</span><a href="#topologicalSort" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></li>
+<li class="tsd-signature tsd-anchor-link" id="topologicalSort"><span class="tsd-kind-call-signature">topological<wbr/>Sort</span><span class="tsd-signature-symbol">(</span><span class="tsd-kind-parameter">nodes</span>, <span class="tsd-kind-parameter">edges</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">[]</span><a href="#topologicalSort" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></li>
 <li class="tsd-description">
 <div class="tsd-comment tsd-typography"><p>This function performs a topological sort on the graph model. It takes into account only nodes that are &quot;dirty&quot; and returns a sorted array of their IDs. Topological sort ensures that for every directed edge (u, v), node u comes before v in the sorted list. The function uses a Map to keep track of nodes connected to each node (graph) and another Map (indegree) to keep track of the number of incoming edges for each node. The actual topological sorting is done by using a queue and BFS-like algorithm.</p>
 </div>
@@ -26,17 +26,19 @@
 <h4 class="tsd-parameters-title">Parameters</h4>
 <ul class="tsd-parameter-list">
 <li>
-<h5><span class="tsd-kind-parameter">graphModel</span>: <a href="../interfaces/Node_Model_modelDatatypes.GraphModel.html" class="tsd-signature-type tsd-kind-interface">GraphModel</a></h5>
-<div class="tsd-comment tsd-typography"><p>The graph model to sort</p>
+<h5><span class="tsd-kind-parameter">nodes</span>: <span class="tsd-signature-type ">Node</span><span class="tsd-signature-symbol">[]</span></h5>
+<div class="tsd-comment tsd-typography"><p>The nodes to sort</p>
 </div>
-<div class="tsd-comment tsd-typography"></div></li></ul></div>
+<div class="tsd-comment tsd-typography"></div></li>
+<li>
+<h5><span class="tsd-kind-parameter">edges</span>: <span class="tsd-signature-type ">Edge</span><span class="tsd-signature-symbol">[]</span></h5></li></ul></div>
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">[]</span></h4><ul>
 <li>A sorted array of node IDs</li>
 </ul>
 
 <div class="tsd-comment tsd-typography"></div><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/Skein-studio/front-end-webapp/blob/63009531/src/app/Node/Model/modelTransformation.tsx#L140">src/app/Node/Model/modelTransformation.tsx:140</a></li></ul></aside></li></ul></section></div>
+<li>Defined in <a href="https://github.com/Skein-studio/front-end-webapp/blob/586722ee/src/app/Node/Model/modelTransformation.tsx#L131">src/app/Node/Model/modelTransformation.tsx:131</a></li></ul></aside></li></ul></section></div>
 <div class="col-sidebar">
 <div class="page-menu">
 <div class="tsd-navigation settings">
@@ -55,7 +57,7 @@
 <div class="site-menu">
 <nav class="tsd-navigation"><a href="../index.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-1"></use></svg><span>Skein Studio Web App</span></a>
 <ul class="tsd-small-nested-navigation" id="tsd-nav-container" data-base="..">
-<li><a href="../modules/Node_GraphContext.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2"></use></svg>Node/GraphContext</a></li>
+<li><a href="../modules/Node_GraphFunctions.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2"></use></svg>Node/GraphFunctions</a></li>
 <li><a href="../modules/Node_Merge_MergePresenter.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2"></use></svg>Node/Merge/MergePresenter</a></li>
 <li><a href="../modules/Node_Merge_MergeView.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2"></use></svg>Node/Merge/MergeView</a></li>
 <li><a href="../modules/Node_Model_modelDatatypes.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2"></use></svg>Node/Model/modelDatatypes</a></li>

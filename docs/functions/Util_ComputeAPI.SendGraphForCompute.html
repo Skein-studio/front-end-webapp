@@ -18,25 +18,25 @@
 <h1>Function SendGraphForCompute</h1></div>
 <section class="tsd-panel">
 <ul class="tsd-signatures">
-<li class="tsd-signature tsd-anchor-link" id="SendGraphForCompute"><span class="tsd-kind-call-signature">Send<wbr/>Graph<wbr/>For<wbr/>Compute</span><span class="tsd-signature-symbol">(</span><span class="tsd-kind-parameter">rootModel</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type ">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type ">Response</span><span class="tsd-signature-symbol">&gt;</span><a href="#SendGraphForCompute" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></li>
+<li class="tsd-signature tsd-anchor-link" id="SendGraphForCompute"><span class="tsd-kind-call-signature">Send<wbr/>Graph<wbr/>For<wbr/>Compute</span><span class="tsd-signature-symbol">(</span><span class="tsd-kind-parameter">reactFlowData</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span><a href="#SendGraphForCompute" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></li>
 <li class="tsd-description">
-<div class="tsd-comment tsd-typography"><p>This function sends a graph model to the compute endpoint. It takes a RootModel object, stringifies it, and sends it in the POST request&#39;s body.</p>
+<div class="tsd-comment tsd-typography"><p>This function sends a graph model to the compute endpoint. It takes a JSON object, and sends it in the POST request&#39;s body.</p>
 </div>
 <div class="tsd-parameters">
 <h4 class="tsd-parameters-title">Parameters</h4>
 <ul class="tsd-parameter-list">
 <li>
-<h5><span class="tsd-kind-parameter">rootModel</span>: <a href="../interfaces/Node_Model_modelDatatypes.RootModel.html" class="tsd-signature-type tsd-kind-interface">RootModel</a></h5>
-<div class="tsd-comment tsd-typography"><p>The RootModel object to send to the compute endpoint</p>
+<h5><span class="tsd-kind-parameter">reactFlowData</span>: <span class="tsd-signature-type">any</span></h5>
+<div class="tsd-comment tsd-typography"><p>The reactFlow object to send to the compute endpoint</p>
 </div>
 <div class="tsd-comment tsd-typography"></div></li></ul></div>
-<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type ">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type ">Response</span><span class="tsd-signature-symbol">&gt;</span></h4><ul>
+<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4><ul>
 <li>The response from the compute endpoint</li>
 </ul>
 
 <div class="tsd-comment tsd-typography"></div><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/Skein-studio/front-end-webapp/blob/63009531/src/app/Util/ComputeAPI.tsx#L39">src/app/Util/ComputeAPI.tsx:39</a></li></ul></aside></li></ul></section></div>
+<li>Defined in <a href="https://github.com/Skein-studio/front-end-webapp/blob/586722ee/src/app/Util/ComputeAPI.tsx#L36">src/app/Util/ComputeAPI.tsx:36</a></li></ul></aside></li></ul></section></div>
 <div class="col-sidebar">
 <div class="page-menu">
 <div class="tsd-navigation settings">
@@ -55,7 +55,7 @@
 <div class="site-menu">
 <nav class="tsd-navigation"><a href="../index.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-1"></use></svg><span>Skein Studio Web App</span></a>
 <ul class="tsd-small-nested-navigation" id="tsd-nav-container" data-base="..">
-<li><a href="../modules/Node_GraphContext.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2"></use></svg>Node/GraphContext</a></li>
+<li><a href="../modules/Node_GraphFunctions.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2"></use></svg>Node/GraphFunctions</a></li>
 <li><a href="../modules/Node_Merge_MergePresenter.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2"></use></svg>Node/Merge/MergePresenter</a></li>
 <li><a href="../modules/Node_Merge_MergeView.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2"></use></svg>Node/Merge/MergeView</a></li>
 <li><a href="../modules/Node_Model_modelDatatypes.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2"></use></svg>Node/Model/modelDatatypes</a></li>
