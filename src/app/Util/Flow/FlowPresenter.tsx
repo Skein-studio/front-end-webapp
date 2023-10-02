@@ -20,11 +20,7 @@ import SignalPresenter from "@/app/Node/Signal/SignalPresenter";
 import SplitPresenter from "@/app/Node/Split/SplitPresenter";
 import MergePresenter from "@/app/Node/Merge/MergePresenter";
 
-import {
-  NodeType,
-  NodeContext,
-  NodeState,
-} from "@/app/Node/NodeState";
+import { NodeType, NodeContext, NodeState } from "@/app/Node/NodeState";
 import {
   createNewNode,
   connectionExists,
@@ -208,6 +204,7 @@ export function FlowPresenter(props: FlowPresenterProps) {
   function onNodesDelete(nodesToDelete: Node[]) {
     // this is called when the user deletes a node
     deleteNodes(nodesToDelete); //  delete the node from the graph
+    selectNode(undefined);
   }
 
   function onEdgesDelete(edgesToDelete: Edge[]) {
@@ -223,10 +220,7 @@ export function FlowPresenter(props: FlowPresenterProps) {
     });
   }
 
-  function onMove(
-    event: TouchEvent | MouseEvent,
-    viewport: Viewport
-  ) {
+  function onMove(event: TouchEvent | MouseEvent, viewport: Viewport) {
     setViewport(viewport);
   }
 
@@ -316,8 +310,8 @@ export function FlowPresenter(props: FlowPresenterProps) {
       clientX = event.changedTouches[0].clientX;
       clientY = event.changedTouches[0].clientY;
     }
-    
-    let { x, y } = reactFlowInstance.project({x:clientX, y:clientY});
+
+    let { x, y } = reactFlowInstance.project({ x: clientX, y: clientY });
 
     // Subtract width and height of node to center the node on the handle
     x = x - NODE_WIDTH / 4;
@@ -345,8 +339,7 @@ export function FlowPresenter(props: FlowPresenterProps) {
           source: connectStartNode.id,
           target: lastNode.id,
           sourceHandle: connectStartHandleId!,
-          targetHandle: (lastNode.data.nodeState.model.Inputs[0] as Input)
-            .ID,
+          targetHandle: (lastNode.data.nodeState.model.Inputs[0] as Input).ID,
         };
         const newEdge = {
           id: `reactflow__edge-${newConnection.source}${newConnection.sourceHandle}-${newConnection.target}${newConnection.targetHandle}`,
@@ -424,13 +417,9 @@ export function FlowPresenter(props: FlowPresenterProps) {
     // this is called when the user clicks on the "add" button
 
     let x =
-      ((window.width * 0.95) / 2 - viewport.x) /
-        viewport.zoom -
-      NODE_WIDTH / 2; // half the width of the node, so it's centered, relative to the viewport, not the window
+      ((window.width * 0.95) / 2 - viewport.x) / viewport.zoom - NODE_WIDTH / 2; // half the width of the node, so it's centered, relative to the viewport, not the window
     let y =
-      ((window.height * 0.95) / 2 - viewport.y) /
-        viewport.zoom -
-      NODE_HEIGHT; // centered, relative to the viewport, not the window
+      ((window.height * 0.95) / 2 - viewport.y) / viewport.zoom - NODE_HEIGHT; // centered, relative to the viewport, not the window
     addNewNode(x, y, NodeType.Unspecified);
   }
 
@@ -447,24 +436,22 @@ export function FlowPresenter(props: FlowPresenterProps) {
       setNodes(loadedNodes);
       setEdges(loadedEdges);
       selectNode(loadedNodes[0].data.nodeState);
+      setViewport(props.graph.viewport);
+      reactFlowInstance.setViewport(props.graph.viewport);
       console.log("Loaded graph: ", props.graph);
     }
   }
 
   useMemo(() => {
-
     if (nodes.length == 0) {
       addNewNode(
-        ((window.width * 0.95) / 2 - viewport.x) /
-          viewport.zoom -
+        ((window.width * 0.95) / 2 - viewport.x) / viewport.zoom -
           NODE_WIDTH / 2,
-        ((window.height * 0.95) / 2 - viewport.y) /
-          viewport.zoom -
-          NODE_HEIGHT,
+        ((window.height * 0.95) / 2 - viewport.y) / viewport.zoom - NODE_HEIGHT,
         NodeType.Source
       );
     }
-    console.log("Initialized (useMemo)")
+    console.log("Initialized (useMemo)");
   }, []);
 
   return (

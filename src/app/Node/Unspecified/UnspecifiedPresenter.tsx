@@ -38,7 +38,7 @@ function UnspecifiedPresenter() {
       type,
       node.model.ID
     );
-    
+
     const updatedNode = {
       id: node.model.ID,
       type: NodeTypeToString(type),

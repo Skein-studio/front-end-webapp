@@ -43,7 +43,7 @@ interface Props {
   addButtonHandler: () => void;
   loadFromGraph: () => void;
   defaultViewport: Viewport;
-  onMove: (event:TouchEvent | MouseEvent, viewport: Viewport) => void;
+  onMove: (event: TouchEvent | MouseEvent, viewport: Viewport) => void;
 }
 
 /**
@@ -54,13 +54,16 @@ function FlowView(props: Props) {
   return (
     <OuterBox width="95vw" height="95vh">
       <GraphNameInput defaultValue={"violet-york-mayflower"} />
-      <StyledMiniMap
-        style={{
-          position: "absolute",
-          bottom: "10px",
-          right: "10px",
-        }}
-      />
+
+      {props.openSelectedNode ? null : (
+        <StyledMiniMap
+          style={{
+            position: "absolute",
+            bottom: "10px",
+            right: "10px",
+          }}
+        />
+      )}
       <OptionsView
         toggle={props.showSelected}
         deleteSelectedNode={props.deleteSelectedNode}

@@ -1,10 +1,6 @@
 //GraphContext.tsx
 
-import {
-  NodeState,
-  NodeTypeToString,
-  NodeType,
-} from "./NodeState";
+import { NodeState, NodeTypeToString, NodeType } from "./NodeState";
 import { Edge, Node, Viewport } from "reactflow";
 import { Graph, NodeModel } from "./Model/modelDatatypes";
 import { createContext, useContext } from "react";
@@ -46,10 +42,10 @@ export function useUI() {
  * @param reactFlowData - The react flow data to create a graph JSON from, it comes from reactFlowInstance.toObject()
  * @returns A graph JSON containing ID, version, nodes, edges, and viewport.
  * */
-export function createGraphJSON(reactFlowData:any) {
+export function createGraphJSON(reactFlowData: any) {
   let nodes: Node[] = reactFlowData.nodes;
   let edges: Edge[] = reactFlowData.edges;
-  let viewport:Viewport = reactFlowData.viewport;
+  let viewport: Viewport = reactFlowData.viewport;
   let graphJSON: Graph = {
     ID: "IDPLACEHOLDER",
     version: 0,
