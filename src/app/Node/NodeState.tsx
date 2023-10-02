@@ -67,7 +67,7 @@ export class NodeState {
       Type: NodeTypeToString(type),
       Inputs: setInputs(type, newID),
       Outputs: setOutputs(type, newID),
-      Data: initializeData(),
+      Data: initializeData(type),
     };
     this.selected = false;
     this.loading = false;
@@ -79,12 +79,15 @@ export class NodeState {
  * @param {NodeType} type - The type of the node
  * @returns {SourceTypeModel | SignalTypeModel | MergeTypeModel | SplitTypeModel | UnspecifiedTypeModel} - The data of the node
  */
-function initializeData(): NodeParameters {
+function initializeData(type:NodeType): NodeParameters {
   let data: NodeParameters = {
     URL: "",
     base: "",
     Prompt: "",
-    Seed: "1234",
+    Seed: type == NodeType.Signal ? "1234" : "",
+    bpm: type == NodeType.Source ? 120 : -1,
+    genre: type == NodeType.Source ? "Classical" : "",
+    mood: type == NodeType.Source ? "None" : "",
   };
   return data;
 }

@@ -51,7 +51,7 @@ export default function OpenNodeView(props: Props) {
 
   return (
     <Window>
-      <BlankSpace width={1} height={75}></BlankSpace>
+      <BlankSpace width={1} height={30}></BlankSpace>
       {Icon()}
       <CloseButton onClick={props.closeWindow}>-</CloseButton>
       <NodeTitle>{props.nodeState.model.Type}</NodeTitle>
@@ -89,7 +89,7 @@ const InnerBox = styled.div<NodeProps>`
   align-items: center;
   align-self: center;
   width: 95%;
-  height: 80%;
+  height: 95%;
   padding: 4px;
   background-color: #ffffff;
   border-radius: 10px;

@@ -1,22 +1,19 @@
 //GenerateAudio.tsx
-
-import React, { useContext } from "react";
+import React, { useContext, useState } from "react";
 import {
   BlankSpace,
   Button,
   Container,
   FieldTitle,
   StyledInput,
+  StyledSelect,
+  FieldDescription,
 } from "../BaseStyles";
 import { NodeContext } from "@/app/Node/NodeState";
 import useAudio from "@/app/Util/AudioPlayback/useAudio";
 import AudioPlayer from "../AudioPlayback/AudioPlayer";
 import { useUpdateNodeInternals } from "reactflow";
 
-/**
- * The view for the GenerateAudio component, which is used to generate audio for the Source node.
- * @returns A Container component, which contains a Button and an AudioPlayer.
- * */
 function GenerateAudio() {
   const nodeContext = useContext(NodeContext);
   const node = nodeContext.nodeState;
@@ -24,11 +21,31 @@ function GenerateAudio() {
   const audioData = nodeData.URL;
   const updateInternals = useUpdateNodeInternals();
   const audioState = useAudio(audioData);
-  const [prompt, setPrompt] = React.useState(nodeData.Prompt);
+  const [prompt, setPrompt] = useState(nodeData.Prompt);
+
+  // State for Genre, BPM and Mood
+  const [genre, setGenre] = useState<string>(nodeData.genre);
+  const [bpm, setBpm] = useState<number>(nodeData.bpm);
+  const [mood, setMood] = useState<string>(nodeData.mood);
 
   const handlePromptChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setPrompt(event.target.value);
     nodeData.Prompt = event.target.value;
+  };
+
+  const handleGenreChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
+    setGenre(event.target.value);
+    nodeData.genre = event.target.value;
+  };
+
+  const handleBpmChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setBpm(Number(event.target.value));
+    nodeData.bpm = Number(event.target.value);
+  };
+
+  const handleMoodChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setMood(event.target.value);
+    nodeData.mood = event.target.value;
   };
 
   const handleClick = async () => {
@@ -42,15 +59,55 @@ function GenerateAudio() {
   return (
     <Container>
       <FieldTitle>
-        🤖
-        <p>Prompt</p>
+        Prompt
       </FieldTitle>
       <StyledInput type="text" value={prompt} onChange={handlePromptChange} />
       <BlankSpace width={5} height={10} />
+
+      {/* Genre Radio Buttons */}
+      <FieldTitle>Genres</FieldTitle>
+      <FieldDescription>
+      <StyledSelect value={genre} onChange={(e: React.ChangeEvent<HTMLSelectElement>) => handleGenreChange(e)}>
+        {[
+
+          "Classical", "Jazz", "Blues", "Ambient", "Electronic", "Post-Rock",
+          "Lo-fi", "Progressive Rock", "Orchestral", "Funk", "Flamenco", "Reggae",
+          "Techno", "Trance", "Drum and Bass", "Bluegrass", "Celtic", "Raggae",
+          "Phonk", "Smooth Jazz"
+        ].map((g) => (
+          <option value={g}>{g}</option>
+        ))}
+      </StyledSelect>
+    </FieldDescription>
+
+      {/* BPM Slider */}
+      <FieldTitle>BPM</FieldTitle>
+      <div>
+        <input
+          type="range"
+          min="60"
+          max="150"
+          step="10"
+          value={bpm}
+          onChange={handleBpmChange}
+        />
+        <FieldDescription>{bpm}</FieldDescription>  {/* Display the value of the slider */}
+      </div>
+
+      {/* Mood Radio Buttons */}
+      <FieldTitle>Mood</FieldTitle>
+      {["None", "Chill", "Aggressive"].map((m) => (
+        <FieldDescription>
+          <input type="radio" value={m} checked={mood === m} onChange={handleMoodChange} />
+          {m}
+        </FieldDescription>
+      ))}
+      <BlankSpace height={5} width={5}/>
       <Button onClick={handleClick}>Generate</Button>
       {audioData && (
         <AudioPlayer audioState={audioState} audioComputed={true} error="" />
       )}
+
     </Container>
   );
 }

@@ -22,6 +22,9 @@ export interface NodeParameters {
   base: string; // whether the source is a record, import or generate type
   Prompt: string;
   Seed: string;
+  bpm: number;
+  genre: string;
+  mood: string;
 }
 
 export interface Input {

@@ -199,6 +199,38 @@ const FieldTitle = styled.div`
     margin-right: 4px;
   }
 `;
+const FieldDescription = styled.div`
+  left: 0;
+  font-size: 12px;
+  font-family: verdana;
+  display: flex;
+  align-items: center;
+
+  & > img {
+    width: 16px;
+    height: 16px;
+    margin-right: 4px;
+  }
+`;
+
+const StyledSelect = styled.select`
+  border-radius: 12px;
+  font-family: Verdana, sans-serif;
+  padding: 8px;
+  background-color: #f1f1f1;
+  border: 1px solid #ccc;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  appearance: none;
+
+  &:hover {
+    background-color: #f9f9f9;
+  }
+
+  &:focus {
+    outline: none;
+    border-color: #aaa;
+  }
+`;
 
 export {
   Text,
@@ -209,4 +241,6 @@ export {
   GraphNameInput,
   StyledInput,
   FieldTitle,
+  FieldDescription,
+  StyledSelect,
 };
