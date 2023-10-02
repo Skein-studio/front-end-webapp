@@ -75,7 +75,7 @@ function GenerateAudio() {
           "Techno", "Trance", "Drum and Bass", "Bluegrass", "Celtic", "Raggae",
           "Phonk", "Smooth Jazz"
         ].map((g) => (
-          <option value={g}>{g}</option>
+          <option key={g} value={g}>{g}</option>
         ))}
       </StyledSelect>
     </FieldDescription>
@@ -97,7 +97,7 @@ function GenerateAudio() {
       {/* Mood Radio Buttons */}
       <FieldTitle>Mood</FieldTitle>
       {["None", "Chill", "Aggressive"].map((m) => (
-        <FieldDescription>
+        <FieldDescription key={m}>
           <input type="radio" value={m} checked={mood === m} onChange={handleMoodChange} />
           {m}
         </FieldDescription>
