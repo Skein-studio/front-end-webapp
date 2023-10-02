@@ -58,27 +58,47 @@ function GenerateAudio() {
 
   return (
     <Container>
-      <FieldTitle>
-        Prompt
-      </FieldTitle>
+      <FieldTitle>Prompt</FieldTitle>
       <StyledInput type="text" value={prompt} onChange={handlePromptChange} />
       <BlankSpace width={5} height={10} />
 
       {/* Genre Radio Buttons */}
       <FieldTitle>Genres</FieldTitle>
       <FieldDescription>
-      <StyledSelect value={genre} onChange={(e: React.ChangeEvent<HTMLSelectElement>) => handleGenreChange(e)}>
-        {[
-
-          "Classical", "Jazz", "Blues", "Ambient", "Electronic", "Post-Rock",
-          "Lo-fi", "Progressive Rock", "Orchestral", "Funk", "Flamenco", "Reggae",
-          "Techno", "Trance", "Drum and Bass", "Bluegrass", "Celtic", "Raggae",
-          "Phonk", "Smooth Jazz"
-        ].map((g) => (
-          <option key={g} value={g}>{g}</option>
-        ))}
-      </StyledSelect>
-    </FieldDescription>
+        <StyledSelect
+          value={genre}
+          onChange={(e: React.ChangeEvent<HTMLSelectElement>) =>
+            handleGenreChange(e)
+          }
+        >
+          {[
+            "Classical",
+            "Jazz",
+            "Blues",
+            "Ambient",
+            "Electronic",
+            "Post-Rock",
+            "Lo-fi",
+            "Progressive Rock",
+            "Orchestral",
+            "Funk",
+            "Flamenco",
+            "Reggae",
+            "Techno",
+            "Trance",
+            "Drum and Bass",
+            "Bluegrass",
+            "Celtic",
+            "Raggae",
+            "Phonk",
+            "Smooth Jazz",
+          ].map((g) => (
+            <option key={g} value={g}>
+              {g}
+            </option>
+          ))}
+        </StyledSelect>
+      </FieldDescription>
 
       {/* BPM Slider */}
       <FieldTitle>BPM</FieldTitle>
@@ -91,23 +111,28 @@ function GenerateAudio() {
           value={bpm}
           onChange={handleBpmChange}
         />
-        <FieldDescription>{bpm}</FieldDescription>  {/* Display the value of the slider */}
+        <FieldDescription>{bpm}</FieldDescription>{" "}
+        {/* Display the value of the slider */}
       </div>
 
       {/* Mood Radio Buttons */}
       <FieldTitle>Mood</FieldTitle>
       {["None", "Chill", "Aggressive"].map((m) => (
         <FieldDescription key={m}>
-          <input type="radio" value={m} checked={mood === m} onChange={handleMoodChange} />
+          <input
+            type="radio"
+            value={m}
+            checked={mood === m}
+            onChange={handleMoodChange}
+          />
           {m}
         </FieldDescription>
       ))}
-      <BlankSpace height={5} width={5}/>
+      <BlankSpace height={5} width={5} />
       <Button onClick={handleClick}>Generate</Button>
       {audioData && (
         <AudioPlayer audioState={audioState} audioComputed={true} error="" />
       )}
-
     </Container>
   );
 }

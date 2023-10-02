@@ -45,7 +45,7 @@ export default function Home() {
                 Seed: "1234",
               },
             },
-            selected: false,
+            selected: true,
             loading: false,
           },
         },
@@ -262,7 +262,7 @@ export default function Home() {
         targetHandle: "c36e74b7-f082-4448-82c2-e479bbc81211in[0]",
       },
     ],
-    viewport: { x: 0, y: 0, zoom: 1 },
+    viewport: { x: -119.0795161456166, y: 66.28887273743001, zoom: 0.5 },
   };
 
   return (

@@ -79,7 +79,7 @@ export class NodeState {
  * @param {NodeType} type - The type of the node
  * @returns {SourceTypeModel | SignalTypeModel | MergeTypeModel | SplitTypeModel | UnspecifiedTypeModel} - The data of the node
  */
-function initializeData(type:NodeType): NodeParameters {
+function initializeData(type: NodeType): NodeParameters {
   let data: NodeParameters = {
     URL: "",
     base: "",

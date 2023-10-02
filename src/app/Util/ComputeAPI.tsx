@@ -37,7 +37,7 @@ export function SendGraphForCompute(reactFlowData: any) {
   console.log("Sending graph for compute");
 
   let graphJSON = createGraphJSON(reactFlowData);
-
+  console.log(JSON.stringify(graphJSON));
   fetch(COMPUTE_ENDPOINT, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
@@ -107,7 +107,7 @@ export async function ComputeNodesInOrder(
       console.log("Stopped the execution.");
       throw new Error("Job was stopped");
     }
-    
+
     const node: Node | undefined = nodes.find(
       (node) => getNodeModelFromNode(node).ID === nodeID
     );

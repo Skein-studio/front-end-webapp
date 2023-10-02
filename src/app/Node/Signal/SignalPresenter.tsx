@@ -43,7 +43,6 @@ export default function SignalPresenter() {
           n.data.nodeState.loading = true;
           updateInternals(n.id);
         }
-        
       });
       await SendGraphForCompute(reactFlowInstance.toObject());
       await populateDependenciesByNodeID(node.model.ID);
