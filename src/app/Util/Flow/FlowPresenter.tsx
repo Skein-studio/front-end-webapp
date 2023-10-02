@@ -208,6 +208,7 @@ export function FlowPresenter(props: FlowPresenterProps) {
   function onNodesDelete(nodesToDelete: Node[]) {
     // this is called when the user deletes a node
     deleteNodes(nodesToDelete); //  delete the node from the graph
+    selectNode(undefined);
   }
 
   function onEdgesDelete(edgesToDelete: Edge[]) {
