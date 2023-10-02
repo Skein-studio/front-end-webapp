@@ -31,21 +31,25 @@ function GenerateAudio() {
   const handlePromptChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setPrompt(event.target.value);
     nodeData.Prompt = event.target.value;
+    node.model.Dirty = true;
   };
 
   const handleGenreChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
     setGenre(event.target.value);
     nodeData.genre = event.target.value;
+    node.model.Dirty = true;
   };
 
   const handleBpmChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setBpm(Number(event.target.value));
     nodeData.bpm = Number(event.target.value);
+    node.model.Dirty = true;
   };
 
   const handleMoodChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setMood(event.target.value);
     nodeData.mood = event.target.value;
+    node.model.Dirty = true;
   };
 
   const handleClick = async () => {
